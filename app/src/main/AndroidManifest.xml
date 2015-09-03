@@ -3,6 +3,11 @@
     <application android:allowBackup="true" android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme">
 
+        <!-- Content Provider -->
+        <provider
+            android:authorities="de.mobcomp.grades.provider"
+            android:name=".database.GradesProvider"
+            android:exported="false" />
     </application>
 
 </manifest>
