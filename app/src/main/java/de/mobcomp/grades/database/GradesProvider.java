@@ -7,8 +7,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
-import de.mobcomp.grades.Database;
-
 /**
  * ContentProvider to access the database.
  */
