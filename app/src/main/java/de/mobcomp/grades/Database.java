@@ -16,6 +16,10 @@ public class Database {
     public SQLiteDatabase db;
     private DBHelper dbHelper;
 
+    public Database(Context context) {
+        dbHelper = new DBHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
     /**
      * Helper class to
      * - create tables
