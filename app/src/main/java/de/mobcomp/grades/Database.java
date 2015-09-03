@@ -36,6 +36,8 @@ public class Database {
             db.execSQL(Action.CREATE_TABLE);
             db.execSQL(ActionParam.CREATE_TABLE);
             db.execSQL(Transformer.CREATE_TABLE);
+            db.execSQL(GradeEntry.CREATE_TABLE);
+            db.execSQL(Overview.CREATE_TABLE);
         }
 
         @Override
@@ -175,6 +177,67 @@ public class Database {
                 + TRANSFORMER_ID + " INTEGER NOT NULL UNIQUE, "
                 + RULE_ID + " INTEGER NOT NULL, "
                 + "FOREIGN KEY(" + RULE_ID + ") REFERENCES " + Rule.TABLE + "(" + Rule.RULE_ID + ")"
+                + ");";
+    }
+
+    /**
+     * GradeEntry table.
+     */
+    public class GradeEntry {
+        public static final String TABLE = "grade_entry";
+
+        // columns
+        public static final String ID = "_id";
+        public static final String NAME = "name";
+        public static final String GRADE = "grade";
+        public static final String EXAM_ID = "exam_id";
+        public static final String SEMESTER = "semester";
+        public static final String STATE = "state";
+
+        // create table
+        private static final String CREATE_TABLE =
+                "CREATE TABLE " + TABLE + "("
+                + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + NAME + " TEXT NOT NULL, "
+                + GRADE + " REAL, "
+                + EXAM_ID + " TEXT, "
+                + SEMESTER + " TEXT NOT NULL, "
+                + STATE + " TEXT "
+                + ");";
+    }
+
+    /**
+     * Exams overview table.
+     */
+    public class Overview {
+        public static final String TABLE = "overview";
+
+        // columns
+        public static final String ID = "_id";
+        public static final String GRADE_ENTRY_ID = "grade_entry_id";
+        public static final String AVERAGE = "average";
+        public static final String PARTICIPANTS = "participants";
+        public static final String SECTION_1 = "section_1";
+        public static final String SECTION_2 = "section_2";
+        public static final String SECTION_3 = "section_3";
+        public static final String SECTION_4 = "section_4";
+        public static final String SECTION_5 = "section_5";
+        public static final String USER_SECTION = "user_section";
+
+        // create table
+        private static final String CREATE_TABLE =
+                "CREATE TABLE " + TABLE + "("
+                + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + GRADE_ENTRY_ID + " INTEGER NOT NULL UNIQUE, "
+                + AVERAGE + " REAL, "
+                + PARTICIPANTS + " INTEGER, "
+                + SECTION_1 + " INTEGER, "
+                + SECTION_2 + " INTEGER, "
+                + SECTION_3 + " INTEGER, "
+                + SECTION_4 + " INTEGER, "
+                + SECTION_5 + " INTEGER, "
+                + USER_SECTION + " INTEGER, "
+                + "FOREIGN KEY(" + GRADE_ENTRY_ID + ") REFERENCES " + GradeEntry.TABLE + "(" + GradeEntry.ID + ")"
                 + ");";
     }
 }
