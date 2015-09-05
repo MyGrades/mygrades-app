@@ -15,7 +15,7 @@ public class DBHelper {
     private static final Uri RULE_URI;
     private static final Uri ACTION_URI;
     private static final Uri ACTION_PARAM_URI;
-    private static final Uri TRANSFORMER_URI;
+    private static final Uri TRANSFORMER_MAPPING_URI;
     private static final Uri GRADE_ENTRY_URI;
     private static final Uri OVERVIEW_URI;
 
@@ -26,7 +26,7 @@ public class DBHelper {
         RULE_URI = contentUri.buildUpon().appendPath(Database.Rule.TABLE).build();
         ACTION_URI = contentUri.buildUpon().appendPath(Database.Action.TABLE).build();
         ACTION_PARAM_URI = contentUri.buildUpon().appendPath(Database.ActionParam.TABLE).build();
-        TRANSFORMER_URI = contentUri.buildUpon().appendPath(Database.Transformer.TABLE).build();
+        TRANSFORMER_MAPPING_URI = contentUri.buildUpon().appendPath(Database.TransformerMapping.TABLE).build();
         GRADE_ENTRY_URI = contentUri.buildUpon().appendPath(Database.GradeEntry.TABLE).build();
         OVERVIEW_URI = contentUri.buildUpon().appendPath(Database.Overview.TABLE).build();
     }

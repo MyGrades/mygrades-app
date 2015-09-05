@@ -22,7 +22,7 @@ public class GradesProvider extends ContentProvider {
     private static final int RULE = 2;
     private static final int ACTION = 3;
     private static final int ACTION_PARAM = 4;
-    private static final int TRANSFORMER = 5;
+    private static final int TRANSFORMER_MAPPING = 5;
     private static final int GRADE_ENTRY = 6;
     private static final int OVERVIEW = 7;
 
@@ -33,7 +33,7 @@ public class GradesProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, Database.Rule.TABLE, RULE);
         uriMatcher.addURI(AUTHORITY, Database.Action.TABLE, ACTION);
         uriMatcher.addURI(AUTHORITY, Database.ActionParam.TABLE, ACTION_PARAM);
-        uriMatcher.addURI(AUTHORITY, Database.Transformer.TABLE, TRANSFORMER);
+        uriMatcher.addURI(AUTHORITY, Database.TransformerMapping.TABLE, TRANSFORMER_MAPPING);
         uriMatcher.addURI(AUTHORITY, Database.GradeEntry.TABLE, GRADE_ENTRY);
         uriMatcher.addURI(AUTHORITY, Database.Overview.TABLE, OVERVIEW);
     }

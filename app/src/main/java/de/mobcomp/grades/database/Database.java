@@ -39,7 +39,7 @@ public class Database {
             db.execSQL(Rule.CREATE_TABLE);
             db.execSQL(Action.CREATE_TABLE);
             db.execSQL(ActionParam.CREATE_TABLE);
-            db.execSQL(Transformer.CREATE_TABLE);
+            db.execSQL(TransformerMapping.CREATE_TABLE);
             db.execSQL(GradeEntry.CREATE_TABLE);
             db.execSQL(Overview.CREATE_TABLE);
         }
@@ -163,16 +163,18 @@ public class Database {
     }
 
     /**
-     * Transformer table.
-     * TODO: add mapping for overview of grades and registration for exams?
+     * TransformerMapping table.
      */
-    public class Transformer {
+    public class TransformerMapping {
         public static final String TABLE = "transformer";
 
         // columns
         public static final String ID = "_id";
         public static final String TRANSFORMER_ID = "transformer_id";
         public static final String RULE_ID = "rule_id";
+        public static final String NAME = "name";
+        public static final String PARSE_EXPRESSION = "parse_expression";
+        public static final String PARSE_TYPE = "parse_type";
 
         // create table
         private static final String CREATE_TABLE =
@@ -180,6 +182,9 @@ public class Database {
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + TRANSFORMER_ID + " INTEGER NOT NULL UNIQUE, "
                 + RULE_ID + " INTEGER NOT NULL, "
+                + NAME + " TEXT NOT NULL, "
+                + PARSE_EXPRESSION + " TEXT, "
+                + PARSE_TYPE + " TEXT, "
                 + "FOREIGN KEY(" + RULE_ID + ") REFERENCES " + Rule.TABLE + "(" + Rule.RULE_ID + ")"
                 + ");";
     }
