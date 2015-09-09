@@ -11,9 +11,9 @@ import de.mygrades.main.rest.RestClient;
  */
 public class BaseProcessor {
     private Context context;
-    private RestClient restClient;
-    private ContentResolver contentResolver;
-    private DBHelper dbHelper;
+    protected RestClient restClient;
+    protected ContentResolver contentResolver;
+    protected DBHelper dbHelper;
 
     public BaseProcessor(Context context) {
         this.context = context.getApplicationContext();
