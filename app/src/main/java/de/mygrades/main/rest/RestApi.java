@@ -1,5 +1,8 @@
 package de.mygrades.main.rest;
 
+import java.util.List;
+
+import de.mygrades.main.model.University;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -10,10 +13,10 @@ import retrofit.http.Path;
 public interface RestApi {
 
     @GET("/universities")
-    Void getUniversities();
+    List<University> getUniversities();
 
     @GET("/universities/{university_id}")
-    Void getUniversity(@Path("university_id") int universityId);
+    University getUniversity(@Path("university_id") int universityId);
 
     @POST("/wishlist")
     Void createWish();
