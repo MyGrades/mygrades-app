@@ -1,8 +1,13 @@
 package de.mygrades.database;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+
+import java.util.List;
+
+import de.mygrades.main.model.University;
 
 /**
  * Helper class to access the database with convenience methods.
@@ -36,5 +41,24 @@ public class DBHelper {
         this.contentResolver = this.context.getContentResolver();
     }
 
-    // TODO: implement convenience methods for database queries, inserts, etc...
+    /**
+     * Inserts a list of universities (without detailed information) into the database.
+     *
+     * @param universities - list of universities
+     */
+    public void createUniversities(List<University> universities) {
+        for(University university : universities) {
+            ContentValues values = new ContentValues();
+            values.put(Database.University.UNIVERSITY_ID, university.getUniversityId());
+            values.put(Database.University.SHORT_NAME, university.getShortName());
+            values.put(Database.University.NAME, university.getName());
+            values.put(Database.University.UPDATED_AT_SERVER, university.getUpdatedAtServer());
+
+            // insert into database
+            contentResolver.insert(UNIVERSITY_URI, values);
+        }
+
+        // notify loaders about change even if no universities were added
+        context.getContentResolver().notifyChange(UNIVERSITY_URI, null);
+    }
 }
