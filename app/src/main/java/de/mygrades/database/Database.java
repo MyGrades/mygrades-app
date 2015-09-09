@@ -71,6 +71,7 @@ public class Database {
         // columns
         public static final String ID = "_id";
         public static final String UNIVERSITY_ID = "university_id";
+        public static final String SHORT_NAME = "short_name";
         public static final String NAME = "name";
         public static final String UPDATED_AT_SERVER = "updated_at_server";
 
@@ -79,6 +80,7 @@ public class Database {
                 "CREATE TABLE " + TABLE + "("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + UNIVERSITY_ID + " INTEGER NOT NULL UNIQUE, "
+                + SHORT_NAME + " TEXT NOT NULL, "
                 + NAME + " TEXT NOT NULL, "
                 + UPDATED_AT_SERVER + " TEXT "
                 + ");";
