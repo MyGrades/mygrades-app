@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="de.mobcomp.grades">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="de.mygrades">
 
     <uses-permission android:name="ANDROID.PERMISSION.INTERNET" />
 
@@ -7,8 +7,8 @@
 
         <!-- Content Provider -->
         <provider
-            android:authorities="de.mobcomp.grades.provider"
-            android:name=".database.GradesProvider"
+            android:authorities="de.mygrades.provider"
+            android:name="de.mygrades.database.GradesProvider"
             android:exported="false" />
     </application>
 

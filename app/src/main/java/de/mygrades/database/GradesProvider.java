@@ -1,4 +1,4 @@
-package de.mobcomp.grades.database;
+package de.mygrades.database;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -13,7 +13,7 @@ import android.util.Log;
 public class GradesProvider extends ContentProvider {
     private static final String TAG = GradesProvider.class.getSimpleName();
 
-    private static final String AUTHORITY = "de.mobcomp.grades.provider";
+    private static final String AUTHORITY = "de.mygrades.provider";
     private static final String CONTENT_URI_STRING = "content://" + AUTHORITY;
     public static final Uri CONTENT_URI = Uri.parse(CONTENT_URI_STRING);
 

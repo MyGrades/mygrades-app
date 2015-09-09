@@ -1,4 +1,4 @@
-package de.mobcomp.grades.util;
+package de.mygrades.util;
 
 /**
  * Global default configuration file.

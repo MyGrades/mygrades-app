@@ -1,4 +1,4 @@
-package de.mobcomp.grades.main.rest;
+package de.mygrades.main.rest;
 
 import android.content.Context;
 
@@ -6,7 +6,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import de.mobcomp.grades.util.Config;
+import de.mygrades.util.Config;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 

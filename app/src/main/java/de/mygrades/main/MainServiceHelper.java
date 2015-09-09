@@ -1,4 +1,4 @@
-package de.mobcomp.grades.main;
+package de.mygrades.main;
 
 import android.content.Context;
 import android.content.Intent;

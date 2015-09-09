@@ -1,4 +1,4 @@
-package de.mobcomp.grades.main.rest;
+package de.mygrades.main.rest;
 
 import retrofit.http.GET;
 import retrofit.http.POST;

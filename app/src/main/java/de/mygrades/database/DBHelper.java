@@ -1,4 +1,4 @@
-package de.mobcomp.grades.database;
+package de.mygrades.database;
 
 import android.content.ContentResolver;
 import android.content.Context;
