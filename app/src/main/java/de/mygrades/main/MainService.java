@@ -7,6 +7,8 @@ import android.util.Log;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.mygrades.main.processor.UniversityProcessor;
+
 /**
  * This service is used to handle ongoing operations in the background.
  * It is mostly used for network operations.
@@ -17,9 +19,15 @@ import java.util.Set;
 public class MainService extends IntentService {
     private static final String TAG = MainService.class.getSimpleName();
 
-    // intent extra keys TODO: add corresponding values for processors and methods.
+    // intent extra, processors: key and values
     public static final String PROCESSOR_KEY = "processor_key";
+    public static final int PROCESSOR_UNIVERSITY = 100;
+
+    // intent extra, methods: key and values
     public static final String METHOD_KEY = "method_key";
+    public static final int METHOD_GET_UNIVERSITIES = 101;
+
+    // misc intent extra
     public static final String REQUEST_ID = "request_id";
 
     // save request ids for pending request in this set, and remove them when its done.
@@ -55,6 +63,9 @@ public class MainService extends IntentService {
         int method = intent.getIntExtra(METHOD_KEY, -1);
 
         switch (processor) {
+            case PROCESSOR_UNIVERSITY:
+                handleUniversityProcessor(method);
+                break;
             default:
                 Log.e(TAG, "Invalid processor call to MainService: " + processor);
                 break;
@@ -63,5 +74,22 @@ public class MainService extends IntentService {
         // remove request id from pending requests
         long requestId = intent.getLongExtra(REQUEST_ID, -1);
         pendingRequest.remove(requestId);
+    }
+
+    /**
+     * Decides which method to call from the university processor.
+     *
+     * @param method - the method to call, indicated with an integer
+     */
+    private void handleUniversityProcessor(int method) {
+        UniversityProcessor universityProcessor = new UniversityProcessor(this);
+
+        switch(method) {
+            case METHOD_GET_UNIVERSITIES:
+                universityProcessor.getUniversities();
+                break;
+            default:
+                Log.e(TAG, "Invalid method call to MainService: "+ method);
+        }
     }
 }
