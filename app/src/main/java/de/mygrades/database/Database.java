@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class Database {
 
-    private static final String DATABASE_NAME = "grades.db";
+    private static final String DATABASE_NAME = "mygrades.db";
     private static final int DATABASE_VERSION = 1;
 
     public SQLiteDatabase db;
