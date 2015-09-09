@@ -51,6 +51,12 @@ public class GradesProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         switch (uriMatcher.match(uri)) {
+            case UNIVERSITY:
+                Cursor universityCursor = database.db.query(Database.University.TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+
+                // register for changes
+                universityCursor.setNotificationUri(getContext().getContentResolver(), uri);
+                return universityCursor;
             default:
                 Log.e(TAG, "Query, uri not supported: " + uri);
                 throw new IllegalArgumentException("Query, uri not supported: " + uri);
@@ -60,6 +66,9 @@ public class GradesProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         switch (uriMatcher.match(uri)) {
+            case UNIVERSITY:
+                database.db.insert(Database.University.TABLE, null, values);
+                return null;
             default:
                 Log.e(TAG, "Insert, uri not supported: " + uri);
                 throw new IllegalArgumentException("Insert, uri not supported: " + uri);
