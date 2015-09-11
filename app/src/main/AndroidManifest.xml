@@ -7,7 +7,7 @@
 
         <!-- Test Activity -->
         <activity
-            android:name=".view.EmptyTestActivity">
+            android:name=".view.activity.SelectUniversityActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
