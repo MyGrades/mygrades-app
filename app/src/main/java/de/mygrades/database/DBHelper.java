@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.content.CursorLoader;
 
 import java.util.List;
 
@@ -39,6 +40,27 @@ public class DBHelper {
     public DBHelper(Context context) {
         this.context = context.getApplicationContext();
         this.contentResolver = this.context.getContentResolver();
+    }
+
+    /**
+     * Returns a sorted university CursorLoader.
+     *
+     * @return CursorLoader
+     */
+    public CursorLoader getUniversityLoader() {
+        // select columns
+        String[] projection = {
+                Database.University.ID,
+                Database.University.NAME,
+                Database.University.SHORT_NAME,
+                Database.University.UNIVERSITY_ID,
+                Database.University.UPDATED_AT_SERVER
+        };
+
+        // set sort order
+        String sortOder = Database.University.NAME + " ASC";
+
+        return new CursorLoader(context, UNIVERSITY_URI, projection, null, null, sortOder);
     }
 
     /**
