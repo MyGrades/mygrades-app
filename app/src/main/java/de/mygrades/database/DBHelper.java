@@ -58,7 +58,7 @@ public class DBHelper {
         };
 
         // set sort order
-        String sortOder = Database.University.NAME + " ASC";
+        String sortOder = Database.University.NAME + " COLLATE NOCASE ASC";
 
         return new CursorLoader(context, UNIVERSITY_URI, projection, null, null, sortOder);
     }
