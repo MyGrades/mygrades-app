@@ -9,10 +9,11 @@ import android.widget.ListView;
 
 import de.mygrades.R;
 import de.mygrades.database.DBHelper;
+import de.mygrades.main.MainServiceHelper;
 import de.mygrades.view.adapter.UniversityAdapter;
 
 /**
- * Created by tilman on 11.09.15.
+ * Activity which shows all universities.
  */
 public class SelectUniversityActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -30,6 +31,10 @@ public class SelectUniversityActivity extends AppCompatActivity implements Loade
         lvUniversities.setAdapter(universityAdapter);
 
         getSupportLoaderManager().initLoader(0, null, this);
+
+        // get all universities from server
+        MainServiceHelper mainServiceHelper = new MainServiceHelper(this);
+        mainServiceHelper.getUniversities();
     }
 
     @Override
