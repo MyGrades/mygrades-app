@@ -1,16 +1,14 @@
 package de.mygrades.view.adapter.viewholder;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-
-import com.twotoasters.sectioncursoradapter.adapter.viewholder.ViewHolder;
-
 import de.mygrades.R;
 
 /**
  * ViewHolder for an university row.
  */
-public class UniversityItemViewHolder extends ViewHolder {
+public class UniversityItemViewHolder extends RecyclerView.ViewHolder {
     public final TextView universityName;
 
     public UniversityItemViewHolder(View rootView) {

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ListView;
 
 import de.mygrades.R;
@@ -18,7 +20,7 @@ import de.mygrades.view.adapter.UniversityAdapter;
 public class SelectUniversityActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private UniversityAdapter universityAdapter;
-    private ListView lvUniversities;
+    private RecyclerView rvUniversities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +28,10 @@ public class SelectUniversityActivity extends AppCompatActivity implements Loade
 
         setContentView(R.layout.activity_select_university);
 
-        lvUniversities = (ListView) findViewById(R.id.lv_universities);
         universityAdapter = new UniversityAdapter(this, null);
-        lvUniversities.setAdapter(universityAdapter);
+        rvUniversities = (RecyclerView) findViewById(R.id.rv_universities);
+        rvUniversities.setLayoutManager(new LinearLayoutManager(rvUniversities.getContext()));
+        rvUniversities.setAdapter(universityAdapter);
 
         getSupportLoaderManager().initLoader(0, null, this);
 
