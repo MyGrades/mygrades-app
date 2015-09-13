@@ -26,5 +26,4 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.twotoasters.SectionCursorAdapter:library:2.0.+'
 }
