@@ -2,7 +2,7 @@ package de.mygrades.main.rest;
 
 import java.util.List;
 
-import de.mygrades.main.model.University;
+import de.mygrades.database.dao.University;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
