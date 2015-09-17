@@ -1,9 +1,9 @@
 package de.mygrades.main.processor;
 
-import android.content.ContentResolver;
 import android.content.Context;
 
-import de.mygrades.database.DBHelper;
+import de.mygrades.MyGradesApplication;
+import de.mygrades.database.dao.DaoSession;
 import de.mygrades.main.rest.RestClient;
 
 /**
@@ -12,13 +12,11 @@ import de.mygrades.main.rest.RestClient;
 public class BaseProcessor {
     private Context context;
     protected RestClient restClient;
-    protected ContentResolver contentResolver;
-    protected DBHelper dbHelper;
+    protected DaoSession daoSession;
 
     public BaseProcessor(Context context) {
         this.context = context.getApplicationContext();
         this.restClient = new RestClient(this.context);
-        this.contentResolver = this.context.getContentResolver();
-        this.dbHelper = new DBHelper(this.context);
+        this.daoSession = ((MyGradesApplication) this.context).getDaoSession();
     }
 }
