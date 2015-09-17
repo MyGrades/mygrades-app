@@ -6,7 +6,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.mygrades.main.model.University;
+import de.mygrades.database.dao.University;
 import retrofit.RetrofitError;
 
 /**
@@ -31,6 +31,6 @@ public class UniversityProcessor extends BaseProcessor {
         }
 
         // insert into database
-        dbHelper.createUniversities(universities);
+        daoSession.getUniversityDao().insertOrReplaceInTx(universities);
     }
 }
