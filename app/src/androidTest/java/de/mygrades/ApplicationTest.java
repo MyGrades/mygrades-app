@@ -1,4 +1,4 @@
-package de.mobcomp.grades;
+package de.mygrades;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
