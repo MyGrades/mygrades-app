@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.mygrades.R;
-import de.mygrades.database.Database;
 import de.mygrades.view.adapter.viewholder.UniversityItemViewHolder;
 
 /**
@@ -23,7 +22,7 @@ public class UniversityAdapter extends CursorRecyclerViewAdapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, Cursor cursor) {
-        int columnIndex = cursor.getColumnIndex(Database.University.NAME);
+        int columnIndex = -1; //cursor.getColumnIndex(Database.University.NAME);
         String name = cursor.getString(columnIndex);
 
         // set university name
