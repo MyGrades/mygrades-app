@@ -38,8 +38,10 @@ public class SelectUniversityActivity extends AppCompatActivity implements Loade
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("MyGrades");
+
 
         // set recycler view
         rvUniversities = (RecyclerView) findViewById(R.id.rv_universities);
