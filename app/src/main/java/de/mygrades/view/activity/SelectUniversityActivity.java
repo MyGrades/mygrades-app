@@ -17,6 +17,7 @@ import de.mygrades.database.dao.University;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.view.adapter.SimpleAdapter;
 import de.mygrades.view.adapter.SimpleSectionedRecyclerViewAdapter;
+import de.mygrades.view.decoration.DividerItemDecoration;
 import de.mygrades.view.loader.UniversityLoader;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
@@ -38,16 +39,16 @@ public class SelectUniversityActivity extends AppCompatActivity implements Loade
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("MyGrades");
-
 
         // set recycler view
         rvUniversities = (RecyclerView) findViewById(R.id.rv_universities);
         rvUniversities.setLayoutManager(new LinearLayoutManager(rvUniversities.getContext()));
+        rvUniversities.addItemDecoration(new DividerItemDecoration(this, R.drawable.university_divider));
         rvUniversities.setItemAnimator(new SlideInUpAnimator());
         rvUniversities.getItemAnimator().setAddDuration(500);
+
 
         // init loader
         getSupportLoaderManager().initLoader(0, null, this);
