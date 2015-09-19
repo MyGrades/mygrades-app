@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MyGrades</string>
+    <string name="username">Benutzername</string>
+    <string name="password">Passwort</string>
+    <string name="tv_enter_userdata">Gib die Benutzerdaten für deine Hochschule ein.</string>
+    <string name="tv_login_privacy_info">Deine Benutzerdaten werden nur lokal und verschlüsselt auf deinem Smartphone gespeichert."\n""\n"An unsere Server wird ausschließlich die Auswahl deiner Hochschule gesendet - ohne auf dich zurückführende Daten. Mit einem Klick auf \"Los geht\'s!\" bestätigst du unsere Datenschutzerklärung.</string>
 </resources>

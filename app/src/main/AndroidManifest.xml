@@ -6,7 +6,7 @@
         android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme"
         android:name=".MyGradesApplication">
 
-        <!-- Test Activity -->
+        <!-- SelectUniversityActivity -->
         <activity
             android:name=".view.activity.SelectUniversityActivity">
             <intent-filter>
@@ -15,7 +15,10 @@
             </intent-filter>
         </activity>
 
-        !-- MainService -->
+        <!-- LoginActivity -->
+        <activity android:name=".view.activity.LoginActivity" />
+
+        <!-- MainService -->
         <service android:name=".main.MainService" android:exported="false" />
     </application>
 

@@ -1,17 +1,18 @@
 package de.mygrades.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.mygrades.R;
 import de.mygrades.database.dao.University;
+import de.mygrades.view.activity.LoginActivity;
 import de.mygrades.view.adapter.viewholder.UniversityItemViewHolder;
 
 public class SimpleAdapter extends RecyclerView.Adapter<UniversityItemViewHolder> {
@@ -46,11 +47,20 @@ public class SimpleAdapter extends RecyclerView.Adapter<UniversityItemViewHolder
 
     @Override
     public void onBindViewHolder(UniversityItemViewHolder holder, final int position) {
-        holder.universityName.setText(mData.get(position).getName());
-        holder.universityName.setOnClickListener(new View.OnClickListener() {
+        // set text view content
+        University university = mData.get(position);
+        holder.tvUniversityName.setText(university.getName());
+
+        // create intent and add extra data
+        final Intent intent = new Intent(mContext, LoginActivity.class);
+        intent.putExtra(LoginActivity.EXTRA_UNIVERSITY_NAME, university.getName());
+        intent.putExtra(LoginActivity.EXTRA_UNIVERSITY_ID, university.getUniversityId());
+
+        // set click listener
+        holder.tvUniversityName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext,"Position ="+position, Toast.LENGTH_SHORT).show();
+                mContext.startActivity(intent);
             }
         });
     }

@@ -49,7 +49,6 @@ public class SelectUniversityActivity extends AppCompatActivity implements Loade
         rvUniversities.setItemAnimator(new SlideInUpAnimator());
         rvUniversities.getItemAnimator().setAddDuration(500);
 
-
         // init loader
         getSupportLoaderManager().initLoader(0, null, this);
 
