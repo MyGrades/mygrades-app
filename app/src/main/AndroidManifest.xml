@@ -18,6 +18,9 @@
         <!-- LoginActivity -->
         <activity android:name=".view.activity.LoginActivity" />
 
+        <!-- MainActivity -->
+        <activity android:name=".view.activity.MainActivity" />
+
         <!-- MainService -->
         <service android:name=".main.MainService" android:exported="false" />
     </application>

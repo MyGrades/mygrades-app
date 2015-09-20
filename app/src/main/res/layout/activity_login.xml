@@ -86,6 +86,7 @@
                 android:maxLines="10"/>
 
             <android.support.v7.widget.AppCompatButton
+                android:id="@+id/bt_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Los geht's!" />
