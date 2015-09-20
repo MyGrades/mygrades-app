@@ -11,6 +11,7 @@ public class ActionParam {
     /** Not-null value. */
     private String key;
     private String value;
+    private String type;
     private long actionParamId;
 
     public ActionParam() {
@@ -20,11 +21,12 @@ public class ActionParam {
         this.id = id;
     }
 
-    public ActionParam(Long id, Integer actionId, String key, String value, long actionParamId) {
+    public ActionParam(Long id, Integer actionId, String key, String value, String type, long actionParamId) {
         this.id = id;
         this.actionId = actionId;
         this.key = key;
         this.value = value;
+        this.type = type;
         this.actionParamId = actionParamId;
     }
 
@@ -60,6 +62,14 @@ public class ActionParam {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public long getActionParamId() {

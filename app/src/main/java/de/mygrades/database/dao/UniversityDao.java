@@ -26,7 +26,8 @@ public class UniversityDao extends AbstractDao<University, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property UniversityId = new Property(1, long.class, "universityId", false, "UNIVERSITY_ID");
         public final static Property Name = new Property(2, String.class, "name", false, "NAME");
-        public final static Property UpdatedAtServer = new Property(3, String.class, "updatedAtServer", false, "UPDATED_AT_SERVER");
+        public final static Property Published = new Property(3, Boolean.class, "published", false, "PUBLISHED");
+        public final static Property UpdatedAtServer = new Property(4, String.class, "updatedAtServer", false, "UPDATED_AT_SERVER");
     };
 
     private DaoSession daoSession;
@@ -48,7 +49,8 @@ public class UniversityDao extends AbstractDao<University, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"UNIVERSITY_ID\" INTEGER NOT NULL UNIQUE ," + // 1: universityId
                 "\"NAME\" TEXT NOT NULL ," + // 2: name
-                "\"UPDATED_AT_SERVER\" TEXT);"); // 3: updatedAtServer
+                "\"PUBLISHED\" INTEGER," + // 3: published
+                "\"UPDATED_AT_SERVER\" TEXT);"); // 4: updatedAtServer
     }
 
     /** Drops the underlying database table. */
@@ -69,9 +71,14 @@ public class UniversityDao extends AbstractDao<University, Long> {
         stmt.bindLong(2, entity.getUniversityId());
         stmt.bindString(3, entity.getName());
  
+        Boolean published = entity.getPublished();
+        if (published != null) {
+            stmt.bindLong(4, published ? 1L: 0L);
+        }
+ 
         String updatedAtServer = entity.getUpdatedAtServer();
         if (updatedAtServer != null) {
-            stmt.bindString(4, updatedAtServer);
+            stmt.bindString(5, updatedAtServer);
         }
     }
 
@@ -94,7 +101,8 @@ public class UniversityDao extends AbstractDao<University, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getLong(offset + 1), // universityId
             cursor.getString(offset + 2), // name
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // updatedAtServer
+            cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0, // published
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // updatedAtServer
         );
         return entity;
     }
@@ -105,7 +113,8 @@ public class UniversityDao extends AbstractDao<University, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setUniversityId(cursor.getLong(offset + 1));
         entity.setName(cursor.getString(offset + 2));
-        entity.setUpdatedAtServer(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setPublished(cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0);
+        entity.setUpdatedAtServer(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
      }
     
     /** @inheritdoc */

@@ -47,7 +47,11 @@ public class MyGradesDaoGenerator {
         university.addIdProperty().primaryKey();
         university.addLongProperty("universityId").unique().notNull();
         university.addStringProperty("name").notNull();
+        university.addBooleanProperty("published");
         university.addStringProperty("updatedAtServer");
+
+        // add "keep" sections
+        university.setHasKeepSections(true);
     }
 
     /**
@@ -65,6 +69,9 @@ public class MyGradesDaoGenerator {
         // add 1:n relation for university -> rules
         Property ruleId = rule.addLongProperty("ruleId").unique().notNull().getProperty();
         university.addToMany(rule, ruleId).setName("rules");
+
+        // add "keep" sections
+        rule.setHasKeepSections(true);
     }
 
     /**
@@ -85,6 +92,9 @@ public class MyGradesDaoGenerator {
         // add 1:n relation for rule -> actions
         Property actionId = action.addLongProperty("actionId").unique().notNull().getProperty();
         rule.addToMany(action, actionId).setName("actions");
+
+        // add "keep" sections
+        action.setHasKeepSections(true);
     }
 
     /**
@@ -98,6 +108,7 @@ public class MyGradesDaoGenerator {
         actionParam.addIntProperty("actionId");
         actionParam.addStringProperty("key").notNull();
         actionParam.addStringProperty("value");
+        actionParam.addStringProperty("type");
 
         // add 1:n relation for action -> actionParams
         Property actionParamId = actionParam.addLongProperty("actionParamId").unique().notNull().getProperty();
