@@ -26,9 +26,11 @@ public class MainService extends IntentService {
     // intent extra, methods: key and values
     public static final String METHOD_KEY = "method_key";
     public static final int METHOD_GET_UNIVERSITIES = 101;
+    public static final int METHOD_GET_DETAILED_UNIVERSITY = 102;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
+    public static final String UNIVERSITY_ID = "university_id";
 
     // save request ids for pending request in this set, and remove them when its done.
     private Set<Long> pendingRequest;
@@ -64,7 +66,7 @@ public class MainService extends IntentService {
 
         switch (processor) {
             case PROCESSOR_UNIVERSITY:
-                handleUniversityProcessor(method);
+                handleUniversityProcessor(method, intent);
                 break;
             default:
                 Log.e(TAG, "Invalid processor call to MainService: " + processor);
@@ -81,12 +83,16 @@ public class MainService extends IntentService {
      *
      * @param method - the method to call, indicated with an integer
      */
-    private void handleUniversityProcessor(int method) {
+    private void handleUniversityProcessor(int method, Intent intent) {
         UniversityProcessor universityProcessor = new UniversityProcessor(this);
 
         switch(method) {
             case METHOD_GET_UNIVERSITIES:
                 universityProcessor.getUniversities();
+                break;
+            case METHOD_GET_DETAILED_UNIVERSITY:
+                long universityId = intent.getLongExtra(UNIVERSITY_ID, 0);
+                universityProcessor.getDetailedUniversity(universityId);
                 break;
             default:
                 Log.e(TAG, "Invalid method call to MainService: "+ method);

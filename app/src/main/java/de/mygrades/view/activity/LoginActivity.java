@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
 import de.mygrades.R;
+import de.mygrades.main.MainServiceHelper;
 
 /**
  * Activity to enter the username and password for the selected university.
@@ -37,5 +38,9 @@ public class LoginActivity extends AppCompatActivity {
         // set university name
         tvUniversityName = (TextView) findViewById(R.id.tv_university_name);
         tvUniversityName.setText(universityName);
+
+        // load detailed university
+        MainServiceHelper mainServiceHelper = new MainServiceHelper(this);
+        mainServiceHelper.getDetailedUniversity(universityId);
     }
 }

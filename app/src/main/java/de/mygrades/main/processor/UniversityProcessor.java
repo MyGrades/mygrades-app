@@ -6,7 +6,12 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.mygrades.database.dao.Action;
+import de.mygrades.database.dao.ActionParam;
+import de.mygrades.database.dao.Rule;
+import de.mygrades.database.dao.TransformerMapping;
 import de.mygrades.database.dao.University;
+import de.mygrades.database.dao.UniversityDao;
 import retrofit.RetrofitError;
 
 /**
@@ -20,6 +25,9 @@ public class UniversityProcessor extends BaseProcessor {
         super(context);
     }
 
+    /**
+     * Load all universities from the server.
+     */
     public void getUniversities() {
         List<University> universities = new ArrayList<>();
 
@@ -32,5 +40,47 @@ public class UniversityProcessor extends BaseProcessor {
 
         // insert into database
         daoSession.getUniversityDao().insertOrReplaceInTx(universities);
+    }
+
+    /**
+     * Get a detailed university with all rules, actions etc by an university id.
+     *
+     * @param universityId - university id
+     */
+    public void getDetailedUniversity(long universityId) {
+        University university = null;
+
+        try {
+            university = restClient.getRestApi().getUniversity(universityId);
+        } catch (RetrofitError e) {
+            Log.e(TAG, "RetrofitError: " + e.getMessage());
+        }
+
+        Log.v("processor", "get detailed university, rules: " + university.getRulesRaw().size());
+
+        // insert into database
+        final University finalUniversity = university;
+        daoSession.runInTx(new Runnable() {
+            @Override
+            public void run() {
+                daoSession.getUniversityDao().insertOrReplace(finalUniversity);
+
+                for (Rule rule : finalUniversity.getRulesRaw()) {
+                    daoSession.getRuleDao().insertOrReplace(rule);
+
+                    for (Action action : rule.getActionsRaw()) {
+                        daoSession.getActionDao().insertOrReplace(action);
+
+                        for (ActionParam actionParam : action.getActionParamsRaw()) {
+                            daoSession.getActionParamDao().insertOrReplace(actionParam);
+                        }
+                    }
+
+                    for (TransformerMapping transformerMapping : rule.getTransformerMappings()) {
+                        daoSession.getTransformerMappingDao().insertOrReplace(transformerMapping);
+                    }
+                }
+            }
+        });
     }
 }

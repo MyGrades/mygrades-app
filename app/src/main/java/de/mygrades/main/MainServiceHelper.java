@@ -16,19 +16,27 @@ public class MainServiceHelper {
         this.context = context.getApplicationContext();
     }
 
-    public long getUniversities() {
+    public void getUniversities() {
         int method = MainService.METHOD_GET_UNIVERSITIES;
 
-        // set request id and add it to the set
+        // set request id
         long requestId = concatenateLong(method, 0);
 
-        // get intent
+        // start worker thread in background
         Intent intent = getBasicIntent(MainService.PROCESSOR_UNIVERSITY, method, requestId);
+        context.startService(intent);
+    }
+
+    public void getDetailedUniversity(long universityId) {
+        int method = MainService.METHOD_GET_DETAILED_UNIVERSITY;
+
+        // set request id
+        long requestId = concatenateLong(method, universityId);
 
         // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_UNIVERSITY, method, requestId);
+        intent.putExtra(MainService.UNIVERSITY_ID, universityId);
         context.startService(intent);
-
-        return requestId;
     }
 
     /**

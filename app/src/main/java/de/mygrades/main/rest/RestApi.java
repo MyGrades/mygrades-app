@@ -15,12 +15,12 @@ public interface RestApi {
     @GET("/universities")
     List<University> getUniversities();
 
-    @GET("/universities/{university_id}")
-    University getUniversity(@Path("university_id") int universityId);
+    @GET("/universities/{university_id}?detailed=true")
+    University getUniversity(@Path("university_id") long universityId);
 
     @POST("/wishlist")
     Void createWish();
 
     @POST("/universities/{university_id}/errors")
-    Void createError(@Path("university_id") int universityId);
+    Void createError(@Path("university_id") long universityId);
 }
