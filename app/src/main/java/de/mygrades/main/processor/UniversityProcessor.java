@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.mygrades.database.dao.Action;
+import de.mygrades.database.dao.ActionDao;
 import de.mygrades.database.dao.ActionParam;
 import de.mygrades.database.dao.Rule;
 import de.mygrades.database.dao.TransformerMapping;
@@ -56,7 +57,7 @@ public class UniversityProcessor extends BaseProcessor {
             Log.e(TAG, "RetrofitError: " + e.getMessage());
         }
 
-        Log.v("processor", "get detailed university, rules: " + university.getRulesRaw().size());
+        //Log.v("processor", "get detailed university, rules: " + university.getRulesRaw().size());
 
         // insert into database
         final University finalUniversity = university;
@@ -75,12 +76,15 @@ public class UniversityProcessor extends BaseProcessor {
                             daoSession.getActionParamDao().insertOrReplace(actionParam);
                         }
                     }
-
-                    for (TransformerMapping transformerMapping : rule.getTransformerMappings()) {
-                        daoSession.getTransformerMappingDao().insertOrReplace(transformerMapping);
-                    }
                 }
             }
         });
+
+        /* TODO: für jonas den lurch
+        University u = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(333l)).unique();
+        Log.v(TAG, "rules: "+ u.getRules().size());
+        Log.v(TAG, "actions; "+ u.getRules().get(0).getActions().size());
+        Log.v(TAG, "params: "+ u.getRules().get(0).getActions().get(1).getActionParams().size());
+        */
     }
 }

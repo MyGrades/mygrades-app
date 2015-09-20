@@ -27,10 +27,10 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property UniversityId = new Property(1, long.class, "universityId", false, "UNIVERSITY_ID");
+        public final static Property RuleId = new Property(1, long.class, "ruleId", false, "RULE_ID");
         public final static Property Type = new Property(2, String.class, "type", false, "TYPE");
         public final static Property LastUpdated = new Property(3, java.util.Date.class, "lastUpdated", false, "LAST_UPDATED");
-        public final static Property RuleId = new Property(4, long.class, "ruleId", false, "RULE_ID");
+        public final static Property UniversityId = new Property(4, long.class, "universityId", false, "UNIVERSITY_ID");
     };
 
     private DaoSession daoSession;
@@ -51,10 +51,10 @@ public class RuleDao extends AbstractDao<Rule, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"RULE\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"UNIVERSITY_ID\" INTEGER NOT NULL ," + // 1: universityId
+                "\"RULE_ID\" INTEGER NOT NULL UNIQUE ," + // 1: ruleId
                 "\"TYPE\" TEXT NOT NULL ," + // 2: type
                 "\"LAST_UPDATED\" INTEGER," + // 3: lastUpdated
-                "\"RULE_ID\" INTEGER NOT NULL UNIQUE );"); // 4: ruleId
+                "\"UNIVERSITY_ID\" INTEGER NOT NULL );"); // 4: universityId
     }
 
     /** Drops the underlying database table. */
@@ -72,14 +72,14 @@ public class RuleDao extends AbstractDao<Rule, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
-        stmt.bindLong(2, entity.getUniversityId());
+        stmt.bindLong(2, entity.getRuleId());
         stmt.bindString(3, entity.getType());
  
         java.util.Date lastUpdated = entity.getLastUpdated();
         if (lastUpdated != null) {
             stmt.bindLong(4, lastUpdated.getTime());
         }
-        stmt.bindLong(5, entity.getRuleId());
+        stmt.bindLong(5, entity.getUniversityId());
     }
 
     @Override
@@ -99,10 +99,10 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     public Rule readEntity(Cursor cursor, int offset) {
         Rule entity = new Rule( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getLong(offset + 1), // universityId
+            cursor.getLong(offset + 1), // ruleId
             cursor.getString(offset + 2), // type
             cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)), // lastUpdated
-            cursor.getLong(offset + 4) // ruleId
+            cursor.getLong(offset + 4) // universityId
         );
         return entity;
     }
@@ -111,10 +111,10 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     @Override
     public void readEntity(Cursor cursor, Rule entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setUniversityId(cursor.getLong(offset + 1));
+        entity.setRuleId(cursor.getLong(offset + 1));
         entity.setType(cursor.getString(offset + 2));
         entity.setLastUpdated(cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)));
-        entity.setRuleId(cursor.getLong(offset + 4));
+        entity.setUniversityId(cursor.getLong(offset + 4));
      }
     
     /** @inheritdoc */
@@ -141,16 +141,16 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     }
     
     /** Internal query to resolve the "rules" to-many relationship of University. */
-    public List<Rule> _queryUniversity_Rules(long ruleId) {
+    public List<Rule> _queryUniversity_Rules(long universityId) {
         synchronized (this) {
             if (university_RulesQuery == null) {
                 QueryBuilder<Rule> queryBuilder = queryBuilder();
-                queryBuilder.where(Properties.RuleId.eq(null));
+                queryBuilder.where(Properties.UniversityId.eq(null));
                 university_RulesQuery = queryBuilder.build();
             }
         }
         Query<Rule> query = university_RulesQuery.forCurrentThread();
-        query.setParameter(0, ruleId);
+        query.setParameter(0, universityId);
         return query.list();
     }
 

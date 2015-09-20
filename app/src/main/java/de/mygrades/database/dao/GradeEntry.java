@@ -49,7 +49,7 @@ public class GradeEntry {
     /** called by internal mechanisms, do not call yourself. */
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
-        myDao = daoSession != null ? daoSession.getGradeEntryDao() : null;
+        myDao = daoSession != null ? null : null;
     }
 
     public Long getId() {
@@ -119,7 +119,7 @@ public class GradeEntry {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
-            OverviewDao targetDao = daoSession.getOverviewDao();
+            OverviewDao targetDao = null;
             Overview overviewNew = targetDao.load(__key);
             synchronized (this) {
                 overview = overviewNew;

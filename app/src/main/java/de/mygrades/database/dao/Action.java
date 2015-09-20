@@ -14,14 +14,14 @@ import de.greenrobot.dao.DaoException;
 public class Action {
 
     private Long id;
-    private long ruleId;
+    private long actionId;
     private int position;
     /** Not-null value. */
     private String method;
     private String url;
     private String parseExpression;
     private String parseType;
-    private long actionId;
+    private long ruleId;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -41,15 +41,15 @@ public class Action {
         this.id = id;
     }
 
-    public Action(Long id, long ruleId, int position, String method, String url, String parseExpression, String parseType, long actionId) {
+    public Action(Long id, long actionId, int position, String method, String url, String parseExpression, String parseType, long ruleId) {
         this.id = id;
-        this.ruleId = ruleId;
+        this.actionId = actionId;
         this.position = position;
         this.method = method;
         this.url = url;
         this.parseExpression = parseExpression;
         this.parseType = parseType;
-        this.actionId = actionId;
+        this.ruleId = ruleId;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -66,12 +66,12 @@ public class Action {
         this.id = id;
     }
 
-    public long getRuleId() {
-        return ruleId;
+    public long getActionId() {
+        return actionId;
     }
 
-    public void setRuleId(long ruleId) {
-        this.ruleId = ruleId;
+    public void setActionId(long actionId) {
+        this.actionId = actionId;
     }
 
     public int getPosition() {
@@ -116,12 +116,12 @@ public class Action {
         this.parseType = parseType;
     }
 
-    public long getActionId() {
-        return actionId;
+    public long getRuleId() {
+        return ruleId;
     }
 
-    public void setActionId(long actionId) {
-        this.actionId = actionId;
+    public void setRuleId(long ruleId) {
+        this.ruleId = ruleId;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */

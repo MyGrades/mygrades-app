@@ -27,11 +27,11 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property ActionId = new Property(1, Integer.class, "actionId", false, "ACTION_ID");
+        public final static Property ActionParamId = new Property(1, long.class, "actionParamId", false, "ACTION_PARAM_ID");
         public final static Property Key = new Property(2, String.class, "key", false, "KEY");
         public final static Property Value = new Property(3, String.class, "value", false, "VALUE");
         public final static Property Type = new Property(4, String.class, "type", false, "TYPE");
-        public final static Property ActionParamId = new Property(5, long.class, "actionParamId", false, "ACTION_PARAM_ID");
+        public final static Property ActionId = new Property(5, long.class, "actionId", false, "ACTION_ID");
     };
 
     private Query<ActionParam> action_ActionParamsQuery;
@@ -49,11 +49,11 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"ACTION_PARAM\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"ACTION_ID\" INTEGER," + // 1: actionId
+                "\"ACTION_PARAM_ID\" INTEGER NOT NULL UNIQUE ," + // 1: actionParamId
                 "\"KEY\" TEXT NOT NULL ," + // 2: key
                 "\"VALUE\" TEXT," + // 3: value
                 "\"TYPE\" TEXT," + // 4: type
-                "\"ACTION_PARAM_ID\" INTEGER NOT NULL UNIQUE );"); // 5: actionParamId
+                "\"ACTION_ID\" INTEGER NOT NULL );"); // 5: actionId
     }
 
     /** Drops the underlying database table. */
@@ -71,11 +71,7 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
- 
-        Integer actionId = entity.getActionId();
-        if (actionId != null) {
-            stmt.bindLong(2, actionId);
-        }
+        stmt.bindLong(2, entity.getActionParamId());
         stmt.bindString(3, entity.getKey());
  
         String value = entity.getValue();
@@ -87,7 +83,7 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
         if (type != null) {
             stmt.bindString(5, type);
         }
-        stmt.bindLong(6, entity.getActionParamId());
+        stmt.bindLong(6, entity.getActionId());
     }
 
     /** @inheritdoc */
@@ -101,11 +97,11 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     public ActionParam readEntity(Cursor cursor, int offset) {
         ActionParam entity = new ActionParam( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1), // actionId
+            cursor.getLong(offset + 1), // actionParamId
             cursor.getString(offset + 2), // key
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // value
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // type
-            cursor.getLong(offset + 5) // actionParamId
+            cursor.getLong(offset + 5) // actionId
         );
         return entity;
     }
@@ -114,11 +110,11 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     @Override
     public void readEntity(Cursor cursor, ActionParam entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setActionId(cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1));
+        entity.setActionParamId(cursor.getLong(offset + 1));
         entity.setKey(cursor.getString(offset + 2));
         entity.setValue(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setType(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setActionParamId(cursor.getLong(offset + 5));
+        entity.setActionId(cursor.getLong(offset + 5));
      }
     
     /** @inheritdoc */
@@ -145,16 +141,16 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     }
     
     /** Internal query to resolve the "actionParams" to-many relationship of Action. */
-    public List<ActionParam> _queryAction_ActionParams(long actionParamId) {
+    public List<ActionParam> _queryAction_ActionParams(long actionId) {
         synchronized (this) {
             if (action_ActionParamsQuery == null) {
                 QueryBuilder<ActionParam> queryBuilder = queryBuilder();
-                queryBuilder.where(Properties.ActionParamId.eq(null));
+                queryBuilder.where(Properties.ActionId.eq(null));
                 action_ActionParamsQuery = queryBuilder.build();
             }
         }
         Query<ActionParam> query = action_ActionParamsQuery.forCurrentThread();
-        query.setParameter(0, actionParamId);
+        query.setParameter(0, actionId);
         return query.list();
     }
 

@@ -7,12 +7,12 @@ package de.mygrades.database.dao;
 public class ActionParam {
 
     private Long id;
-    private Integer actionId;
+    private long actionParamId;
     /** Not-null value. */
     private String key;
     private String value;
     private String type;
-    private long actionParamId;
+    private long actionId;
 
     public ActionParam() {
     }
@@ -21,13 +21,13 @@ public class ActionParam {
         this.id = id;
     }
 
-    public ActionParam(Long id, Integer actionId, String key, String value, String type, long actionParamId) {
+    public ActionParam(Long id, long actionParamId, String key, String value, String type, long actionId) {
         this.id = id;
-        this.actionId = actionId;
+        this.actionParamId = actionParamId;
         this.key = key;
         this.value = value;
         this.type = type;
-        this.actionParamId = actionParamId;
+        this.actionId = actionId;
     }
 
     public Long getId() {
@@ -38,12 +38,12 @@ public class ActionParam {
         this.id = id;
     }
 
-    public Integer getActionId() {
-        return actionId;
+    public long getActionParamId() {
+        return actionParamId;
     }
 
-    public void setActionId(Integer actionId) {
-        this.actionId = actionId;
+    public void setActionParamId(long actionParamId) {
+        this.actionParamId = actionParamId;
     }
 
     /** Not-null value. */
@@ -72,12 +72,12 @@ public class ActionParam {
         this.type = type;
     }
 
-    public long getActionParamId() {
-        return actionParamId;
+    public long getActionId() {
+        return actionId;
     }
 
-    public void setActionParamId(long actionParamId) {
-        this.actionParamId = actionParamId;
+    public void setActionId(long actionId) {
+        this.actionId = actionId;
     }
 
 }

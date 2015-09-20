@@ -14,11 +14,11 @@ import de.greenrobot.dao.DaoException;
 public class Rule {
 
     private Long id;
-    private long universityId;
+    private long ruleId;
     /** Not-null value. */
     private String type;
     private java.util.Date lastUpdated;
-    private long ruleId;
+    private long universityId;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -27,7 +27,6 @@ public class Rule {
     private transient RuleDao myDao;
 
     private List<Action> actions;
-    private List<TransformerMapping> transformerMappings;
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
@@ -39,12 +38,12 @@ public class Rule {
         this.id = id;
     }
 
-    public Rule(Long id, long universityId, String type, java.util.Date lastUpdated, long ruleId) {
+    public Rule(Long id, long ruleId, String type, java.util.Date lastUpdated, long universityId) {
         this.id = id;
-        this.universityId = universityId;
+        this.ruleId = ruleId;
         this.type = type;
         this.lastUpdated = lastUpdated;
-        this.ruleId = ruleId;
+        this.universityId = universityId;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -61,12 +60,12 @@ public class Rule {
         this.id = id;
     }
 
-    public long getUniversityId() {
-        return universityId;
+    public long getRuleId() {
+        return ruleId;
     }
 
-    public void setUniversityId(long universityId) {
-        this.universityId = universityId;
+    public void setRuleId(long ruleId) {
+        this.ruleId = ruleId;
     }
 
     /** Not-null value. */
@@ -87,12 +86,12 @@ public class Rule {
         this.lastUpdated = lastUpdated;
     }
 
-    public long getRuleId() {
-        return ruleId;
+    public long getUniversityId() {
+        return universityId;
     }
 
-    public void setRuleId(long ruleId) {
-        this.ruleId = ruleId;
+    public void setUniversityId(long universityId) {
+        this.universityId = universityId;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
@@ -115,28 +114,6 @@ public class Rule {
     /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     public synchronized void resetActions() {
         actions = null;
-    }
-
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
-    public List<TransformerMapping> getTransformerMappings() {
-        if (transformerMappings == null) {
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            TransformerMappingDao targetDao = daoSession.getTransformerMappingDao();
-            List<TransformerMapping> transformerMappingsNew = targetDao._queryRule_TransformerMappings(id);
-            synchronized (this) {
-                if(transformerMappings == null) {
-                    transformerMappings = transformerMappingsNew;
-                }
-            }
-        }
-        return transformerMappings;
-    }
-
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
-    public synchronized void resetTransformerMappings() {
-        transformerMappings = null;
     }
 
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */
@@ -171,14 +148,6 @@ public class Rule {
 
     public List<Action> getActionsRaw() {
         return actions;
-    }
-
-    public void setTransformerMappings(List<TransformerMapping> transformerMappings) {
-        this.transformerMappings = transformerMappings;
-    }
-
-    public List<TransformerMapping> getTransformerMappingsRaw() {
-        return transformerMappings;
     }
     // KEEP METHODS END
 

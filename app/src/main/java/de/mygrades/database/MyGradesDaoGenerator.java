@@ -29,9 +29,9 @@ public class MyGradesDaoGenerator {
         addRule(schema);
         addAction(schema);
         addActionParam(schema);
-        addTransformerMapping(schema);
+        /*addTransformerMapping(schema);
         addGradeEntry(schema);
-        addOverview(schema);
+        addOverview(schema);*/
 
         DaoGenerator daoGenerator = new DaoGenerator();
         daoGenerator.generateAll(schema, DIR_PATH);
@@ -44,7 +44,7 @@ public class MyGradesDaoGenerator {
      */
     private static void addUniversity(Schema schema) {
         university = schema.addEntity("University");
-        university.addIdProperty().primaryKey();
+        university.addIdProperty();
         university.addLongProperty("universityId").unique().notNull();
         university.addStringProperty("name").notNull();
         university.addBooleanProperty("published");
@@ -61,14 +61,14 @@ public class MyGradesDaoGenerator {
      */
     private static void addRule(Schema schema) {
         rule = schema.addEntity("Rule");
-        rule.addIdProperty().primaryKey();
-        rule.addLongProperty("universityId").notNull();
+        rule.addIdProperty();
+        rule.addLongProperty("ruleId").unique().notNull();
         rule.addStringProperty("type").notNull();
         rule.addDateProperty("lastUpdated");
 
         // add 1:n relation for university -> rules
-        Property ruleId = rule.addLongProperty("ruleId").unique().notNull().getProperty();
-        university.addToMany(rule, ruleId).setName("rules");
+        Property universityId = rule.addLongProperty("universityId").notNull().getProperty();
+        university.addToMany(rule, universityId, "rules");
 
         // add "keep" sections
         rule.setHasKeepSections(true);
@@ -81,8 +81,8 @@ public class MyGradesDaoGenerator {
      */
     private static void addAction(Schema schema) {
         action = schema.addEntity("Action");
-        action.addIdProperty().primaryKey();
-        action.addLongProperty("ruleId").notNull();
+        action.addIdProperty();
+        action.addLongProperty("actionId").unique().notNull();
         action.addIntProperty("position").notNull();
         action.addStringProperty("method").notNull();
         action.addStringProperty("url");
@@ -90,8 +90,8 @@ public class MyGradesDaoGenerator {
         action.addStringProperty("parseType");
 
         // add 1:n relation for rule -> actions
-        Property actionId = action.addLongProperty("actionId").unique().notNull().getProperty();
-        rule.addToMany(action, actionId).setName("actions");
+        Property ruleId = action.addLongProperty("ruleId").notNull().getProperty();
+        rule.addToMany(action, ruleId, "actions");
 
         // add "keep" sections
         action.setHasKeepSections(true);
@@ -105,14 +105,14 @@ public class MyGradesDaoGenerator {
     private static void addActionParam(Schema schema) {
         actionParam = schema.addEntity("ActionParam");
         actionParam.addIdProperty().primaryKey();
-        actionParam.addIntProperty("actionId");
+        actionParam.addLongProperty("actionParamId").unique().notNull();
         actionParam.addStringProperty("key").notNull();
         actionParam.addStringProperty("value");
         actionParam.addStringProperty("type");
 
         // add 1:n relation for action -> actionParams
-        Property actionParamId = actionParam.addLongProperty("actionParamId").unique().notNull().getProperty();
-        action.addToMany(actionParam, actionParamId).setName("actionParams");
+        Property actionId = actionParam.addLongProperty("actionId").notNull().getProperty();
+        action.addToMany(actionParam, actionId).setName("actionParams");
     }
 
     /**

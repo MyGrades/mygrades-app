@@ -168,7 +168,7 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, Long> {
             StringBuilder builder = new StringBuilder("SELECT ");
             SqlUtils.appendColumns(builder, "T", getAllColumns());
             builder.append(',');
-            SqlUtils.appendColumns(builder, "T0", daoSession.getOverviewDao().getAllColumns());
+            SqlUtils.appendColumns(builder, "T0", null);
             builder.append(" FROM GRADE_ENTRY T");
             builder.append(" LEFT JOIN OVERVIEW T0 ON T.\"OVERVIEW_ID\"=T0.\"_id\"");
             builder.append(' ');
@@ -181,7 +181,7 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, Long> {
         GradeEntry entity = loadCurrent(cursor, 0, lock);
         int offset = getAllColumns().length;
 
-        Overview overview = loadCurrentOther(daoSession.getOverviewDao(), cursor, offset);
+        Overview overview = loadCurrentOther(null, cursor, offset);
         entity.setOverview(overview);
 
         return entity;    
