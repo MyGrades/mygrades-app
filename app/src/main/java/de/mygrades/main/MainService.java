@@ -7,6 +7,7 @@ import android.util.Log;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.mygrades.main.processor.GradesProcessor;
 import de.mygrades.main.processor.UniversityProcessor;
 
 /**
@@ -22,11 +23,13 @@ public class MainService extends IntentService {
     // intent extra, processors: key and values
     public static final String PROCESSOR_KEY = "processor_key";
     public static final int PROCESSOR_UNIVERSITY = 100;
+    public static final int PROCESSOR_GRADES = 101;
 
     // intent extra, methods: key and values
     public static final String METHOD_KEY = "method_key";
-    public static final int METHOD_GET_UNIVERSITIES = 101;
-    public static final int METHOD_GET_DETAILED_UNIVERSITY = 102;
+    public static final int METHOD_GET_UNIVERSITIES = 111;
+    public static final int METHOD_GET_DETAILED_UNIVERSITY = 112;
+    public static final int METHOD_SCRAPE_FOR_GRADES = 113;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
@@ -68,6 +71,9 @@ public class MainService extends IntentService {
             case PROCESSOR_UNIVERSITY:
                 handleUniversityProcessor(method, intent);
                 break;
+            case PROCESSOR_GRADES:
+                handleGradesProcessor(method, intent);
+                break;
             default:
                 Log.e(TAG, "Invalid processor call to MainService: " + processor);
                 break;
@@ -93,6 +99,23 @@ public class MainService extends IntentService {
             case METHOD_GET_DETAILED_UNIVERSITY:
                 long universityId = intent.getLongExtra(UNIVERSITY_ID, 0);
                 universityProcessor.getDetailedUniversity(universityId);
+                break;
+            default:
+                Log.e(TAG, "Invalid method call to MainService: "+ method);
+        }
+    }
+
+    /**
+     * Decides which method to call from the grades processor.
+     *
+     * @param method - the method to call, indicated with an integer
+     */
+    private void handleGradesProcessor(int method, Intent intent) {
+        GradesProcessor gradesProcessor = new GradesProcessor(this);
+
+        switch (method) {
+            case METHOD_SCRAPE_FOR_GRADES:
+                gradesProcessor.scrapeForGrades();
                 break;
             default:
                 Log.e(TAG, "Invalid method call to MainService: "+ method);

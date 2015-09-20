@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import de.mygrades.R;
+import de.mygrades.main.MainServiceHelper;
 
 /**
  * Activity to show the overview of grades.
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         btParse.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "¯\\_(ツ)_/¯", Toast.LENGTH_LONG).show();
+                new MainServiceHelper(MainActivity.this).scrapeForGrades();
             }
         });
     }

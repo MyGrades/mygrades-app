@@ -30,6 +30,6 @@ public class UniversityLoader extends AsyncTaskLoader<List<University>> {
     @Override
     public List<University> loadInBackground() {
         UniversityDao universityDao = daoSession.getUniversityDao();
-        return universityDao.queryBuilder().orderAsc(UniversityDao.Properties.Name).list();
+        return universityDao.queryBuilder().where(UniversityDao.Properties.Published.eq(true)).orderAsc(UniversityDao.Properties.Name).list();
     }
 }
