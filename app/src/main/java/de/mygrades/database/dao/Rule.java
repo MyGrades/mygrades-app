@@ -170,7 +170,7 @@ public class Rule {
     }
 
     public List<Action> getActionsRaw() {
-        return actions;
+        return actions == null ? new java.util.ArrayList<Action>() : actions;
     }
 
     public void setTransformerMappings(List<TransformerMapping> transformerMappings) {
@@ -178,9 +178,8 @@ public class Rule {
     }
 
     public List<TransformerMapping> getTransformerMappingsRaw() {
-        return transformerMappings;
+        return transformerMappings == null ? new java.util.ArrayList<TransformerMapping>() : transformerMappings;
     }
-
     // KEEP METHODS END
 
 }

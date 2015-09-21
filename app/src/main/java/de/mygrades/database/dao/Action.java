@@ -177,7 +177,7 @@ public class Action {
     }
 
     public List<ActionParam> getActionParamsRaw() {
-        return actionParams;
+        return actionParams == null ? new java.util.ArrayList<ActionParam>() : actionParams;
     }
     // KEEP METHODS END
 
