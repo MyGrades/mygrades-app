@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,7 @@ public class SelectUniversityActivity extends AppCompatActivity implements Loade
         rvUniversities.addItemDecoration(new DividerItemDecoration(this, R.drawable.university_divider));
         rvUniversities.setItemAnimator(new SlideInUpAnimator());
         rvUniversities.getItemAnimator().setAddDuration(500);
+        rvUniversities.setHasFixedSize(true);
 
         // init loader
         getSupportLoaderManager().initLoader(0, null, this);
@@ -95,7 +97,5 @@ public class SelectUniversityActivity extends AppCompatActivity implements Loade
     }
 
     @Override
-    public void onLoaderReset(Loader<List<University>> loader) {
-
-    }
+    public void onLoaderReset(Loader<List<University>> loader) { }
 }

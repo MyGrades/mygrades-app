@@ -16,7 +16,13 @@
         </activity>
 
         <!-- LoginActivity -->
-        <activity android:name=".view.activity.LoginActivity" />
+        <activity android:name=".view.activity.LoginActivity"
+            android:parentActivityName=".view.activity.SelectUniversityActivity">
+            <!-- The meta-data element is needed for versions lower than 4.1 -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.activity.SelectUniversityActivity" />
+        </activity>
 
         <!-- MainActivity -->
         <activity android:name=".view.activity.MainActivity" />
