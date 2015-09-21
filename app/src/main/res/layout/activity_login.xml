@@ -40,6 +40,11 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"/>
 
+            <!-- Dummy item to prevent EditText from receiving focus -->
+            <LinearLayout
+                android:focusable="true" android:focusableInTouchMode="true"
+                android:layout_width="0px" android:layout_height="0px"/>
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -85,11 +90,12 @@
                 android:paddingBottom="8dp"
                 android:maxLines="10"/>
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/bt_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Los geht's!" />
+                android:text="Los geht's!"
+                android:theme="@style/RobotoButtonStyle"/>
         </LinearLayout>
 
     </ScrollView>
