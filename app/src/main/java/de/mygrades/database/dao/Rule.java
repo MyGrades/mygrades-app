@@ -27,6 +27,7 @@ public class Rule {
     private transient RuleDao myDao;
 
     private List<Action> actions;
+    private List<TransformerMapping> transformerMappings;
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
@@ -116,6 +117,28 @@ public class Rule {
         actions = null;
     }
 
+    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
+    public List<TransformerMapping> getTransformerMappings() {
+        if (transformerMappings == null) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            TransformerMappingDao targetDao = daoSession.getTransformerMappingDao();
+            List<TransformerMapping> transformerMappingsNew = targetDao._queryRule_TransformerMappings(id);
+            synchronized (this) {
+                if(transformerMappings == null) {
+                    transformerMappings = transformerMappingsNew;
+                }
+            }
+        }
+        return transformerMappings;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    public synchronized void resetTransformerMappings() {
+        transformerMappings = null;
+    }
+
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */
     public void delete() {
         if (myDao == null) {
@@ -149,6 +172,15 @@ public class Rule {
     public List<Action> getActionsRaw() {
         return actions;
     }
+
+    public void setTransformerMappings(List<TransformerMapping> transformerMappings) {
+        this.transformerMappings = transformerMappings;
+    }
+
+    public List<TransformerMapping> getTransformerMappingsRaw() {
+        return transformerMappings;
+    }
+
     // KEEP METHODS END
 
 }

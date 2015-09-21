@@ -7,12 +7,11 @@ package de.mygrades.database.dao;
 public class TransformerMapping {
 
     private Long id;
-    private long ruleId;
     /** Not-null value. */
     private String name;
     private String parseExpression;
     private String parseType;
-    private long transformerMappingId;
+    private long ruleId;
 
     public TransformerMapping() {
     }
@@ -21,13 +20,12 @@ public class TransformerMapping {
         this.id = id;
     }
 
-    public TransformerMapping(Long id, long ruleId, String name, String parseExpression, String parseType, long transformerMappingId) {
+    public TransformerMapping(Long id, String name, String parseExpression, String parseType, long ruleId) {
         this.id = id;
-        this.ruleId = ruleId;
         this.name = name;
         this.parseExpression = parseExpression;
         this.parseType = parseType;
-        this.transformerMappingId = transformerMappingId;
+        this.ruleId = ruleId;
     }
 
     public Long getId() {
@@ -36,14 +34,6 @@ public class TransformerMapping {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public long getRuleId() {
-        return ruleId;
-    }
-
-    public void setRuleId(long ruleId) {
-        this.ruleId = ruleId;
     }
 
     /** Not-null value. */
@@ -72,12 +62,12 @@ public class TransformerMapping {
         this.parseType = parseType;
     }
 
-    public long getTransformerMappingId() {
-        return transformerMappingId;
+    public long getRuleId() {
+        return ruleId;
     }
 
-    public void setTransformerMappingId(long transformerMappingId) {
-        this.transformerMappingId = transformerMappingId;
+    public void setRuleId(long ruleId) {
+        this.ruleId = ruleId;
     }
 
 }
