@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +26,6 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
  */
 public class SelectUniversityActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<University>> {
 
-    private SimpleAdapter simpleAdapter;
-    private SimpleSectionedRecyclerViewAdapter sectionedAdapter;
     private RecyclerView rvUniversities;
 
     @Override
@@ -66,8 +63,8 @@ public class SelectUniversityActivity extends AppCompatActivity implements Loade
 
     @Override
     public void onLoadFinished(Loader<List<University>> loader, List<University> data) {
-        simpleAdapter = new SimpleAdapter(this, null);
-        sectionedAdapter = new SimpleSectionedRecyclerViewAdapter(this, simpleAdapter);
+        SimpleAdapter simpleAdapter = new SimpleAdapter(this, null);
+        SimpleSectionedRecyclerViewAdapter sectionedAdapter = new SimpleSectionedRecyclerViewAdapter(this, simpleAdapter);
 
         // create sections
         List<SimpleSectionedRecyclerViewAdapter.Section> sections = new ArrayList<>();
@@ -78,7 +75,7 @@ public class SelectUniversityActivity extends AppCompatActivity implements Loade
                 prevPrefix = data.get(i-1).getName().substring(0, 1).toUpperCase();
             }
 
-            if (!prefix.equals(prevPrefix) || prevPrefix == null) {
+            if (!prefix.equals(prevPrefix)) {
                 sections.add(new SimpleSectionedRecyclerViewAdapter.Section(i, ""+prefix));
             }
         }
