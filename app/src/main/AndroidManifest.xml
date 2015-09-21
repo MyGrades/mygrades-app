@@ -6,14 +6,16 @@
         android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme"
         android:name=".MyGradesApplication">
 
-        <!-- SelectUniversityActivity -->
-        <activity
-            android:name=".view.activity.SelectUniversityActivity">
+        <!-- MainActivity -->
+        <activity android:name=".view.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- SelectUniversityActivity -->
+        <activity android:name=".view.activity.SelectUniversityActivity" />
 
         <!-- LoginActivity -->
         <activity android:name=".view.activity.LoginActivity"
@@ -23,9 +25,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.activity.SelectUniversityActivity" />
         </activity>
-
-        <!-- MainActivity -->
-        <activity android:name=".view.activity.MainActivity" />
 
         <!-- MainService -->
         <service android:name=".main.MainService" android:exported="false" />
