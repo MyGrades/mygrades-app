@@ -147,7 +147,7 @@ public class University {
     }
 
     public List<Rule> getRulesRaw() {
-        return rules;
+        return rules == null ? new java.util.ArrayList<Rule>() : rules;
     }
     // KEEP METHODS END
 
