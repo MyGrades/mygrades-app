@@ -54,6 +54,26 @@ public class MainServiceHelper {
     }
 
     /**
+     * Starts an IntentService to save the username and password
+     * and starts scraping for grades afterwards.
+     *
+     * @param username - username
+     * @param password - password
+     */
+    public void loginAndScrapeForGrades(String username, String password) {
+        int method = MainService.METHOD_LOGIN_AND_SCRAPE_FOR_GRADES;
+
+        // set request id
+        long requestId = username.hashCode() + password.hashCode();
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_LOGIN, method, requestId);
+        intent.putExtra(MainService.USERNAME, username);
+        intent.putExtra(MainService.PASSWORD, password);
+        context.startService(intent);
+    }
+
+    /**
      * Build a basic intent with required extra data for each request.
      *
      * @param processor - processor to create (declared in the MainService)

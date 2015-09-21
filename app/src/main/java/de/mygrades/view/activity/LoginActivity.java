@@ -74,10 +74,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (checkInput()) {
-                    savePreferences();
-
-                    // TODO: save secure prefs asynchronous and wait for response before intent?
-                    saveLoginData();
+                    saveSelectedUniversity();
+                    loginAndScrapeForGrades();
                     goToMainActivity();
                 }
             }
@@ -114,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Saves universityId and logged-in state to preferences.
      */
-    private void savePreferences() {
+    private void saveSelectedUniversity() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
 
@@ -124,17 +122,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Saves username and password in secure preferences.
+     * Save login data and start scraping through main service.
      */
-    private void saveLoginData() {
+    private void loginAndScrapeForGrades() {
         String username = etUsername.getText().toString();
         String password = etPassword.getText().toString();
 
-        SharedPreferences prefs = new SecurePreferences(this, Constants.NOT_SO_SECURE_PREF_PW, Constants.NOT_SO_SECURE_PREF_FILE);
-        SecurePreferences.Editor editor = (SecurePreferences.Editor) prefs.edit();
-        editor.putString(Constants.PREF_KEY_USERNAME, username);
-        editor.putString(Constants.PREF_KEY_PASSWORD, password);
-        editor.apply();
+        MainServiceHelper mainServiceHelper = new MainServiceHelper(LoginActivity.this);
+        mainServiceHelper.loginAndScrapeForGrades(username, password);
     }
 
     /**
