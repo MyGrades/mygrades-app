@@ -10,7 +10,7 @@ import de.mygrades.main.rest.RestClient;
  * Base class for all processors to hold relevant objects.
  */
 public abstract class BaseProcessor {
-    private Context context;
+    protected Context context;
     protected RestClient restClient;
     protected DaoSession daoSession;
 
