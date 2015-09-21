@@ -29,9 +29,9 @@ public class MyGradesDaoGenerator {
         addRule(schema);
         addAction(schema);
         addActionParam(schema);
-        /*addTransformerMapping(schema);
+        addTransformerMapping(schema);
         addGradeEntry(schema);
-        addOverview(schema);*/
+        /*addOverview(schema);*/
 
         DaoGenerator daoGenerator = new DaoGenerator();
         daoGenerator.generateAll(schema, DIR_PATH);
@@ -123,14 +123,13 @@ public class MyGradesDaoGenerator {
     private static void addTransformerMapping(Schema schema) {
         transformerMapping = schema.addEntity("TransformerMapping");
         transformerMapping.addIdProperty().primaryKey();
-        transformerMapping.addLongProperty("ruleId").notNull();
         transformerMapping.addStringProperty("name").notNull();
         transformerMapping.addStringProperty("parseExpression");
         transformerMapping.addStringProperty("parseType");
 
-        // add 1:n relation for rule -> transformerMappings
-        Property transformerMappingId = transformerMapping.addLongProperty("transformerMappingId").unique().notNull().getProperty();
-        rule.addToMany(transformerMapping, transformerMappingId).setName("transformerMappings");
+        // add 1:n relation for rule -> actions
+        Property ruleId = transformerMapping.addLongProperty("ruleId").notNull().getProperty();
+        rule.addToMany(transformerMapping, ruleId, "transformerMappings");
     }
 
     /**

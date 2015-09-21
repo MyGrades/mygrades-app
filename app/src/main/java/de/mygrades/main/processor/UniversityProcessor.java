@@ -76,6 +76,10 @@ public class UniversityProcessor extends BaseProcessor {
                             daoSession.getActionParamDao().insertOrReplace(actionParam);
                         }
                     }
+
+                    for (TransformerMapping transformerMapping : rule.getTransformerMappingsRaw()) {
+                        daoSession.getTransformerMappingDao().insertOrReplace(transformerMapping);
+                    }
                 }
             }
         });
