@@ -16,6 +16,8 @@
     <!-- set global Button font to Roboto light -->
     <style name="RobotoButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:fontFamily">sans-serif-light</item>
+        <item name="colorButtonNormal">?attr/colorPrimary</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
     <!-- set EditText style. DO NOT declare the parent view, it will break the colors.
