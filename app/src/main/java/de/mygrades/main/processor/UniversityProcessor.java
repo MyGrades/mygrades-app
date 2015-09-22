@@ -62,32 +62,32 @@ public class UniversityProcessor extends BaseProcessor {
             Log.e(TAG, "RetrofitError: " + e.getMessage());
         }
 
-        //Log.v("processor", "get detailed university, rules: " + university.getRulesRaw().size());
-
         // insert into database
-        final University finalUniversity = university;
-        daoSession.runInTx(new Runnable() {
-            @Override
-            public void run() {
-                daoSession.getUniversityDao().insertOrReplace(finalUniversity);
+        if (university != null) {
+            final University finalUniversity = university;
+            daoSession.runInTx(new Runnable() {
+                @Override
+                public void run() {
+                    daoSession.getUniversityDao().insertOrReplace(finalUniversity);
 
-                for (Rule rule : finalUniversity.getRulesRaw()) {
-                    daoSession.getRuleDao().insertOrReplace(rule);
+                    for (Rule rule : finalUniversity.getRulesRaw()) {
+                        daoSession.getRuleDao().insertOrReplace(rule);
 
-                    for (Action action : rule.getActionsRaw()) {
-                        daoSession.getActionDao().insertOrReplace(action);
+                        for (Action action : rule.getActionsRaw()) {
+                            daoSession.getActionDao().insertOrReplace(action);
 
-                        for (ActionParam actionParam : action.getActionParamsRaw()) {
-                            daoSession.getActionParamDao().insertOrReplace(actionParam);
+                            for (ActionParam actionParam : action.getActionParamsRaw()) {
+                                daoSession.getActionParamDao().insertOrReplace(actionParam);
+                            }
+                        }
+
+                        for (TransformerMapping transformerMapping : rule.getTransformerMappingsRaw()) {
+                            daoSession.getTransformerMappingDao().insertOrReplace(transformerMapping);
                         }
                     }
-
-                    for (TransformerMapping transformerMapping : rule.getTransformerMappingsRaw()) {
-                        daoSession.getTransformerMappingDao().insertOrReplace(transformerMapping);
-                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     /**
