@@ -6,7 +6,6 @@ package de.mygrades.database.dao;
  */
 public class GradeEntry {
 
-    private Long id;
     /** Not-null value. */
     private String name;
     private Double grade;
@@ -18,25 +17,12 @@ public class GradeEntry {
     public GradeEntry() {
     }
 
-    public GradeEntry(Long id) {
-        this.id = id;
-    }
-
-    public GradeEntry(Long id, String name, Double grade, String examId, String semester, String state) {
-        this.id = id;
+    public GradeEntry(String name, Double grade, String examId, String semester, String state) {
         this.name = name;
         this.grade = grade;
         this.examId = examId;
         this.semester = semester;
         this.state = state;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     /** Not-null value. */

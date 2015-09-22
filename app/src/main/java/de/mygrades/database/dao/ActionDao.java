@@ -26,14 +26,13 @@ public class ActionDao extends AbstractDao<Action, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property ActionId = new Property(1, long.class, "actionId", false, "ACTION_ID");
-        public final static Property Position = new Property(2, int.class, "position", false, "POSITION");
-        public final static Property Method = new Property(3, String.class, "method", false, "METHOD");
-        public final static Property Url = new Property(4, String.class, "url", false, "URL");
-        public final static Property ParseExpression = new Property(5, String.class, "parseExpression", false, "PARSE_EXPRESSION");
-        public final static Property ParseType = new Property(6, String.class, "parseType", false, "PARSE_TYPE");
-        public final static Property RuleId = new Property(7, long.class, "ruleId", false, "RULE_ID");
+        public final static Property ActionId = new Property(0, Long.class, "actionId", true, "ACTION_ID");
+        public final static Property Position = new Property(1, int.class, "position", false, "POSITION");
+        public final static Property Method = new Property(2, String.class, "method", false, "METHOD");
+        public final static Property Url = new Property(3, String.class, "url", false, "URL");
+        public final static Property ParseExpression = new Property(4, String.class, "parseExpression", false, "PARSE_EXPRESSION");
+        public final static Property ParseType = new Property(5, String.class, "parseType", false, "PARSE_TYPE");
+        public final static Property RuleId = new Property(6, long.class, "ruleId", false, "RULE_ID");
     };
 
     private DaoSession daoSession;
@@ -53,14 +52,13 @@ public class ActionDao extends AbstractDao<Action, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"ACTION\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"ACTION_ID\" INTEGER NOT NULL UNIQUE ," + // 1: actionId
-                "\"POSITION\" INTEGER NOT NULL ," + // 2: position
-                "\"METHOD\" TEXT NOT NULL ," + // 3: method
-                "\"URL\" TEXT," + // 4: url
-                "\"PARSE_EXPRESSION\" TEXT," + // 5: parseExpression
-                "\"PARSE_TYPE\" TEXT," + // 6: parseType
-                "\"RULE_ID\" INTEGER NOT NULL );"); // 7: ruleId
+                "\"ACTION_ID\" INTEGER PRIMARY KEY ," + // 0: actionId
+                "\"POSITION\" INTEGER NOT NULL ," + // 1: position
+                "\"METHOD\" TEXT NOT NULL ," + // 2: method
+                "\"URL\" TEXT," + // 3: url
+                "\"PARSE_EXPRESSION\" TEXT," + // 4: parseExpression
+                "\"PARSE_TYPE\" TEXT," + // 5: parseType
+                "\"RULE_ID\" INTEGER NOT NULL );"); // 6: ruleId
     }
 
     /** Drops the underlying database table. */
@@ -74,29 +72,28 @@ public class ActionDao extends AbstractDao<Action, Long> {
     protected void bindValues(SQLiteStatement stmt, Action entity) {
         stmt.clearBindings();
  
-        Long id = entity.getId();
-        if (id != null) {
-            stmt.bindLong(1, id);
+        Long actionId = entity.getActionId();
+        if (actionId != null) {
+            stmt.bindLong(1, actionId);
         }
-        stmt.bindLong(2, entity.getActionId());
-        stmt.bindLong(3, entity.getPosition());
-        stmt.bindString(4, entity.getMethod());
+        stmt.bindLong(2, entity.getPosition());
+        stmt.bindString(3, entity.getMethod());
  
         String url = entity.getUrl();
         if (url != null) {
-            stmt.bindString(5, url);
+            stmt.bindString(4, url);
         }
  
         String parseExpression = entity.getParseExpression();
         if (parseExpression != null) {
-            stmt.bindString(6, parseExpression);
+            stmt.bindString(5, parseExpression);
         }
  
         String parseType = entity.getParseType();
         if (parseType != null) {
-            stmt.bindString(7, parseType);
+            stmt.bindString(6, parseType);
         }
-        stmt.bindLong(8, entity.getRuleId());
+        stmt.bindLong(7, entity.getRuleId());
     }
 
     @Override
@@ -115,14 +112,13 @@ public class ActionDao extends AbstractDao<Action, Long> {
     @Override
     public Action readEntity(Cursor cursor, int offset) {
         Action entity = new Action( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getLong(offset + 1), // actionId
-            cursor.getInt(offset + 2), // position
-            cursor.getString(offset + 3), // method
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // url
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // parseExpression
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // parseType
-            cursor.getLong(offset + 7) // ruleId
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // actionId
+            cursor.getInt(offset + 1), // position
+            cursor.getString(offset + 2), // method
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // url
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // parseExpression
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // parseType
+            cursor.getLong(offset + 6) // ruleId
         );
         return entity;
     }
@@ -130,20 +126,19 @@ public class ActionDao extends AbstractDao<Action, Long> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, Action entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setActionId(cursor.getLong(offset + 1));
-        entity.setPosition(cursor.getInt(offset + 2));
-        entity.setMethod(cursor.getString(offset + 3));
-        entity.setUrl(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setParseExpression(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setParseType(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setRuleId(cursor.getLong(offset + 7));
+        entity.setActionId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setPosition(cursor.getInt(offset + 1));
+        entity.setMethod(cursor.getString(offset + 2));
+        entity.setUrl(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setParseExpression(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setParseType(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setRuleId(cursor.getLong(offset + 6));
      }
     
     /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(Action entity, long rowId) {
-        entity.setId(rowId);
+        entity.setActionId(rowId);
         return rowId;
     }
     
@@ -151,7 +146,7 @@ public class ActionDao extends AbstractDao<Action, Long> {
     @Override
     public Long getKey(Action entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getActionId();
         } else {
             return null;
         }

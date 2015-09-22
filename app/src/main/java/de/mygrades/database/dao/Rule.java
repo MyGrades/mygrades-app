@@ -13,8 +13,7 @@ import de.greenrobot.dao.DaoException;
  */
 public class Rule {
 
-    private Long id;
-    private long ruleId;
+    private Long ruleId;
     /** Not-null value. */
     private String type;
     private java.util.Date lastUpdated;
@@ -35,12 +34,11 @@ public class Rule {
     public Rule() {
     }
 
-    public Rule(Long id) {
-        this.id = id;
+    public Rule(Long ruleId) {
+        this.ruleId = ruleId;
     }
 
-    public Rule(Long id, long ruleId, String type, java.util.Date lastUpdated, long universityId) {
-        this.id = id;
+    public Rule(Long ruleId, String type, java.util.Date lastUpdated, long universityId) {
         this.ruleId = ruleId;
         this.type = type;
         this.lastUpdated = lastUpdated;
@@ -53,19 +51,11 @@ public class Rule {
         myDao = daoSession != null ? daoSession.getRuleDao() : null;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public long getRuleId() {
+    public Long getRuleId() {
         return ruleId;
     }
 
-    public void setRuleId(long ruleId) {
+    public void setRuleId(Long ruleId) {
         this.ruleId = ruleId;
     }
 
@@ -102,7 +92,7 @@ public class Rule {
                 throw new DaoException("Entity is detached from DAO context");
             }
             ActionDao targetDao = daoSession.getActionDao();
-            List<Action> actionsNew = targetDao._queryRule_Actions(id);
+            List<Action> actionsNew = targetDao._queryRule_Actions(ruleId);
             synchronized (this) {
                 if(actions == null) {
                     actions = actionsNew;
@@ -124,7 +114,7 @@ public class Rule {
                 throw new DaoException("Entity is detached from DAO context");
             }
             TransformerMappingDao targetDao = daoSession.getTransformerMappingDao();
-            List<TransformerMapping> transformerMappingsNew = targetDao._queryRule_TransformerMappings(id);
+            List<TransformerMapping> transformerMappingsNew = targetDao._queryRule_TransformerMappings(ruleId);
             synchronized (this) {
                 if(transformerMappings == null) {
                     transformerMappings = transformerMappingsNew;
