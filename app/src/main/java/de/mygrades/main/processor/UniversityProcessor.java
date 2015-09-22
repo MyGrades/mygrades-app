@@ -106,7 +106,7 @@ public class UniversityProcessor extends BaseProcessor {
                 .limit(1)
                 .unique();
 
-        if (u == null) {
+        if (u != null) {
             return u.getUpdatedAtServer();
         }
 
