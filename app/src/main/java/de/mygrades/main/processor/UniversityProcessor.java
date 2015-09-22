@@ -1,6 +1,8 @@
 package de.mygrades.main.processor;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import de.mygrades.database.dao.Rule;
 import de.mygrades.database.dao.TransformerMapping;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
+import de.mygrades.util.Constants;
 import retrofit.RetrofitError;
 
 /**
@@ -34,7 +37,8 @@ public class UniversityProcessor extends BaseProcessor {
 
         // make synchronous rest call
         try {
-            universities = restClient.getRestApi().getUniversities();
+            String updatedAtServer = getUpdatedAtServerForUniversities();
+            universities = restClient.getRestApi().getUniversities(updatedAtServer);
         } catch (RetrofitError e) {
             Log.e(TAG, "RetrofitError: " + e.getMessage());
         }
@@ -52,7 +56,8 @@ public class UniversityProcessor extends BaseProcessor {
         University university = null;
 
         try {
-            university = restClient.getRestApi().getUniversity(universityId);
+            String updatedAtServer = getUpdatedAtServerForUniversity(universityId);
+            university = restClient.getRestApi().getUniversity(universityId, updatedAtServer);
         } catch (RetrofitError e) {
             Log.e(TAG, "RetrofitError: " + e.getMessage());
         }
@@ -83,5 +88,45 @@ public class UniversityProcessor extends BaseProcessor {
                 }
             }
         });
+    }
+
+    /**
+     * Get the latest updated_at_server timestamp for all universities.
+     *
+     * @return timestamp as string
+     */
+    private String getUpdatedAtServerForUniversities() {
+        // get selected university id to exclude it from query
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
+
+        University u = daoSession.getUniversityDao().queryBuilder()
+                .orderDesc(UniversityDao.Properties.UpdatedAtServer)
+                .where(UniversityDao.Properties.UniversityId.notEq(universityId))
+                .limit(1)
+                .unique();
+
+        if (u == null) {
+            return u.getUpdatedAtServer();
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the updated_at_server timestamp for the selected university.
+     * Return null, if the selected university has no rules attached (should not happen).
+     *
+     * @param universityId - university id
+     * @return timestamp
+     */
+    private String getUpdatedAtServerForUniversity(long universityId) {
+        University u = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
+
+        if (u == null || u.getRules() == null || u.getRules().size() == 0) {
+            return null;
+        }
+
+        return u.getUpdatedAtServer();
     }
 }
