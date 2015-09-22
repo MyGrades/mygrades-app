@@ -26,12 +26,11 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property ActionParamId = new Property(1, long.class, "actionParamId", false, "ACTION_PARAM_ID");
-        public final static Property Key = new Property(2, String.class, "key", false, "KEY");
-        public final static Property Value = new Property(3, String.class, "value", false, "VALUE");
-        public final static Property Type = new Property(4, String.class, "type", false, "TYPE");
-        public final static Property ActionId = new Property(5, long.class, "actionId", false, "ACTION_ID");
+        public final static Property ActionParamId = new Property(0, Long.class, "actionParamId", true, "ACTION_PARAM_ID");
+        public final static Property Key = new Property(1, String.class, "key", false, "KEY");
+        public final static Property Value = new Property(2, String.class, "value", false, "VALUE");
+        public final static Property Type = new Property(3, String.class, "type", false, "TYPE");
+        public final static Property ActionId = new Property(4, long.class, "actionId", false, "ACTION_ID");
     };
 
     private Query<ActionParam> action_ActionParamsQuery;
@@ -48,12 +47,11 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"ACTION_PARAM\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"ACTION_PARAM_ID\" INTEGER NOT NULL UNIQUE ," + // 1: actionParamId
-                "\"KEY\" TEXT NOT NULL ," + // 2: key
-                "\"VALUE\" TEXT," + // 3: value
-                "\"TYPE\" TEXT," + // 4: type
-                "\"ACTION_ID\" INTEGER NOT NULL );"); // 5: actionId
+                "\"ACTION_PARAM_ID\" INTEGER PRIMARY KEY ," + // 0: actionParamId
+                "\"KEY\" TEXT NOT NULL ," + // 1: key
+                "\"VALUE\" TEXT," + // 2: value
+                "\"TYPE\" TEXT," + // 3: type
+                "\"ACTION_ID\" INTEGER NOT NULL );"); // 4: actionId
     }
 
     /** Drops the underlying database table. */
@@ -67,23 +65,22 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     protected void bindValues(SQLiteStatement stmt, ActionParam entity) {
         stmt.clearBindings();
  
-        Long id = entity.getId();
-        if (id != null) {
-            stmt.bindLong(1, id);
+        Long actionParamId = entity.getActionParamId();
+        if (actionParamId != null) {
+            stmt.bindLong(1, actionParamId);
         }
-        stmt.bindLong(2, entity.getActionParamId());
-        stmt.bindString(3, entity.getKey());
+        stmt.bindString(2, entity.getKey());
  
         String value = entity.getValue();
         if (value != null) {
-            stmt.bindString(4, value);
+            stmt.bindString(3, value);
         }
  
         String type = entity.getType();
         if (type != null) {
-            stmt.bindString(5, type);
+            stmt.bindString(4, type);
         }
-        stmt.bindLong(6, entity.getActionId());
+        stmt.bindLong(5, entity.getActionId());
     }
 
     /** @inheritdoc */
@@ -96,12 +93,11 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     @Override
     public ActionParam readEntity(Cursor cursor, int offset) {
         ActionParam entity = new ActionParam( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getLong(offset + 1), // actionParamId
-            cursor.getString(offset + 2), // key
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // value
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // type
-            cursor.getLong(offset + 5) // actionId
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // actionParamId
+            cursor.getString(offset + 1), // key
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // value
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // type
+            cursor.getLong(offset + 4) // actionId
         );
         return entity;
     }
@@ -109,18 +105,17 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, ActionParam entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setActionParamId(cursor.getLong(offset + 1));
-        entity.setKey(cursor.getString(offset + 2));
-        entity.setValue(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setType(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setActionId(cursor.getLong(offset + 5));
+        entity.setActionParamId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setKey(cursor.getString(offset + 1));
+        entity.setValue(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setType(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setActionId(cursor.getLong(offset + 4));
      }
     
     /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(ActionParam entity, long rowId) {
-        entity.setId(rowId);
+        entity.setActionParamId(rowId);
         return rowId;
     }
     
@@ -128,7 +123,7 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     @Override
     public Long getKey(ActionParam entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getActionParamId();
         } else {
             return null;
         }

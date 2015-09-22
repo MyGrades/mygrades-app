@@ -13,8 +13,7 @@ import de.greenrobot.dao.DaoException;
  */
 public class University {
 
-    private Long id;
-    private long universityId;
+    private Long universityId;
     /** Not-null value. */
     private String name;
     private Boolean published;
@@ -34,12 +33,11 @@ public class University {
     public University() {
     }
 
-    public University(Long id) {
-        this.id = id;
+    public University(Long universityId) {
+        this.universityId = universityId;
     }
 
-    public University(Long id, long universityId, String name, Boolean published, String updatedAtServer) {
-        this.id = id;
+    public University(Long universityId, String name, Boolean published, String updatedAtServer) {
         this.universityId = universityId;
         this.name = name;
         this.published = published;
@@ -52,19 +50,11 @@ public class University {
         myDao = daoSession != null ? daoSession.getUniversityDao() : null;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public long getUniversityId() {
+    public Long getUniversityId() {
         return universityId;
     }
 
-    public void setUniversityId(long universityId) {
+    public void setUniversityId(Long universityId) {
         this.universityId = universityId;
     }
 
@@ -101,7 +91,7 @@ public class University {
                 throw new DaoException("Entity is detached from DAO context");
             }
             RuleDao targetDao = daoSession.getRuleDao();
-            List<Rule> rulesNew = targetDao._queryUniversity_Rules(id);
+            List<Rule> rulesNew = targetDao._queryUniversity_Rules(universityId);
             synchronized (this) {
                 if(rules == null) {
                     rules = rulesNew;

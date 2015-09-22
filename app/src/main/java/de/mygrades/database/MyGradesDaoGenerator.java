@@ -44,8 +44,7 @@ public class MyGradesDaoGenerator {
      */
     private static void addUniversity(Schema schema) {
         university = schema.addEntity("University");
-        university.addIdProperty();
-        university.addLongProperty("universityId").unique().notNull();
+        university.addLongProperty("universityId").primaryKey();
         university.addStringProperty("name").notNull();
         university.addBooleanProperty("published");
         university.addStringProperty("updatedAtServer");
@@ -61,8 +60,7 @@ public class MyGradesDaoGenerator {
      */
     private static void addRule(Schema schema) {
         rule = schema.addEntity("Rule");
-        rule.addIdProperty();
-        rule.addLongProperty("ruleId").unique().notNull();
+        rule.addLongProperty("ruleId").primaryKey();
         rule.addStringProperty("type").notNull();
         rule.addDateProperty("lastUpdated");
 
@@ -81,8 +79,7 @@ public class MyGradesDaoGenerator {
      */
     private static void addAction(Schema schema) {
         action = schema.addEntity("Action");
-        action.addIdProperty();
-        action.addLongProperty("actionId").unique().notNull();
+        action.addLongProperty("actionId").primaryKey();
         action.addIntProperty("position").notNull();
         action.addStringProperty("method").notNull();
         action.addStringProperty("url");
@@ -104,8 +101,7 @@ public class MyGradesDaoGenerator {
      */
     private static void addActionParam(Schema schema) {
         actionParam = schema.addEntity("ActionParam");
-        actionParam.addIdProperty().primaryKey();
-        actionParam.addLongProperty("actionParamId").unique().notNull();
+        actionParam.addLongProperty("actionParamId").primaryKey();
         actionParam.addStringProperty("key").notNull();
         actionParam.addStringProperty("value");
         actionParam.addStringProperty("type");
@@ -122,7 +118,7 @@ public class MyGradesDaoGenerator {
      */
     private static void addTransformerMapping(Schema schema) {
         transformerMapping = schema.addEntity("TransformerMapping");
-        transformerMapping.addIdProperty().primaryKey();
+        transformerMapping.addLongProperty("transformerMappingId").primaryKey();
         transformerMapping.addStringProperty("name").notNull();
         transformerMapping.addStringProperty("parseExpression");
         transformerMapping.addStringProperty("parseType");
@@ -139,7 +135,6 @@ public class MyGradesDaoGenerator {
      */
     private static void addGradeEntry(Schema schema) {
         gradeEntry = schema.addEntity("GradeEntry");
-        gradeEntry.addIdProperty().primaryKey();
         gradeEntry.addStringProperty("name").notNull();
         gradeEntry.addDoubleProperty("grade");
         gradeEntry.addStringProperty("examId");
@@ -154,7 +149,6 @@ public class MyGradesDaoGenerator {
      */
     private static void addOverview(Schema schema) {
         overview = schema.addEntity("Overview");
-        overview.addIdProperty().primaryKey();
         overview.addDoubleProperty("average");
         overview.addIntProperty("participants");
         overview.addIntProperty("section1");

@@ -26,7 +26,7 @@ public class TransformerMappingDao extends AbstractDao<TransformerMapping, Long>
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property TransformerMappingId = new Property(0, Long.class, "transformerMappingId", true, "TRANSFORMER_MAPPING_ID");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property ParseExpression = new Property(2, String.class, "parseExpression", false, "PARSE_EXPRESSION");
         public final static Property ParseType = new Property(3, String.class, "parseType", false, "PARSE_TYPE");
@@ -47,7 +47,7 @@ public class TransformerMappingDao extends AbstractDao<TransformerMapping, Long>
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"TRANSFORMER_MAPPING\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"TRANSFORMER_MAPPING_ID\" INTEGER PRIMARY KEY ," + // 0: transformerMappingId
                 "\"NAME\" TEXT NOT NULL ," + // 1: name
                 "\"PARSE_EXPRESSION\" TEXT," + // 2: parseExpression
                 "\"PARSE_TYPE\" TEXT," + // 3: parseType
@@ -65,9 +65,9 @@ public class TransformerMappingDao extends AbstractDao<TransformerMapping, Long>
     protected void bindValues(SQLiteStatement stmt, TransformerMapping entity) {
         stmt.clearBindings();
  
-        Long id = entity.getId();
-        if (id != null) {
-            stmt.bindLong(1, id);
+        Long transformerMappingId = entity.getTransformerMappingId();
+        if (transformerMappingId != null) {
+            stmt.bindLong(1, transformerMappingId);
         }
         stmt.bindString(2, entity.getName());
  
@@ -93,7 +93,7 @@ public class TransformerMappingDao extends AbstractDao<TransformerMapping, Long>
     @Override
     public TransformerMapping readEntity(Cursor cursor, int offset) {
         TransformerMapping entity = new TransformerMapping( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // transformerMappingId
             cursor.getString(offset + 1), // name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // parseExpression
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // parseType
@@ -105,7 +105,7 @@ public class TransformerMappingDao extends AbstractDao<TransformerMapping, Long>
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, TransformerMapping entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setTransformerMappingId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.getString(offset + 1));
         entity.setParseExpression(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setParseType(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
@@ -115,7 +115,7 @@ public class TransformerMappingDao extends AbstractDao<TransformerMapping, Long>
     /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(TransformerMapping entity, long rowId) {
-        entity.setId(rowId);
+        entity.setTransformerMappingId(rowId);
         return rowId;
     }
     
@@ -123,7 +123,7 @@ public class TransformerMappingDao extends AbstractDao<TransformerMapping, Long>
     @Override
     public Long getKey(TransformerMapping entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getTransformerMappingId();
         } else {
             return null;
         }

@@ -6,8 +6,7 @@ package de.mygrades.database.dao;
  */
 public class ActionParam {
 
-    private Long id;
-    private long actionParamId;
+    private Long actionParamId;
     /** Not-null value. */
     private String key;
     private String value;
@@ -17,12 +16,11 @@ public class ActionParam {
     public ActionParam() {
     }
 
-    public ActionParam(Long id) {
-        this.id = id;
+    public ActionParam(Long actionParamId) {
+        this.actionParamId = actionParamId;
     }
 
-    public ActionParam(Long id, long actionParamId, String key, String value, String type, long actionId) {
-        this.id = id;
+    public ActionParam(Long actionParamId, String key, String value, String type, long actionId) {
         this.actionParamId = actionParamId;
         this.key = key;
         this.value = value;
@@ -30,19 +28,11 @@ public class ActionParam {
         this.actionId = actionId;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public long getActionParamId() {
+    public Long getActionParamId() {
         return actionParamId;
     }
 
-    public void setActionParamId(long actionParamId) {
+    public void setActionParamId(Long actionParamId) {
         this.actionParamId = actionParamId;
     }
 

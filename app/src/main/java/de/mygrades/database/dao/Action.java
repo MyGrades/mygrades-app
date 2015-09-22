@@ -13,8 +13,7 @@ import de.greenrobot.dao.DaoException;
  */
 public class Action {
 
-    private Long id;
-    private long actionId;
+    private Long actionId;
     private int position;
     /** Not-null value. */
     private String method;
@@ -37,12 +36,11 @@ public class Action {
     public Action() {
     }
 
-    public Action(Long id) {
-        this.id = id;
+    public Action(Long actionId) {
+        this.actionId = actionId;
     }
 
-    public Action(Long id, long actionId, int position, String method, String url, String parseExpression, String parseType, long ruleId) {
-        this.id = id;
+    public Action(Long actionId, int position, String method, String url, String parseExpression, String parseType, long ruleId) {
         this.actionId = actionId;
         this.position = position;
         this.method = method;
@@ -58,19 +56,11 @@ public class Action {
         myDao = daoSession != null ? daoSession.getActionDao() : null;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public long getActionId() {
+    public Long getActionId() {
         return actionId;
     }
 
-    public void setActionId(long actionId) {
+    public void setActionId(Long actionId) {
         this.actionId = actionId;
     }
 
@@ -131,7 +121,7 @@ public class Action {
                 throw new DaoException("Entity is detached from DAO context");
             }
             ActionParamDao targetDao = daoSession.getActionParamDao();
-            List<ActionParam> actionParamsNew = targetDao._queryAction_ActionParams(id);
+            List<ActionParam> actionParamsNew = targetDao._queryAction_ActionParams(actionId);
             synchronized (this) {
                 if(actionParams == null) {
                     actionParams = actionParamsNew;

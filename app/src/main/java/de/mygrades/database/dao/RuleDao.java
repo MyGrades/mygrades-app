@@ -26,11 +26,10 @@ public class RuleDao extends AbstractDao<Rule, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property RuleId = new Property(1, long.class, "ruleId", false, "RULE_ID");
-        public final static Property Type = new Property(2, String.class, "type", false, "TYPE");
-        public final static Property LastUpdated = new Property(3, java.util.Date.class, "lastUpdated", false, "LAST_UPDATED");
-        public final static Property UniversityId = new Property(4, long.class, "universityId", false, "UNIVERSITY_ID");
+        public final static Property RuleId = new Property(0, Long.class, "ruleId", true, "RULE_ID");
+        public final static Property Type = new Property(1, String.class, "type", false, "TYPE");
+        public final static Property LastUpdated = new Property(2, java.util.Date.class, "lastUpdated", false, "LAST_UPDATED");
+        public final static Property UniversityId = new Property(3, long.class, "universityId", false, "UNIVERSITY_ID");
     };
 
     private DaoSession daoSession;
@@ -50,11 +49,10 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"RULE\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"RULE_ID\" INTEGER NOT NULL UNIQUE ," + // 1: ruleId
-                "\"TYPE\" TEXT NOT NULL ," + // 2: type
-                "\"LAST_UPDATED\" INTEGER," + // 3: lastUpdated
-                "\"UNIVERSITY_ID\" INTEGER NOT NULL );"); // 4: universityId
+                "\"RULE_ID\" INTEGER PRIMARY KEY ," + // 0: ruleId
+                "\"TYPE\" TEXT NOT NULL ," + // 1: type
+                "\"LAST_UPDATED\" INTEGER," + // 2: lastUpdated
+                "\"UNIVERSITY_ID\" INTEGER NOT NULL );"); // 3: universityId
     }
 
     /** Drops the underlying database table. */
@@ -68,18 +66,17 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     protected void bindValues(SQLiteStatement stmt, Rule entity) {
         stmt.clearBindings();
  
-        Long id = entity.getId();
-        if (id != null) {
-            stmt.bindLong(1, id);
+        Long ruleId = entity.getRuleId();
+        if (ruleId != null) {
+            stmt.bindLong(1, ruleId);
         }
-        stmt.bindLong(2, entity.getRuleId());
-        stmt.bindString(3, entity.getType());
+        stmt.bindString(2, entity.getType());
  
         java.util.Date lastUpdated = entity.getLastUpdated();
         if (lastUpdated != null) {
-            stmt.bindLong(4, lastUpdated.getTime());
+            stmt.bindLong(3, lastUpdated.getTime());
         }
-        stmt.bindLong(5, entity.getUniversityId());
+        stmt.bindLong(4, entity.getUniversityId());
     }
 
     @Override
@@ -98,11 +95,10 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     @Override
     public Rule readEntity(Cursor cursor, int offset) {
         Rule entity = new Rule( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getLong(offset + 1), // ruleId
-            cursor.getString(offset + 2), // type
-            cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)), // lastUpdated
-            cursor.getLong(offset + 4) // universityId
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // ruleId
+            cursor.getString(offset + 1), // type
+            cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)), // lastUpdated
+            cursor.getLong(offset + 3) // universityId
         );
         return entity;
     }
@@ -110,17 +106,16 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, Rule entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setRuleId(cursor.getLong(offset + 1));
-        entity.setType(cursor.getString(offset + 2));
-        entity.setLastUpdated(cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)));
-        entity.setUniversityId(cursor.getLong(offset + 4));
+        entity.setRuleId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setType(cursor.getString(offset + 1));
+        entity.setLastUpdated(cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)));
+        entity.setUniversityId(cursor.getLong(offset + 3));
      }
     
     /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(Rule entity, long rowId) {
-        entity.setId(rowId);
+        entity.setRuleId(rowId);
         return rowId;
     }
     
@@ -128,7 +123,7 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     @Override
     public Long getKey(Rule entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getRuleId();
         } else {
             return null;
         }
