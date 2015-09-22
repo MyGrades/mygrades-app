@@ -1,32 +1,33 @@
 package de.mygrades.view.activity;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import de.mygrades.MyGradesApplication;
 import de.mygrades.R;
+import de.mygrades.database.dao.DaoSession;
 import de.mygrades.database.dao.University;
+import de.mygrades.database.dao.UniversityDao;
 import de.mygrades.main.MainServiceHelper;
-import de.mygrades.view.adapter.SimpleAdapter;
-import de.mygrades.view.adapter.SimpleSectionedRecyclerViewAdapter;
+import de.mygrades.view.adapter.UniversitiesRecyclerViewAdapter;
 import de.mygrades.view.decoration.DividerItemDecoration;
-import de.mygrades.view.loader.UniversityLoader;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 /**
  * Activity which shows all universities.
  */
-public class SelectUniversityActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<University>> {
+public class SelectUniversityActivity extends AppCompatActivity {
 
     private RecyclerView rvUniversities;
+    private UniversitiesRecyclerViewAdapter universityAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,53 +47,59 @@ public class SelectUniversityActivity extends AppCompatActivity implements Loade
         rvUniversities.addItemDecoration(new DividerItemDecoration(this, R.drawable.university_divider));
         rvUniversities.setItemAnimator(new SlideInUpAnimator());
         rvUniversities.getItemAnimator().setAddDuration(500);
-        rvUniversities.setHasFixedSize(true);
+        universityAdapter = new UniversitiesRecyclerViewAdapter(this, null);
+        rvUniversities.setAdapter(universityAdapter);
 
-        // init loader
-        getSupportLoaderManager().initLoader(0, null, this);
+        // start async task to load universities
+        UniversityAsyncTask universityAsyncTask = new UniversityAsyncTask(this);
+        universityAsyncTask.execute();
 
         // get all universities from server
         MainServiceHelper mainServiceHelper = new MainServiceHelper(this);
         mainServiceHelper.getUniversities();
     }
 
-    @Override
-    public Loader<List<University>> onCreateLoader(int id, Bundle args) {
-        return new UniversityLoader(this);
-    }
+    /**
+     * AsyncTask to load all universities in background thread from database.
+     */
+    private class UniversityAsyncTask extends AsyncTask<Void, Void, List<University>> {
+        private Context context;
 
-    @Override
-    public void onLoadFinished(Loader<List<University>> loader, List<University> data) {
-        SimpleAdapter simpleAdapter = new SimpleAdapter(this, null);
-        SimpleSectionedRecyclerViewAdapter sectionedAdapter = new SimpleSectionedRecyclerViewAdapter(this, simpleAdapter);
-
-        // create sections
-        List<SimpleSectionedRecyclerViewAdapter.Section> sections = new ArrayList<>();
-        for(int i = 0; i < data.size(); i++) {
-            String prefix = data.get(i).getName().substring(0, 1).toUpperCase();
-            String prevPrefix = null;
-            if (i > 0) {
-                prevPrefix = data.get(i-1).getName().substring(0, 1).toUpperCase();
-            }
-
-            if (!prefix.equals(prevPrefix)) {
-                sections.add(new SimpleSectionedRecyclerViewAdapter.Section(i, ""+prefix));
-            }
+        public UniversityAsyncTask(Context context) {
+            this.context = context.getApplicationContext();
         }
 
-        // set sections
-        SimpleSectionedRecyclerViewAdapter.Section[] dummy = new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
-        sectionedAdapter.setSections(sections.toArray(dummy));
+        @Override
+        protected List<University> doInBackground(Void... params) {
+            DaoSession daoSession = ((MyGradesApplication) context.getApplicationContext()).getDaoSession();
+            UniversityDao universityDao = daoSession.getUniversityDao();
 
-        // set the adapter
-        rvUniversities.setAdapter(sectionedAdapter);
+            List<University> universities = universityDao.queryBuilder()
+                    .where(UniversityDao.Properties.Published.eq(true))
+                    .orderAsc(UniversityDao.Properties.Name)
+                    .list();
 
-        // add all items (animations!)
-        for(int i = 0; i < data.size(); i++) {
-            simpleAdapter.add(data.get(i), i);
+            // set section flags for universities
+            for(int i = 0; i < universities.size(); i++) {
+                String prefix = universities.get(i).getName().substring(0, 1).toUpperCase();
+                String prevPrefix = null;
+                if (i > 0) {
+                    prevPrefix = universities.get(i-1).getName().substring(0, 1).toUpperCase();
+                }
+
+                if (!prefix.equals(prevPrefix)) {
+                    universities.get(i).setSection(true);
+                }
+            }
+
+            return universities;
+        }
+
+        @Override
+        protected void onPostExecute(List<University> universities) {
+            for(int i = 0; i < universities.size(); i++) {
+                universityAdapter.add(universities.get(i), i);
+            }
         }
     }
-
-    @Override
-    public void onLoaderReset(Loader<List<University>> loader) { }
 }

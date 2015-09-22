@@ -82,12 +82,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        // dirty hack to avoid recycler view bug
-        NavUtils.navigateUpFromSameTask(this);
-    }
-
     /**
      * Checks if username or password are empty and shows an error message.
      *
