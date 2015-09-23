@@ -5,9 +5,12 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import de.greenrobot.dao.query.QueryBuilder;
 import de.mygrades.database.dao.Action;
 import de.mygrades.database.dao.ActionDao;
 import de.mygrades.database.dao.ActionParam;
@@ -32,13 +35,14 @@ public class UniversityProcessor extends BaseProcessor {
     /**
      * Load all universities from the server.
      */
-    public void getUniversities() {
+    public void getUniversities(boolean publishedOnly) {
         List<University> universities = new ArrayList<>();
 
         // make synchronous rest call
         try {
-            String updatedAtServer = getUpdatedAtServerForUniversities();
-            universities = restClient.getRestApi().getUniversities(updatedAtServer);
+            String updatedAtServerPublished = getUpdatedAtServerForUniversities(true);
+            String updatedAtServerUnpublished = getUpdatedAtServerForUniversities(false);
+            universities = restClient.getRestApi().getUniversities(publishedOnly, updatedAtServerPublished, updatedAtServerUnpublished);
         } catch (RetrofitError e) {
             Log.e(TAG, "RetrofitError: " + e.getMessage());
         }
@@ -93,21 +97,23 @@ public class UniversityProcessor extends BaseProcessor {
     /**
      * Get the latest updated_at_server timestamp for all universities.
      *
+     * @param publishedOnly - get timestamp for published or unpublished universities
      * @return timestamp as string
      */
-    private String getUpdatedAtServerForUniversities() {
+    public String getUpdatedAtServerForUniversities(boolean publishedOnly) {
         // get selected university id to exclude it from query
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
 
-        University u = daoSession.getUniversityDao().queryBuilder()
+        University university = daoSession.getUniversityDao().queryBuilder()
                 .orderDesc(UniversityDao.Properties.UpdatedAtServer)
                 .where(UniversityDao.Properties.UniversityId.notEq(universityId))
+                .where(UniversityDao.Properties.Published.eq(publishedOnly))
                 .limit(1)
                 .unique();
 
-        if (u != null) {
-            return u.getUpdatedAtServer();
+        if (university != null) {
+            return university.getUpdatedAtServer();
         }
 
         return null;

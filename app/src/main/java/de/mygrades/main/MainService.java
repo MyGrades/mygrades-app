@@ -39,6 +39,7 @@ public class MainService extends IntentService {
     public static final String UNIVERSITY_ID = "university_id";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
+    public static final String PUBLISHED_ONLY = "published_only";
 
     // save request ids for pending request in this set, and remove them when its done.
     private Set<Long> pendingRequest;
@@ -102,7 +103,8 @@ public class MainService extends IntentService {
 
         switch(method) {
             case METHOD_GET_UNIVERSITIES:
-                universityProcessor.getUniversities();
+                boolean publishedOnly = intent.getBooleanExtra(PUBLISHED_ONLY, false);
+                universityProcessor.getUniversities(publishedOnly);
                 break;
             case METHOD_GET_DETAILED_UNIVERSITY:
                 long universityId = intent.getLongExtra(UNIVERSITY_ID, 0);
