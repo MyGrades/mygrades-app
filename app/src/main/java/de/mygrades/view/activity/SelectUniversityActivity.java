@@ -56,7 +56,7 @@ public class SelectUniversityActivity extends AppCompatActivity {
 
         // get all universities from server
         MainServiceHelper mainServiceHelper = new MainServiceHelper(this);
-        mainServiceHelper.getUniversities();
+        mainServiceHelper.getUniversities(true);
     }
 
     /**

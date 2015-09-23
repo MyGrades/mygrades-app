@@ -16,7 +16,7 @@ public class MainServiceHelper {
         this.context = context.getApplicationContext();
     }
 
-    public void getUniversities() {
+    public void getUniversities(boolean publishedOnly) {
         int method = MainService.METHOD_GET_UNIVERSITIES;
 
         // set request id
@@ -24,6 +24,7 @@ public class MainServiceHelper {
 
         // start worker thread in background
         Intent intent = getBasicIntent(MainService.PROCESSOR_UNIVERSITY, method, requestId);
+        intent.putExtra(MainService.PUBLISHED_ONLY, publishedOnly);
         context.startService(intent);
     }
 
