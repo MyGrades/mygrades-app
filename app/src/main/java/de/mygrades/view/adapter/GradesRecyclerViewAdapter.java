@@ -4,13 +4,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.mygrades.R;
-import de.mygrades.view.adapter.viewholder.GradeViewHolder;
-import de.mygrades.view.adapter.viewholder.SemesterViewHolder;
 import de.mygrades.view.adapter.model.GradeItem;
 import de.mygrades.view.adapter.model.GradesAdapterItem;
 import de.mygrades.view.adapter.model.SemesterItem;
@@ -182,5 +181,41 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         return -1;
+    }
+
+    /**
+     * View holder for a grade entry.
+     */
+    public class GradeViewHolder extends RecyclerView.ViewHolder {
+        public TextView tvName;
+        public TextView tvGrade;
+        public TextView tvCreditPoints;
+
+        public GradeViewHolder(View itemView) {
+            super(itemView);
+
+            tvName = (TextView) itemView.findViewById(R.id.tv_grade_name);
+            tvGrade = (TextView) itemView.findViewById(R.id.tv_grade);
+            tvCreditPoints = (TextView) itemView.findViewById(R.id.tv_credit_points);
+        }
+    }
+
+    /**
+     * View holder for an semester section header.
+     */
+    public class SemesterViewHolder extends RecyclerView.ViewHolder {
+        public TextView tvTermCount;
+        public TextView tvTermAsString;
+        public TextView tvAverage;
+        public TextView tvCreditPoints;
+
+        public SemesterViewHolder(View itemView) {
+            super(itemView);
+
+            tvTermCount = (TextView) itemView.findViewById(R.id.tv_term_count);
+            tvTermAsString = (TextView) itemView.findViewById(R.id.tv_semester);
+            tvAverage = (TextView) itemView.findViewById(R.id.tv_average);
+            tvCreditPoints = (TextView) itemView.findViewById(R.id.tv_credit_points);
+        }
     }
 }
