@@ -20,7 +20,6 @@ import de.mygrades.database.dao.UniversityDao;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.view.adapter.UniversitiesRecyclerViewAdapter;
 import de.mygrades.view.decoration.DividerItemDecoration;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 /**
  * Activity which shows all universities.
