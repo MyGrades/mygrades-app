@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -45,8 +46,7 @@ public class SelectUniversityActivity extends AppCompatActivity {
         rvUniversities = (RecyclerView) findViewById(R.id.rv_universities);
         rvUniversities.setLayoutManager(new LinearLayoutManager(rvUniversities.getContext()));
         rvUniversities.addItemDecoration(new DividerItemDecoration(this, R.drawable.university_divider));
-        rvUniversities.setItemAnimator(new SlideInUpAnimator());
-        rvUniversities.getItemAnimator().setAddDuration(500);
+        rvUniversities.setItemAnimator(new DefaultItemAnimator());
         universityAdapter = new UniversitiesRecyclerViewAdapter(this, null);
         rvUniversities.setAdapter(universityAdapter);
 
