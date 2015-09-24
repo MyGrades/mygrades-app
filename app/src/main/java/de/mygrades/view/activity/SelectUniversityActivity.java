@@ -22,6 +22,7 @@ import de.mygrades.database.dao.UniversityDao;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.UniversityEvent;
 import de.mygrades.view.adapter.UniversitiesRecyclerViewAdapter;
+import de.mygrades.view.adapter.model.UniversityItem;
 import de.mygrades.view.decoration.DividerItemDecoration;
 
 /**
@@ -49,7 +50,7 @@ public class SelectUniversityActivity extends AppCompatActivity {
         rvUniversities.setLayoutManager(new LinearLayoutManager(rvUniversities.getContext()));
         rvUniversities.addItemDecoration(new DividerItemDecoration(this, R.drawable.university_divider));
         rvUniversities.setItemAnimator(new DefaultItemAnimator());
-        universityAdapter = new UniversitiesRecyclerViewAdapter(this, null);
+        universityAdapter = new UniversitiesRecyclerViewAdapter();
         rvUniversities.setAdapter(universityAdapter);
 
         // start async task to load universities
@@ -102,9 +103,14 @@ public class SelectUniversityActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<University> universities) {
-            for(int i = 0; i < universities.size(); i++) {
-                universityAdapter.add(universities.get(i), i);
-            }
+            addUniversities(universities);
+        }
+    }
+
+    private void addUniversities(List<University> universities) {
+        for(University university : universities) {
+            UniversityItem universityItem = new UniversityItem(university.getName(), university.getUniversityId());
+            universityAdapter.add(universityItem);
         }
     }
 
@@ -118,10 +124,7 @@ public class SelectUniversityActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    for (University u : universityEvent.getNewUniversities(true)) {
-                        // add to the end of the list
-                        universityAdapter.add(u, universityAdapter.getItemCount());
-                    }
+                    addUniversities(universityEvent.getNewUniversities(true));
                 }
             });
         }

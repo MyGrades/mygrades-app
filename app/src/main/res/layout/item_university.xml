@@ -7,22 +7,6 @@
     android:padding="16dp"
     android:layout_marginBottom="0.5dp"
     android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/ll_section_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="24dp"
-        android:layout_marginBottom="16dp">
-
-        <TextView
-            android:id="@+id/tv_section_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textColor="?attr/colorPrimary"/>
-    </LinearLayout>
     
     <TextView
         android:id="@+id/tv_university_name"
