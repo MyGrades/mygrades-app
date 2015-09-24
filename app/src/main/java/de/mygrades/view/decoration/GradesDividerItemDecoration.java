@@ -8,10 +8,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import de.mygrades.view.adapter.viewholder.SemesterViewHolder;
+import de.mygrades.view.adapter.GradesRecyclerViewAdapter;
 
 /**
- * Created by tilman on 23.09.15.
+ * Custom divider item decoration for the overview of grades.
  */
 public class GradesDividerItemDecoration extends RecyclerView.ItemDecoration  {
 
@@ -47,7 +47,7 @@ public class GradesDividerItemDecoration extends RecyclerView.ItemDecoration  {
             View child = parent.getChildAt(i);
 
             Drawable divider;
-            if (parent.getChildViewHolder(child) instanceof SemesterViewHolder) {
+            if (parent.getChildViewHolder(child) instanceof GradesRecyclerViewAdapter.SemesterViewHolder) {
                 divider = semesterDivider;
             } else {
                 divider = gradeDivider;
