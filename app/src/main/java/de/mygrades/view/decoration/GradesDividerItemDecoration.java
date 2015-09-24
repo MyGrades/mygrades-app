@@ -59,6 +59,7 @@ public class GradesDividerItemDecoration extends RecyclerView.ItemDecoration  {
             int bottom = top + divider.getIntrinsicHeight();
 
             divider.setBounds(left, top, right, bottom);
+            divider.setAlpha((int) (child.getAlpha() * 255));
             divider.draw(c);
         }
     }
