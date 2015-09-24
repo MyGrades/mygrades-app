@@ -9,15 +9,18 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import de.mygrades.MyGradesApplication;
 import de.mygrades.R;
 import de.mygrades.database.dao.DaoSession;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
 import de.mygrades.main.MainServiceHelper;
+import de.mygrades.main.events.UniversityEvent;
 import de.mygrades.view.adapter.UniversitiesRecyclerViewAdapter;
 import de.mygrades.view.decoration.DividerItemDecoration;
 
@@ -52,6 +55,9 @@ public class SelectUniversityActivity extends AppCompatActivity {
         // start async task to load universities
         UniversityAsyncTask universityAsyncTask = new UniversityAsyncTask(this);
         universityAsyncTask.execute();
+
+        // register event bus
+        EventBus.getDefault().register(this);
 
         // get all universities from server
         MainServiceHelper mainServiceHelper = new MainServiceHelper(this);
@@ -100,5 +106,30 @@ public class SelectUniversityActivity extends AppCompatActivity {
                 universityAdapter.add(universities.get(i), i);
             }
         }
+    }
+
+    /**
+     * Receive an UniversityEvent and add all new universities to the adapter.
+     *
+     * @param universityEvent - university event
+     */
+    public void onEvent(final UniversityEvent universityEvent) {
+        if (universityAdapter != null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    for (University u : universityEvent.getNewUniversities(true)) {
+                        // add to the end of the list
+                        universityAdapter.add(u, universityAdapter.getItemCount());
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 }
