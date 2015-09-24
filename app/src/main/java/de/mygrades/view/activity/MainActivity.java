@@ -18,8 +18,7 @@ import de.mygrades.main.MainServiceHelper;
 import de.mygrades.util.Constants;
 import de.mygrades.view.adapter.GradesRecyclerViewAdapter;
 import de.mygrades.view.decoration.GradesDividerItemDecoration;
-import de.mygrades.view.model.GradeItem;
-import de.mygrades.view.model.SemesterItem;
+import de.mygrades.view.adapter.model.GradeItem;
 
 /**
  * Activity to show the overview of grades.

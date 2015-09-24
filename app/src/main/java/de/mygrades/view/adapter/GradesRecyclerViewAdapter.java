@@ -11,9 +11,9 @@ import java.util.List;
 import de.mygrades.R;
 import de.mygrades.view.adapter.viewholder.GradeViewHolder;
 import de.mygrades.view.adapter.viewholder.SemesterViewHolder;
-import de.mygrades.view.model.GradeItem;
-import de.mygrades.view.model.GradesAdapterItem;
-import de.mygrades.view.model.SemesterItem;
+import de.mygrades.view.adapter.model.GradeItem;
+import de.mygrades.view.adapter.model.GradesAdapterItem;
+import de.mygrades.view.adapter.model.SemesterItem;
 
 /**
  * Custom RecyclerView adapter for the overview of grades with semester headers.
