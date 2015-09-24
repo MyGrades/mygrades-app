@@ -15,10 +15,13 @@
         </activity>
 
         <!-- SelectUniversityActivity -->
-        <activity android:name=".view.activity.SelectUniversityActivity" />
+        <activity
+            android:name=".view.activity.SelectUniversityActivity"
+            android:launchMode="singleTop"/>
 
         <!-- LoginActivity -->
-        <activity android:name=".view.activity.LoginActivity"
+        <activity
+            android:name=".view.activity.LoginActivity"
             android:parentActivityName=".view.activity.SelectUniversityActivity">
             <!-- The meta-data element is needed for versions lower than 4.1 -->
             <meta-data
