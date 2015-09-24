@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.Random;
+
 import de.mygrades.R;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.util.Constants;
@@ -57,15 +59,50 @@ public class MainActivity extends AppCompatActivity {
         rvGrades.setLayoutManager(new LinearLayoutManager(rvGrades.getContext()));
         rvGrades.addItemDecoration(new GradesDividerItemDecoration(this, R.drawable.grade_divider, R.drawable.semester_divider));
         rvGrades.setItemAnimator(new DefaultItemAnimator());
+
+        // set adapter
         adapter = new GradesRecyclerViewAdapter();
         rvGrades.setAdapter(adapter);
+    }
 
-        adapter.add(new SemesterItem(1, "Wintersemester 2012/13", 1.00f, 5), 0);
-        adapter.add(new GradeItem("Programmieren 1", 1.0f, 3.5f), 1);
-        adapter.add(new GradeItem("Programmieren 1 - Praktikum", 1.0f, 1.5f), 2);
-        adapter.add(new SemesterItem(2, "Sommersemester 2013", 1.00f, 30), 3);
-        adapter.add(new GradeItem("Algorithmen und Datenstrukturen", 1.3f, 3.5f), 4);
-        adapter.add(new GradeItem("Algorithmen und Datenstrukturen - Praktikum", 1.0f, 1.5f), 5);
+    public void addOne(View v) {
+        addRandomGrades(1);
+    }
+
+    public void addThree(View v) {
+        addRandomGrades(3);
+    }
+
+    public void addFive(View v) {
+        addRandomGrades(5);
+    }
+
+    public void clear(View v) {
+        adapter.clear();
+    }
+
+    // TODO: only temporary to test adapter functionality
+    private void addRandomGrades(int n) {
+        Random rand = new Random();
+
+        for(int i = 0; i < n; i++) {
+            String name = generateString(rand, "abcdefghijklmopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", 12);
+            float g = rand.nextFloat() * (5.0f - 1.0f) + 1.0f;
+            float cp = rand.nextFloat() * (10.0f);
+            GradeItem grade = new GradeItem(name, g, cp);
+            adapter.addGradeForSemester(grade, rand.nextInt((6 - 1) + 1) + 1);
+        }
+    }
+
+    // TODO: only temporary for random grades
+    public static String generateString(Random rand, String characters, int length)
+    {
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++)
+        {
+            text[i] = characters.charAt(rand.nextInt(characters.length()));
+        }
+        return new String(text);
     }
 
     /**
