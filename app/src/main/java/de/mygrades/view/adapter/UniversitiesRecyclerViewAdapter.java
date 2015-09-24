@@ -64,6 +64,9 @@ public class UniversitiesRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                     newUniversityIndex = i;
                     break;
                 }
+            } else if (items.get(i) instanceof UniversityHeader) {
+                newUniversityIndex = i;
+                break;
             }
         }
 
