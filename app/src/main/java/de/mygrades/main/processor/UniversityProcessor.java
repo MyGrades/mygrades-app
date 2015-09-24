@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
+import de.greenrobot.event.EventBus;
 import de.mygrades.database.dao.Action;
 import de.mygrades.database.dao.ActionDao;
 import de.mygrades.database.dao.ActionParam;
@@ -18,6 +19,7 @@ import de.mygrades.database.dao.Rule;
 import de.mygrades.database.dao.TransformerMapping;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
+import de.mygrades.main.events.UniversityEvent;
 import de.mygrades.util.Constants;
 import retrofit.RetrofitError;
 
@@ -47,8 +49,15 @@ public class UniversityProcessor extends BaseProcessor {
             Log.e(TAG, "RetrofitError: " + e.getMessage());
         }
 
-        // insert into database
-        daoSession.getUniversityDao().insertOrReplaceInTx(universities);
+        if (universities != null || universities.size() > 0) {
+            // insert into database
+            daoSession.getUniversityDao().insertOrReplaceInTx(universities);
+
+            // post university event
+            UniversityEvent universityEvent = new UniversityEvent();
+            universityEvent.setNewUniversities(universities);
+            EventBus.getDefault().post(universityEvent);
+        }
     }
 
     /**
