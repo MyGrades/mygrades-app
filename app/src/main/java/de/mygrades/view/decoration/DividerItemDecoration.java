@@ -42,9 +42,10 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
 
             int top = child.getBottom() + params.bottomMargin + (int) child.getTranslationY();
-            int bottom = top + mDivider.getIntrinsicHeight() - (int) child.getTranslationY();
+            int bottom = top + mDivider.getIntrinsicHeight();
 
             mDivider.setBounds(left, top, right, bottom);
+            mDivider.setAlpha((int) (child.getAlpha() * 255));
             mDivider.draw(c);
         }
     }
