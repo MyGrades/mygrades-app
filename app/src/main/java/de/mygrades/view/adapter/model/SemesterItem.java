@@ -1,4 +1,4 @@
-package de.mygrades.view.model;
+package de.mygrades.view.adapter.model;
 
 import java.util.ArrayList;
 import java.util.List;

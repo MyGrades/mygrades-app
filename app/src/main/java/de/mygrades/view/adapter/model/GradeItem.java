@@ -1,4 +1,4 @@
-package de.mygrades.view.model;
+package de.mygrades.view.adapter.model;
 
 /**
  * GradeItem is used in GradesRecyclerViewAdapter.
