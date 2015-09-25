@@ -70,4 +70,20 @@ public class ActionParam {
         this.actionId = actionId;
     }
 
+
+    // KEEP METHODS - put your custom methods here
+
+    @Override
+    public String toString() {
+        return "ActionParam{" +
+                "actionParamId=" + actionParamId +
+                ", key='" + key + '\'' +
+                ", value='" + value + '\'' +
+                ", type='" + type + '\'' +
+                ", actionId=" + actionId +
+                '}';
+    }
+
+
+    // KEEP METHODS END
 }

@@ -19,7 +19,6 @@ public class Action {
     private String method;
     private String url;
     private String parseExpression;
-    private String parseType;
     private long ruleId;
 
     /** Used to resolve relations */
@@ -40,13 +39,12 @@ public class Action {
         this.actionId = actionId;
     }
 
-    public Action(Long actionId, int position, String method, String url, String parseExpression, String parseType, long ruleId) {
+    public Action(Long actionId, int position, String method, String url, String parseExpression, long ruleId) {
         this.actionId = actionId;
         this.position = position;
         this.method = method;
         this.url = url;
         this.parseExpression = parseExpression;
-        this.parseType = parseType;
         this.ruleId = ruleId;
     }
 
@@ -96,14 +94,6 @@ public class Action {
 
     public void setParseExpression(String parseExpression) {
         this.parseExpression = parseExpression;
-    }
-
-    public String getParseType() {
-        return parseType;
-    }
-
-    public void setParseType(String parseType) {
-        this.parseType = parseType;
     }
 
     public long getRuleId() {
@@ -169,6 +159,22 @@ public class Action {
     public List<ActionParam> getActionParamsRaw() {
         return actionParams == null ? new java.util.ArrayList<ActionParam>() : actionParams;
     }
+
+    @Override
+    public String toString() {
+        return "Action{" +
+                "actionId=" + actionId +
+                ", position=" + position +
+                ", method='" + method + '\'' +
+                ", url='" + url + '\'' +
+                ", parseExpression='" + parseExpression + '\'' +
+                ", ruleId=" + ruleId +
+                ", daoSession=" + daoSession +
+                ", myDao=" + myDao +
+                ", actionParams=" + actionParams +
+                '}';
+    }
+
     // KEEP METHODS END
 
 }

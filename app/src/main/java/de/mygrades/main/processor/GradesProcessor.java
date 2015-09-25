@@ -8,6 +8,8 @@ import java.io.IOException;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
 import de.mygrades.main.scraping.Scraper;
+import de.mygrades.main.scraping.Parser;
+import de.mygrades.main.scraping.Transformer;
 import de.mygrades.util.exceptions.ParseException;
 
 /**
@@ -27,15 +29,26 @@ public class GradesProcessor extends BaseProcessor {
         Log.v(TAG, "actions: "+ u.getRules().get(0).getActions().size());
         Log.v(TAG, "params: "+ u.getRules().get(0).getActions().get(1).getActionParams().size());
 
-
-        Scraper scraper = new Scraper(u.getRules().get(0).getActions());
+        // init parser only 1 time
+        Parser parser = null;
         try {
-            scraper.scrape();
+           parser = new Parser();
+        } catch (ParseException e) {
+            Log.e(TAG, "Parser Error", e);
+        }
+
+        String scrapingResult = null;
+        Scraper scraper = new Scraper(u.getRules().get(0).getActions(), parser);
+        try {
+            scrapingResult = scraper.scrape();
         } catch (IOException e) {
             Log.e(TAG, "Scrape Error", e);
         } catch (ParseException e) {
             Log.e(TAG, "Parse Error", e);
         }
+
+        Transformer transformer = new Transformer(scrapingResult, parser);
+        transformer.transform();
     }
 
 }
