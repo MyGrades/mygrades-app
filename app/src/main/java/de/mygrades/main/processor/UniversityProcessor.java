@@ -49,7 +49,7 @@ public class UniversityProcessor extends BaseProcessor {
             Log.e(TAG, "RetrofitError: " + e.getMessage());
         }
 
-        if (universities != null || universities.size() > 0) {
+        if (universities != null) {
             // insert into database
             daoSession.getUniversityDao().insertOrReplaceInTx(universities);
 
