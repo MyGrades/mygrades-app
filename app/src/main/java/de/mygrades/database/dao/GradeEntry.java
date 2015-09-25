@@ -13,16 +13,20 @@ public class GradeEntry {
     /** Not-null value. */
     private String semester;
     private String state;
+    private Double creditPoints;
+    private Integer semesterNumber;
 
     public GradeEntry() {
     }
 
-    public GradeEntry(String name, Double grade, String examId, String semester, String state) {
+    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, Integer semesterNumber) {
         this.name = name;
         this.grade = grade;
         this.examId = examId;
         this.semester = semester;
         this.state = state;
+        this.creditPoints = creditPoints;
+        this.semesterNumber = semesterNumber;
     }
 
     /** Not-null value. */
@@ -69,4 +73,37 @@ public class GradeEntry {
         this.state = state;
     }
 
+    public Double getCreditPoints() {
+        return creditPoints;
+    }
+
+    public void setCreditPoints(Double creditPoints) {
+        this.creditPoints = creditPoints;
+    }
+
+    public Integer getSemesterNumber() {
+        return semesterNumber;
+    }
+
+    public void setSemesterNumber(Integer semesterNumber) {
+        this.semesterNumber = semesterNumber;
+    }
+
+
+
+    // KEEP METHODS - put your custom methods here
+
+    @Override
+    public String toString() {
+        return "GradeEntry{" +
+                "name='" + name + '\'' +
+                ", grade=" + grade +
+                ", examId='" + examId + '\'' +
+                ", semester='" + semester + '\'' +
+                ", state='" + state + '\'' +
+                ", creditPoints=" + creditPoints +
+                ", semesterNumber=" + semesterNumber +
+                '}';
+    }
+    // KEEP METHODS END
 }

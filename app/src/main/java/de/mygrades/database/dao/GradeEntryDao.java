@@ -28,6 +28,8 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, Void> {
         public final static Property ExamId = new Property(2, String.class, "examId", false, "EXAM_ID");
         public final static Property Semester = new Property(3, String.class, "semester", false, "SEMESTER");
         public final static Property State = new Property(4, String.class, "state", false, "STATE");
+        public final static Property CreditPoints = new Property(5, Double.class, "creditPoints", false, "CREDIT_POINTS");
+        public final static Property SemesterNumber = new Property(6, Integer.class, "semesterNumber", false, "SEMESTER_NUMBER");
     };
 
 
@@ -47,7 +49,9 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, Void> {
                 "\"GRADE\" REAL," + // 1: grade
                 "\"EXAM_ID\" TEXT," + // 2: examId
                 "\"SEMESTER\" TEXT NOT NULL ," + // 3: semester
-                "\"STATE\" TEXT);"); // 4: state
+                "\"STATE\" TEXT," + // 4: state
+                "\"CREDIT_POINTS\" REAL," + // 5: creditPoints
+                "\"SEMESTER_NUMBER\" INTEGER);"); // 6: semesterNumber
     }
 
     /** Drops the underlying database table. */
@@ -77,6 +81,16 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, Void> {
         if (state != null) {
             stmt.bindString(5, state);
         }
+ 
+        Double creditPoints = entity.getCreditPoints();
+        if (creditPoints != null) {
+            stmt.bindDouble(6, creditPoints);
+        }
+ 
+        Integer semesterNumber = entity.getSemesterNumber();
+        if (semesterNumber != null) {
+            stmt.bindLong(7, semesterNumber);
+        }
     }
 
     /** @inheritdoc */
@@ -93,7 +107,9 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, Void> {
             cursor.isNull(offset + 1) ? null : cursor.getDouble(offset + 1), // grade
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // examId
             cursor.getString(offset + 3), // semester
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // state
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // state
+            cursor.isNull(offset + 5) ? null : cursor.getDouble(offset + 5), // creditPoints
+            cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6) // semesterNumber
         );
         return entity;
     }
@@ -106,6 +122,8 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, Void> {
         entity.setExamId(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setSemester(cursor.getString(offset + 3));
         entity.setState(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setCreditPoints(cursor.isNull(offset + 5) ? null : cursor.getDouble(offset + 5));
+        entity.setSemesterNumber(cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6));
      }
     
     /** @inheritdoc */

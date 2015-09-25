@@ -4,12 +4,17 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import de.mygrades.database.dao.GradeEntry;
+import de.mygrades.database.dao.TransformerMapping;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
-import de.mygrades.main.scraping.Scraper;
-import de.mygrades.main.scraping.Parser;
-import de.mygrades.main.scraping.Transformer;
+import de.mygrades.main.core.Scraper;
+import de.mygrades.main.core.Parser;
+import de.mygrades.main.core.Transformer;
 import de.mygrades.util.exceptions.ParseException;
 
 /**
@@ -28,6 +33,7 @@ public class GradesProcessor extends BaseProcessor {
         Log.v(TAG, "rules: " + u.getRules().size());
         Log.v(TAG, "actions: "+ u.getRules().get(0).getActions().size());
         Log.v(TAG, "params: "+ u.getRules().get(0).getActions().get(1).getActionParams().size());
+        Log.v(TAG, "transformer_mapping: "+ u.getRules().get(0).getTransformerMappings().toString());
 
         // init parser only 1 time
         Parser parser = null;
@@ -47,8 +53,17 @@ public class GradesProcessor extends BaseProcessor {
             Log.e(TAG, "Parse Error", e);
         }
 
-        Transformer transformer = new Transformer(scrapingResult, parser);
-        transformer.transform();
+        Transformer transformer = new Transformer(u.getRules().get(0).getTransformerMappings(), scrapingResult, parser);
+        List<GradeEntry> gradeEntries = null;
+        try {
+            gradeEntries = transformer.transform();
+        } catch (ParseException e) {
+            Log.e(TAG, "Transform Error", e);
+        }
+
+        Log.v(TAG, gradeEntries.toString());
     }
+
+
 
 }

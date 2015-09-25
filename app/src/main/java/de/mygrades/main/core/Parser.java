@@ -1,4 +1,4 @@
-package de.mygrades.main.scraping;
+package de.mygrades.main.core;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -24,24 +24,28 @@ import javax.xml.xpath.XPathFactory;
 import de.mygrades.util.exceptions.ParseException;
 
 
-
+/**
+ * Parses String to Documents and evaluates xPath expressions on them.
+ */
 public class Parser {
     private static final String TAG = Parser.class.getSimpleName();
 
+    /**
+     * DocumentBuilder is needed for creating documents out of strings.
+     */
     private DocumentBuilder builder;
+
+    /**
+     * XPath evaluates xPath expressions on documents.
+     */
     private XPath xPath;
+
+    /**
+     * Transformer is needed for converting a node to string.
+     */
     private Transformer transformer;
 
     public Parser() throws ParseException {
-        initXPathComponents();
-    }
-
-    /**
-     * Init Builder, XPath and Transformer.
-     *
-     * @throws ParseException
-     */
-    private void initXPathComponents() throws ParseException {
         xPath = XPathFactory.newInstance().newXPath();
 
         // initialize Builder to build document from string
@@ -61,7 +65,17 @@ public class Parser {
     }
 
 
-
+    /**
+     * Parses a Document with given XPATH expression and returns result of expression as String.
+     *
+     * @param xmlDocument Document which should get parsed
+     * @param parseExpression XPATH expression
+     * @return parsed result
+     * @throws ParseException if something goes wrong at parsing or initializing Document Builder
+     */
+    public String parseToString(String parseExpression, Document xmlDocument) throws ParseException {
+        return evaluateXpathExpressionString(parseExpression, xmlDocument);
+    }
 
     /**
      * Parses a String with given XPATH expression and returns result of expression as String.
@@ -92,35 +106,53 @@ public class Parser {
         return getNodeAsString(evaluateXpathExpressionNode(parseExpression, xmlDocument));
     }
 
+    /**
+     * Parses a String with given XPATH expression and returns result of expression as NodeList.
+     *
+     * @param html String which should get parsed
+     * @param parseExpression XPATH expression
+     * @return parsed result
+     * @throws ParseException if something goes wrong at parsing or initializing Document Builder
+     */
+    public NodeList parseToNodeList(String parseExpression, String html) throws ParseException {
+        Document xmlDocument = createXmlDocument(html);
+
+        return evaluateXpathExpressionNodeList(parseExpression, xmlDocument);
+    }
+
+    /**
+     * Creates a XML-document from a Node.
+     *
+     * @param node Node of content which is wanted
+     * @return content of node as Document
+     * @throws ParseException if something goes wrong with transforming
+     */
+    public Document getNodeAsDocument(Node node) throws ParseException {
+        return createXmlDocument(getNodeAsString(node));
+    }
 
 
 
 
-    public void testIterator(String table) throws ParseException, XPathExpressionException {
-        org.w3c.dom.Document xmlDocument;
 
-        initXPathComponents();
+
+
+    /**
+     * Gets content of node as string with XML-structure.
+     *
+     * @param node Node of content which is wanted
+     * @return content of node as string with XML-Structure
+     * @throws ParseException if something goes wrong with transforming
+     */
+    private String getNodeAsString(Node node) throws ParseException {
+        StreamResult xmlOutput = new StreamResult(new StringWriter());
 
         try {
-            xmlDocument = builder.parse(new ByteArrayInputStream(table.getBytes("UTF-8")));
-        } catch (SAXException | IOException e) {
-            throw new ParseException("Could not parse Document for XPATH!");
+            transformer.transform(new DOMSource(node), xmlOutput);
+        } catch (TransformerException e) {
+            throw new ParseException("Could not transform node to stream!");
         }
-
-        String expression = "//tr[./td[@class != 'qis_kontoOnTop']]";
-
-        NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node nNode = nodeList.item(i);
-
-            String nodeAsAString = getNodeAsString(nNode);
-
-            System.out.println(nodeAsAString);
-            //Element eElement = (Element) nNode;
-            //System.out.println(eElement.getElementsByTagName("td").item(0).getTextContent());
-        }
-
-
+        return xmlOutput.getWriter().toString();
     }
 
     /**
@@ -184,23 +216,5 @@ public class Parser {
         } catch (XPathExpressionException e) {
             throw new ParseException("Could not compile XPATH expression!");
         }
-    }
-
-    /**
-     * Gets content of node as string with XML-structure.
-     *
-     * @param node Node of content which is wanted
-     * @return content of node as string with XML-Structure
-     * @throws ParseException if something goes wrong with transforming
-     */
-    private String getNodeAsString(Node node) throws ParseException {
-        StreamResult xmlOutput = new StreamResult(new StringWriter());
-
-        try {
-            transformer.transform(new DOMSource(node), xmlOutput);
-        } catch (TransformerException e) {
-            throw new ParseException("Could not transform node to stream!");
-        }
-        return xmlOutput.getWriter().toString();
     }
 }

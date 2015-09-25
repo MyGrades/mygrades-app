@@ -1,4 +1,4 @@
-package de.mygrades.main.scraping;
+package de.mygrades.main.core;
 
 import android.util.Log;
 
