@@ -29,8 +29,7 @@ public class TransformerMappingDao extends AbstractDao<TransformerMapping, Long>
         public final static Property TransformerMappingId = new Property(0, Long.class, "transformerMappingId", true, "TRANSFORMER_MAPPING_ID");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property ParseExpression = new Property(2, String.class, "parseExpression", false, "PARSE_EXPRESSION");
-        public final static Property ParseType = new Property(3, String.class, "parseType", false, "PARSE_TYPE");
-        public final static Property RuleId = new Property(4, long.class, "ruleId", false, "RULE_ID");
+        public final static Property RuleId = new Property(3, long.class, "ruleId", false, "RULE_ID");
     };
 
     private Query<TransformerMapping> rule_TransformerMappingsQuery;
@@ -50,8 +49,7 @@ public class TransformerMappingDao extends AbstractDao<TransformerMapping, Long>
                 "\"TRANSFORMER_MAPPING_ID\" INTEGER PRIMARY KEY ," + // 0: transformerMappingId
                 "\"NAME\" TEXT NOT NULL ," + // 1: name
                 "\"PARSE_EXPRESSION\" TEXT," + // 2: parseExpression
-                "\"PARSE_TYPE\" TEXT," + // 3: parseType
-                "\"RULE_ID\" INTEGER NOT NULL );"); // 4: ruleId
+                "\"RULE_ID\" INTEGER NOT NULL );"); // 3: ruleId
     }
 
     /** Drops the underlying database table. */
@@ -75,12 +73,7 @@ public class TransformerMappingDao extends AbstractDao<TransformerMapping, Long>
         if (parseExpression != null) {
             stmt.bindString(3, parseExpression);
         }
- 
-        String parseType = entity.getParseType();
-        if (parseType != null) {
-            stmt.bindString(4, parseType);
-        }
-        stmt.bindLong(5, entity.getRuleId());
+        stmt.bindLong(4, entity.getRuleId());
     }
 
     /** @inheritdoc */
@@ -96,8 +89,7 @@ public class TransformerMappingDao extends AbstractDao<TransformerMapping, Long>
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // transformerMappingId
             cursor.getString(offset + 1), // name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // parseExpression
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // parseType
-            cursor.getLong(offset + 4) // ruleId
+            cursor.getLong(offset + 3) // ruleId
         );
         return entity;
     }
@@ -108,8 +100,7 @@ public class TransformerMappingDao extends AbstractDao<TransformerMapping, Long>
         entity.setTransformerMappingId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.getString(offset + 1));
         entity.setParseExpression(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setParseType(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setRuleId(cursor.getLong(offset + 4));
+        entity.setRuleId(cursor.getLong(offset + 3));
      }
     
     /** @inheritdoc */

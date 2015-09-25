@@ -84,7 +84,6 @@ public class MyGradesDaoGenerator {
         action.addStringProperty("method").notNull();
         action.addStringProperty("url");
         action.addStringProperty("parseExpression");
-        action.addStringProperty("parseType");
 
         // add 1:n relation for rule -> actions
         Property ruleId = action.addLongProperty("ruleId").notNull().getProperty();
@@ -121,7 +120,6 @@ public class MyGradesDaoGenerator {
         transformerMapping.addLongProperty("transformerMappingId").primaryKey();
         transformerMapping.addStringProperty("name").notNull();
         transformerMapping.addStringProperty("parseExpression");
-        transformerMapping.addStringProperty("parseType");
 
         // add 1:n relation for rule -> actions
         Property ruleId = transformerMapping.addLongProperty("ruleId").notNull().getProperty();

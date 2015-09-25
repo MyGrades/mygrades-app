@@ -52,11 +52,16 @@ public class Scraper {
      */
     private Document document;
 
+    /**
+     * Parser to extract values while scraping.
+     */
+    private Parser parser;
 
 
-    public Scraper(List<Action> actions) {
+    public Scraper(List<Action> actions, Parser parser) {
         this.actions = actions;
         this.cookies = new HashMap<>();
+        this.parser = parser;
     }
 
     /**
@@ -67,9 +72,8 @@ public class Scraper {
      * @throws IOException
      * @throws ParseException
      */
-    public void scrape() throws IOException, ParseException {
+    public String scrape() throws IOException, ParseException {
         String parsedHtml = null;
-        Parser parser = new Parser();
 
         // iterate over all actions in order by position
         for (int i=0; i<actions.size(); i++) {
@@ -87,10 +91,16 @@ public class Scraper {
             // set parsedHtml for each Action back to null -> clean start and check at the end
             parsedHtml = null;
 
-            // parse Content
-            parsedHtml = parser.parse(document, action.getParseExpression(), action.getParseType());
-            Log.v(TAG, "parsedHtml inner loop: " + parsedHtml);
+            // parse Content to String if its not the last action
+            if (i < actions.size() - 1) {
+                parsedHtml = parser.parseToString(action.getParseExpression(), document.toString());
+            } else {
+                // parse with XML
+                parsedHtml = parser.parseToStringWithXML(action.getParseExpression(), document.toString());
+            }
+            //Log.v(TAG, "parsedHtml: " + parsedHtml);
         }
+        return parsedHtml;
     }
 
     /**

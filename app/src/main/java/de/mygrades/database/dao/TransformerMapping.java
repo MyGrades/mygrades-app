@@ -10,7 +10,6 @@ public class TransformerMapping {
     /** Not-null value. */
     private String name;
     private String parseExpression;
-    private String parseType;
     private long ruleId;
 
     public TransformerMapping() {
@@ -20,11 +19,10 @@ public class TransformerMapping {
         this.transformerMappingId = transformerMappingId;
     }
 
-    public TransformerMapping(Long transformerMappingId, String name, String parseExpression, String parseType, long ruleId) {
+    public TransformerMapping(Long transformerMappingId, String name, String parseExpression, long ruleId) {
         this.transformerMappingId = transformerMappingId;
         this.name = name;
         this.parseExpression = parseExpression;
-        this.parseType = parseType;
         this.ruleId = ruleId;
     }
 
@@ -52,14 +50,6 @@ public class TransformerMapping {
 
     public void setParseExpression(String parseExpression) {
         this.parseExpression = parseExpression;
-    }
-
-    public String getParseType() {
-        return parseType;
-    }
-
-    public void setParseType(String parseType) {
-        this.parseType = parseType;
     }
 
     public long getRuleId() {
