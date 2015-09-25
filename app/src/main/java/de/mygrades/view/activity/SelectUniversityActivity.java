@@ -85,19 +85,6 @@ public class SelectUniversityActivity extends AppCompatActivity {
                     .orderAsc(UniversityDao.Properties.Name)
                     .list();
 
-            // set section flags for universities
-            for(int i = 0; i < universities.size(); i++) {
-                String prefix = universities.get(i).getName().substring(0, 1).toUpperCase();
-                String prevPrefix = null;
-                if (i > 0) {
-                    prevPrefix = universities.get(i-1).getName().substring(0, 1).toUpperCase();
-                }
-
-                if (!prefix.equals(prevPrefix)) {
-                    universities.get(i).setSection(true);
-                }
-            }
-
             return universities;
         }
 
