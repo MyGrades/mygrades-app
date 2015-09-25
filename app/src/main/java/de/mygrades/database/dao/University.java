@@ -28,9 +28,6 @@ public class University {
     private List<Rule> rules;
 
     // KEEP FIELDS - put your custom fields here
-
-    private boolean section;
-
     // KEEP FIELDS END
 
     public University() {
@@ -143,13 +140,6 @@ public class University {
         return rules == null ? new java.util.ArrayList<Rule>() : rules;
     }
 
-    public boolean isSection() {
-        return section;
-    }
-
-    public void setSection(boolean section) {
-        this.section = section;
-    }
     // KEEP METHODS END
 
 }
