@@ -76,6 +76,8 @@ public class Transformer {
             gradeEntry.setState(getStringProperty(xmlDocument, STATE));
             gradeEntry.setCreditPoints(getDoubleProperty(xmlDocument, CREDIT_POINTS));
 
+            // update hash, used as primary key
+            gradeEntry.updateHash();
 
             gradeEntries.add(gradeEntry);
         }
