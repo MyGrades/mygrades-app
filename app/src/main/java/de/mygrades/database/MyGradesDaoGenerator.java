@@ -136,10 +136,12 @@ public class MyGradesDaoGenerator {
         gradeEntry.addStringProperty("name").notNull();
         gradeEntry.addDoubleProperty("grade");
         gradeEntry.addStringProperty("examId");
-        gradeEntry.addStringProperty("semester").notNull();
+        gradeEntry.addStringProperty("semester");
         gradeEntry.addStringProperty("state");
         gradeEntry.addDoubleProperty("creditPoints");
         gradeEntry.addIntProperty("semesterNumber");
+        gradeEntry.addStringProperty("hash").primaryKey();
+        gradeEntry.setHasKeepSections(true);
     }
 
     /**
