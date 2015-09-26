@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Button;
 
 import java.util.Random;
@@ -21,8 +20,8 @@ import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.GradesEvent;
 import de.mygrades.util.Constants;
 import de.mygrades.view.adapter.GradesRecyclerViewAdapter;
-import de.mygrades.view.decoration.GradesDividerItemDecoration;
 import de.mygrades.view.adapter.model.GradeItem;
+import de.mygrades.view.decoration.GradesDividerItemDecoration;
 
 /**
  * Activity to show the overview of grades.
@@ -35,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     private MainServiceHelper mainServiceHelper;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    public static final String EXTRA_INITIAL_LOADING = "initial_loading"; // initial loading after login
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,18 @@ public class MainActivity extends AppCompatActivity {
 
         // init swipe to refresh layout
         initSwipeToRefresh();
+
+        boolean initialLoading = getIntent().getBooleanExtra(EXTRA_INITIAL_LOADING, false);
+        if (initialLoading) {
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                   swipeRefreshLayout.setRefreshing(true);
+               }
+            });
+        } else {
+            // TODO: load from database through pattern
+        }
     }
 
     /**
