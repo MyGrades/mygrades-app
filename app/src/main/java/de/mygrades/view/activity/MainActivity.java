@@ -89,46 +89,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void addOne(View v) {
-        addRandomGrades(1);
-    }
-
-    public void addThree(View v) {
-        addRandomGrades(3);
-    }
-
-    public void addFive(View v) {
-        addRandomGrades(5);
-    }
-
-    public void clear(View v) {
-        adapter.clear();
-    }
-
-    // TODO: only temporary to test adapter functionality
-    private void addRandomGrades(int n) {
-        Random rand = new Random();
-
-        for(int i = 0; i < n; i++) {
-            String name = generateString(rand, "abcdefghijklmopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", 12);
-            float g = rand.nextFloat() * (5.0f - 1.0f) + 1.0f;
-            float cp = rand.nextFloat() * (10.0f);
-            GradeItem grade = new GradeItem(name, g, cp);
-            adapter.addGradeForSemester(grade, rand.nextInt((6 - 1) + 1) + 1);
-        }
-    }
-
-    // TODO: only temporary for random grades
-    public static String generateString(Random rand, String characters, int length)
-    {
-        char[] text = new char[length];
-        for (int i = 0; i < length; i++)
-        {
-            text[i] = characters.charAt(rand.nextInt(characters.length()));
-        }
-        return new String(text);
-    }
-
     /**
      * Checks if user is already logged in.
      *
