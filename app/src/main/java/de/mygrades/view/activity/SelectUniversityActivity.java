@@ -177,6 +177,9 @@ public class SelectUniversityActivity extends AppCompatActivity implements AppBa
     public void onEventMainThread(UniversityEvent universityEvent) {
         if (universityAdapter != null) {
             addUniversities(universityEvent.getNewUniversities(true));
+        }
+
+        if (swipeRefresh != null) {
             swipeRefresh.setRefreshing(false);
         }
     }
