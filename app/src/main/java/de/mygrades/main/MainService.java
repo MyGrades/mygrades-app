@@ -35,6 +35,7 @@ public class MainService extends IntentService {
     public static final int METHOD_LOGIN_AND_SCRAPE_FOR_GRADES = 114;
     public static final int METHOD_GET_GRADES_FROM_DATABASE = 115;
     public static final int METHOD_GET_UNIVERSITIES_FROM_DATABASE = 116;
+    public static final int METHOD_LOGOUT = 117;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
@@ -156,6 +157,9 @@ public class MainService extends IntentService {
                 String username = intent.getStringExtra(USERNAME);
                 String password = intent.getStringExtra(PASSWORD);
                 loginProcessor.loginAndScrapeForGrades(username, password);
+                break;
+            case METHOD_LOGOUT:
+                loginProcessor.logout();
                 break;
             default:
                 Log.e(TAG, "Invalid method call to MainService: "+ method);

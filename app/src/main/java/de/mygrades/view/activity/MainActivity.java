@@ -9,6 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Button;
 
 import java.util.Random;
@@ -28,7 +32,6 @@ import de.mygrades.view.decoration.GradesDividerItemDecoration;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private Button btParse;
     private RecyclerView rvGrades;
     private GradesRecyclerViewAdapter adapter;
 
@@ -50,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
 
         // register event bus
         EventBus.getDefault().register(this);
+
+        // init toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
 
         // init recycler view
         initGradesRecyclerView();
@@ -148,5 +156,32 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.actions_main_activity, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_logout:
+                mainServiceHelper.logout();
+
+                Intent intent = new Intent(this, SelectUniversityActivity.class);
+                intent.putExtra(MainActivity.EXTRA_INITIAL_LOADING, true);
+                // set flags, so the user won't be able to go back to the login activity
+                intent.setFlags(
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
