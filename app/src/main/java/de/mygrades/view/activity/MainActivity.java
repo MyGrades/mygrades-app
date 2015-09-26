@@ -13,8 +13,11 @@ import android.widget.Button;
 
 import java.util.Random;
 
+import de.greenrobot.event.EventBus;
 import de.mygrades.R;
+import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.main.MainServiceHelper;
+import de.mygrades.main.events.GradesEvent;
 import de.mygrades.util.Constants;
 import de.mygrades.view.adapter.GradesRecyclerViewAdapter;
 import de.mygrades.view.decoration.GradesDividerItemDecoration;
@@ -39,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        // register event bus
+        EventBus.getDefault().register(this);
+
         btParse = (Button) findViewById(R.id.bt_parse);
         btParse.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -62,6 +68,25 @@ public class MainActivity extends AppCompatActivity {
         // set adapter
         adapter = new GradesRecyclerViewAdapter();
         rvGrades.setAdapter(adapter);
+    }
+
+    public void onEventMainThread(GradesEvent gradesEvent) {
+        if (adapter != null) {
+            for(GradeEntry gradeEntry : gradesEvent.getGrades()) {
+
+                GradeItem item = new GradeItem();
+                item.setName(gradeEntry.getName());
+
+                Double creditPoints = gradeEntry.getCreditPoints();
+                item.setCreditPoints(creditPoints == null ? null : creditPoints.floatValue());
+
+                Double grade = gradeEntry.getGrade();
+                item.setGrade(grade == null ? null : grade.floatValue());
+
+                Random rand = new Random();
+                adapter.addGradeForSemester(item, rand.nextInt((6 - 1) + 1) + 1);
+            }
+        }
     }
 
     public void addOne(View v) {
@@ -121,5 +146,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SelectUniversityActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 }

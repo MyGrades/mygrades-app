@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
 import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.database.dao.TransformerMapping;
 import de.mygrades.database.dao.University;
@@ -15,6 +16,7 @@ import de.mygrades.database.dao.UniversityDao;
 import de.mygrades.main.core.Scraper;
 import de.mygrades.main.core.Parser;
 import de.mygrades.main.core.Transformer;
+import de.mygrades.main.events.GradesEvent;
 import de.mygrades.util.exceptions.ParseException;
 
 /**
@@ -61,7 +63,10 @@ public class GradesProcessor extends BaseProcessor {
             Log.e(TAG, "Transform Error", e);
         }
 
-        Log.v(TAG, gradeEntries.toString());
+        // send event with new grades to activity
+        GradesEvent gradesEvent = new GradesEvent();
+        gradesEvent.setGrades(gradeEntries);
+        EventBus.getDefault().post(gradesEvent);
     }
 
 
