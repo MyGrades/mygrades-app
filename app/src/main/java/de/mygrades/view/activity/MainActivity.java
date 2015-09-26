@@ -116,8 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 Double grade = gradeEntry.getGrade();
                 item.setGrade(grade == null ? null : grade.floatValue());
 
-                Random rand = new Random();
-                adapter.addGradeForSemester(item, rand.nextInt((6 - 1) + 1) + 1);
+                adapter.addGradeForSemester(item, gradeEntry.getSemesterNumber());
             }
         }
 
