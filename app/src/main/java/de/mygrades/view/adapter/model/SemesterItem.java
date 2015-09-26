@@ -29,17 +29,18 @@ public class SemesterItem implements GradesAdapterItem {
         grades.add(gradeItem);
 
         // update creditPoints and average
-        // TODO: consider credit points for average calculation!
         float average = 0f;
-        float creditPoints = 0f;
+        float creditPointsSum = 0f;
         for(GradeItem grade : grades) {
-            average += (grade.getGrade() == null ? 0f : grade.getGrade());
-            creditPoints += (grade.getCreditPoints() == null ? 0f : grade.getCreditPoints());
+            float actCreditPoints = (grade.getCreditPoints() == null ? 0f : grade.getCreditPoints());
+            creditPointsSum += actCreditPoints;
+            average += (grade.getGrade() == null ? 0f : grade.getGrade() * actCreditPoints);
+
         }
-        average /= grades.size();
+        average /= creditPointsSum;
 
         this.average = average;
-        this.creditPoints = creditPoints;
+        this.creditPoints = creditPointsSum;
     }
 
     public int getSemesterNumber() {
