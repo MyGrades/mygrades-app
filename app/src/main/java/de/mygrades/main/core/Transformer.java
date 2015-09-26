@@ -5,9 +5,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import de.mygrades.database.dao.GradeEntry;
@@ -60,6 +66,9 @@ public class Transformer {
      */
     public List<GradeEntry> transform() throws ParseException {
         List<GradeEntry> gradeEntries = new ArrayList<>();
+        // remember strings of semester to calculate semester number
+        Set<String> semestersSet = new HashSet<>();
+
         // get List to iterate through and respectively extract GradeEntry values
         NodeList nodeList = parser.parseToNodeList(transformerMapping.get(ITERATOR).getParseExpression(), html);
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -79,10 +88,76 @@ public class Transformer {
             // update hash, used as primary key
             gradeEntry.updateHash();
 
+            // add GradeEntry to list
             gradeEntries.add(gradeEntry);
+            // add semester to set
+            semestersSet.add(gradeEntry.getSemester());
         }
 
+        // calculate semester numbers
+        calculateGradeEntrySemesterNumber(gradeEntries, semestersSet);
+
         return gradeEntries;
+    }
+
+    /**
+     * Updates each GradeEntry in gradeEntries with SemesterNumber.
+     * This is calculated by the available Semester Strings given in semestersSet.
+     *
+     * @param gradeEntries GradeEntries which should get a SemesterNumber
+     * @param semestersSet available
+     */
+    private void calculateGradeEntrySemesterNumber(List<GradeEntry> gradeEntries, Set<String> semestersSet) {
+        // create List out of set to sort it
+        List<String> semestersList = new ArrayList<>(semestersSet);
+
+        // TODO: save pattern in rule
+        // compile regex pattern for reuse
+        final Pattern pattern = Pattern.compile("(^\\w+)\\s*([0-9]+)");
+
+        // sort semester to get the correct semester number
+        Collections.sort(semestersList, new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                Matcher matcher;
+                String sem1 = "";
+                String sem2 = "";
+                Integer year1 = 0;
+                Integer year2 = 0;
+
+                // get Semester and Year from first String
+                matcher = pattern.matcher(s1);
+                if (matcher.find()) { // Find first match
+                    sem1 = matcher.group(1);
+                    year1 = Integer.parseInt(matcher.group(2));
+                }
+
+                // get Semester and Year from second String
+                matcher = pattern.matcher(s2);
+                if (matcher.find()) { // Find first match
+                    sem2 = matcher.group(1);
+                    year2 = Integer.parseInt(matcher.group(2));
+                }
+
+                // compare years -> if equal sem1 and sem2 (SoSe and WiSe) have to be compared
+                int compYears = year1.compareTo(year2);
+                if (compYears == 0) {
+                    return sem1.compareTo(sem2);
+                }
+                return compYears;
+            }
+        });
+
+        // create Map Semester -> SemesterNumber for easy adding to GradeEntry
+        Map<String, Integer> semesterSemesterNumberMap = new HashMap<>();
+        for (int i=0; i < semestersList.size(); i++) {
+            semesterSemesterNumberMap.put(semestersList.get(i), i+1);
+        }
+
+        // finally set SemesterNumber in each GradeEntry
+        for (GradeEntry gradeEntry : gradeEntries) {
+            gradeEntry.setSemesterNumber(semesterSemesterNumberMap.get(gradeEntry.getSemester()));
+        }
     }
 
     /**
