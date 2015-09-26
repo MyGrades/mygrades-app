@@ -76,7 +76,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         for(int i = 0; i < items.size(); i++) {
             if (items.get(i) instanceof SemesterItem) {
                 SemesterItem semesterItem = (SemesterItem) items.get(i);
-                if (semesterItem.getTermCount() == termCount) {
+                if (semesterItem.getSemesterNumber() == termCount) {
                     semesterIndex = i;
                     break;
                 }
@@ -95,17 +95,17 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * Adds a new semester to the item list.
      * Semester are sorted descend by its term count (semester 3, semester 2, semester 1)
      *
-     * @param termCount - term count
+     * @param semesterNumber - semester number
      * @return index
      */
-    private int addSemester(int termCount) {
+    private int addSemester(int semesterNumber) {
         int semesterIndex = -1; // -1, if there are no semesters so far
 
-        // find index where the semester should be added (descending by term count)
+        // find index where the semester should be added (descending by semester number)
         for(int i = 0; i < items.size(); i++) {
             if (items.get(i) instanceof SemesterItem) {
                 SemesterItem semesterItem = (SemesterItem) items.get(i);
-                if (termCount > semesterItem.getTermCount()) {
+                if (semesterNumber > semesterItem.getSemesterNumber()) {
                     semesterIndex = i;
                     break;
                 }
@@ -120,7 +120,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         // add new semester
         SemesterItem newSemester = new SemesterItem();
-        newSemester.setTermCount(termCount);
+        newSemester.setSemesterNumber(semesterNumber);
         items.add(semesterIndex, newSemester);
         notifyItemInserted(semesterIndex);
 
@@ -153,8 +153,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             SemesterViewHolder viewHolder = (SemesterViewHolder) holder;
             SemesterItem semesterItem = (SemesterItem) items.get(position);
 
-            viewHolder.tvTermCount.setText("" + semesterItem.getTermCount() + ". Semester");
-            viewHolder.tvTermAsString.setText(semesterItem.getTermAsString());
+            viewHolder.tvSemesterNumber.setText("" + semesterItem.getSemesterNumber() + ". Semester");
+            viewHolder.tvSemester.setText(semesterItem.getSemester());
             viewHolder.tvAverage.setText("Ø " + String.format("%.2f", semesterItem.getAverage()));
             viewHolder.tvCreditPoints.setText("Σ " + String.format("%.1f", semesterItem.getCreditPoints()) + " CP");
         } else if (holder instanceof GradeViewHolder) {
@@ -204,16 +204,16 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * View holder for an semester section header.
      */
     public class SemesterViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvTermCount;
-        public TextView tvTermAsString;
+        public TextView tvSemesterNumber;
+        public TextView tvSemester;
         public TextView tvAverage;
         public TextView tvCreditPoints;
 
         public SemesterViewHolder(View itemView) {
             super(itemView);
 
-            tvTermCount = (TextView) itemView.findViewById(R.id.tv_term_count);
-            tvTermAsString = (TextView) itemView.findViewById(R.id.tv_semester);
+            tvSemesterNumber = (TextView) itemView.findViewById(R.id.tv_semester_number);
+            tvSemester = (TextView) itemView.findViewById(R.id.tv_semester);
             tvAverage = (TextView) itemView.findViewById(R.id.tv_average);
             tvCreditPoints = (TextView) itemView.findViewById(R.id.tv_credit_points);
         }

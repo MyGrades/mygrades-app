@@ -7,8 +7,8 @@ import java.util.List;
  * Semester item used in GradesRecyclerViewAdapter.
  */
 public class SemesterItem implements GradesAdapterItem {
-    private int termCount;
-    private String termAsString;
+    private int semesterNumber;
+    private String semester;
     private float average;
     private float creditPoints;
     private List<GradeItem> grades;
@@ -17,9 +17,9 @@ public class SemesterItem implements GradesAdapterItem {
         grades = new ArrayList<>();
     }
 
-    public SemesterItem(int termCount, String termAsString, float average, float creditPoints) {
-        this.termCount = termCount;
-        this.termAsString = termAsString;
+    public SemesterItem(int semesterNumber, String semester, float average, float creditPoints) {
+        this.semesterNumber = semesterNumber;
+        this.semester = semester;
         this.average = average;
         this.creditPoints = creditPoints;
         grades = new ArrayList<>();
@@ -42,20 +42,20 @@ public class SemesterItem implements GradesAdapterItem {
         this.creditPoints = creditPoints;
     }
 
-    public int getTermCount() {
-        return termCount;
+    public int getSemesterNumber() {
+        return semesterNumber;
     }
 
-    public void setTermCount(int termCount) {
-        this.termCount = termCount;
+    public void setSemesterNumber(int semesterNumber) {
+        this.semesterNumber = semesterNumber;
     }
 
-    public String getTermAsString() {
-        return termAsString;
+    public String getSemester() {
+        return semester;
     }
 
-    public void setTermAsString(String termAsString) {
-        this.termAsString = termAsString;
+    public void setSemester(String semester) {
+        this.semester = semester;
     }
 
     public float getAverage() {
