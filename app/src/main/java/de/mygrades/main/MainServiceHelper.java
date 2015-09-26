@@ -105,6 +105,17 @@ public class MainServiceHelper {
         context.startService(intent);
     }
 
+    public void logout() {
+        int method = MainService.METHOD_LOGOUT;
+
+        // set request id
+        long requestId = concatenateLong(method, 0);
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_LOGIN, method, requestId);
+        context.startService(intent);
+    }
+
     /**
      * Build a basic intent with required extra data for each request.
      *

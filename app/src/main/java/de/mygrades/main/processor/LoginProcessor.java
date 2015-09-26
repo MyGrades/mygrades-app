@@ -2,6 +2,7 @@ package de.mygrades.main.processor;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.securepreferences.SecurePreferences;
 
@@ -31,6 +32,28 @@ public class LoginProcessor extends BaseProcessor {
         gradesProcessor.scrapeForGrades();
 
         // TODO: post university id to our server (asynchronous with retrofit)
+    }
+
+    /**
+     * Remove all data.
+     */
+    public void logout() {
+        // remove username and password
+        SharedPreferences securePrefs = new SecurePreferences(context, Constants.NOT_SO_SECURE_PREF_PW, Constants.NOT_SO_SECURE_PREF_FILE);
+        SecurePreferences.Editor secureEditor = (SecurePreferences.Editor) securePrefs.edit();
+        secureEditor.remove(Constants.PREF_KEY_USERNAME);
+        secureEditor.remove(Constants.PREF_KEY_PASSWORD);
+        secureEditor.commit();
+
+        // remove normal preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(Constants.PREF_KEY_UNIVERSITY_ID);
+        editor.remove(Constants.PREF_KEY_LOGGED_IN);
+        editor.commit();
+
+        // delete all grades
+        daoSession.getGradeEntryDao().deleteAll();
     }
 
     /**
