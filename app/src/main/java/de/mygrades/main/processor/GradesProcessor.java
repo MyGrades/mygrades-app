@@ -72,7 +72,24 @@ public class GradesProcessor extends BaseProcessor {
             Log.e(TAG, "Transform Error", e);
         }
 
+        // save grade entries in database
+        if (gradeEntries != null && gradeEntries.size() > 0) {
+            daoSession.getGradeEntryDao().insertOrReplaceInTx(gradeEntries);
+        }
+
         // send event with new grades to activity
+        GradesEvent gradesEvent = new GradesEvent();
+        gradesEvent.setGrades(gradeEntries);
+        EventBus.getDefault().post(gradesEvent);
+    }
+
+    /**
+     * Load a grades from the database and post an event with all grades.
+     */
+    public void getGradesFromDatabase() {
+        List<GradeEntry> gradeEntries = daoSession.getGradeEntryDao().loadAll();
+
+        // post event with new grades to subscribers
         GradesEvent gradesEvent = new GradesEvent();
         gradesEvent.setGrades(gradeEntries);
         EventBus.getDefault().post(gradesEvent);
