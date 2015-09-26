@@ -131,6 +131,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void goToMainActivity() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.putExtra(MainActivity.EXTRA_INITIAL_LOADING, true);
         // set flags, so the user won't be able to go back to the login activity
         intent.setFlags(
                 Intent.FLAG_ACTIVITY_CLEAR_TOP |
