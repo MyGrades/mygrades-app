@@ -1,7 +1,5 @@
 package de.mygrades.view.activity;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -11,16 +9,12 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import de.mygrades.MyGradesApplication;
 import de.mygrades.R;
-import de.mygrades.database.dao.DaoSession;
 import de.mygrades.database.dao.University;
-import de.mygrades.database.dao.UniversityDao;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.UniversityEvent;
 import de.mygrades.view.adapter.UniversitiesRecyclerViewAdapter;
@@ -57,11 +51,10 @@ public class SelectUniversityActivity extends AppCompatActivity implements AppBa
         // register event bus
         EventBus.getDefault().register(this);
 
-        // start async task to load universities
-        UniversityAsyncTask universityAsyncTask = new UniversityAsyncTask(this);
-        universityAsyncTask.execute();
+        // get all published universities from the database
+        mainServiceHelper.getUniversitiesFromDatabase(true);
 
-        // get all universities from server
+        // get all published universities from server
         mainServiceHelper.getUniversities(true);
     }
 
@@ -122,42 +115,6 @@ public class SelectUniversityActivity extends AppCompatActivity implements AppBa
     }
 
     /**
-     * AsyncTask to load all universities in background thread from database.
-     * // TODO: remove async, use pattern throug intent service
-     */
-    private class UniversityAsyncTask extends AsyncTask<Void, Void, List<University>> {
-        private Context context;
-
-        public UniversityAsyncTask(Context context) {
-            this.context = context.getApplicationContext();
-        }
-
-        @Override
-        protected List<University> doInBackground(Void... params) {
-            DaoSession daoSession = ((MyGradesApplication) context.getApplicationContext()).getDaoSession();
-            UniversityDao universityDao = daoSession.getUniversityDao();
-
-            List<University> universities = universityDao.queryBuilder()
-                    .where(UniversityDao.Properties.Published.eq(true))
-                    .orderAsc(UniversityDao.Properties.Name)
-                    .list();
-
-            return universities;
-        }
-
-        @Override
-        protected void onPostExecute(List<University> universities) {
-            if (universities.size() > 0) {
-                addUniversities(universities);
-                swipeRefresh.setRefreshing(false);
-            } else {
-                // no universities in the database, show the refresh indicator
-                swipeRefresh.setRefreshing(true);
-            }
-        }
-    }
-
-    /**
      * Add new universities to the adapter.
      *
      * @param universities list of new universities which should be added
@@ -166,6 +123,10 @@ public class SelectUniversityActivity extends AppCompatActivity implements AppBa
         for(University university : universities) {
             UniversityItem universityItem = new UniversityItem(university.getName(), university.getUniversityId());
             universityAdapter.add(universityItem);
+        }
+
+        if (universityAdapter.getItemCount() > 0 && swipeRefresh != null) {
+            swipeRefresh.setRefreshing(false);
         }
     }
 
@@ -177,10 +138,6 @@ public class SelectUniversityActivity extends AppCompatActivity implements AppBa
     public void onEventMainThread(UniversityEvent universityEvent) {
         if (universityAdapter != null) {
             addUniversities(universityEvent.getNewUniversities(true));
-        }
-
-        if (swipeRefresh != null) {
-            swipeRefresh.setRefreshing(false);
         }
     }
 

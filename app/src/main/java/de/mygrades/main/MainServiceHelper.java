@@ -55,6 +55,23 @@ public class MainServiceHelper {
     }
 
     /**
+     * Load all universities from the database.
+     *
+     * @param publishedOnly only published universities or all.
+     */
+    public void getUniversitiesFromDatabase(boolean publishedOnly) {
+        int method = MainService.METHOD_GET_UNIVERSITIES_FROM_DATABASE;
+
+        // set request id
+        long requestId = concatenateLong(method, 0);
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_UNIVERSITY, method, requestId);
+        intent.putExtra(MainService.PUBLISHED_ONLY, publishedOnly);
+        context.startService(intent);
+    }
+
+    /**
      * Starts an IntentService to scrape for new grades.
      */
     public void scrapeForGrades() {
