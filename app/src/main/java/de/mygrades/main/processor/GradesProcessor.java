@@ -1,22 +1,23 @@
 package de.mygrades.main.processor;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.database.dao.GradeEntry;
-import de.mygrades.database.dao.TransformerMapping;
+import de.mygrades.database.dao.Rule;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
-import de.mygrades.main.core.Scraper;
 import de.mygrades.main.core.Parser;
+import de.mygrades.main.core.Scraper;
 import de.mygrades.main.core.Transformer;
 import de.mygrades.main.events.GradesEvent;
+import de.mygrades.util.Constants;
 import de.mygrades.util.exceptions.ParseException;
 
 /**
@@ -31,11 +32,19 @@ public class GradesProcessor extends BaseProcessor {
 
 
     public void scrapeForGrades() {
-        University u = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(333l)).unique();
-        Log.v(TAG, "rules: " + u.getRules().size());
-        Log.v(TAG, "actions: "+ u.getRules().get(0).getActions().size());
-        Log.v(TAG, "params: "+ u.getRules().get(0).getActions().get(1).getActionParams().size());
-        Log.v(TAG, "transformer_mapping: "+ u.getRules().get(0).getTransformerMappings().toString());
+        // get university
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
+        University university = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
+
+        // get bachelor rule // TODO: read from preferences?
+        Rule rule = null;
+        for(Rule r : university.getRules()) {
+            if (r.getType().equalsIgnoreCase("bachelor")) {
+                rule = r;
+                break;
+            }
+        }
 
         // init parser only 1 time
         Parser parser = null;
@@ -46,7 +55,7 @@ public class GradesProcessor extends BaseProcessor {
         }
 
         String scrapingResult = null;
-        Scraper scraper = new Scraper(u.getRules().get(0).getActions(), parser);
+        Scraper scraper = new Scraper(rule.getActions(), parser);
         try {
             scrapingResult = scraper.scrape();
         } catch (IOException e) {
@@ -55,7 +64,7 @@ public class GradesProcessor extends BaseProcessor {
             Log.e(TAG, "Parse Error", e);
         }
 
-        Transformer transformer = new Transformer(u.getRules().get(0).getTransformerMappings(), scrapingResult, parser);
+        Transformer transformer = new Transformer(rule.getTransformerMappings(), scrapingResult, parser);
         List<GradeEntry> gradeEntries = null;
         try {
             gradeEntries = transformer.transform();
