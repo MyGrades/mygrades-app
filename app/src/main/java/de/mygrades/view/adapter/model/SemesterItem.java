@@ -33,8 +33,8 @@ public class SemesterItem implements GradesAdapterItem {
         float average = 0f;
         float creditPoints = 0f;
         for(GradeItem grade : grades) {
-            average += grade.getGrade();
-            creditPoints += grade.getCreditPoints();
+            average += (grade.getGrade() == null ? 0f : grade.getGrade());
+            creditPoints += (grade.getCreditPoints() == null ? 0f : grade.getCreditPoints());
         }
         average /= grades.size();
 

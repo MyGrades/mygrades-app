@@ -5,12 +5,12 @@ package de.mygrades.view.adapter.model;
  */
 public class GradeItem implements GradesAdapterItem {
     private String name;
-    private float grade;
-    private float creditPoints;
+    private Float grade;
+    private Float creditPoints;
 
     public GradeItem() {}
 
-    public GradeItem(String name, float grade, float creditPoints) {
+    public GradeItem(String name, Float grade, Float creditPoints) {
         this.name = name;
         this.grade = grade;
         this.creditPoints = creditPoints;
@@ -24,19 +24,19 @@ public class GradeItem implements GradesAdapterItem {
         this.name = name;
     }
 
-    public float getGrade() {
+    public Float getGrade() {
         return grade;
     }
 
-    public void setGrade(float grade) {
+    public void setGrade(Float grade) {
         this.grade = grade;
     }
 
-    public float getCreditPoints() {
+    public Float getCreditPoints() {
         return creditPoints;
     }
 
-    public void setCreditPoints(float creditPoints) {
+    public void setCreditPoints(Float creditPoints) {
         this.creditPoints = creditPoints;
     }
 }
