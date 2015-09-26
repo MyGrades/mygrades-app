@@ -49,15 +49,34 @@ public class UniversityProcessor extends BaseProcessor {
             Log.e(TAG, "RetrofitError: " + e.getMessage());
         }
 
-        if (universities != null) {
-            // insert into database
-            daoSession.getUniversityDao().insertOrReplaceInTx(universities);
+        universities = universities == null ? new ArrayList<University>() : universities;
 
-            // post university event
-            UniversityEvent universityEvent = new UniversityEvent();
-            universityEvent.setNewUniversities(universities);
-            EventBus.getDefault().post(universityEvent);
-        }
+        // insert into database
+        daoSession.getUniversityDao().insertOrReplaceInTx(universities);
+
+        // post university event
+        UniversityEvent universityEvent = new UniversityEvent();
+        universityEvent.setNewUniversities(universities);
+        EventBus.getDefault().post(universityEvent);
+    }
+
+    /**
+     * Load all universities from the database and post an event.
+     *
+     * @param publishedOnly - select only published universities or all
+     */
+    public void getUniversitiesFromDatabase(boolean publishedOnly) {
+        UniversityDao universityDao = daoSession.getUniversityDao();
+
+        List<University> universities = universityDao.queryBuilder()
+                .where(UniversityDao.Properties.Published.eq(publishedOnly))
+                .orderAsc(UniversityDao.Properties.Name)
+                .list();
+
+        // post university event
+        UniversityEvent universityEvent = new UniversityEvent();
+        universityEvent.setNewUniversities(universities);
+        EventBus.getDefault().post(universityEvent);
     }
 
     /**
