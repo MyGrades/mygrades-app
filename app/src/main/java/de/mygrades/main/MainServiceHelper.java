@@ -79,7 +79,7 @@ public class MainServiceHelper {
         int method = MainService.METHOD_LOGIN_AND_SCRAPE_FOR_GRADES;
 
         // set request id
-        long requestId = concatenateLong(method, username.hashCode() + password.hashCode());
+        long requestId = concatenateLong(method, 0);
 
         // start worker thread in background
         Intent intent = getBasicIntent(MainService.PROCESSOR_LOGIN, method, requestId);
