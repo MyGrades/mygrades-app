@@ -123,6 +123,7 @@ public class SelectUniversityActivity extends AppCompatActivity implements AppBa
 
     /**
      * AsyncTask to load all universities in background thread from database.
+     * // TODO:
      */
     private class UniversityAsyncTask extends AsyncTask<Void, Void, List<University>> {
         private Context context;
@@ -173,15 +174,10 @@ public class SelectUniversityActivity extends AppCompatActivity implements AppBa
      *
      * @param universityEvent - university event
      */
-    public void onEvent(final UniversityEvent universityEvent) {
+    public void onEventMainThread(UniversityEvent universityEvent) {
         if (universityAdapter != null) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    addUniversities(universityEvent.getNewUniversities(true));
-                    swipeRefresh.setRefreshing(false);
-                }
-            });
+            addUniversities(universityEvent.getNewUniversities(true));
+            swipeRefresh.setRefreshing(false);
         }
     }
 
