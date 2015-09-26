@@ -40,7 +40,7 @@ public class GradesProcessor extends BaseProcessor {
         // init parser only 1 time
         Parser parser = null;
         try {
-           parser = new Parser();
+           parser = new Parser(context);
         } catch (ParseException e) {
             Log.e(TAG, "Parser Error", e);
         }
@@ -68,7 +68,4 @@ public class GradesProcessor extends BaseProcessor {
         gradesEvent.setGrades(gradeEntries);
         EventBus.getDefault().post(gradesEvent);
     }
-
-
-
 }

@@ -1,5 +1,7 @@
 package de.mygrades.main.core;
 
+import android.content.Context;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -29,6 +31,7 @@ import de.mygrades.util.exceptions.ParseException;
  */
 public class Parser {
     private static final String TAG = Parser.class.getSimpleName();
+    private Context context;
 
     /**
      * DocumentBuilder is needed for creating documents out of strings.
@@ -45,7 +48,8 @@ public class Parser {
      */
     private Transformer transformer;
 
-    public Parser() throws ParseException {
+    public Parser(Context context) throws ParseException {
+        this.context = context;
         xPath = XPathFactory.newInstance().newXPath();
 
         // initialize Builder to build document from string
@@ -216,5 +220,14 @@ public class Parser {
         } catch (XPathExpressionException e) {
             throw new ParseException("Could not compile XPATH expression!");
         }
+    }
+
+    /**
+     * Get the context.
+     *
+     * @return context
+     */
+    public Context getContext() {
+        return context;
     }
 }

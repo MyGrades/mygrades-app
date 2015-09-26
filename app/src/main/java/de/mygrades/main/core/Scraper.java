@@ -1,6 +1,9 @@
 package de.mygrades.main.core;
 
+import android.content.SharedPreferences;
 import android.util.Log;
+
+import com.securepreferences.SecurePreferences;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -17,6 +20,7 @@ import javax.net.ssl.HttpsURLConnection;
 import de.mygrades.database.dao.Action;
 import de.mygrades.database.dao.ActionParam;
 import de.mygrades.util.Config;
+import de.mygrades.util.Constants;
 import de.mygrades.util.NoSSLv3Factory;
 import de.mygrades.util.exceptions.ParseException;
 
@@ -175,6 +179,8 @@ public class Scraper {
      * @return Map of key value pairs for request
      */
     private Map<String, String> getRequestData(List<ActionParam> actionParams) {
+        SharedPreferences prefs = null;
+
         Map<String, String> requestData = new HashMap<>();
         if (actionParams != null) {
             // iterate over all ActionParams and add params to Map
@@ -182,11 +188,15 @@ public class Scraper {
                 String value = actionParam.getValue();
                 // check if type == password or username -> get from secure shared preferences
                 if (actionParam.getType().equals("password")) {
-                    // TODO: get from prefs
-                    value = Config.TEMP_PW;
+                    if (prefs == null) {
+                        prefs = new SecurePreferences(parser.getContext(), Constants.NOT_SO_SECURE_PREF_PW, Constants.NOT_SO_SECURE_PREF_FILE);
+                    }
+                    value = prefs.getString(Constants.PREF_KEY_PASSWORD, "");
                 } else if (actionParam.getType().equals("username")) {
-                    // TODO: get from prefs
-                    value = Config.TEMP_U;
+                    if (prefs == null) {
+                        prefs = new SecurePreferences(parser.getContext(), Constants.NOT_SO_SECURE_PREF_PW, Constants.NOT_SO_SECURE_PREF_FILE);
+                    }
+                    value = prefs.getString(Constants.PREF_KEY_USERNAME, "");
                 }
                 requestData.put(actionParam.getKey(), value);
             }
