@@ -13,7 +13,7 @@
         android:layout_gravity="center">
 
         <TextView
-            android:id="@+id/tv_term_count"
+            android:id="@+id/tv_semester_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="24sp" />
