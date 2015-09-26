@@ -59,14 +59,15 @@ public class MainActivity extends AppCompatActivity {
 
         boolean initialLoading = getIntent().getBooleanExtra(EXTRA_INITIAL_LOADING, false);
         if (initialLoading) {
+            getIntent().removeExtra(EXTRA_INITIAL_LOADING);
             swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                   swipeRefreshLayout.setRefreshing(true);
-               }
+                    @Override
+                    public void run() {
+                    swipeRefreshLayout.setRefreshing(true);
+                }
             });
         } else {
-            // TODO: load from database through pattern
+            mainServiceHelper.getGradesFromDatabase();
         }
     }
 

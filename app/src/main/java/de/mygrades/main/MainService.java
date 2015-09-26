@@ -33,6 +33,7 @@ public class MainService extends IntentService {
     public static final int METHOD_GET_DETAILED_UNIVERSITY = 112;
     public static final int METHOD_SCRAPE_FOR_GRADES = 113;
     public static final int METHOD_LOGIN_AND_SCRAPE_FOR_GRADES = 114;
+    public static final int METHOD_GET_GRADES_FROM_DATABASE = 115;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
@@ -127,6 +128,9 @@ public class MainService extends IntentService {
         switch (method) {
             case METHOD_SCRAPE_FOR_GRADES:
                 gradesProcessor.scrapeForGrades();
+                break;
+            case METHOD_GET_GRADES_FROM_DATABASE:
+                gradesProcessor.getGradesFromDatabase();
                 break;
             default:
                 Log.e(TAG, "Invalid method call to MainService: "+ method);
