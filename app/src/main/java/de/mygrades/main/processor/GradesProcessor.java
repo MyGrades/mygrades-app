@@ -38,6 +38,7 @@ public class GradesProcessor extends BaseProcessor {
         University university = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
 
         // get bachelor rule // TODO: read from preferences?
+        // TODO: eager Loading?!
         Rule rule = null;
         for(Rule r : university.getRules()) {
             if (r.getType().equalsIgnoreCase("bachelor")) {
