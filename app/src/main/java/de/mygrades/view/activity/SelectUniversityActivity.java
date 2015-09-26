@@ -123,7 +123,7 @@ public class SelectUniversityActivity extends AppCompatActivity implements AppBa
 
     /**
      * AsyncTask to load all universities in background thread from database.
-     * // TODO:
+     * // TODO: remove async, use pattern throug intent service
      */
     private class UniversityAsyncTask extends AsyncTask<Void, Void, List<University>> {
         private Context context;
