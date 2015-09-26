@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rvGrades;
     private GradesRecyclerViewAdapter adapter;
 
+    private MainServiceHelper mainServiceHelper;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,19 +45,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_main);
+        mainServiceHelper = new MainServiceHelper(this);
 
         // register event bus
         EventBus.getDefault().register(this);
 
-        btParse = (Button) findViewById(R.id.bt_parse);
-        btParse.setOnClickListener(new Button.OnClickListener() {
+        // init recycler view
+        initGradesRecyclerView();
+
+        // init swipe to refresh layout
+        initSwipeToRefresh();
+    }
+
+    /**
+     * Initialize the SwipeRefreshLayout.
+     */
+    private void initSwipeToRefresh() {
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
-                new MainServiceHelper(MainActivity.this).scrapeForGrades();
+            public void onRefresh() {
+                mainServiceHelper.scrapeForGrades();
             }
         });
-
-        initGradesRecyclerView();
     }
 
     /**
@@ -70,6 +84,11 @@ public class MainActivity extends AppCompatActivity {
         rvGrades.setAdapter(adapter);
     }
 
+    /**
+     * Receive an GradesEvent and add all grades to the adapter.
+     *
+     * @param gradesEvent - grades event
+     */
     public void onEventMainThread(GradesEvent gradesEvent) {
         if (adapter != null) {
             for(GradeEntry gradeEntry : gradesEvent.getGrades()) {
@@ -86,6 +105,10 @@ public class MainActivity extends AppCompatActivity {
                 Random rand = new Random();
                 adapter.addGradeForSemester(item, rand.nextInt((6 - 1) + 1) + 1);
             }
+        }
+
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
