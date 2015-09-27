@@ -3,12 +3,12 @@ package de.mygrades.view.adapter.model;
 /**
  * Created by tilman on 27.09.15.
  */
-public class GradeSummaryItem implements GradesAdapterItem {
+public class GradesSummaryItem implements GradesAdapterItem {
     private float average;
     private float creditPoints;
     private String lastUpdatedAt;
 
-    public GradeSummaryItem() {
+    public GradesSummaryItem() {
     }
 
     public float getAverage() {

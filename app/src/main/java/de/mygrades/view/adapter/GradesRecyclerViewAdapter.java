@@ -18,7 +18,7 @@ import java.util.List;
 import de.mygrades.R;
 import de.mygrades.util.Constants;
 import de.mygrades.view.adapter.model.GradeItem;
-import de.mygrades.view.adapter.model.GradeSummaryItem;
+import de.mygrades.view.adapter.model.GradesSummaryItem;
 import de.mygrades.view.adapter.model.GradesAdapterItem;
 import de.mygrades.view.adapter.model.SemesterItem;
 
@@ -49,7 +49,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         // add summary if necessary
         if (items.size() == 0) {
             // always add summary to top
-            GradeSummaryItem summary = new GradeSummaryItem();
+            GradesSummaryItem summary = new GradesSummaryItem();
             items.add(0, summary);
             notifyItemInserted(0);
         }
@@ -140,6 +140,9 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         return semesterIndex;
     }
 
+    /**
+     * Update the summary and set average, creditPoints and lastUpdatedAt.
+     */
     public void updateSummary() {
         float average = 0f;
         float creditPointsSum = 0f;
@@ -160,13 +163,19 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         long timestamp = prefs.getLong(Constants.PREF_KEY_LAST_UPDATED_AT, -1);
         String lastUpdatedAt = timestampToString(timestamp);
 
-        GradeSummaryItem summaryItem = (GradeSummaryItem) items.get(0);
+        GradesSummaryItem summaryItem = (GradesSummaryItem) items.get(0);
         summaryItem.setAverage(average);
         summaryItem.setCreditPoints(creditPointsSum);
         summaryItem.setLastUpdatedAt(lastUpdatedAt + " Uhr"); // TODO: better time format + string resource
         notifyItemChanged(0);
     }
 
+    /**
+     * Convert a given timestamp to a string representation.
+     *
+     * @param timestamp - timestamp to convert
+     * @return timestamp as string
+     */
     public static String timestampToString(long timestamp) {
         if (timestamp < 0) {
             return "-";
@@ -196,7 +205,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             return new GradeViewHolder(v);
         } else if (viewType == VIEW_TYPE_SUMMARY) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grades_summary, parent, false);
-            return new GradeSummaryViewHolder(v);
+            return new GradesSummaryViewHolder(v);
         }
         return null;
     }
@@ -224,9 +233,9 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             Float creditPoints = gradeItem.getCreditPoints();
             String creditPointsAsString = creditPoints == null ? "-" : String.format("%.1f", creditPoints);
             viewHolder.tvCreditPoints.setText(creditPointsAsString + " CP");
-        } else if (holder instanceof GradeSummaryViewHolder) {
-            GradeSummaryViewHolder viewHolder = (GradeSummaryViewHolder) holder;
-            GradeSummaryItem summaryItem = (GradeSummaryItem) items.get(position);
+        } else if (holder instanceof GradesSummaryViewHolder) {
+            GradesSummaryViewHolder viewHolder = (GradesSummaryViewHolder) holder;
+            GradesSummaryItem summaryItem = (GradesSummaryItem) items.get(position);
 
             viewHolder.tvAverage.setText(String.format("%.2f", summaryItem.getAverage()));
             viewHolder.tvCreditPoints.setText(String.format("%.1f", summaryItem.getCreditPoints()));
@@ -245,7 +254,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             return VIEW_TYPE_SEMESTER;
         } else if (items.get(position) instanceof GradeItem) {
             return VIEW_TYPE_GRADE;
-        } else if (items.get(position) instanceof GradeSummaryItem) {
+        } else if (items.get(position) instanceof GradesSummaryItem) {
             return VIEW_TYPE_SUMMARY;
         }
 
@@ -291,12 +300,12 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     /**
      * View holder for the overall summary (header).
      */
-    public class GradeSummaryViewHolder extends RecyclerView.ViewHolder {
+    public class GradesSummaryViewHolder extends RecyclerView.ViewHolder {
         public TextView tvAverage;
         public TextView tvCreditPoints;
         public TextView tvLastUpdatedAt;
 
-        public GradeSummaryViewHolder(View itemView) {
+        public GradesSummaryViewHolder(View itemView) {
             super(itemView);
 
             tvAverage = (TextView) itemView.findViewById(R.id.tv_average);
