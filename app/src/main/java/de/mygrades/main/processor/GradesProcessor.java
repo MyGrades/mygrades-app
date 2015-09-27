@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -32,13 +33,16 @@ public class GradesProcessor extends BaseProcessor {
 
 
     public void scrapeForGrades() {
+        // TODO: check network connection
+        // No Connection -> event no Connection, abort
+
+
         // get university
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
         University university = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
 
         // get bachelor rule // TODO: read from preferences?
-        // TODO: eager Loading?!
         Rule rule = null;
         for(Rule r : university.getRules()) {
             if (r.getType().equalsIgnoreCase("bachelor")) {
@@ -47,41 +51,43 @@ public class GradesProcessor extends BaseProcessor {
             }
         }
 
-        // init parser only 1 time
-        Parser parser = null;
         try {
-           parser = new Parser(context);
+            String scrapingResult;
+            List<GradeEntry> gradeEntries;
+
+            // init Parser, Scraper, Transformer
+            Parser parser = new Parser(context);
+            Scraper scraper = new Scraper(rule.getActions(), parser);
+
+            // start scraping
+            scrapingResult = scraper.scrape();
+
+            // start transforming
+            Transformer transformer = new Transformer(rule.getTransformerMappings(), scrapingResult, parser);
+            gradeEntries = transformer.transform();
+
+            // save grade entries in database
+            if (gradeEntries != null && gradeEntries.size() > 0) {
+                daoSession.getGradeEntryDao().insertOrReplaceInTx(gradeEntries);
+            }
+
+            // send event with new grades to activity
+            GradesEvent gradesEvent = new GradesEvent();
+            gradesEvent.setGrades(gradeEntries);
+            EventBus.getDefault().post(gradesEvent);
         } catch (ParseException e) {
             Log.e(TAG, "Parser Error", e);
-        }
-
-        String scrapingResult = null;
-        Scraper scraper = new Scraper(rule.getActions(), parser);
-        try {
-            scrapingResult = scraper.scrape();
         } catch (IOException e) {
+            if (e instanceof SocketTimeoutException) {
+                // TODO: event timeout
+            } else {
+                // TODO: event general error
+            }
+
             Log.e(TAG, "Scrape Error", e);
-        } catch (ParseException e) {
-            Log.e(TAG, "Parse Error", e);
+        } catch (Exception e) {
+            // TODO: event general error
         }
-
-        Transformer transformer = new Transformer(rule.getTransformerMappings(), scrapingResult, parser);
-        List<GradeEntry> gradeEntries = null;
-        try {
-            gradeEntries = transformer.transform();
-        } catch (ParseException e) {
-            Log.e(TAG, "Transform Error", e);
-        }
-
-        // save grade entries in database
-        if (gradeEntries != null && gradeEntries.size() > 0) {
-            daoSession.getGradeEntryDao().insertOrReplaceInTx(gradeEntries);
-        }
-
-        // send event with new grades to activity
-        GradesEvent gradesEvent = new GradesEvent();
-        gradesEvent.setGrades(gradeEntries);
-        EventBus.getDefault().post(gradesEvent);
     }
 
     /**
