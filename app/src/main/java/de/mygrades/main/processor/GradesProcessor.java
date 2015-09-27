@@ -66,7 +66,7 @@ public class GradesProcessor extends BaseProcessor {
             Transformer transformer = new Transformer(rule, scrapingResult, parser);
             gradeEntries = transformer.transform();
 
-            System.out.println(gradeEntries);
+            Log.d(TAG, gradeEntries.toString());
 
             // save grade entries in database
             if (gradeEntries != null && gradeEntries.size() > 0) {

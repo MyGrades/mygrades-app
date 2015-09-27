@@ -18,6 +18,7 @@ public class GradeEntry {
     private Double creditPoints;
     private String annotation;
     private String attempt;
+    private String examDate;
     private Integer semesterNumber;
     private String hash;
 
@@ -31,7 +32,7 @@ public class GradeEntry {
         this.hash = hash;
     }
 
-    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, Integer semesterNumber, String hash) {
+    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String hash) {
         this.name = name;
         this.grade = grade;
         this.examId = examId;
@@ -40,6 +41,7 @@ public class GradeEntry {
         this.creditPoints = creditPoints;
         this.annotation = annotation;
         this.attempt = attempt;
+        this.examDate = examDate;
         this.semesterNumber = semesterNumber;
         this.hash = hash;
     }
@@ -110,6 +112,14 @@ public class GradeEntry {
         this.attempt = attempt;
     }
 
+    public String getExamDate() {
+        return examDate;
+    }
+
+    public void setExamDate(String examDate) {
+        this.examDate = examDate;
+    }
+
     public Integer getSemesterNumber() {
         return semesterNumber;
     }
@@ -148,6 +158,7 @@ public class GradeEntry {
                 ", creditPoints=" + creditPoints +
                 ", annotation='" + annotation + '\'' +
                 ", attempt='" + attempt + '\'' +
+                ", examDate='" + examDate + '\'' +
                 ", semesterNumber=" + semesterNumber +
                 ", hash='" + hash + '\'' +
                 '}';
