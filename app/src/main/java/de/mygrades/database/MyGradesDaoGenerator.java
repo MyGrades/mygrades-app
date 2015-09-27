@@ -62,6 +62,9 @@ public class MyGradesDaoGenerator {
         rule = schema.addEntity("Rule");
         rule.addLongProperty("ruleId").primaryKey();
         rule.addStringProperty("type").notNull();
+        rule.addStringProperty("semesterFormat");
+        rule.addStringProperty("semesterPattern");
+        rule.addDoubleProperty("gradeFactor");
         rule.addDateProperty("lastUpdated");
 
         // add 1:n relation for university -> rules
@@ -139,6 +142,8 @@ public class MyGradesDaoGenerator {
         gradeEntry.addStringProperty("semester");
         gradeEntry.addStringProperty("state");
         gradeEntry.addDoubleProperty("creditPoints");
+        gradeEntry.addStringProperty("annotation");
+        gradeEntry.addStringProperty("attempt");
         gradeEntry.addIntProperty("semesterNumber");
         gradeEntry.addStringProperty("hash").primaryKey();
         gradeEntry.setHasKeepSections(true);
