@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(this, SelectUniversityActivity.class);
                 intent.putExtra(MainActivity.EXTRA_INITIAL_LOADING, true);
-                // set flags, so the user won't be able to go back to the login activity
+                // set flags, so the user won't be able to go back to the main activity
                 intent.setFlags(
                         Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                 Intent.FLAG_ACTIVITY_CLEAR_TASK |
