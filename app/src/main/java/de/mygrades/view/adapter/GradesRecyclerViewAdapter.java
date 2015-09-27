@@ -1,16 +1,24 @@
 package de.mygrades.view.adapter;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.mygrades.R;
+import de.mygrades.util.Constants;
 import de.mygrades.view.adapter.model.GradeItem;
+import de.mygrades.view.adapter.model.GradesSummaryItem;
 import de.mygrades.view.adapter.model.GradesAdapterItem;
 import de.mygrades.view.adapter.model.SemesterItem;
 
@@ -20,23 +28,34 @@ import de.mygrades.view.adapter.model.SemesterItem;
 public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_SEMESTER = 0;
     private final int VIEW_TYPE_GRADE = 1;
+    private final int VIEW_TYPE_SUMMARY = 2;
 
+    private Context context;
     private List<GradesAdapterItem> items;
 
-    public GradesRecyclerViewAdapter() {
+    public GradesRecyclerViewAdapter(Context context) {
         super();
         items = new ArrayList<>();
+        this.context = context;
     }
 
     /**
      * Add a new grade to the given semester by its termCount.
      *
      * @param newGrade - new grade
-     * @param termCount - semester term count
+     * @param semesterNumber - semester term count
      */
-    public void addGradeForSemester(GradeItem newGrade, int termCount) {
+    public void addGradeForSemester(GradeItem newGrade, int semesterNumber) {
+        // add summary if necessary
+        if (items.size() == 0) {
+            // always add summary to top
+            GradesSummaryItem summary = new GradesSummaryItem();
+            items.add(0, summary);
+            notifyItemInserted(0);
+        }
+
         // find semester index, where the grade should be added
-        int semesterIndex = getIndexForSemester(termCount);
+        int semesterIndex = getIndexForSemester(semesterNumber);
 
         // find position in semester (lexicographic)
         // start after the semesterIndex
@@ -67,16 +86,16 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     /**
      * Get the index for a semester by its termCount.
      *
-     * @param termCount - term count
+     * @param semesterNumber - term count
      * @return index
      */
-    private int getIndexForSemester(int termCount) {
+    private int getIndexForSemester(int semesterNumber) {
         // find the index for a semester
         int semesterIndex = -1;
         for(int i = 0; i < items.size(); i++) {
             if (items.get(i) instanceof SemesterItem) {
                 SemesterItem semesterItem = (SemesterItem) items.get(i);
-                if (semesterItem.getSemesterNumber() == termCount) {
+                if (semesterItem.getSemesterNumber() == semesterNumber) {
                     semesterIndex = i;
                     break;
                 }
@@ -85,7 +104,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         // no semester found, add a new one
         if (semesterIndex < 0) {
-            semesterIndex = addSemester(termCount);
+            semesterIndex = addSemester(semesterNumber);
         }
 
         return semesterIndex;
@@ -99,7 +118,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * @return index
      */
     private int addSemester(int semesterNumber) {
-        int semesterIndex = -1; // -1, if there are no semesters so far
+        int semesterIndex = items.size(); // add to bottom , if no other position will be found
 
         // find index where the semester should be added (descending by semester number)
         for(int i = 0; i < items.size(); i++) {
@@ -112,12 +131,6 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             }
         }
 
-        // if list is empty, use index 0
-        semesterIndex = items.size() == 0 ? 0 : semesterIndex;
-
-        // if new semester goes to bottom, use item.size()
-        semesterIndex = semesterIndex < 0 ? items.size() : semesterIndex;
-
         // add new semester
         SemesterItem newSemester = new SemesterItem();
         newSemester.setSemesterNumber(semesterNumber);
@@ -125,6 +138,53 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         notifyItemInserted(semesterIndex);
 
         return semesterIndex;
+    }
+
+    /**
+     * Update the summary and set average, creditPoints and lastUpdatedAt.
+     */
+    public void updateSummary() {
+        float average = 0f;
+        float creditPointsSum = 0f;
+
+        // iterate over items, count credit points and calculate average
+        for(GradesAdapterItem item : items) {
+            if (item instanceof GradeItem) {
+                GradeItem grade = (GradeItem) item;
+                float actCreditPoints = (grade.getCreditPoints() == null ? 0f : grade.getCreditPoints());
+                creditPointsSum += actCreditPoints;
+                average += (grade.getGrade() == null ? 0f : grade.getGrade() * actCreditPoints);
+            }
+        }
+        average /= creditPointsSum;
+
+        // get last updated at
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        long timestamp = prefs.getLong(Constants.PREF_KEY_LAST_UPDATED_AT, -1);
+        String lastUpdatedAt = timestampToString(timestamp);
+
+        GradesSummaryItem summaryItem = (GradesSummaryItem) items.get(0);
+        summaryItem.setAverage(average);
+        summaryItem.setCreditPoints(creditPointsSum);
+        summaryItem.setLastUpdatedAt(lastUpdatedAt + " Uhr"); // TODO: better time format + string resource
+        notifyItemChanged(0);
+    }
+
+    /**
+     * Convert a given timestamp to a string representation.
+     *
+     * @param timestamp - timestamp to convert
+     * @return timestamp as string
+     */
+    public static String timestampToString(long timestamp) {
+        if (timestamp < 0) {
+            return "-";
+        }
+
+        //timestamp *= 1000;
+        DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        Date date = new Date(timestamp);
+        return df.format(date);
     }
 
     /**
@@ -143,6 +203,9 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         } else if (viewType == VIEW_TYPE_GRADE) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grade, parent, false);
             return new GradeViewHolder(v);
+        } else if (viewType == VIEW_TYPE_SUMMARY) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grades_summary, parent, false);
+            return new GradesSummaryViewHolder(v);
         }
         return null;
     }
@@ -170,6 +233,13 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             Float creditPoints = gradeItem.getCreditPoints();
             String creditPointsAsString = creditPoints == null ? "-" : String.format("%.1f", creditPoints);
             viewHolder.tvCreditPoints.setText(creditPointsAsString + " CP");
+        } else if (holder instanceof GradesSummaryViewHolder) {
+            GradesSummaryViewHolder viewHolder = (GradesSummaryViewHolder) holder;
+            GradesSummaryItem summaryItem = (GradesSummaryItem) items.get(position);
+
+            viewHolder.tvAverage.setText(String.format("%.2f", summaryItem.getAverage()));
+            viewHolder.tvCreditPoints.setText(String.format("%.1f", summaryItem.getCreditPoints()));
+            viewHolder.tvLastUpdatedAt.setText(summaryItem.getLastUpdatedAt());
         }
     }
 
@@ -184,6 +254,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             return VIEW_TYPE_SEMESTER;
         } else if (items.get(position) instanceof GradeItem) {
             return VIEW_TYPE_GRADE;
+        } else if (items.get(position) instanceof GradesSummaryItem) {
+            return VIEW_TYPE_SUMMARY;
         }
 
         return -1;
@@ -222,6 +294,23 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             tvSemester = (TextView) itemView.findViewById(R.id.tv_semester);
             tvAverage = (TextView) itemView.findViewById(R.id.tv_average);
             tvCreditPoints = (TextView) itemView.findViewById(R.id.tv_credit_points);
+        }
+    }
+
+    /**
+     * View holder for the overall summary (header).
+     */
+    public class GradesSummaryViewHolder extends RecyclerView.ViewHolder {
+        public TextView tvAverage;
+        public TextView tvCreditPoints;
+        public TextView tvLastUpdatedAt;
+
+        public GradesSummaryViewHolder(View itemView) {
+            super(itemView);
+
+            tvAverage = (TextView) itemView.findViewById(R.id.tv_average);
+            tvCreditPoints = (TextView) itemView.findViewById(R.id.tv_credit_points);
+            tvLastUpdatedAt = (TextView) itemView.findViewById(R.id.tv_last_updated_at);
         }
     }
 }

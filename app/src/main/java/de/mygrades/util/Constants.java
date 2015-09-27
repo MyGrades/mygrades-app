@@ -14,4 +14,5 @@ public class Constants {
     // normal preferences constants
     public static final String PREF_KEY_UNIVERSITY_ID = "university_id";
     public static final String PREF_KEY_LOGGED_IN = "logged_in";
+    public static final String PREF_KEY_LAST_UPDATED_AT = "last_updated_at";
 }
