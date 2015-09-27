@@ -124,7 +124,7 @@ public class Scraper {
                 .userAgent(Config.BROWSER_USER_AGENT) // set explicit user agent
                 .method(method)
                 .timeout(15000)
-                //.validateTLSCertificates(false) // do not validate ssl certificates -> must be used for self certified
+                .validateTLSCertificates(false) // do not validate ssl certificates -> must be used for self certified
                 .execute();
 
         // get cookies from response and add to all cookies

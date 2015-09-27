@@ -63,13 +63,18 @@ public class GradesProcessor extends BaseProcessor {
             scrapingResult = scraper.scrape();
 
             // start transforming
-            Transformer transformer = new Transformer(rule.getTransformerMappings(), scrapingResult, parser);
+            Transformer transformer = new Transformer(rule, scrapingResult, parser);
             gradeEntries = transformer.transform();
+
+            System.out.println(gradeEntries);
 
             // save grade entries in database
             if (gradeEntries != null && gradeEntries.size() > 0) {
                 daoSession.getGradeEntryDao().insertOrReplaceInTx(gradeEntries);
             }
+
+            // save last_updated_at timestamp
+            saveLastUpdatedAt(prefs);
 
             // send event with new grades to activity
             GradesEvent gradesEvent = new GradesEvent();
@@ -87,15 +92,9 @@ public class GradesProcessor extends BaseProcessor {
             Log.e(TAG, "Scrape Error", e);
         } catch (Exception e) {
             // TODO: event general error
+
+            Log.e(TAG, "General Error", e);
         }
-
-        // save last_updated_at timestamp
-        saveLastUpdatedAt(prefs);
-
-        // send event with new grades to activity
-        GradesEvent gradesEvent = new GradesEvent();
-        gradesEvent.setGrades(gradeEntries);
-        EventBus.getDefault().post(gradesEvent);
     }
 
     /**

@@ -16,6 +16,8 @@ public class GradeEntry {
     private String semester;
     private String state;
     private Double creditPoints;
+    private String annotation;
+    private String attempt;
     private Integer semesterNumber;
     private String hash;
 
@@ -29,13 +31,15 @@ public class GradeEntry {
         this.hash = hash;
     }
 
-    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, Integer semesterNumber, String hash) {
+    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, Integer semesterNumber, String hash) {
         this.name = name;
         this.grade = grade;
         this.examId = examId;
         this.semester = semester;
         this.state = state;
         this.creditPoints = creditPoints;
+        this.annotation = annotation;
+        this.attempt = attempt;
         this.semesterNumber = semesterNumber;
         this.hash = hash;
     }
@@ -90,6 +94,22 @@ public class GradeEntry {
         this.creditPoints = creditPoints;
     }
 
+    public String getAnnotation() {
+        return annotation;
+    }
+
+    public void setAnnotation(String annotation) {
+        this.annotation = annotation;
+    }
+
+    public String getAttempt() {
+        return attempt;
+    }
+
+    public void setAttempt(String attempt) {
+        this.attempt = attempt;
+    }
+
     public Integer getSemesterNumber() {
         return semesterNumber;
     }
@@ -116,6 +136,23 @@ public class GradeEntry {
                     (semester == null ? "" : semester) +
                     name;
     }
+
+    @Override
+    public String toString() {
+        return "GradeEntry{" +
+                "name='" + name + '\'' +
+                ", grade=" + grade +
+                ", examId='" + examId + '\'' +
+                ", semester='" + semester + '\'' +
+                ", state='" + state + '\'' +
+                ", creditPoints=" + creditPoints +
+                ", annotation='" + annotation + '\'' +
+                ", attempt='" + attempt + '\'' +
+                ", semesterNumber=" + semesterNumber +
+                ", hash='" + hash + '\'' +
+                '}';
+    }
+
     // KEEP METHODS END
 
 }

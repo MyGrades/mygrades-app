@@ -16,6 +16,9 @@ public class Rule {
     private Long ruleId;
     /** Not-null value. */
     private String type;
+    private String semesterFormat;
+    private String semesterPattern;
+    private Double gradeFactor;
     private java.util.Date lastUpdated;
     private long universityId;
 
@@ -38,9 +41,12 @@ public class Rule {
         this.ruleId = ruleId;
     }
 
-    public Rule(Long ruleId, String type, java.util.Date lastUpdated, long universityId) {
+    public Rule(Long ruleId, String type, String semesterFormat, String semesterPattern, Double gradeFactor, java.util.Date lastUpdated, long universityId) {
         this.ruleId = ruleId;
         this.type = type;
+        this.semesterFormat = semesterFormat;
+        this.semesterPattern = semesterPattern;
+        this.gradeFactor = gradeFactor;
         this.lastUpdated = lastUpdated;
         this.universityId = universityId;
     }
@@ -67,6 +73,30 @@ public class Rule {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getSemesterFormat() {
+        return semesterFormat;
+    }
+
+    public void setSemesterFormat(String semesterFormat) {
+        this.semesterFormat = semesterFormat;
+    }
+
+    public String getSemesterPattern() {
+        return semesterPattern;
+    }
+
+    public void setSemesterPattern(String semesterPattern) {
+        this.semesterPattern = semesterPattern;
+    }
+
+    public Double getGradeFactor() {
+        return gradeFactor;
+    }
+
+    public void setGradeFactor(Double gradeFactor) {
+        this.gradeFactor = gradeFactor;
     }
 
     public java.util.Date getLastUpdated() {
@@ -170,6 +200,24 @@ public class Rule {
     public List<TransformerMapping> getTransformerMappingsRaw() {
         return transformerMappings == null ? new java.util.ArrayList<TransformerMapping>() : transformerMappings;
     }
+
+    @Override
+    public String toString() {
+        return "Rule{" +
+                "ruleId=" + ruleId +
+                ", type='" + type + '\'' +
+                ", semesterFormat='" + semesterFormat + '\'' +
+                ", semesterPattern='" + semesterPattern + '\'' +
+                ", gradeFactor=" + gradeFactor +
+                ", lastUpdated=" + lastUpdated +
+                ", universityId=" + universityId +
+                ", daoSession=" + daoSession +
+                ", myDao=" + myDao +
+                ", actions=" + actions +
+                ", transformerMappings=" + transformerMappings +
+                '}';
+    }
+
     // KEEP METHODS END
 
 }
