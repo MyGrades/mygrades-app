@@ -37,23 +37,60 @@ public class UniversitiesRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
      * @param newUniversity - university to add
      */
     public void add(UniversityItem newUniversity) {
-        // check if header already exists for this university
-        String desiredHeader = newUniversity.getName().substring(0, 1).toUpperCase();
-        int headerIndex = -1;
-        for (int i = 0; i < items.size(); i++) {
+        // delete (only if necessary)
+        if (!deleteUniversity(newUniversity)) {
+
+            // if the university did not exist already, add it
+            addUniversity(newUniversity);
+        }
+    }
+
+    /**
+     * Deletes an university if it exists already (compared by university id).
+     * Its also checked, whether the section will be empty afterwards and deletes it if necessary.
+     *
+     * @param newUniversity university to delete
+     */
+    private boolean deleteUniversity(UniversityItem newUniversity) {
+        int actHeaderIndex = 0;
+        for(int i = 0; i < items.size(); i++) {
             if (items.get(i) instanceof UniversityHeader) {
-                UniversityHeader header = (UniversityHeader) items.get(i);
-                if (header.getHeader().equals(desiredHeader)) {
-                    headerIndex = i;
-                    break;
+                actHeaderIndex = i;
+            } else if (items.get(i) instanceof UniversityItem) {
+                UniversityItem universityItem = (UniversityItem) items.get(i);
+                if (universityItem.getUniversityId() == newUniversity.getUniversityId()) {
+                    if (!universityItem.getName().equals(newUniversity.getName())) {
+                        // delete old university
+                        items.remove(i);
+                        notifyItemRemoved(i);
+
+                        // check if header is still required (section could be empty now)
+                        if (actHeaderIndex == items.size() - 1 || (items.get(actHeaderIndex + 1) instanceof UniversityHeader)) {
+                            // next item is also an header, so the one above can be deleted
+                            items.remove(actHeaderIndex);
+                            notifyItemRemoved(actHeaderIndex);
+                        }
+
+                        // add new university
+                        addUniversity(newUniversity);
+                    }
+                    return true;
                 }
             }
         }
+        return false;
+    }
 
-        // if no header was found, add a new one
-        if (headerIndex < 0) {
-            headerIndex = addHeader(desiredHeader);
-        }
+    /**
+     * Adds an university to the given header by its index.
+     *
+     * @param newUniversity - university to add
+     */
+    private void addUniversity(UniversityItem newUniversity) {
+        String desiredHeader = newUniversity.getName().substring(0, 1).toUpperCase();
+
+        // get header index
+        int headerIndex = getHeaderIndex(desiredHeader);
 
         // add university after header index (lexicographic)
         int newUniversityIndex = items.size(); // add to end, if no index was found
@@ -109,6 +146,33 @@ public class UniversitiesRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         return headerIndex;
     }
 
+    /**
+     * Get the index for a header by its string.
+     * It will create a new header, if necessary.
+     *
+     * @param desiredHeader - header as string
+     * @return index
+     */
+    private int getHeaderIndex(String desiredHeader) {
+        int headerIndex = -1;
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i) instanceof UniversityHeader) {
+                UniversityHeader header = (UniversityHeader) items.get(i);
+                if (header.getHeader().equals(desiredHeader)) {
+                    headerIndex = i;
+                    break;
+                }
+            }
+        }
+
+        // if no header was found, add a new one
+        if (headerIndex < 0) {
+            headerIndex = addHeader(desiredHeader);
+        }
+
+        return headerIndex;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_HEADER) {
@@ -120,7 +184,6 @@ public class UniversitiesRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         }
 
         return null;
-
     }
 
     @Override
