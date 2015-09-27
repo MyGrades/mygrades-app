@@ -163,11 +163,14 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         long timestamp = prefs.getLong(Constants.PREF_KEY_LAST_UPDATED_AT, -1);
         String lastUpdatedAt = timestampToString(timestamp);
 
-        GradesSummaryItem summaryItem = (GradesSummaryItem) items.get(0);
-        summaryItem.setAverage(average);
-        summaryItem.setCreditPoints(creditPointsSum);
-        summaryItem.setLastUpdatedAt(lastUpdatedAt + " Uhr"); // TODO: better time format + string resource
-        notifyItemChanged(0);
+        // if list is not empty, set summary header
+        if (items.size() > 0) {
+            GradesSummaryItem summaryItem = (GradesSummaryItem) items.get(0);
+            summaryItem.setAverage(average);
+            summaryItem.setCreditPoints(creditPointsSum);
+            summaryItem.setLastUpdatedAt(lastUpdatedAt + " Uhr"); // TODO: better time format + string resource
+            notifyItemChanged(0);
+        }
     }
 
     /**
