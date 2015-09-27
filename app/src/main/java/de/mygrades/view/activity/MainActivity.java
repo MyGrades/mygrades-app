@@ -111,9 +111,9 @@ public class MainActivity extends AppCompatActivity {
     public void onEventMainThread(GradesEvent gradesEvent) {
         if (adapter != null) {
             for(GradeEntry gradeEntry : gradesEvent.getGrades()) {
-
                 GradeItem item = new GradeItem();
                 item.setName(gradeEntry.getName());
+                item.setHash(gradeEntry.getHash());
 
                 Double creditPoints = gradeEntry.getCreditPoints();
                 item.setCreditPoints(creditPoints == null ? null : creditPoints.floatValue());

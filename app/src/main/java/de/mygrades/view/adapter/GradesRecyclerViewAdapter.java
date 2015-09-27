@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,53 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         // find semester index, where the grade should be added
         int semesterIndex = getIndexForSemester(semesterNumber, semester);
 
+        // update grade if necessary
+        if (!updateGrade(newGrade, semesterIndex)) {
+            addGrade(newGrade, semesterIndex);
+        }
+    }
+
+    /**
+     * Checks if the new grade is already in the list and updates it if necessary.
+     *
+     * @param newGrade - new grade
+     * @param semesterIndex - semester index
+     * @return true, if grade was updated or if it exists already. false otherwise
+     */
+    private boolean updateGrade(GradeItem newGrade, int semesterIndex) {
+
+        for(int i = semesterIndex + 1; i < items.size(); i++) {
+            if (items.get(i) instanceof GradeItem) {
+                GradeItem gradeItem = (GradeItem) items.get(i);
+                if (gradeItem.getHash().equals(newGrade.getHash())) {
+                    if (!gradeItem.equals(newGrade)) {
+                        // update old grade item and notify ui
+                        gradeItem.setGrade(newGrade.getGrade());
+                        gradeItem.setCreditPoints(newGrade.getCreditPoints());
+                        notifyItemChanged(i);
+
+                        // update semester item and notify ui
+                        if (items.get(semesterIndex) instanceof SemesterItem) {
+                            SemesterItem semesterItem = (SemesterItem) items.get(semesterIndex);
+                            semesterItem.update();
+                            notifyItemChanged(semesterIndex);
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Adds a new grade after the given semester index.
+     *
+     * @param newGrade - new grade to add
+     * @param semesterIndex - semester index
+     */
+    private void addGrade(GradeItem newGrade, int semesterIndex) {
         // find position in semester (lexicographic)
         // start after the semesterIndex
         int newGradeIndex = items.size();
