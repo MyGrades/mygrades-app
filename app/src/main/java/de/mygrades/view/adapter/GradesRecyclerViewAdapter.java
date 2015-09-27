@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,8 @@ import java.util.List;
 import de.mygrades.R;
 import de.mygrades.util.Constants;
 import de.mygrades.view.adapter.model.GradeItem;
-import de.mygrades.view.adapter.model.GradesSummaryItem;
 import de.mygrades.view.adapter.model.GradesAdapterItem;
+import de.mygrades.view.adapter.model.GradesSummaryItem;
 import de.mygrades.view.adapter.model.SemesterItem;
 
 /**
