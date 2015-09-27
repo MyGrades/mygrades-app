@@ -78,10 +78,25 @@ public class GradesProcessor extends BaseProcessor {
             daoSession.getGradeEntryDao().insertOrReplaceInTx(gradeEntries);
         }
 
+        // save last_updated_at timestamp
+        saveLastUpdatedAt(prefs);
+
         // send event with new grades to activity
         GradesEvent gradesEvent = new GradesEvent();
         gradesEvent.setGrades(gradeEntries);
         EventBus.getDefault().post(gradesEvent);
+    }
+
+    /**
+     * Saves the current timestamp in shared preferences.
+     *
+     * @param prefs - shared preferences
+     */
+    private void saveLastUpdatedAt(SharedPreferences prefs) {
+        SharedPreferences.Editor editor = prefs.edit();
+        long timestamp = System.currentTimeMillis(); // get utc timestamp
+        editor.putLong(Constants.PREF_KEY_LAST_UPDATED_AT, timestamp);
+        editor.apply();
     }
 
     /**
