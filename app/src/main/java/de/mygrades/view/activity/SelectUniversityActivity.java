@@ -24,10 +24,9 @@ import de.mygrades.view.decoration.DividerItemDecoration;
 /**
  * Activity which shows all universities.
  */
-public class SelectUniversityActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
+public class SelectUniversityActivity extends AppCompatActivity {
 
-    private AppBarLayout appBarLayout;
-    private SwipeRefreshLayout swipeRefresh;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rvUniversities;
     private UniversitiesRecyclerViewAdapter universityAdapter;
 
@@ -73,15 +72,9 @@ public class SelectUniversityActivity extends AppCompatActivity implements AppBa
      * Initialize the swipeToRefresh layout.
      */
     private void initSwipeToRefresh() {
-        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
-
-        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mainServiceHelper.getUniversities(true);
-            }
-        });
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setEnabled(false);
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     /**
@@ -96,24 +89,6 @@ public class SelectUniversityActivity extends AppCompatActivity implements AppBa
         rvUniversities.setAdapter(universityAdapter);
     }
 
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        // the refresh must be only active when the offset is zero
-        swipeRefresh.setEnabled(i == 0);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        appBarLayout.addOnOffsetChangedListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        appBarLayout.removeOnOffsetChangedListener(this);
-    }
-
     /**
      * Add new universities to the adapter.
      *
@@ -125,8 +100,8 @@ public class SelectUniversityActivity extends AppCompatActivity implements AppBa
             universityAdapter.add(universityItem);
         }
 
-        if (universityAdapter.getItemCount() > 0 && swipeRefresh != null) {
-            swipeRefresh.setRefreshing(false);
+        if (universityAdapter.getItemCount() > 0 && swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
