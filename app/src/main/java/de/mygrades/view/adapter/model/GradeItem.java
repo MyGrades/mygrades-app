@@ -7,14 +7,9 @@ public class GradeItem implements GradesAdapterItem {
     private String name;
     private Float grade;
     private Float creditPoints;
+    private String hash;
 
     public GradeItem() {}
-
-    public GradeItem(String name, Float grade, Float creditPoints) {
-        this.name = name;
-        this.grade = grade;
-        this.creditPoints = creditPoints;
-    }
 
     public String getName() {
         return name;
@@ -38,5 +33,45 @@ public class GradeItem implements GradesAdapterItem {
 
     public void setCreditPoints(Float creditPoints) {
         this.creditPoints = creditPoints;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    /**
+     * Checks if two GradeItems are equal, according to their credit points and grade.
+     *
+     * @param gradeItem - other grade item
+     * @return true, if credit points and grade are equal
+     */
+    public boolean equals(GradeItem gradeItem) {
+        // check if credit points has changed
+        if ((gradeItem.getCreditPoints() != null && creditPoints != null) &&
+            (!gradeItem.getCreditPoints().equals(creditPoints))) {
+            return false;
+        }
+
+        if ((gradeItem.getCreditPoints() == null && creditPoints != null) ||
+            (gradeItem.getCreditPoints() != null && creditPoints == null)) {
+            return false;
+        }
+
+        // check if grade has changed
+        if ((gradeItem.getGrade() != null && grade != null) &&
+            (!gradeItem.getGrade().equals(grade))) {
+            return false;
+        }
+
+        if ((gradeItem.getGrade() == null && grade != null) ||
+            (gradeItem.getGrade() != null && grade == null)) {
+            return false;
+        }
+
+        return true;
     }
 }

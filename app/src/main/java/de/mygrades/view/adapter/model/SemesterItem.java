@@ -27,7 +27,13 @@ public class SemesterItem implements GradesAdapterItem {
 
     public void addGrade(GradeItem gradeItem) {
         grades.add(gradeItem);
+        update();
+    }
 
+    /**
+     * Updates the average grade and the sum of credit points.
+     */
+    public void update() {
         // update creditPoints and average
         float average = 0f;
         float creditPointsSum = 0f;
