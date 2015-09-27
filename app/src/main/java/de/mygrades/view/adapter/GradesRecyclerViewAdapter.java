@@ -147,6 +147,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     public void updateSummary() {
         float average = 0f;
         float creditPointsSum = 0f;
+        float creditPointsSumForAverage = 0f; // sum grade_entries may have credit points, but no grade
 
         // iterate over items, count credit points and calculate average
         for(GradesAdapterItem item : items) {
@@ -154,10 +155,13 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 GradeItem grade = (GradeItem) item;
                 float actCreditPoints = (grade.getCreditPoints() == null ? 0f : grade.getCreditPoints());
                 creditPointsSum += actCreditPoints;
+                if (grade.getGrade() != null && actCreditPoints > 0) {
+                    creditPointsSumForAverage += actCreditPoints;
+                }
                 average += (grade.getGrade() == null ? 0f : grade.getGrade() * actCreditPoints);
             }
         }
-        average /= creditPointsSum;
+        average = creditPointsSumForAverage > 0 ? average/creditPointsSumForAverage : 0f;
 
         // get last updated at
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -185,7 +189,6 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             return "-";
         }
 
-        //timestamp *= 1000;
         DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         Date date = new Date(timestamp);
         return df.format(date);
