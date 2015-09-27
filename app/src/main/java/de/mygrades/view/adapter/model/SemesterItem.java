@@ -31,13 +31,20 @@ public class SemesterItem implements GradesAdapterItem {
         // update creditPoints and average
         float average = 0f;
         float creditPointsSum = 0f;
+        float creditPointsSumForAverage = 0f; // sum grade_entries may have credit points, but no grade
+
         for(GradeItem grade : grades) {
             float actCreditPoints = (grade.getCreditPoints() == null ? 0f : grade.getCreditPoints());
             creditPointsSum += actCreditPoints;
+
+            if (grade.getGrade() != null && actCreditPoints > 0) {
+                creditPointsSumForAverage += actCreditPoints;
+            }
             average += (grade.getGrade() == null ? 0f : grade.getGrade() * actCreditPoints);
 
         }
-        average /= creditPointsSum;
+
+        average = creditPointsSumForAverage > 0 ? average/creditPointsSumForAverage : 0f;
 
         this.average = average;
         this.creditPoints = creditPointsSum;
