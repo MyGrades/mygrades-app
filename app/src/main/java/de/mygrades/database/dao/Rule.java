@@ -18,6 +18,8 @@ public class Rule {
     private String type;
     private String semesterFormat;
     private String semesterPattern;
+    private Integer semesterStartSummer;
+    private Integer semesterStartWinter;
     private Double gradeFactor;
     private java.util.Date lastUpdated;
     private long universityId;
@@ -41,11 +43,13 @@ public class Rule {
         this.ruleId = ruleId;
     }
 
-    public Rule(Long ruleId, String type, String semesterFormat, String semesterPattern, Double gradeFactor, java.util.Date lastUpdated, long universityId) {
+    public Rule(Long ruleId, String type, String semesterFormat, String semesterPattern, Integer semesterStartSummer, Integer semesterStartWinter, Double gradeFactor, java.util.Date lastUpdated, long universityId) {
         this.ruleId = ruleId;
         this.type = type;
         this.semesterFormat = semesterFormat;
         this.semesterPattern = semesterPattern;
+        this.semesterStartSummer = semesterStartSummer;
+        this.semesterStartWinter = semesterStartWinter;
         this.gradeFactor = gradeFactor;
         this.lastUpdated = lastUpdated;
         this.universityId = universityId;
@@ -89,6 +93,22 @@ public class Rule {
 
     public void setSemesterPattern(String semesterPattern) {
         this.semesterPattern = semesterPattern;
+    }
+
+    public Integer getSemesterStartSummer() {
+        return semesterStartSummer;
+    }
+
+    public void setSemesterStartSummer(Integer semesterStartSummer) {
+        this.semesterStartSummer = semesterStartSummer;
+    }
+
+    public Integer getSemesterStartWinter() {
+        return semesterStartWinter;
+    }
+
+    public void setSemesterStartWinter(Integer semesterStartWinter) {
+        this.semesterStartWinter = semesterStartWinter;
     }
 
     public Double getGradeFactor() {
@@ -208,6 +228,8 @@ public class Rule {
                 ", type='" + type + '\'' +
                 ", semesterFormat='" + semesterFormat + '\'' +
                 ", semesterPattern='" + semesterPattern + '\'' +
+                ", semesterStartSummer=" + semesterStartSummer +
+                ", semesterStartWinter=" + semesterStartWinter +
                 ", gradeFactor=" + gradeFactor +
                 ", lastUpdated=" + lastUpdated +
                 ", universityId=" + universityId +

@@ -31,8 +31,9 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         public final static Property CreditPoints = new Property(5, Double.class, "creditPoints", false, "CREDIT_POINTS");
         public final static Property Annotation = new Property(6, String.class, "annotation", false, "ANNOTATION");
         public final static Property Attempt = new Property(7, String.class, "attempt", false, "ATTEMPT");
-        public final static Property SemesterNumber = new Property(8, Integer.class, "semesterNumber", false, "SEMESTER_NUMBER");
-        public final static Property Hash = new Property(9, String.class, "hash", true, "HASH");
+        public final static Property ExamDate = new Property(8, String.class, "examDate", false, "EXAM_DATE");
+        public final static Property SemesterNumber = new Property(9, Integer.class, "semesterNumber", false, "SEMESTER_NUMBER");
+        public final static Property Hash = new Property(10, String.class, "hash", true, "HASH");
     };
 
 
@@ -56,8 +57,9 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
                 "\"CREDIT_POINTS\" REAL," + // 5: creditPoints
                 "\"ANNOTATION\" TEXT," + // 6: annotation
                 "\"ATTEMPT\" TEXT," + // 7: attempt
-                "\"SEMESTER_NUMBER\" INTEGER," + // 8: semesterNumber
-                "\"HASH\" TEXT PRIMARY KEY NOT NULL );"); // 9: hash
+                "\"EXAM_DATE\" TEXT," + // 8: examDate
+                "\"SEMESTER_NUMBER\" INTEGER," + // 9: semesterNumber
+                "\"HASH\" TEXT PRIMARY KEY NOT NULL );"); // 10: hash
     }
 
     /** Drops the underlying database table. */
@@ -107,21 +109,26 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             stmt.bindString(8, attempt);
         }
  
+        String examDate = entity.getExamDate();
+        if (examDate != null) {
+            stmt.bindString(9, examDate);
+        }
+ 
         Integer semesterNumber = entity.getSemesterNumber();
         if (semesterNumber != null) {
-            stmt.bindLong(9, semesterNumber);
+            stmt.bindLong(10, semesterNumber);
         }
  
         String hash = entity.getHash();
         if (hash != null) {
-            stmt.bindString(10, hash);
+            stmt.bindString(11, hash);
         }
     }
 
     /** @inheritdoc */
     @Override
     public String readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9);
+        return cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10);
     }    
 
     /** @inheritdoc */
@@ -136,8 +143,9 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             cursor.isNull(offset + 5) ? null : cursor.getDouble(offset + 5), // creditPoints
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // annotation
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // attempt
-            cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8), // semesterNumber
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9) // hash
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // examDate
+            cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9), // semesterNumber
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10) // hash
         );
         return entity;
     }
@@ -153,8 +161,9 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         entity.setCreditPoints(cursor.isNull(offset + 5) ? null : cursor.getDouble(offset + 5));
         entity.setAnnotation(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setAttempt(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setSemesterNumber(cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8));
-        entity.setHash(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setExamDate(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setSemesterNumber(cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9));
+        entity.setHash(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
      }
     
     /** @inheritdoc */

@@ -1,5 +1,7 @@
 package de.mygrades.main.core;
 
+import android.util.Log;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -37,6 +39,7 @@ public class Transformer {
     private static final String CREDIT_POINTS = "credit_points";
     private static final String ANNOTATION = "annotation";
     private static final String ATTEMPT = "attempt";
+    private static final String EXAM_DATE = "exam_date";
 
     private static final String SEMESTER_FORMAT_SEMESTER = "semester";
     private static final String SEMSETER_FORMAT_DATE = "date";
@@ -109,6 +112,7 @@ public class Transformer {
             gradeEntry.setCreditPoints(getDoubleProperty(xmlDocument, CREDIT_POINTS, null));
             gradeEntry.setAnnotation(getStringProperty(xmlDocument, ANNOTATION));
             gradeEntry.setAttempt(getStringProperty(xmlDocument, ATTEMPT));
+            gradeEntry.setExamDate(getStringProperty(xmlDocument, EXAM_DATE));
 
             // update hash, used as primary key
             gradeEntry.updateHash();
@@ -147,7 +151,7 @@ public class Transformer {
                 try {
                     extractedYear = Integer.parseInt(matcher.group(2));
                 } catch (NumberFormatException e) {
-                    extractedYear = 0; // TODO: what to do with errors?
+                    extractedYear = 0;
                 }
             }
 
@@ -163,7 +167,6 @@ public class Transformer {
                 resultSemester += SEMSETER_SS + extractedYear;
             }
         } else if (rule.getSemesterFormat().equals(SEMSETER_FORMAT_DATE)) {
-            semesterPattern = Pattern.compile("\\d{2}\\.(\\d{2})\\.(\\d{4})");
             Integer extractedYear = 0;
             Integer extractedMonth = 0;
 
@@ -173,25 +176,32 @@ public class Transformer {
                 try {
                     extractedMonth = Integer.parseInt(matcher.group(1));
                 } catch (NumberFormatException e) {
-                    extractedMonth = 0; // TODO: what to do with errors?
+                    extractedMonth = 0;
                 }
                 try {
                     extractedYear = Integer.parseInt(matcher.group(2));
                 } catch (NumberFormatException e) {
-                    extractedYear = 0; // TODO: what to do with errors?
+                    extractedYear = 0;
                 }
             }
-            System.out.println("Month: " + extractedMonth + " - Year: " + extractedYear);
+
+            // get year in correct format
+            if (extractedYear.toString().length() < 4) {
+                extractedYear = extractedYear + 2000;
+            }
+
             // calculate Semester string depending on month and year
-            if (extractedMonth >= 4 && extractedMonth <= 9) { // Sommersemester (o4-09)
+            if (extractedMonth >= rule.getSemesterStartSummer() && extractedMonth < rule.getSemesterStartWinter()) { // Sommersemester (04-09)
                 resultSemester += SEMSETER_SS + extractedYear;
             } else { // Wintersemester
-                if (extractedMonth >= 10) { // first part of Wintersemester (10-12)
+                if (extractedMonth >= rule.getSemesterStartWinter()) { // first part of Wintersemester (10-12)
                     resultSemester += SEMSETER_WS + extractedYear + "/" + (extractedYear+1);
                 } else { // second part of Wintersemester (01-03)
                     resultSemester += SEMSETER_WS + (extractedYear-1) + "/" + extractedYear;
                 }
             }
+
+            Log.d(TAG, "Month: " + extractedMonth + " - Year: " + extractedYear + " - " + resultSemester);
         }
 
         return resultSemester;
@@ -228,7 +238,7 @@ public class Transformer {
                     try {
                         year1 = Integer.parseInt(matcher.group(2));
                     } catch (NumberFormatException e) {
-                        year1 = 0; // TODO: what to do with errors?
+                        year1 = 0;
                     }
                 }
 
@@ -239,7 +249,7 @@ public class Transformer {
                     try {
                         year2 = Integer.parseInt(matcher.group(2));
                     } catch (NumberFormatException e) {
-                        year2 = 0; // TODO: what to do with errors?
+                        year2 = 0;
                     }
                 }
 
@@ -273,9 +283,11 @@ public class Transformer {
      * @throws ParseException if something goes wrong at parsing
      */
     private String getStringProperty(Document xmlDocument, String type) throws ParseException {
-        String result = parser.parseToString(transformerMapping.get(type).getParseExpression(), xmlDocument).trim();
-
-        return result;
+        TransformerMapping transformerMappingVal = transformerMapping.get(type);
+        if (transformerMappingVal == null) {
+            return null;
+        }
+        return parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument).trim();
     }
 
     /**
@@ -287,8 +299,13 @@ public class Transformer {
      * @throws ParseException if something goes wrong at parsing
      */
     private Double getDoubleProperty(Document xmlDocument, String type, Double factor) throws ParseException {
+        TransformerMapping transformerMappingVal = transformerMapping.get(type);
+        if (transformerMappingVal == null) {
+            return null;
+        }
+
         Double property;
-        String result = parser.parseToString(transformerMapping.get(type).getParseExpression(), xmlDocument).trim();
+        String result = parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument).trim();
         result = result.replace(',', '.');
 
         // if cannot parse to Double -> return null

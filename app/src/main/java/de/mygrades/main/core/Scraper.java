@@ -146,6 +146,10 @@ public class Scraper {
                 if (redirectUrl != null) {
                     // if its a relative redirect url -> prepend with host
                     if (!redirectUrl.toLowerCase().startsWith("http")) {
+                        // check if it starts with / and remove it
+                        if (redirectUrl.startsWith("/") && response.url().toString().endsWith("/")) {
+                            redirectUrl = redirectUrl.substring(1);
+                        }
                         redirectUrl = response.url().toString().concat(redirectUrl);
                     }
                     makeJsoupRequest(requestData, Connection.Method.GET, redirectUrl);

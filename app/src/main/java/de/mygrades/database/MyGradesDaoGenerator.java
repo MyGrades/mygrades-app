@@ -64,6 +64,8 @@ public class MyGradesDaoGenerator {
         rule.addStringProperty("type").notNull();
         rule.addStringProperty("semesterFormat");
         rule.addStringProperty("semesterPattern");
+        rule.addIntProperty("semesterStartSummer");
+        rule.addIntProperty("semesterStartWinter");
         rule.addDoubleProperty("gradeFactor");
         rule.addDateProperty("lastUpdated");
 
@@ -144,6 +146,7 @@ public class MyGradesDaoGenerator {
         gradeEntry.addDoubleProperty("creditPoints");
         gradeEntry.addStringProperty("annotation");
         gradeEntry.addStringProperty("attempt");
+        gradeEntry.addStringProperty("examDate");
         gradeEntry.addIntProperty("semesterNumber");
         gradeEntry.addStringProperty("hash").primaryKey();
         gradeEntry.setHasKeepSections(true);
