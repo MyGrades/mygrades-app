@@ -13,9 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
-
-import java.util.Random;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
@@ -102,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         rvGrades.setItemAnimator(new DefaultItemAnimator());
 
         // set adapter
-        adapter = new GradesRecyclerViewAdapter();
+        adapter = new GradesRecyclerViewAdapter(this);
         rvGrades.setAdapter(adapter);
     }
 
@@ -126,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
 
                 adapter.addGradeForSemester(item, gradeEntry.getSemesterNumber());
             }
+
+            adapter.updateSummary();
         }
 
         if (swipeRefreshLayout != null) {

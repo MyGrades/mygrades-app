@@ -15,8 +15,7 @@
             android:id="@+id/tv_grade_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="Mobile Computing"/>
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -32,16 +31,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="1,1"
             android:gravity="right"
-            android:textStyle="bold"/>
+            android:fontFamily="sans-serif-medium"/>
 
         <TextView
             android:id="@+id/tv_credit_points"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:text="5,0 CP"
             android:gravity="right"/>
     </LinearLayout>
 </LinearLayout>
