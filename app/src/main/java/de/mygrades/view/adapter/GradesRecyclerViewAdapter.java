@@ -45,7 +45,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * @param newGrade - new grade
      * @param semesterNumber - semester term count
      */
-    public void addGradeForSemester(GradeItem newGrade, int semesterNumber) {
+    public void addGradeForSemester(GradeItem newGrade, int semesterNumber, String semester) {
         // add summary if necessary
         if (items.size() == 0) {
             // always add summary to top
@@ -55,7 +55,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         // find semester index, where the grade should be added
-        int semesterIndex = getIndexForSemester(semesterNumber);
+        int semesterIndex = getIndexForSemester(semesterNumber, semester);
 
         // find position in semester (lexicographic)
         // start after the semesterIndex
@@ -74,8 +74,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         // add grade to semester and update semester header
-        SemesterItem semester = (SemesterItem) items.get(semesterIndex);
-        semester.addGrade(newGrade);
+        SemesterItem semesterItem = (SemesterItem) items.get(semesterIndex);
+        semesterItem.addGrade(newGrade);
         notifyItemChanged(semesterIndex);
 
         // add grade to the item list
@@ -89,7 +89,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * @param semesterNumber - term count
      * @return index
      */
-    private int getIndexForSemester(int semesterNumber) {
+    private int getIndexForSemester(int semesterNumber, String semester) {
         // find the index for a semester
         int semesterIndex = -1;
         for(int i = 0; i < items.size(); i++) {
@@ -104,7 +104,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         // no semester found, add a new one
         if (semesterIndex < 0) {
-            semesterIndex = addSemester(semesterNumber);
+            semesterIndex = addSemester(semesterNumber, semester);
         }
 
         return semesterIndex;
@@ -117,7 +117,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * @param semesterNumber - semester number
      * @return index
      */
-    private int addSemester(int semesterNumber) {
+    private int addSemester(int semesterNumber, String semester) {
         int semesterIndex = items.size(); // add to bottom , if no other position will be found
 
         // find index where the semester should be added (descending by semester number)
@@ -134,6 +134,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         // add new semester
         SemesterItem newSemester = new SemesterItem();
         newSemester.setSemesterNumber(semesterNumber);
+        newSemester.setSemester(semester);
         items.add(semesterIndex, newSemester);
         notifyItemInserted(semesterIndex);
 

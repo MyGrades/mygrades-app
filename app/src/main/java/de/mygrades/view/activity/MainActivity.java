@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 Double grade = gradeEntry.getGrade();
                 item.setGrade(grade == null ? null : grade.floatValue());
 
-                adapter.addGradeForSemester(item, gradeEntry.getSemesterNumber());
+                adapter.addGradeForSemester(item, gradeEntry.getSemesterNumber(), gradeEntry.getSemester());
             }
 
             adapter.updateSummary();
