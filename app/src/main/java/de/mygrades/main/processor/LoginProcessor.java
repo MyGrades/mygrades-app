@@ -50,6 +50,7 @@ public class LoginProcessor extends BaseProcessor {
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove(Constants.PREF_KEY_UNIVERSITY_ID);
         editor.remove(Constants.PREF_KEY_LOGGED_IN);
+        editor.remove(Constants.PREF_KEY_LAST_UPDATED_AT);
         editor.commit();
 
         // delete all grades
