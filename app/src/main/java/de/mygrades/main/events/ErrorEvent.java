@@ -32,6 +32,6 @@ public class ErrorEvent {
     }
 
     public enum ErrorType {
-        GENERAL, TIMEOUT, NO_NETWORK, WRONG_CREDENTIALS
+        GENERAL, TIMEOUT, NO_NETWORK
     }
 }
