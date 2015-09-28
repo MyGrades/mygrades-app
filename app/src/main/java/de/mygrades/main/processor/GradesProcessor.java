@@ -47,6 +47,11 @@ public class GradesProcessor extends BaseProcessor {
         // get university
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
+
+        // update university and rules
+        UniversityProcessor universityProcessor = new UniversityProcessor(context);
+        universityProcessor.getDetailedUniversity(universityId);
+
         University university = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
 
         // get bachelor rule // TODO: read from preferences?
