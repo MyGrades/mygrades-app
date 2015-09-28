@@ -2,6 +2,8 @@ package de.mygrades.main.processor;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -17,6 +19,7 @@ import de.mygrades.database.dao.UniversityDao;
 import de.mygrades.main.core.Parser;
 import de.mygrades.main.core.Scraper;
 import de.mygrades.main.core.Transformer;
+import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.GradesEvent;
 import de.mygrades.util.Constants;
 import de.mygrades.util.exceptions.ParseException;
@@ -33,9 +36,13 @@ public class GradesProcessor extends BaseProcessor {
 
 
     public void scrapeForGrades() {
-        // TODO: check network connection
         // No Connection -> event no Connection, abort
-
+        if (!isOnline()) {
+            // post error event to subscribers
+            ErrorEvent errorEvent = new ErrorEvent(ErrorEvent.ErrorType.NO_NETWORK, "No Internet Connection!");
+            EventBus.getDefault().post(errorEvent);
+            return;
+        }
 
         // get university
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -81,17 +88,27 @@ public class GradesProcessor extends BaseProcessor {
             gradesEvent.setGrades(gradeEntries);
             EventBus.getDefault().post(gradesEvent);
         } catch (ParseException e) {
+            // post error event to subscribers
+            ErrorEvent errorEvent = new ErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parser Error");
+            EventBus.getDefault().post(errorEvent);
+
             Log.e(TAG, "Parser Error", e);
         } catch (IOException e) {
             if (e instanceof SocketTimeoutException) {
-                // TODO: event timeout
+                // post error event to subscribers
+                ErrorEvent errorEvent = new ErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout");
+                EventBus.getDefault().post(errorEvent);
             } else {
-                // TODO: event general error
+                // post error event to subscribers
+                ErrorEvent errorEvent = new ErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error");
+                EventBus.getDefault().post(errorEvent);
             }
 
             Log.e(TAG, "Scrape Error", e);
         } catch (Exception e) {
-            // TODO: event general error
+            // post error event to subscribers
+            ErrorEvent errorEvent = new ErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error");
+            EventBus.getDefault().post(errorEvent);
 
             Log.e(TAG, "General Error", e);
         }
@@ -107,6 +124,18 @@ public class GradesProcessor extends BaseProcessor {
         long timestamp = System.currentTimeMillis(); // get utc timestamp
         editor.putLong(Constants.PREF_KEY_LAST_UPDATED_AT, timestamp);
         editor.apply();
+    }
+
+    /**
+     * Checks whether a Network interface is available and a connection is possible.
+     * @return boolean
+     */
+    private boolean isOnline() {
+        // getActiveNetworkInfo() -> first connected network interface or null
+        // getNetworkInfo(ConnectivityManager.TYPE_WIFI | TYPE_MOBILE) -> for wifi | mobile
+        ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
     }
 
     /**
