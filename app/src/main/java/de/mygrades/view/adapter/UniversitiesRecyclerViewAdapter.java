@@ -37,8 +37,8 @@ public class UniversitiesRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
      * @param newUniversity - university to add
      */
     public void add(UniversityItem newUniversity) {
-        // delete (only if necessary)
-        if (!deleteUniversity(newUniversity)) {
+        // update (only if necessary)
+        if (!updateUniversity(newUniversity)) {
 
             // if the university did not exist already, add it
             addUniversity(newUniversity);
@@ -46,12 +46,12 @@ public class UniversitiesRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * Deletes an university if it exists already (compared by university id).
+     * Updates an university if it exists already (compared by university id).
      * Its also checked, whether the section will be empty afterwards and deletes it if necessary.
      *
      * @param newUniversity university to delete
      */
-    private boolean deleteUniversity(UniversityItem newUniversity) {
+    private boolean updateUniversity(UniversityItem newUniversity) {
         int actHeaderIndex = 0;
         for(int i = 0; i < items.size(); i++) {
             if (items.get(i) instanceof UniversityHeader) {
