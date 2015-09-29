@@ -35,7 +35,7 @@ public class LoginProcessor extends BaseProcessor {
     }
 
     /**
-     * Remove all data.
+     * Remove all userdata and grade entries from the database.
      */
     public void logout() {
         // remove username and password
