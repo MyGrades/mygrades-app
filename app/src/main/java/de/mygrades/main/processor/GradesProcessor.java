@@ -25,7 +25,8 @@ import de.mygrades.util.Constants;
 import de.mygrades.util.exceptions.ParseException;
 
 /**
- * Created by Jonas on 20.09.2015.
+ * GradesProcessor is responsible to scrape for grades
+ * and to post GradeEntries to subscribers, e.g. Activities.
  */
 public class GradesProcessor extends BaseProcessor {
     private static final String TAG = GradesProcessor.class.getSimpleName();
@@ -34,7 +35,10 @@ public class GradesProcessor extends BaseProcessor {
         super(context);
     }
 
-
+    /**
+     * Scrape for grades and post and GradeEvent if scraping was successful.
+     * Otherwise, an ErrorEvent will be posted.
+     */
     public void scrapeForGrades() {
         // No Connection -> event no Connection, abort
         if (!isOnline()) {
@@ -44,7 +48,7 @@ public class GradesProcessor extends BaseProcessor {
             return;
         }
 
-        // get university
+        // get university id
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
 
@@ -52,6 +56,7 @@ public class GradesProcessor extends BaseProcessor {
         UniversityProcessor universityProcessor = new UniversityProcessor(context);
         universityProcessor.getDetailedUniversity(universityId);
 
+        // load university from database
         University university = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
 
         // get bachelor rule // TODO: read from preferences?
@@ -88,7 +93,7 @@ public class GradesProcessor extends BaseProcessor {
             // save last_updated_at timestamp
             saveLastUpdatedAt(prefs);
 
-            // send event with new grades to activity
+            // post event with new grades to activity
             GradesEvent gradesEvent = new GradesEvent();
             gradesEvent.setGrades(gradeEntries);
             EventBus.getDefault().post(gradesEvent);
