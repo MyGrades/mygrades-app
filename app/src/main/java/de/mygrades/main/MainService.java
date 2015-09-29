@@ -15,7 +15,7 @@ import de.mygrades.main.processor.UniversityProcessor;
  * This service is used to handle ongoing operations in the background.
  * It is mostly used for network operations.
  *
- * The incoming intent must specify two extra Strings (PROCESSOR_KEY, METHOD_KEY),
+ * The incoming intent must specify two extra integers (PROCESSOR_KEY, METHOD_KEY),
  * so the service can decide which processor to create and which method to call.
  */
 public class MainService extends IntentService {
@@ -63,7 +63,7 @@ public class MainService extends IntentService {
             return;
         }
 
-        // add request to pending requests
+        // add request id to pending requests
         pendingRequest.add(requestId);
 
         // add intent to message queue
@@ -81,7 +81,7 @@ public class MainService extends IntentService {
                 handleUniversityProcessor(method, intent);
                 break;
             case PROCESSOR_GRADES:
-                handleGradesProcessor(method, intent);
+                handleGradesProcessor(method);
                 break;
             case PROCESSOR_LOGIN:
                 handleLoginProcessor(method, intent);
@@ -99,7 +99,7 @@ public class MainService extends IntentService {
     /**
      * Decides which method to call from the university processor.
      *
-     * @param method - the method to call, indicated with an integer
+     * @param method - the method to call, represented by an integer
      */
     private void handleUniversityProcessor(int method, Intent intent) {
         UniversityProcessor universityProcessor = new UniversityProcessor(this);
@@ -125,10 +125,9 @@ public class MainService extends IntentService {
     /**
      * Decides which method to call from the grades processor.
      *
-     * @param method - the method to call, indicated with an integer
-     * @param intent - intent
+     * @param method - the method to call, represented by an integer
      */
-    private void handleGradesProcessor(int method, Intent intent) {
+    private void handleGradesProcessor(int method) {
         GradesProcessor gradesProcessor = new GradesProcessor(this);
 
         switch (method) {
@@ -146,7 +145,7 @@ public class MainService extends IntentService {
     /**
      * Decides which method to call from login processor.
      *
-     * @param method - the method to call, indicated with an integer
+     * @param method - the method to call, represented by an integer
      * @param intent - intent
      */
     private void handleLoginProcessor(int method, Intent intent) {
