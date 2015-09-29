@@ -16,6 +16,11 @@ public class MainServiceHelper {
         this.context = context.getApplicationContext();
     }
 
+    /**
+     * Start a worker thread to load all universities from the server.
+     *
+     * @param publishedOnly - only published universities or all.
+     */
     public void getUniversities(boolean publishedOnly) {
         int method = MainService.METHOD_GET_UNIVERSITIES;
 
@@ -28,6 +33,11 @@ public class MainServiceHelper {
         context.startService(intent);
     }
 
+    /**
+     * Starts a worker thread to get a detailed university from the server.
+     *
+     * @param universityId - university id
+     */
     public void getDetailedUniversity(long universityId) {
         int method = MainService.METHOD_GET_DETAILED_UNIVERSITY;
 
@@ -57,7 +67,7 @@ public class MainServiceHelper {
     /**
      * Load all universities from the database.
      *
-     * @param publishedOnly only published universities or all.
+     * @param publishedOnly - only published universities or all.
      */
     public void getUniversitiesFromDatabase(boolean publishedOnly) {
         int method = MainService.METHOD_GET_UNIVERSITIES_FROM_DATABASE;
@@ -72,7 +82,7 @@ public class MainServiceHelper {
     }
 
     /**
-     * Starts an IntentService to scrape for new grades.
+     * Starts a worker thread to scrape for new grades.
      */
     public void scrapeForGrades() {
         int method = MainService.METHOD_SCRAPE_FOR_GRADES;
@@ -86,7 +96,7 @@ public class MainServiceHelper {
     }
 
     /**
-     * Starts an IntentService to save the username and password
+     * Starts a worker thread to save the username and password
      * and starts scraping for grades afterwards.
      *
      * @param username - username
@@ -105,6 +115,9 @@ public class MainServiceHelper {
         context.startService(intent);
     }
 
+    /**
+     * Starts a worker thread to delete all userdata and grades from the database.
+     */
     public void logout() {
         int method = MainService.METHOD_LOGOUT;
 
@@ -120,7 +133,7 @@ public class MainServiceHelper {
      * Build a basic intent with required extra data for each request.
      *
      * @param processor - processor to create (declared in the MainService)
-     * @param method - method to call by (declared in the MainService)
+     * @param method - method to call (declared in the MainService)
      * @param requestId - request id
      * @return intent
      */
@@ -134,7 +147,7 @@ public class MainServiceHelper {
 
     /**
      * Concatenates two long values.
-     * This is used to generate unique request ids.
+     * This can be used to generate unique request ids.
      *
      * @param a first long value
      * @param b second long value
