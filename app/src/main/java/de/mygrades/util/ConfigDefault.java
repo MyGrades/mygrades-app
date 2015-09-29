@@ -15,7 +15,7 @@ public class ConfigDefault {
     public static final String SERVER_URL = DOMAIN + ":" + PORT + "/api/v" + API_VERSION;
     public static final String API_USER = "MyGradesApi";
     public static final String API_PW = "AxPMiBxtgZXuGF28fVme";
-    public static final String API_BASE64_CEDENTIALS = Base64.encodeToString((API_USER + ":" + API_PW).getBytes(), Base64.NO_WRAP);
+    public static final String API_BASE64_CREDENTIALS = Base64.encodeToString((API_USER + ":" + API_PW).getBytes(), Base64.NO_WRAP);
 
 
 
