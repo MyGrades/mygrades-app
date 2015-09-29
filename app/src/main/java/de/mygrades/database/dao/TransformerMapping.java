@@ -6,44 +6,32 @@ package de.mygrades.database.dao;
  */
 public class TransformerMapping {
 
-    private Long id;
-    private long ruleId;
+    private Long transformerMappingId;
     /** Not-null value. */
     private String name;
     private String parseExpression;
-    private String parseType;
-    private long transformerMappingId;
+    private long ruleId;
 
     public TransformerMapping() {
     }
 
-    public TransformerMapping(Long id) {
-        this.id = id;
-    }
-
-    public TransformerMapping(Long id, long ruleId, String name, String parseExpression, String parseType, long transformerMappingId) {
-        this.id = id;
-        this.ruleId = ruleId;
-        this.name = name;
-        this.parseExpression = parseExpression;
-        this.parseType = parseType;
+    public TransformerMapping(Long transformerMappingId) {
         this.transformerMappingId = transformerMappingId;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public long getRuleId() {
-        return ruleId;
-    }
-
-    public void setRuleId(long ruleId) {
+    public TransformerMapping(Long transformerMappingId, String name, String parseExpression, long ruleId) {
+        this.transformerMappingId = transformerMappingId;
+        this.name = name;
+        this.parseExpression = parseExpression;
         this.ruleId = ruleId;
+    }
+
+    public Long getTransformerMappingId() {
+        return transformerMappingId;
+    }
+
+    public void setTransformerMappingId(Long transformerMappingId) {
+        this.transformerMappingId = transformerMappingId;
     }
 
     /** Not-null value. */
@@ -64,20 +52,12 @@ public class TransformerMapping {
         this.parseExpression = parseExpression;
     }
 
-    public String getParseType() {
-        return parseType;
+    public long getRuleId() {
+        return ruleId;
     }
 
-    public void setParseType(String parseType) {
-        this.parseType = parseType;
-    }
-
-    public long getTransformerMappingId() {
-        return transformerMappingId;
-    }
-
-    public void setTransformerMappingId(long transformerMappingId) {
-        this.transformerMappingId = transformerMappingId;
+    public void setRuleId(long ruleId) {
+        this.ruleId = ruleId;
     }
 
 }

@@ -1,8 +1,36 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#8BC34A</item>
+        <item name="colorPrimaryDark">#7CB342</item>
+        <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+        <item name="buttonStyle">@style/RobotoButtonStyle</item>
     </style>
 
+    <!-- set global TextView font to Roboto light -->
+    <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <!-- set global Button font to Roboto light -->
+    <style name="RobotoButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="colorButtonNormal">?attr/colorPrimary</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <!-- set EditText style. DO NOT declare the parent view, it will break the colors.
+    This style has to be set for each EditText with android:theme="@style/CustomEditTextStyle" -->
+    <style name="CustomEditTextStyle">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="colorControlNormal">?attr/colorPrimary</item>
+        <item name="colorControlActivated">?attr/colorPrimary</item>
+        <item name="colorControlHighlight">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Set the text color for the EditText hint. -->
+    <style name="TextAppearance.App.TextInputLayout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#888888</item>
+    </style>
 </resources>

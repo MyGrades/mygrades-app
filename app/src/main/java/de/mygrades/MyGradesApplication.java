@@ -16,7 +16,7 @@ public class MyGradesApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        SQLiteOpenHelper helper = new DaoMaster.DevOpenHelper(this, "mygrades-db", null);
+        SQLiteOpenHelper helper = new DaoMaster.DevOpenHelper(this, "mygrades.db", null);
         DaoMaster daoMaster = new DaoMaster(helper.getWritableDatabase());
         daoSession = daoMaster.newSession();
     }

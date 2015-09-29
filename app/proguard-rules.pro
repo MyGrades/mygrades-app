@@ -15,3 +15,12 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# greendao rules
+-keepclassmembers class * extends de.greenrobot.dao.AbstractDao {
+    public static java.lang.String TABLENAME;
+}
+-keep class **$Properties
+
+# secure preferences rules
+-keep class com.tozny.crypto.android.AesCbcWithIntegrity$PrngFixes$* { *; }

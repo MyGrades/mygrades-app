@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Collapsing Toolbar height -->
+    <dimen name="detail_backdrop_height">196dp</dimen>
+
+    <!-- Disable default inset (padding) for Buttons -->
+    <dimen name="abc_button_inset_horizontal_material">0dp</dimen>
+    <dimen name="abc_button_inset_vertical_material">0dp</dimen>
+
+    <!-- Disable default inset (padding) for EditTexts -->
+    <dimen name="abc_edit_text_inset_vertical_material">0dp</dimen>
+    <dimen name="abc_edit_text_inset_horizontal_material">0dp</dimen>
+</resources>

@@ -23,9 +23,9 @@ public class UniversityDao extends AbstractDao<University, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property UniversityId = new Property(1, long.class, "universityId", false, "UNIVERSITY_ID");
-        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property UniversityId = new Property(0, Long.class, "universityId", true, "UNIVERSITY_ID");
+        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
+        public final static Property Published = new Property(2, Boolean.class, "published", false, "PUBLISHED");
         public final static Property UpdatedAtServer = new Property(3, String.class, "updatedAtServer", false, "UPDATED_AT_SERVER");
     };
 
@@ -45,9 +45,9 @@ public class UniversityDao extends AbstractDao<University, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"UNIVERSITY\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"UNIVERSITY_ID\" INTEGER NOT NULL UNIQUE ," + // 1: universityId
-                "\"NAME\" TEXT NOT NULL ," + // 2: name
+                "\"UNIVERSITY_ID\" INTEGER PRIMARY KEY ," + // 0: universityId
+                "\"NAME\" TEXT NOT NULL ," + // 1: name
+                "\"PUBLISHED\" INTEGER," + // 2: published
                 "\"UPDATED_AT_SERVER\" TEXT);"); // 3: updatedAtServer
     }
 
@@ -62,12 +62,16 @@ public class UniversityDao extends AbstractDao<University, Long> {
     protected void bindValues(SQLiteStatement stmt, University entity) {
         stmt.clearBindings();
  
-        Long id = entity.getId();
-        if (id != null) {
-            stmt.bindLong(1, id);
+        Long universityId = entity.getUniversityId();
+        if (universityId != null) {
+            stmt.bindLong(1, universityId);
         }
-        stmt.bindLong(2, entity.getUniversityId());
-        stmt.bindString(3, entity.getName());
+        stmt.bindString(2, entity.getName());
+ 
+        Boolean published = entity.getPublished();
+        if (published != null) {
+            stmt.bindLong(3, published ? 1L: 0L);
+        }
  
         String updatedAtServer = entity.getUpdatedAtServer();
         if (updatedAtServer != null) {
@@ -91,9 +95,9 @@ public class UniversityDao extends AbstractDao<University, Long> {
     @Override
     public University readEntity(Cursor cursor, int offset) {
         University entity = new University( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getLong(offset + 1), // universityId
-            cursor.getString(offset + 2), // name
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // universityId
+            cursor.getString(offset + 1), // name
+            cursor.isNull(offset + 2) ? null : cursor.getShort(offset + 2) != 0, // published
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // updatedAtServer
         );
         return entity;
@@ -102,16 +106,16 @@ public class UniversityDao extends AbstractDao<University, Long> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, University entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setUniversityId(cursor.getLong(offset + 1));
-        entity.setName(cursor.getString(offset + 2));
+        entity.setUniversityId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setName(cursor.getString(offset + 1));
+        entity.setPublished(cursor.isNull(offset + 2) ? null : cursor.getShort(offset + 2) != 0);
         entity.setUpdatedAtServer(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
      }
     
     /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(University entity, long rowId) {
-        entity.setId(rowId);
+        entity.setUniversityId(rowId);
         return rowId;
     }
     
@@ -119,7 +123,7 @@ public class UniversityDao extends AbstractDao<University, Long> {
     @Override
     public Long getKey(University entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getUniversityId();
         } else {
             return null;
         }
