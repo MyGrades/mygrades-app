@@ -42,11 +42,10 @@ public class Transformer {
     private static final String EXAM_DATE = "exam_date";
 
     private static final String SEMESTER_FORMAT_SEMESTER = "semester";
-    private static final String SEMSETER_FORMAT_DATE = "date";
+    private static final String SEMESTER_FORMAT_DATE = "date";
 
-    private static final String SEMSETER_WS = "Wintersemester ";
-    private static final String SEMSETER_SS = "Sommersemester ";
-
+    private static final String SEMESTER_WS = "Wintersemester ";
+    private static final String SEMESTER_SS = "Sommersemester ";
 
     /**
      * Parser to extract values into Models.
@@ -73,13 +72,11 @@ public class Transformer {
      */
     private Pattern semesterPattern;
 
-
     public Transformer(Rule rule, String html, Parser parser) {
         this.rule = rule;
         this.transformerMapping = createTransformerMappingMap(rule.getTransformerMappings());
         this.parser = parser;
         this.html = html;
-
         this.semesterPattern = Pattern.compile(rule.getSemesterPattern());
     }
 
@@ -162,11 +159,11 @@ public class Transformer {
 
             // if extractedSemester starts with w -> Wintersemester
             if (extractedSemester.toLowerCase().startsWith("w")) {
-                resultSemester += SEMSETER_WS + extractedYear + "/" + (extractedYear+1);
+                resultSemester += SEMESTER_WS + extractedYear + "/" + (extractedYear+1);
             } else {
-                resultSemester += SEMSETER_SS + extractedYear;
+                resultSemester += SEMESTER_SS + extractedYear;
             }
-        } else if (rule.getSemesterFormat().equals(SEMSETER_FORMAT_DATE)) {
+        } else if (rule.getSemesterFormat().equals(SEMESTER_FORMAT_DATE)) {
             Integer extractedYear = 0;
             Integer extractedMonth = 0;
 
@@ -192,12 +189,12 @@ public class Transformer {
 
             // calculate Semester string depending on month and year
             if (extractedMonth >= rule.getSemesterStartSummer() && extractedMonth < rule.getSemesterStartWinter()) { // Sommersemester (04-09)
-                resultSemester += SEMSETER_SS + extractedYear;
+                resultSemester += SEMESTER_SS + extractedYear;
             } else { // Wintersemester
                 if (extractedMonth >= rule.getSemesterStartWinter()) { // first part of Wintersemester (10-12)
-                    resultSemester += SEMSETER_WS + extractedYear + "/" + (extractedYear+1);
+                    resultSemester += SEMESTER_WS + extractedYear + "/" + (extractedYear+1);
                 } else { // second part of Wintersemester (01-03)
-                    resultSemester += SEMSETER_WS + (extractedYear-1) + "/" + extractedYear;
+                    resultSemester += SEMESTER_WS + (extractedYear-1) + "/" + extractedYear;
                 }
             }
 
@@ -264,7 +261,7 @@ public class Transformer {
 
         // create Map Semester -> SemesterNumber for easy adding to GradeEntry
         Map<String, Integer> semesterSemesterNumberMap = new HashMap<>();
-        for (int i=0; i < semestersList.size(); i++) {
+        for (int i = 0; i < semestersList.size(); i++) {
             semesterSemesterNumberMap.put(semestersList.get(i), i+1);
         }
 
@@ -295,6 +292,7 @@ public class Transformer {
      *
      * @param xmlDocument Document which should get parsed
      * @param type Type of TransformerMapping regarding to GradeEntry
+     * @param factor A factor can be used to multiply the double value
      * @return extracted value as Double
      * @throws ParseException if something goes wrong at parsing
      */
