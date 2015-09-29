@@ -16,19 +16,104 @@ public class MainServiceHelper {
         this.context = context.getApplicationContext();
     }
 
-    public long getUniversities() {
+    public void getUniversities(boolean publishedOnly) {
         int method = MainService.METHOD_GET_UNIVERSITIES;
 
-        // set request id and add it to the set
+        // set request id
         long requestId = concatenateLong(method, 0);
 
-        // get intent
+        // start worker thread in background
         Intent intent = getBasicIntent(MainService.PROCESSOR_UNIVERSITY, method, requestId);
+        intent.putExtra(MainService.PUBLISHED_ONLY, publishedOnly);
+        context.startService(intent);
+    }
+
+    public void getDetailedUniversity(long universityId) {
+        int method = MainService.METHOD_GET_DETAILED_UNIVERSITY;
+
+        // set request id
+        long requestId = concatenateLong(method, universityId);
 
         // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_UNIVERSITY, method, requestId);
+        intent.putExtra(MainService.UNIVERSITY_ID, universityId);
         context.startService(intent);
+    }
 
-        return requestId;
+    /**
+     * Load all grades from the database.
+     */
+    public void getGradesFromDatabase() {
+        int method = MainService.METHOD_GET_GRADES_FROM_DATABASE;
+
+        // set request id
+        long requestId = concatenateLong(method, 0);
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_GRADES, method, requestId);
+        context.startService(intent);
+    }
+
+    /**
+     * Load all universities from the database.
+     *
+     * @param publishedOnly only published universities or all.
+     */
+    public void getUniversitiesFromDatabase(boolean publishedOnly) {
+        int method = MainService.METHOD_GET_UNIVERSITIES_FROM_DATABASE;
+
+        // set request id
+        long requestId = concatenateLong(method, 0);
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_UNIVERSITY, method, requestId);
+        intent.putExtra(MainService.PUBLISHED_ONLY, publishedOnly);
+        context.startService(intent);
+    }
+
+    /**
+     * Starts an IntentService to scrape for new grades.
+     */
+    public void scrapeForGrades() {
+        int method = MainService.METHOD_SCRAPE_FOR_GRADES;
+
+        // set request id
+        long requestId = concatenateLong(method, 0);
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_GRADES, method, requestId);
+        context.startService(intent);
+    }
+
+    /**
+     * Starts an IntentService to save the username and password
+     * and starts scraping for grades afterwards.
+     *
+     * @param username - username
+     * @param password - password
+     */
+    public void loginAndScrapeForGrades(String username, String password) {
+        int method = MainService.METHOD_LOGIN_AND_SCRAPE_FOR_GRADES;
+
+        // set request id
+        long requestId = concatenateLong(method, 0);
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_LOGIN, method, requestId);
+        intent.putExtra(MainService.USERNAME, username);
+        intent.putExtra(MainService.PASSWORD, password);
+        context.startService(intent);
+    }
+
+    public void logout() {
+        int method = MainService.METHOD_LOGOUT;
+
+        // set request id
+        long requestId = concatenateLong(method, 0);
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_LOGIN, method, requestId);
+        context.startService(intent);
     }
 
     /**

@@ -7,6 +7,8 @@ import android.util.Log;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.mygrades.main.processor.GradesProcessor;
+import de.mygrades.main.processor.LoginProcessor;
 import de.mygrades.main.processor.UniversityProcessor;
 
 /**
@@ -22,13 +24,25 @@ public class MainService extends IntentService {
     // intent extra, processors: key and values
     public static final String PROCESSOR_KEY = "processor_key";
     public static final int PROCESSOR_UNIVERSITY = 100;
+    public static final int PROCESSOR_GRADES = 101;
+    public static final int PROCESSOR_LOGIN = 102;
 
     // intent extra, methods: key and values
     public static final String METHOD_KEY = "method_key";
-    public static final int METHOD_GET_UNIVERSITIES = 101;
+    public static final int METHOD_GET_UNIVERSITIES = 111;
+    public static final int METHOD_GET_DETAILED_UNIVERSITY = 112;
+    public static final int METHOD_SCRAPE_FOR_GRADES = 113;
+    public static final int METHOD_LOGIN_AND_SCRAPE_FOR_GRADES = 114;
+    public static final int METHOD_GET_GRADES_FROM_DATABASE = 115;
+    public static final int METHOD_GET_UNIVERSITIES_FROM_DATABASE = 116;
+    public static final int METHOD_LOGOUT = 117;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
+    public static final String UNIVERSITY_ID = "university_id";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
+    public static final String PUBLISHED_ONLY = "published_only";
 
     // save request ids for pending request in this set, and remove them when its done.
     private Set<Long> pendingRequest;
@@ -64,7 +78,13 @@ public class MainService extends IntentService {
 
         switch (processor) {
             case PROCESSOR_UNIVERSITY:
-                handleUniversityProcessor(method);
+                handleUniversityProcessor(method, intent);
+                break;
+            case PROCESSOR_GRADES:
+                handleGradesProcessor(method, intent);
+                break;
+            case PROCESSOR_LOGIN:
+                handleLoginProcessor(method, intent);
                 break;
             default:
                 Log.e(TAG, "Invalid processor call to MainService: " + processor);
@@ -81,12 +101,65 @@ public class MainService extends IntentService {
      *
      * @param method - the method to call, indicated with an integer
      */
-    private void handleUniversityProcessor(int method) {
+    private void handleUniversityProcessor(int method, Intent intent) {
         UniversityProcessor universityProcessor = new UniversityProcessor(this);
 
         switch(method) {
             case METHOD_GET_UNIVERSITIES:
-                universityProcessor.getUniversities();
+                boolean publishedOnly = intent.getBooleanExtra(PUBLISHED_ONLY, false);
+                universityProcessor.getUniversities(publishedOnly);
+                break;
+            case METHOD_GET_DETAILED_UNIVERSITY:
+                long universityId = intent.getLongExtra(UNIVERSITY_ID, 0);
+                universityProcessor.getDetailedUniversity(universityId);
+                break;
+            case METHOD_GET_UNIVERSITIES_FROM_DATABASE:
+                publishedOnly = intent.getBooleanExtra(PUBLISHED_ONLY, false);
+                universityProcessor.getUniversitiesFromDatabase(publishedOnly);
+                break;
+            default:
+                Log.e(TAG, "Invalid method call to MainService: "+ method);
+        }
+    }
+
+    /**
+     * Decides which method to call from the grades processor.
+     *
+     * @param method - the method to call, indicated with an integer
+     * @param intent - intent
+     */
+    private void handleGradesProcessor(int method, Intent intent) {
+        GradesProcessor gradesProcessor = new GradesProcessor(this);
+
+        switch (method) {
+            case METHOD_SCRAPE_FOR_GRADES:
+                gradesProcessor.scrapeForGrades();
+                break;
+            case METHOD_GET_GRADES_FROM_DATABASE:
+                gradesProcessor.getGradesFromDatabase();
+                break;
+            default:
+                Log.e(TAG, "Invalid method call to MainService: "+ method);
+        }
+    }
+
+    /**
+     * Decides which method to call from login processor.
+     *
+     * @param method - the method to call, indicated with an integer
+     * @param intent - intent
+     */
+    private void handleLoginProcessor(int method, Intent intent) {
+        LoginProcessor loginProcessor = new LoginProcessor(this);
+
+        switch (method) {
+            case METHOD_LOGIN_AND_SCRAPE_FOR_GRADES:
+                String username = intent.getStringExtra(USERNAME);
+                String password = intent.getStringExtra(PASSWORD);
+                loginProcessor.loginAndScrapeForGrades(username, password);
+                break;
+            case METHOD_LOGOUT:
+                loginProcessor.logout();
                 break;
             default:
                 Log.e(TAG, "Invalid method call to MainService: "+ method);

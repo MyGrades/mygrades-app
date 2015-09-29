@@ -26,11 +26,11 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property ActionId = new Property(1, Integer.class, "actionId", false, "ACTION_ID");
-        public final static Property Key = new Property(2, String.class, "key", false, "KEY");
-        public final static Property Value = new Property(3, String.class, "value", false, "VALUE");
-        public final static Property ActionParamId = new Property(4, long.class, "actionParamId", false, "ACTION_PARAM_ID");
+        public final static Property ActionParamId = new Property(0, Long.class, "actionParamId", true, "ACTION_PARAM_ID");
+        public final static Property Key = new Property(1, String.class, "key", false, "KEY");
+        public final static Property Value = new Property(2, String.class, "value", false, "VALUE");
+        public final static Property Type = new Property(3, String.class, "type", false, "TYPE");
+        public final static Property ActionId = new Property(4, long.class, "actionId", false, "ACTION_ID");
     };
 
     private Query<ActionParam> action_ActionParamsQuery;
@@ -47,11 +47,11 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"ACTION_PARAM\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"ACTION_ID\" INTEGER," + // 1: actionId
-                "\"KEY\" TEXT NOT NULL ," + // 2: key
-                "\"VALUE\" TEXT," + // 3: value
-                "\"ACTION_PARAM_ID\" INTEGER NOT NULL UNIQUE );"); // 4: actionParamId
+                "\"ACTION_PARAM_ID\" INTEGER PRIMARY KEY ," + // 0: actionParamId
+                "\"KEY\" TEXT NOT NULL ," + // 1: key
+                "\"VALUE\" TEXT," + // 2: value
+                "\"TYPE\" TEXT," + // 3: type
+                "\"ACTION_ID\" INTEGER NOT NULL );"); // 4: actionId
     }
 
     /** Drops the underlying database table. */
@@ -65,22 +65,22 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     protected void bindValues(SQLiteStatement stmt, ActionParam entity) {
         stmt.clearBindings();
  
-        Long id = entity.getId();
-        if (id != null) {
-            stmt.bindLong(1, id);
+        Long actionParamId = entity.getActionParamId();
+        if (actionParamId != null) {
+            stmt.bindLong(1, actionParamId);
         }
- 
-        Integer actionId = entity.getActionId();
-        if (actionId != null) {
-            stmt.bindLong(2, actionId);
-        }
-        stmt.bindString(3, entity.getKey());
+        stmt.bindString(2, entity.getKey());
  
         String value = entity.getValue();
         if (value != null) {
-            stmt.bindString(4, value);
+            stmt.bindString(3, value);
         }
-        stmt.bindLong(5, entity.getActionParamId());
+ 
+        String type = entity.getType();
+        if (type != null) {
+            stmt.bindString(4, type);
+        }
+        stmt.bindLong(5, entity.getActionId());
     }
 
     /** @inheritdoc */
@@ -93,11 +93,11 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     @Override
     public ActionParam readEntity(Cursor cursor, int offset) {
         ActionParam entity = new ActionParam( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1), // actionId
-            cursor.getString(offset + 2), // key
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // value
-            cursor.getLong(offset + 4) // actionParamId
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // actionParamId
+            cursor.getString(offset + 1), // key
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // value
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // type
+            cursor.getLong(offset + 4) // actionId
         );
         return entity;
     }
@@ -105,17 +105,17 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, ActionParam entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setActionId(cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1));
-        entity.setKey(cursor.getString(offset + 2));
-        entity.setValue(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setActionParamId(cursor.getLong(offset + 4));
+        entity.setActionParamId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setKey(cursor.getString(offset + 1));
+        entity.setValue(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setType(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setActionId(cursor.getLong(offset + 4));
      }
     
     /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(ActionParam entity, long rowId) {
-        entity.setId(rowId);
+        entity.setActionParamId(rowId);
         return rowId;
     }
     
@@ -123,7 +123,7 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     @Override
     public Long getKey(ActionParam entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getActionParamId();
         } else {
             return null;
         }
@@ -136,16 +136,16 @@ public class ActionParamDao extends AbstractDao<ActionParam, Long> {
     }
     
     /** Internal query to resolve the "actionParams" to-many relationship of Action. */
-    public List<ActionParam> _queryAction_ActionParams(long actionParamId) {
+    public List<ActionParam> _queryAction_ActionParams(long actionId) {
         synchronized (this) {
             if (action_ActionParamsQuery == null) {
                 QueryBuilder<ActionParam> queryBuilder = queryBuilder();
-                queryBuilder.where(Properties.ActionParamId.eq(null));
+                queryBuilder.where(Properties.ActionId.eq(null));
                 action_ActionParamsQuery = queryBuilder.build();
             }
         }
         Query<ActionParam> query = action_ActionParamsQuery.forCurrentThread();
-        query.setParameter(0, actionParamId);
+        query.setParameter(0, actionId);
         return query.list();
     }
 

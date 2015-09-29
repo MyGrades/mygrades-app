@@ -6,42 +6,34 @@ package de.mygrades.database.dao;
  */
 public class ActionParam {
 
-    private Long id;
-    private Integer actionId;
+    private Long actionParamId;
     /** Not-null value. */
     private String key;
     private String value;
-    private long actionParamId;
+    private String type;
+    private long actionId;
 
     public ActionParam() {
     }
 
-    public ActionParam(Long id) {
-        this.id = id;
-    }
-
-    public ActionParam(Long id, Integer actionId, String key, String value, long actionParamId) {
-        this.id = id;
-        this.actionId = actionId;
-        this.key = key;
-        this.value = value;
+    public ActionParam(Long actionParamId) {
         this.actionParamId = actionParamId;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getActionId() {
-        return actionId;
-    }
-
-    public void setActionId(Integer actionId) {
+    public ActionParam(Long actionParamId, String key, String value, String type, long actionId) {
+        this.actionParamId = actionParamId;
+        this.key = key;
+        this.value = value;
+        this.type = type;
         this.actionId = actionId;
+    }
+
+    public Long getActionParamId() {
+        return actionParamId;
+    }
+
+    public void setActionParamId(Long actionParamId) {
+        this.actionParamId = actionParamId;
     }
 
     /** Not-null value. */
@@ -62,12 +54,20 @@ public class ActionParam {
         this.value = value;
     }
 
-    public long getActionParamId() {
-        return actionParamId;
+    public String getType() {
+        return type;
     }
 
-    public void setActionParamId(long actionParamId) {
-        this.actionParamId = actionParamId;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public long getActionId() {
+        return actionId;
+    }
+
+    public void setActionId(long actionId) {
+        this.actionId = actionId;
     }
 
 }
