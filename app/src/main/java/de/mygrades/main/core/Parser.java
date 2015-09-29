@@ -30,7 +30,6 @@ import de.mygrades.util.exceptions.ParseException;
  * Parses String to Documents and evaluates xPath expressions on them.
  */
 public class Parser {
-    private static final String TAG = Parser.class.getSimpleName();
     private Context context;
 
     /**

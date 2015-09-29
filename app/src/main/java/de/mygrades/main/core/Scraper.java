@@ -61,7 +61,6 @@ public class Scraper {
      */
     private Parser parser;
 
-
     public Scraper(List<Action> actions, Parser parser) {
         this.actions = actions;
         this.cookies = new HashMap<>();
