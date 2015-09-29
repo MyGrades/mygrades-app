@@ -80,20 +80,15 @@ public class Scraper {
         String parsedHtml = null;
 
         // iterate over all actions in order by position
-        for (int i=0; i<actions.size(); i++) {
+        for (int i = 0; i < actions.size(); i++) {
             Action action = actions.get(i);
             Log.v(TAG, action.toString());
-
 
             String url = getUrl(parsedHtml, action.getUrl());
             Log.v(TAG, "Action " + (i + 1) + "/" + actions.size() + " -- Sending Request to url: " + url);
 
             // make request with data, cookies, current method
             makeJsoupRequest(getRequestData(action.getActionParams()), getHttpMethodEnum(action.getMethod()), url);
-
-
-            // set parsedHtml for each Action back to null -> clean start and check at the end
-            parsedHtml = null;
 
             // parse Content to String if its not the last action
             if (i < actions.size() - 1) {
@@ -102,7 +97,6 @@ public class Scraper {
                 // parse with XML
                 parsedHtml = parser.parseToStringWithXML(action.getParseExpression(), document.toString());
             }
-            //Log.v(TAG, "parsedHtml: " + parsedHtml);
         }
         return parsedHtml;
     }
@@ -157,7 +151,6 @@ public class Scraper {
             }
         }
     }
-
 
     /**
      * Evaluates the url.
