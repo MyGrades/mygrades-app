@@ -25,7 +25,7 @@ import retrofit.RetrofitError;
 
 /**
  * UniversityProcessor is responsible for university resources.
- * It makes rest calls and required inserts / updated to the local database.
+ * It makes rest calls and required inserts / updates to the local database.
  */
 public class UniversityProcessor extends BaseProcessor {
     private static final String TAG = UniversityProcessor.class.getSimpleName();
@@ -35,7 +35,9 @@ public class UniversityProcessor extends BaseProcessor {
     }
 
     /**
-     * Load all universities from the server.
+     * Load all universities from the server and posts an UniversityEvent.
+     *
+     * @param publishedOnly - load only published universities or all
      */
     public void getUniversities(boolean publishedOnly) {
         List<University> universities = new ArrayList<>();
@@ -61,7 +63,7 @@ public class UniversityProcessor extends BaseProcessor {
     }
 
     /**
-     * Load all universities from the database and post an event.
+     * Load all universities from the database and posts an UniversityEvent.
      *
      * @param publishedOnly - select only published universities or all
      */
@@ -124,6 +126,8 @@ public class UniversityProcessor extends BaseProcessor {
 
     /**
      * Get the latest updated_at_server timestamp for all universities.
+     * The selected university should be excluded from the query, because
+     * it may be already updated multiple times.
      *
      * @param publishedOnly - get timestamp for published or unpublished universities
      * @return timestamp as string
@@ -149,10 +153,10 @@ public class UniversityProcessor extends BaseProcessor {
 
     /**
      * Get the updated_at_server timestamp for the selected university.
-     * Return null, if the selected university has no rules attached (should not happen).
+     * Return null, if the selected university has no rules attached (should only happen at first load).
      *
      * @param universityId - university id
-     * @return timestamp
+     * @return timestamp as string
      */
     private String getUpdatedAtServerForUniversity(long universityId) {
         University u = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
