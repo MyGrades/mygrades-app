@@ -56,7 +56,7 @@ public class UniversityProcessor extends BaseProcessor {
 
         // post university event
         UniversityEvent universityEvent = new UniversityEvent();
-        universityEvent.setNewUniversities(universities);
+        universityEvent.setUniversities(universities);
         EventBus.getDefault().post(universityEvent);
     }
 
@@ -75,7 +75,7 @@ public class UniversityProcessor extends BaseProcessor {
 
         // post university event
         UniversityEvent universityEvent = new UniversityEvent();
-        universityEvent.setNewUniversities(universities);
+        universityEvent.setUniversities(universities);
         EventBus.getDefault().post(universityEvent);
     }
 
