@@ -24,7 +24,7 @@ public class RestClient {
         RequestInterceptor interceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-                request.addHeader("Authorization", "Basic " + Config.API_BASE64_CEDENTIALS);
+                request.addHeader("Authorization", "Basic " + Config.API_BASE64_CREDENTIALS);
             }
         };
 
