@@ -28,7 +28,6 @@ public class RestClient {
             }
         };
 
-
         // initialize GSON converter
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
