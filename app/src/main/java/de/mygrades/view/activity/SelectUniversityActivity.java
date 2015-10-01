@@ -117,7 +117,7 @@ public class SelectUniversityActivity extends AppCompatActivity {
      */
     public void onEventMainThread(UniversityEvent universityEvent) {
         if (universityAdapter != null) {
-            addUniversities(universityEvent.getNewUniversities(true));
+            addUniversities(universityEvent.getUniversities(true));
         }
     }
 
