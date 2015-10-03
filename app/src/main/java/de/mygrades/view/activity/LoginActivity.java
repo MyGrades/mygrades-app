@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
 
         editor.putLong(Constants.PREF_KEY_UNIVERSITY_ID, universityId);
-        editor.putBoolean(Constants.PREF_KEY_LOGGED_IN, true);
+        editor.putBoolean(Constants.PREF_KEY_INITIAL_LOADING_DONE, false);
         editor.apply();
     }
 

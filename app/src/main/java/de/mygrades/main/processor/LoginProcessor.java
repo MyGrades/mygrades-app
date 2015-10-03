@@ -29,7 +29,7 @@ public class LoginProcessor extends BaseProcessor {
 
         // start scraping
         GradesProcessor gradesProcessor = new GradesProcessor(context);
-        gradesProcessor.scrapeForGrades();
+        gradesProcessor.scrapeForGrades(true);
 
         // TODO: post university id to our server (asynchronous with retrofit)
     }
@@ -49,7 +49,7 @@ public class LoginProcessor extends BaseProcessor {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove(Constants.PREF_KEY_UNIVERSITY_ID);
-        editor.remove(Constants.PREF_KEY_LOGGED_IN);
+        editor.remove(Constants.PREF_KEY_INITIAL_LOADING_DONE);
         editor.remove(Constants.PREF_KEY_LAST_UPDATED_AT);
         editor.commit();
 
