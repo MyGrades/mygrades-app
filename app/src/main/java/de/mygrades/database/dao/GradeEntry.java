@@ -4,6 +4,11 @@ package de.mygrades.database.dao;
 
 // KEEP INCLUDES - put your custom includes here
 // KEEP INCLUDES END
+
+import android.util.Base64;
+
+import java.io.UnsupportedEncodingException;
+
 /**
  * Entity mapped to table "GRADE_ENTRY".
  */
@@ -142,9 +147,16 @@ public class GradeEntry {
      * The hash is used as the primary key.
      */
     public void updateHash() {
-        this.hash = (examId == null ? "" : examId) +
-                    (semester == null ? "" : semester) +
-                    name;
+        hash = (examId == null ? "" : examId) +
+               (semester == null ? "" : semester) +
+               name;
+
+        try {
+            byte[] data = hash.getBytes("UTF-8");
+            hash = Base64.encodeToString(data, Base64.DEFAULT);
+        } catch (UnsupportedEncodingException e) {
+            // ignore, normal hash is used
+        }
     }
 
     @Override
