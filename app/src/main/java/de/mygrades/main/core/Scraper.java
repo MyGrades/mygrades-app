@@ -11,17 +11,27 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.SSLSocketFactory;
+
+import javax.net.ssl.TrustManager;
 
 import de.mygrades.database.dao.Action;
 import de.mygrades.database.dao.ActionParam;
 import de.mygrades.util.Config;
 import de.mygrades.util.Constants;
-import de.mygrades.util.NoSSLv3Factory;
+import de.mygrades.util.NoSSLv3SocketFactory;
 import de.mygrades.util.exceptions.ParseException;
 
 
@@ -34,11 +44,46 @@ public class Scraper {
 
     /**
      * Avoid SSLv3 as the only protocol available.
-     * http://stackoverflow.com/questions/26633349/disable-ssl-as-a-protocol-in-httpsurlconnection
      * http://stackoverflow.com/questions/2793150/using-java-net-urlconnection-to-fire-and-handle-http-requests/2793153#2793153
+     * (not used) http://stackoverflow.com/questions/26633349/disable-ssl-as-a-protocol-in-httpsurlconnection
+     * (not used) http://stackoverflow.com/a/29946540 -> initializing of SSLv3 Context
      */
     static {
-        HttpsURLConnection.setDefaultSSLSocketFactory(new NoSSLv3Factory());
+        TrustManager[] trustAllCertificates = new TrustManager[] {
+                new X509TrustManager() {
+                    @Override
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null; // Not relevant.
+                    }
+                    @Override
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                        // Do nothing. Just allow them all.
+                    }
+                    @Override
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                        // Do nothing. Just allow them all.
+                    }
+                }
+        };
+
+        HostnameVerifier trustAllHostnames = new HostnameVerifier() {
+            @Override
+            public boolean verify(String hostname, SSLSession session) {
+                return true; // Just allow them all.
+            }
+        };
+
+        try {
+            System.setProperty("jsse.enableSNIExtension", "false");
+            SSLContext sc = SSLContext.getInstance("TLSv1");
+            sc.init(null, trustAllCertificates, new SecureRandom());
+            SSLSocketFactory NoSSLv3Factory = new NoSSLv3SocketFactory(sc.getSocketFactory());
+            HttpsURLConnection.setDefaultSSLSocketFactory(NoSSLv3Factory);
+            HttpsURLConnection.setDefaultHostnameVerifier(trustAllHostnames);
+        }
+        catch (GeneralSecurityException e) {
+
+        }
     }
 
     /**
@@ -121,7 +166,7 @@ public class Scraper {
                 .userAgent(Config.BROWSER_USER_AGENT) // set explicit user agent
                 .method(method)
                 .timeout(15000)
-                .validateTLSCertificates(false) // do not validate ssl certificates -> must be used for self certified
+                //.validateTLSCertificates(false) // do not validate ssl certificates -> must be used for self certified
                 .execute();
 
         // get cookies from response and add to all cookies
