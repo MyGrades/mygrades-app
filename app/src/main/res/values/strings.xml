@@ -10,4 +10,7 @@
     <string name="tv_grades_average">Notendurchschnitt:</string>
     <string name="tv_credit_points">Credit Points:</string>
     <string name="tv_last_updated_at">Zuletzt aktualisiert:</string>
+
+    <string name="drawer_open">Menü öffnen</string>
+    <string name="drawer_close">Menü schließen</string>
 </resources>
