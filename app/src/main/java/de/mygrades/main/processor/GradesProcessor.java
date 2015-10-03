@@ -21,6 +21,7 @@ import de.mygrades.main.core.Scraper;
 import de.mygrades.main.core.Transformer;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.GradesEvent;
+import de.mygrades.main.events.InitialLoadingDoneEvent;
 import de.mygrades.util.Constants;
 import de.mygrades.util.exceptions.ParseException;
 
@@ -39,7 +40,7 @@ public class GradesProcessor extends BaseProcessor {
      * Scrape for grades and post and GradeEvent if scraping was successful.
      * Otherwise, an ErrorEvent will be posted.
      */
-    public void scrapeForGrades() {
+    public void scrapeForGrades(boolean initialLoading) {
         // No Connection -> event no Connection, abort
         if (!isOnline()) {
             // post error event to subscribers
@@ -97,6 +98,12 @@ public class GradesProcessor extends BaseProcessor {
             GradesEvent gradesEvent = new GradesEvent();
             gradesEvent.setGrades(gradeEntries);
             EventBus.getDefault().post(gradesEvent);
+
+            // set initial loading to done and send event to activity
+            if (initialLoading) {
+                prefs.edit().putBoolean(Constants.PREF_KEY_INITIAL_LOADING_DONE, true).apply();
+                EventBus.getDefault().post(new InitialLoadingDoneEvent());
+            }
         } catch (ParseException e) {
             // post error event to subscribers
             ErrorEvent errorEvent = new ErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parser Error");

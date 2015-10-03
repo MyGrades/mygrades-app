@@ -131,7 +131,7 @@ public class MainService extends MultiThreadedIntentService {
 
         switch (method) {
             case METHOD_SCRAPE_FOR_GRADES:
-                gradesProcessor.scrapeForGrades();
+                gradesProcessor.scrapeForGrades(false);
                 break;
             case METHOD_GET_GRADES_FROM_DATABASE:
                 gradesProcessor.getGradesFromDatabase();
