@@ -18,7 +18,7 @@ import de.mygrades.main.processor.UniversityProcessor;
  * The incoming intent must specify two extra integers (PROCESSOR_KEY, METHOD_KEY),
  * so the service can decide which processor to create and which method to call.
  */
-public class MainService extends IntentService {
+public class MainService extends MultiThreadedIntentService {
     private static final String TAG = MainService.class.getSimpleName();
 
     // intent extra, processors: key and values
@@ -51,7 +51,6 @@ public class MainService extends IntentService {
      * Creates an IntentService. Invoked by your subclass's constructor.
      */
     public MainService() {
-        super(TAG);
         pendingRequest = new HashSet<>();
     }
 
