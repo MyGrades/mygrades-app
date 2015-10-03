@@ -28,10 +28,11 @@ public class ActionDao extends AbstractDao<Action, Long> {
     public static class Properties {
         public final static Property ActionId = new Property(0, Long.class, "actionId", true, "ACTION_ID");
         public final static Property Position = new Property(1, int.class, "position", false, "POSITION");
-        public final static Property Method = new Property(2, String.class, "method", false, "METHOD");
-        public final static Property Url = new Property(3, String.class, "url", false, "URL");
-        public final static Property ParseExpression = new Property(4, String.class, "parseExpression", false, "PARSE_EXPRESSION");
-        public final static Property RuleId = new Property(5, long.class, "ruleId", false, "RULE_ID");
+        public final static Property Type = new Property(2, String.class, "type", false, "TYPE");
+        public final static Property Method = new Property(3, String.class, "method", false, "METHOD");
+        public final static Property Url = new Property(4, String.class, "url", false, "URL");
+        public final static Property ParseExpression = new Property(5, String.class, "parseExpression", false, "PARSE_EXPRESSION");
+        public final static Property RuleId = new Property(6, long.class, "ruleId", false, "RULE_ID");
     };
 
     private DaoSession daoSession;
@@ -53,10 +54,11 @@ public class ActionDao extends AbstractDao<Action, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"ACTION\" (" + //
                 "\"ACTION_ID\" INTEGER PRIMARY KEY ," + // 0: actionId
                 "\"POSITION\" INTEGER NOT NULL ," + // 1: position
-                "\"METHOD\" TEXT NOT NULL ," + // 2: method
-                "\"URL\" TEXT," + // 3: url
-                "\"PARSE_EXPRESSION\" TEXT," + // 4: parseExpression
-                "\"RULE_ID\" INTEGER NOT NULL );"); // 5: ruleId
+                "\"TYPE\" TEXT," + // 2: type
+                "\"METHOD\" TEXT NOT NULL ," + // 3: method
+                "\"URL\" TEXT," + // 4: url
+                "\"PARSE_EXPRESSION\" TEXT," + // 5: parseExpression
+                "\"RULE_ID\" INTEGER NOT NULL );"); // 6: ruleId
     }
 
     /** Drops the underlying database table. */
@@ -75,18 +77,23 @@ public class ActionDao extends AbstractDao<Action, Long> {
             stmt.bindLong(1, actionId);
         }
         stmt.bindLong(2, entity.getPosition());
-        stmt.bindString(3, entity.getMethod());
+ 
+        String type = entity.getType();
+        if (type != null) {
+            stmt.bindString(3, type);
+        }
+        stmt.bindString(4, entity.getMethod());
  
         String url = entity.getUrl();
         if (url != null) {
-            stmt.bindString(4, url);
+            stmt.bindString(5, url);
         }
  
         String parseExpression = entity.getParseExpression();
         if (parseExpression != null) {
-            stmt.bindString(5, parseExpression);
+            stmt.bindString(6, parseExpression);
         }
-        stmt.bindLong(6, entity.getRuleId());
+        stmt.bindLong(7, entity.getRuleId());
     }
 
     @Override
@@ -107,10 +114,11 @@ public class ActionDao extends AbstractDao<Action, Long> {
         Action entity = new Action( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // actionId
             cursor.getInt(offset + 1), // position
-            cursor.getString(offset + 2), // method
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // url
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // parseExpression
-            cursor.getLong(offset + 5) // ruleId
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // type
+            cursor.getString(offset + 3), // method
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // url
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // parseExpression
+            cursor.getLong(offset + 6) // ruleId
         );
         return entity;
     }
@@ -120,10 +128,11 @@ public class ActionDao extends AbstractDao<Action, Long> {
     public void readEntity(Cursor cursor, Action entity, int offset) {
         entity.setActionId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setPosition(cursor.getInt(offset + 1));
-        entity.setMethod(cursor.getString(offset + 2));
-        entity.setUrl(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setParseExpression(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setRuleId(cursor.getLong(offset + 5));
+        entity.setType(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setMethod(cursor.getString(offset + 3));
+        entity.setUrl(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setParseExpression(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setRuleId(cursor.getLong(offset + 6));
      }
     
     /** @inheritdoc */
