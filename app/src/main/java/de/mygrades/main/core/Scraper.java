@@ -17,8 +17,10 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import de.greenrobot.event.EventBus;
 import de.mygrades.database.dao.Action;
 import de.mygrades.database.dao.ActionParam;
+import de.mygrades.main.events.ScrapeProgressEvent;
 import de.mygrades.util.Config;
 import de.mygrades.util.Constants;
 import de.mygrades.util.NoSSLv3Factory;
@@ -96,6 +98,9 @@ public class Scraper {
                 // parse with XML
                 parsedHtml = parser.parseToStringWithXML(action.getParseExpression(), document.toString());
             }
+
+            // post status event
+            EventBus.getDefault().post(new ScrapeProgressEvent(i + 1, actions.size()));
         }
         return parsedHtml;
     }
