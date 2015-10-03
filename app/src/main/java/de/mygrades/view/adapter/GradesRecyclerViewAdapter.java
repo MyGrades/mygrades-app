@@ -1,6 +1,7 @@
 package de.mygrades.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import de.mygrades.R;
 import de.mygrades.util.Constants;
+import de.mygrades.view.activity.GradeDetailedActivity;
 import de.mygrades.view.adapter.model.GradeItem;
 import de.mygrades.view.adapter.model.GradesAdapterItem;
 import de.mygrades.view.adapter.model.GradesSummaryItem;
@@ -318,7 +320,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     /**
      * View holder for a grade entry.
      */
-    public class GradeViewHolder extends RecyclerView.ViewHolder {
+    public class GradeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener  {
         public TextView tvName;
         public TextView tvGrade;
         public TextView tvCreditPoints;
@@ -329,6 +331,17 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             tvName = (TextView) itemView.findViewById(R.id.tv_grade_name);
             tvGrade = (TextView) itemView.findViewById(R.id.tv_grade);
             tvCreditPoints = (TextView) itemView.findViewById(R.id.tv_credit_points);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            final Intent intent = new Intent(v.getContext(), GradeDetailedActivity.class);
+            GradeItem gradeItem = (GradeItem) items.get(getAdapterPosition());
+
+            intent.putExtra(GradeDetailedActivity.EXTRA_GRADE_HASH, gradeItem.getHash());
+            v.getContext().startActivity(intent);
         }
     }
 

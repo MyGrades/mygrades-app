@@ -239,7 +239,6 @@ public class Rule {
                 ", transformerMappings=" + transformerMappings +
                 '}';
     }
-
     // KEEP METHODS END
 
 }
