@@ -86,6 +86,7 @@ public class MyGradesDaoGenerator {
         action = schema.addEntity("Action");
         action.addLongProperty("actionId").primaryKey();
         action.addIntProperty("position").notNull();
+        action.addStringProperty("type");
         action.addStringProperty("method").notNull();
         action.addStringProperty("url");
         action.addStringProperty("parseExpression");

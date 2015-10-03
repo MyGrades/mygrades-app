@@ -15,6 +15,16 @@
             </intent-filter>
         </activity>
 
+        <!-- GradeDetailedActivity -->
+        <activity
+            android:name=".view.activity.GradeDetailedActivity"
+            android:parentActivityName=".view.activity.MainActivity">
+            <!-- The meta-data element is needed for versions lower than 4.1 -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.activity.MainActivity" />
+        </activity>
+
         <!-- SelectUniversityActivity -->
         <activity
             android:name=".view.activity.SelectUniversityActivity"
