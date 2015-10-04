@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ActionBarDrawerToggle drawerToggle;
 
+    private static final String TAG_FRAGMENT_INITIAL_SCRAPING = "tag_fragment_initial_scraping";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
 
         // check initial loading
-        if (!checkInitialLoadingDone()) {
+        if (!checkInitialScrapingDone()) {
             // disable navigation drawer
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             drawerToggle.setDrawerIndicatorEnabled(false);
@@ -70,8 +72,10 @@ public class MainActivity extends AppCompatActivity {
             ImageView iv = (ImageView) toolbar.findViewById(R.id.iv_mygrades_logo);
             iv.setAlpha(0f);
 
-            // show initial loading fragment
-            setFragment(FragmentInitialScraping.class);
+            if (savedInstanceState == null) {
+                // show initial loading fragment
+                setFragment(FragmentInitialScraping.class);
+            }
         } else {
             // set default fragment to overview of grades
             if (savedInstanceState == null) {
@@ -97,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @return true or false
      */
-    private boolean checkInitialLoadingDone() {
+    private boolean checkInitialScrapingDone() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         return prefs.getBoolean(Constants.PREF_KEY_INITIAL_LOADING_DONE, false);
     }
@@ -201,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
 
             // insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fl_content, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.fl_content, fragment, TAG_FRAGMENT_INITIAL_SCRAPING).commit();
         } catch (Exception e) {
             // do nothing
         }
