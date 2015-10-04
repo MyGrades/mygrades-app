@@ -170,7 +170,7 @@ public class Scraper {
                 .referrer("http://www.google.com") // some websites block without referrer
                 .userAgent(Config.BROWSER_USER_AGENT) // set explicit user agent
                 .method(method)
-                .timeout(15000)
+                .timeout(25000)
                 //.validateTLSCertificates(false) // do not validate ssl certificates -> must be used for self certified
                 .execute();
 
