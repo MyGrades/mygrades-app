@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
+import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.ScrapeProgressEvent;
 import de.mygrades.view.ProgressImageViewOverlay;
 
@@ -39,6 +40,10 @@ public class FragmentInitialLoading extends Fragment {
 
         // register to events
         EventBus.getDefault().register(this);
+
+        // start scraping
+        MainServiceHelper mainServiceHelper = new MainServiceHelper(getContext());
+        mainServiceHelper.scrapeForGrades(true);
 
         return view;
     }

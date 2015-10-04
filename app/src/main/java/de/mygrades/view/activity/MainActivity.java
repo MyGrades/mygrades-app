@@ -3,8 +3,6 @@ package de.mygrades.view.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -14,15 +12,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
 import de.mygrades.main.MainServiceHelper;
-import de.mygrades.main.events.InitialLoadingDoneEvent;
+import de.mygrades.main.events.InitialScrapingDoneEvent;
 import de.mygrades.util.Constants;
 
 /**
@@ -118,9 +114,9 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Receive an event when the initial loading is done and replace fragments afterwards.
      *
-     * @param initialLoadingDoneEvent
+     * @param initialScrapingDoneEvent
      */
-    public void onEventMainThread(InitialLoadingDoneEvent initialLoadingDoneEvent) {
+    public void onEventMainThread(InitialScrapingDoneEvent initialScrapingDoneEvent) {
         if (navigationView == null || drawerLayout == null || drawerToggle == null || toolbar == null) {
             return;
         }

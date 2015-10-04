@@ -45,6 +45,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final String PASSWORD = "password";
     public static final String PUBLISHED_ONLY = "published_only";
     public static final String GRADE_HASH = "grade_hash";
+    public static final String INITIAL_SCRAPING = "initial_scraping";
 
     // save request ids for pending request in this set, and remove them when its done.
     private Set<Long> pendingRequest;
@@ -133,7 +134,8 @@ public class MainService extends MultiThreadedIntentService {
 
         switch (method) {
             case METHOD_SCRAPE_FOR_GRADES:
-                gradesProcessor.scrapeForGrades(false);
+                boolean initialScraping = intent.getBooleanExtra(INITIAL_SCRAPING, false);
+                gradesProcessor.scrapeForGrades(initialScraping);
                 break;
             case METHOD_GET_GRADES_FROM_DATABASE:
                 gradesProcessor.getGradesFromDatabase();
@@ -160,7 +162,7 @@ public class MainService extends MultiThreadedIntentService {
             case METHOD_LOGIN_AND_SCRAPE_FOR_GRADES:
                 String username = intent.getStringExtra(USERNAME);
                 String password = intent.getStringExtra(PASSWORD);
-                loginProcessor.loginAndScrapeForGrades(username, password);
+                loginProcessor.login(username, password);
                 break;
             case METHOD_LOGOUT:
                 loginProcessor.logout();

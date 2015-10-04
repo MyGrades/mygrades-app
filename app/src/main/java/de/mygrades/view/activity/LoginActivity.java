@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = etPassword.getText().toString();
 
         MainServiceHelper mainServiceHelper = new MainServiceHelper(LoginActivity.this);
-        mainServiceHelper.loginAndScrapeForGrades(username, password);
+        mainServiceHelper.login(username, password);
     }
 
     /**

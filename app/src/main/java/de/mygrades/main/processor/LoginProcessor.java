@@ -18,18 +18,14 @@ public class LoginProcessor extends BaseProcessor {
     }
 
     /**
-     * Saves the username and password and starts the scraping afterwards.
+     * Saves the username and password.
      *
      * @param username - username
      * @param password - password
      */
-    public void loginAndScrapeForGrades(String username, String password) {
+    public void login(String username, String password) {
         // save login data to secure preferences
         saveLoginData(username, password);
-
-        // start scraping
-        GradesProcessor gradesProcessor = new GradesProcessor(context);
-        gradesProcessor.scrapeForGrades(true);
 
         // TODO: post university id to our server (asynchronous with retrofit)
     }
@@ -65,6 +61,6 @@ public class LoginProcessor extends BaseProcessor {
         SecurePreferences.Editor editor = (SecurePreferences.Editor) prefs.edit();
         editor.putString(Constants.PREF_KEY_USERNAME, username);
         editor.putString(Constants.PREF_KEY_PASSWORD, password);
-        editor.commit();
+        editor.apply();
     }
 }
