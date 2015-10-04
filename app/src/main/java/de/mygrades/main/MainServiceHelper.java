@@ -84,7 +84,7 @@ public class MainServiceHelper {
     /**
      * Starts a worker thread to scrape for new grades.
      */
-    public void scrapeForGrades() {
+    public void scrapeForGrades(boolean initialScraping) {
         int method = MainService.METHOD_SCRAPE_FOR_GRADES;
 
         // set request id
@@ -92,6 +92,7 @@ public class MainServiceHelper {
 
         // start worker thread in background
         Intent intent = getBasicIntent(MainService.PROCESSOR_GRADES, method, requestId);
+        intent.putExtra(MainService.INITIAL_SCRAPING, initialScraping);
         context.startService(intent);
     }
 
@@ -119,7 +120,7 @@ public class MainServiceHelper {
      * @param username - username
      * @param password - password
      */
-    public void loginAndScrapeForGrades(String username, String password) {
+    public void login(String username, String password) {
         int method = MainService.METHOD_LOGIN_AND_SCRAPE_FOR_GRADES;
 
         // set request id

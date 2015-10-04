@@ -2,10 +2,7 @@ package de.mygrades.main.processor;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.IOException;
@@ -25,7 +22,7 @@ import de.mygrades.main.core.Scraper;
 import de.mygrades.main.core.Transformer;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.GradesEvent;
-import de.mygrades.main.events.InitialLoadingDoneEvent;
+import de.mygrades.main.events.InitialScrapingDoneEvent;
 import de.mygrades.main.events.ScrapeProgressEvent;
 import de.mygrades.util.Constants;
 import de.mygrades.util.exceptions.ParseException;
@@ -102,7 +99,7 @@ public class GradesProcessor extends BaseProcessor {
      * Scrape for grades and post and GradeEvent if scraping was successful.
      * Otherwise, an ErrorEvent will be posted.
      */
-    public void scrapeForGrades(boolean initialLoading) {
+    public void scrapeForGrades(boolean initialScraping) {
         // No Connection -> event no Connection, abort
         if (!isOnline()) {
             postErrorEvent(ErrorEvent.ErrorType.NO_NETWORK, "No Internet Connection!");
@@ -160,9 +157,9 @@ public class GradesProcessor extends BaseProcessor {
             EventBus.getDefault().post(gradesEvent);
 
             // set initial loading to done and send event to activity
-            if (initialLoading) {
+            if (initialScraping) {
                 prefs.edit().putBoolean(Constants.PREF_KEY_INITIAL_LOADING_DONE, true).apply();
-                EventBus.getDefault().post(new InitialLoadingDoneEvent());
+                EventBus.getDefault().post(new InitialScrapingDoneEvent());
             }
         } catch (ParseException e) {
             postErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parse Error", e);

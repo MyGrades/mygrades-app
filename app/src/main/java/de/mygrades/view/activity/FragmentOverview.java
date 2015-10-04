@@ -73,7 +73,7 @@ public class FragmentOverview extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mainServiceHelper.scrapeForGrades();
+                mainServiceHelper.scrapeForGrades(false);
             }
         });
     }
