@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
             iv.setAlpha(0f);
 
             // show initial loading fragment
-            setFragment(FragmentInitialLoading.class);
+            setFragment(FragmentInitialScraping.class);
         } else {
             // set default fragment to overview of grades
             if (savedInstanceState == null) {
