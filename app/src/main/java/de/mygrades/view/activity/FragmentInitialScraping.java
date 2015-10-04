@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import de.mygrades.view.ProgressImageViewOverlay;
 /**
  * Fragment to show initial loading screen.
  */
-public class FragmentInitialLoading extends Fragment {
+public class FragmentInitialScraping extends Fragment {
 
     private ProgressImageViewOverlay progressImageViewOverlay;
 
@@ -34,7 +33,7 @@ public class FragmentInitialLoading extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_initial_loading, container, false);
+        View view = inflater.inflate(R.layout.fragment_initial_scraping, container, false);
 
         progressImageViewOverlay = (ProgressImageViewOverlay) view.findViewById(R.id.iv_progress_overlay);
 
