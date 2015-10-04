@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import de.mygrades.R;
+import de.mygrades.main.MainServiceHelper;
 
 /**
  * Created by jonastheis on 03.10.15.
@@ -41,7 +42,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
         button.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("test click");
+                MainServiceHelper mainServiceHelper = new MainServiceHelper(GradeDetailedActivity.this);
+                mainServiceHelper.scrapeForOverview(gradeHash);
             }
         });
     }

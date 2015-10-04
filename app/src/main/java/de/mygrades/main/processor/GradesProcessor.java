@@ -13,6 +13,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.database.dao.GradeEntry;
+import de.mygrades.database.dao.GradeEntryDao;
 import de.mygrades.database.dao.Rule;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
@@ -34,6 +35,14 @@ public class GradesProcessor extends BaseProcessor {
 
     public GradesProcessor(Context context) {
         super(context);
+    }
+
+    public void scrapeForOverview(String gradeHash) {
+        Log.d(TAG, "scrape for overview: " + gradeHash);
+
+        GradeEntry gradeEntry = daoSession.getGradeEntryDao().queryBuilder()
+                .where(GradeEntryDao.Properties.Hash.eq(gradeHash)).unique();
+        Log.d(TAG, gradeEntry.toString());
     }
 
     /**
@@ -141,18 +150,6 @@ public class GradesProcessor extends BaseProcessor {
         long timestamp = System.currentTimeMillis(); // get utc timestamp
         editor.putLong(Constants.PREF_KEY_LAST_UPDATED_AT, timestamp);
         editor.apply();
-    }
-
-    /**
-     * Checks whether a Network interface is available and a connection is possible.
-     * @return boolean
-     */
-    private boolean isOnline() {
-        // getActiveNetworkInfo() -> first connected network interface or null
-        // getNetworkInfo(ConnectivityManager.TYPE_WIFI | TYPE_MOBILE) -> for wifi | mobile
-        ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
     }
 
     /**

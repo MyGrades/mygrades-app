@@ -96,6 +96,23 @@ public class MainServiceHelper {
     }
 
     /**
+     * Starts a worker thread to scrape for the overview of a specific subject.
+     * @param gradeHash - Hash of Grade/Subject (unique identifier)
+     */
+    public void scrapeForOverview(String gradeHash) {
+        int method = MainService.METHOD_SCRAPE_FOR_OVERVIEW;
+
+        // set request id
+        // TODO: there could be more than one scraping for overview?!
+        long requestId = concatenateLong(method, 0);
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_GRADES, method, requestId);
+        intent.putExtra(MainService.GRADE_HASH, gradeHash);
+        context.startService(intent);
+    }
+
+    /**
      * Starts a worker thread to save the username and password
      * and starts scraping for grades afterwards.
      *

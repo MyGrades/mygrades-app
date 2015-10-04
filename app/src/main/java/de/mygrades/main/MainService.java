@@ -36,6 +36,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final int METHOD_GET_GRADES_FROM_DATABASE = 115;
     public static final int METHOD_GET_UNIVERSITIES_FROM_DATABASE = 116;
     public static final int METHOD_LOGOUT = 117;
+    public static final int METHOD_SCRAPE_FOR_OVERVIEW = 118;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
@@ -43,6 +44,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String PUBLISHED_ONLY = "published_only";
+    public static final String GRADE_HASH = "grade_hash";
 
     // save request ids for pending request in this set, and remove them when its done.
     private Set<Long> pendingRequest;
@@ -80,7 +82,7 @@ public class MainService extends MultiThreadedIntentService {
                 handleUniversityProcessor(method, intent);
                 break;
             case PROCESSOR_GRADES:
-                handleGradesProcessor(method);
+                handleGradesProcessor(method, intent);
                 break;
             case PROCESSOR_LOGIN:
                 handleLoginProcessor(method, intent);
@@ -126,7 +128,7 @@ public class MainService extends MultiThreadedIntentService {
      *
      * @param method - the method to call, represented by an integer
      */
-    private void handleGradesProcessor(int method) {
+    private void handleGradesProcessor(int method, Intent intent) {
         GradesProcessor gradesProcessor = new GradesProcessor(this);
 
         switch (method) {
@@ -135,6 +137,10 @@ public class MainService extends MultiThreadedIntentService {
                 break;
             case METHOD_GET_GRADES_FROM_DATABASE:
                 gradesProcessor.getGradesFromDatabase();
+                break;
+            case METHOD_SCRAPE_FOR_OVERVIEW:
+                String gradeHash = intent.getStringExtra(GRADE_HASH);
+                gradesProcessor.scrapeForOverview(gradeHash);
                 break;
             default:
                 Log.e(TAG, "Invalid method call to MainService: "+ method);
