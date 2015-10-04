@@ -137,15 +137,11 @@ public class Scraper {
             makeJsoupRequest(getRequestData(action.getActionParams()), getHttpMethodEnum(action.getMethod()), url);
 
             // parse Content to String if its not the last action
-            // TODO: constants and correct validation
-            if (i < actions.size() - 1 && !action.getType().equals("table_grades")) {
+            if (i < actions.size() - 1) {
                 parsedHtml = parser.parseToString(action.getParseExpression(), document.toString());
             } else {
                 // parse with XML
                 parsedHtml = parser.parseToStringWithXML(action.getParseExpression(), document.toString());
-                if (action.getType().equals("table_grades")) {
-                    return parsedHtml;
-                }
             }
 
             // post status event

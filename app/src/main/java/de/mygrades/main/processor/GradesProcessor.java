@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.IOException;
@@ -12,6 +13,8 @@ import java.net.SocketTimeoutException;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import de.mygrades.database.dao.Action;
+import de.mygrades.database.dao.ActionDao;
 import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.database.dao.GradeEntryDao;
 import de.mygrades.database.dao.Rule;
@@ -33,16 +36,65 @@ import de.mygrades.util.exceptions.ParseException;
 public class GradesProcessor extends BaseProcessor {
     private static final String TAG = GradesProcessor.class.getSimpleName();
 
+    private static final String ACTION_TYPE_TABLE_GRADES = "table_grades";
+    private static final String ACTION_TYPE_TABLE_OVERVIEW = "table_overview";
+
     public GradesProcessor(Context context) {
         super(context);
     }
 
     public void scrapeForOverview(String gradeHash) {
-        Log.d(TAG, "scrape for overview: " + gradeHash);
+        // No Connection -> event no Connection, abort
+        if (!isOnline()) {
+            postErrorEvent(ErrorEvent.ErrorType.NO_NETWORK, "No Internet Connection!");
+            return;
+        }
 
+        // get shared preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        // update and get university
+        University university = updateAndGetUniversity(prefs);
+
+        // get rule for user
+        Rule rule = getUserRule(university);
+
+        // get actions for scrape for overview
+        List<Action> actions = daoSession.getActionDao().queryBuilder()
+                .where(ActionDao.Properties.Type.notEq(ACTION_TYPE_TABLE_GRADES))
+                .orderAsc(ActionDao.Properties.Position).list();
+
+        try {
+
+            String scrapingResult;
+
+            // init Parser, Scraper, Transformer
+            Parser parser = new Parser(context);
+
+            Scraper scraper = new Scraper(actions, parser);
+
+            // start scraping
+            scrapingResult = scraper.scrape();
+
+            Log.d(TAG, scrapingResult);
+
+        } catch (ParseException e) {
+            postErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parse Error", e);
+        } catch (IOException e) {
+            if (e instanceof SocketTimeoutException) {
+                postErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout", e);
+            } else {
+                postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
+            }
+        } catch (Exception e) {
+            postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
+        }
+
+        // get GradeEntry from DB by hash
         GradeEntry gradeEntry = daoSession.getGradeEntryDao().queryBuilder()
                 .where(GradeEntryDao.Properties.Hash.eq(gradeHash)).unique();
         Log.d(TAG, gradeEntry.toString());
+
     }
 
     /**
@@ -52,31 +104,23 @@ public class GradesProcessor extends BaseProcessor {
     public void scrapeForGrades(boolean initialLoading) {
         // No Connection -> event no Connection, abort
         if (!isOnline()) {
-            // post error event to subscribers
-            ErrorEvent errorEvent = new ErrorEvent(ErrorEvent.ErrorType.NO_NETWORK, "No Internet Connection!");
-            EventBus.getDefault().post(errorEvent);
+            postErrorEvent(ErrorEvent.ErrorType.NO_NETWORK, "No Internet Connection!");
             return;
         }
 
-        // get university id
+        // get shared preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
 
-        // update university and rules
-        UniversityProcessor universityProcessor = new UniversityProcessor(context);
-        universityProcessor.getDetailedUniversity(universityId);
+        // update and get university
+        University university = updateAndGetUniversity(prefs);
 
-        // load university from database
-        University university = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
+        // get rule for user
+        Rule rule = getUserRule(university);
 
-        // get bachelor rule // TODO: read from preferences?
-        Rule rule = null;
-        for(Rule r : university.getRules()) {
-            if (r.getType().equalsIgnoreCase("bachelor")) {
-                rule = r;
-                break;
-            }
-        }
+        // get actions for scrape for overview
+        List<Action> actions = daoSession.getActionDao().queryBuilder()
+                .where(ActionDao.Properties.Type.notEq(ACTION_TYPE_TABLE_OVERVIEW))
+                .orderAsc(ActionDao.Properties.Position).list();
 
         try {
             String scrapingResult;
@@ -84,7 +128,7 @@ public class GradesProcessor extends BaseProcessor {
 
             // init Parser, Scraper, Transformer
             Parser parser = new Parser(context);
-            Scraper scraper = new Scraper(rule.getActions(), parser);
+            Scraper scraper = new Scraper(actions, parser);
 
             // start scraping
             scrapingResult = scraper.scrape();
@@ -114,42 +158,16 @@ public class GradesProcessor extends BaseProcessor {
                 EventBus.getDefault().post(new InitialLoadingDoneEvent());
             }
         } catch (ParseException e) {
-            // post error event to subscribers
-            ErrorEvent errorEvent = new ErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parser Error");
-            EventBus.getDefault().post(errorEvent);
-
-            Log.e(TAG, "Parser Error", e);
+            postErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parse Error", e);
         } catch (IOException e) {
             if (e instanceof SocketTimeoutException) {
-                // post error event to subscribers
-                ErrorEvent errorEvent = new ErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout");
-                EventBus.getDefault().post(errorEvent);
+                postErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout", e);
             } else {
-                // post error event to subscribers
-                ErrorEvent errorEvent = new ErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error");
-                EventBus.getDefault().post(errorEvent);
+                postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
             }
-
-            Log.e(TAG, "Scrape Error", e);
         } catch (Exception e) {
-            // post error event to subscribers
-            ErrorEvent errorEvent = new ErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error");
-            EventBus.getDefault().post(errorEvent);
-
-            Log.e(TAG, "General Error", e);
+            postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
         }
-    }
-
-    /**
-     * Saves the current timestamp in shared preferences.
-     *
-     * @param prefs - shared preferences
-     */
-    private void saveLastUpdatedAt(SharedPreferences prefs) {
-        SharedPreferences.Editor editor = prefs.edit();
-        long timestamp = System.currentTimeMillis(); // get utc timestamp
-        editor.putLong(Constants.PREF_KEY_LAST_UPDATED_AT, timestamp);
-        editor.apply();
     }
 
     /**
@@ -162,5 +180,50 @@ public class GradesProcessor extends BaseProcessor {
         GradesEvent gradesEvent = new GradesEvent();
         gradesEvent.setGrades(gradeEntries);
         EventBus.getDefault().post(gradesEvent);
+    }
+
+    /**
+     * Get the rule from university for user.
+     * @param university university object
+     * @return selected rule
+     */
+    private Rule getUserRule(University university) {
+        // get bachelor rule // TODO: read from preferences?
+        Rule rule = null;
+        for(Rule r : university.getRules()) {
+            if (r.getType().equalsIgnoreCase("bachelor")) {
+                rule = r;
+                break;
+            }
+        }
+        return rule;
+    }
+
+    /**
+     * Update user university (from shared preferences) via rest and return it.
+     * @param prefs - shared preferences
+     * @return university object
+     */
+    private University updateAndGetUniversity(SharedPreferences prefs) {
+        long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
+
+        // update university and rules
+        UniversityProcessor universityProcessor = new UniversityProcessor(context);
+        universityProcessor.getDetailedUniversity(universityId);
+
+        // load university from database
+        return daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
+    }
+
+    /**
+     * Saves the current timestamp in shared preferences.
+     *
+     * @param prefs - shared preferences
+     */
+    private void saveLastUpdatedAt(SharedPreferences prefs) {
+        SharedPreferences.Editor editor = prefs.edit();
+        long timestamp = System.currentTimeMillis(); // get utc timestamp
+        editor.putLong(Constants.PREF_KEY_LAST_UPDATED_AT, timestamp);
+        editor.apply();
     }
 }
