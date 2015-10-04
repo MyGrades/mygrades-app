@@ -55,4 +55,12 @@ public class ProgressImageViewOverlay extends ImageView {
             invalidate(); // force re-draw
         }
     }
+
+    public float getProgress() {
+        return progress;
+    }
+
+    public float getNextProgress() {
+        return nextProgress;
+    }
 }

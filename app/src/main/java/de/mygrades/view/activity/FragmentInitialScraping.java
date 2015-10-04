@@ -18,6 +18,8 @@ import de.mygrades.view.ProgressImageViewOverlay;
  * Fragment to show initial loading screen.
  */
 public class FragmentInitialScraping extends Fragment {
+    private static final String PROGRESS_STATE = "progress_state";
+    private static final String NEXT_PROGRESS_STATE = "next_progress_state";
 
     private ProgressImageViewOverlay progressImageViewOverlay;
 
@@ -44,7 +46,22 @@ public class FragmentInitialScraping extends Fragment {
         MainServiceHelper mainServiceHelper = new MainServiceHelper(getContext());
         mainServiceHelper.scrapeForGrades(true);
 
+        if (savedInstanceState != null) {
+            float progress = savedInstanceState.getFloat(PROGRESS_STATE);
+            float nextProgress = savedInstanceState.getFloat(NEXT_PROGRESS_STATE);
+            progressImageViewOverlay.setProgress(progress, nextProgress);
+            progressAnimation.run();
+        }
+
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putFloat(PROGRESS_STATE, progressImageViewOverlay.getProgress());
+        outState.putFloat(NEXT_PROGRESS_STATE, progressImageViewOverlay.getNextProgress());
+        stopAnimation();
     }
 
     /**
@@ -67,9 +84,13 @@ public class FragmentInitialScraping extends Fragment {
             // start animation at first step, it runs continuously
             progressAnimation.run();
         } else if (currentStep == stepCount) {
-            // stop animation, if last step is reached
-            handler.removeCallbacks(progressAnimation);
+            stopAnimation();
         }
+    }
+
+    private void stopAnimation() {
+        // stop animation, if last step is reached
+        handler.removeCallbacks(progressAnimation);
     }
 
     @Override
