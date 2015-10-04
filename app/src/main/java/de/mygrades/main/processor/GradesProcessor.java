@@ -70,8 +70,19 @@ public class GradesProcessor extends BaseProcessor {
         // get GradeEntry from DB by hash
         GradeEntry gradeEntry = daoSession.getGradeEntryDao().queryBuilder()
                 .where(GradeEntryDao.Properties.Hash.eq(gradeHash)).unique();
-        Log.d(TAG, gradeEntry.toString());
-        // TODO: iterate through actions and search for placeholders
+
+        // iterate through actions (type == table_overview) and search for placeholders
+        for (Action action : actions) {
+            if (action.getType() != null && action.getType().equals(ACTION_TYPE_TABLE_OVERVIEW)) {
+                String parseExpression = action.getParseExpression();
+                // replace placeholders
+                // TODO: compile expression before -> save resources!
+                parseExpression = parseExpression.replaceAll("###"+Transformer.EXAM_ID+"###", gradeEntry.getExamId());
+                parseExpression = parseExpression.replaceAll("###"+Transformer.NAME+"###", gradeEntry.getName());
+                action.setParseExpression(parseExpression);
+            }
+        }
+
 
         try {
             // init Parser, Scraper, Transformer
