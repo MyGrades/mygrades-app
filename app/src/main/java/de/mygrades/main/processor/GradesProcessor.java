@@ -26,6 +26,7 @@ import de.mygrades.main.core.Transformer;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.GradesEvent;
 import de.mygrades.main.events.InitialLoadingDoneEvent;
+import de.mygrades.main.events.ScrapeProgressEvent;
 import de.mygrades.util.Constants;
 import de.mygrades.util.exceptions.ParseException;
 
@@ -122,6 +123,9 @@ public class GradesProcessor extends BaseProcessor {
                 .where(ActionDao.Properties.Type.notEq(ACTION_TYPE_TABLE_OVERVIEW))
                 .orderAsc(ActionDao.Properties.Position).list();
 
+        // post status event (0% done)
+        EventBus.getDefault().post(new ScrapeProgressEvent(0, actions.size() + 1));
+
         try {
             String scrapingResult;
             List<GradeEntry> gradeEntries;
@@ -136,6 +140,9 @@ public class GradesProcessor extends BaseProcessor {
             // start transforming
             Transformer transformer = new Transformer(rule, scrapingResult, parser);
             gradeEntries = transformer.transform();
+
+            // post status event (100% done)
+            EventBus.getDefault().post(new ScrapeProgressEvent(actions.size() + 1, actions.size() + 1));
 
             Log.d(TAG, gradeEntries.toString());
 
