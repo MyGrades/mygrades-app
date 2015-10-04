@@ -107,4 +107,23 @@ public class Overview {
         this.userSection = userSection;
     }
 
+
+    // KEEP METHODS - put your custom methods here
+
+    @Override
+    public String toString() {
+        return "Overview{" +
+                "id=" + id +
+                ", average=" + average +
+                ", participants=" + participants +
+                ", section1=" + section1 +
+                ", section2=" + section2 +
+                ", section3=" + section3 +
+                ", section4=" + section4 +
+                ", section5=" + section5 +
+                ", userSection=" + userSection +
+                '}';
+    }
+
+    // KEEP METHODS END
 }

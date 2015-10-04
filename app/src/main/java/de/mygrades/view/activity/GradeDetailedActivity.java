@@ -1,7 +1,6 @@
 package de.mygrades.view.activity;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,7 +28,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         // set toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setTitle(R.string.toolbar_login);
+        getSupportActionBar().setTitle(R.string.toolbar_details);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // get extra data
