@@ -14,6 +14,7 @@ import de.mygrades.database.dao.Action;
 import de.mygrades.database.dao.ActionDao;
 import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.database.dao.GradeEntryDao;
+import de.mygrades.database.dao.Overview;
 import de.mygrades.database.dao.Rule;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
@@ -41,6 +42,10 @@ public class GradesProcessor extends BaseProcessor {
         super(context);
     }
 
+    /**
+     * Scrape for grades and post OverviewEvent if scraping was successful.
+     * Otherwise, an ErrorEvent will be posted.
+     */
     public void scrapeForOverview(String gradeHash) {
         // No Connection -> event no Connection, abort
         if (!isOnline()) {
@@ -62,19 +67,26 @@ public class GradesProcessor extends BaseProcessor {
                 .where(ActionDao.Properties.Type.notEq(ACTION_TYPE_TABLE_GRADES))
                 .orderAsc(ActionDao.Properties.Position).list();
 
+        // get GradeEntry from DB by hash
+        GradeEntry gradeEntry = daoSession.getGradeEntryDao().queryBuilder()
+                .where(GradeEntryDao.Properties.Hash.eq(gradeHash)).unique();
+        Log.d(TAG, gradeEntry.toString());
+        // TODO: iterate through actions and search for placeholders
+
         try {
-
-            String scrapingResult;
-
             // init Parser, Scraper, Transformer
             Parser parser = new Parser(context);
 
             Scraper scraper = new Scraper(actions, parser);
 
             // start scraping
-            scrapingResult = scraper.scrape();
+            String scrapingResult = scraper.scrape();
 
-            Log.d(TAG, scrapingResult);
+            // start transforming
+            Transformer transformer = new Transformer(rule, scrapingResult, parser);
+            Overview overview = transformer.transformOverview(gradeEntry.getGrade());
+
+            Log.d(TAG, overview.toString());
 
         } catch (ParseException e) {
             postErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parse Error", e);
@@ -87,12 +99,6 @@ public class GradesProcessor extends BaseProcessor {
         } catch (Exception e) {
             postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
         }
-
-        // get GradeEntry from DB by hash
-        GradeEntry gradeEntry = daoSession.getGradeEntryDao().queryBuilder()
-                .where(GradeEntryDao.Properties.Hash.eq(gradeHash)).unique();
-        Log.d(TAG, gradeEntry.toString());
-
     }
 
     /**

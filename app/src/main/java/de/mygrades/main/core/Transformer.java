@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 
 import de.mygrades.database.dao.GradeEntry;
+import de.mygrades.database.dao.Overview;
 import de.mygrades.database.dao.Rule;
 import de.mygrades.database.dao.TransformerMapping;
 import de.mygrades.util.exceptions.ParseException;
@@ -40,6 +41,15 @@ public class Transformer {
     private static final String ANNOTATION = "annotation";
     private static final String ATTEMPT = "attempt";
     private static final String EXAM_DATE = "exam_date";
+
+    // mapping from TransformerMapping Name -> Overview Property
+    private static final String OVERVIEW_SECTION_1 = "overview_section1";
+    private static final String OVERVIEW_SECTION_2 = "overview_section2";
+    private static final String OVERVIEW_SECTION_3 = "overview_section3";
+    private static final String OVERVIEW_SECTION_4 = "overview_section4";
+    private static final String OVERVIEW_SECTION_5 = "overview_section5";
+    private static final String OVERVIEW_PARTICIPANTS = "overview_participants";
+    private static final String OVERVIEW_AVERAGE = "overview_average";
 
     private static final String SEMESTER_FORMAT_SEMESTER = "semester";
     private static final String SEMESTER_FORMAT_DATE = "date";
@@ -81,6 +91,34 @@ public class Transformer {
     }
 
     /**
+     * Creates Overview object from HTML via
+     * xPath expressions from TransformerMapping.
+     *
+     * @return Overview
+     * @throws ParseException if something goes wrong at parsing
+     */
+    public Overview transformOverview(Double userGrade) throws ParseException {
+        // get Node as XML document -> so it must not created every time
+        Document xmlDocument = parser.getStringAsDocument(html);
+
+        // create Pattern for Integer Extraction
+        Pattern pattern = Pattern.compile("[0-9]+");
+
+        // extract Overview values
+        Overview overview = new Overview();
+        overview.setSection1(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_1, pattern));
+        overview.setSection2(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_2, pattern));
+        overview.setSection3(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_3, pattern));
+        overview.setSection4(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_4, pattern));
+        overview.setSection5(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_5, pattern));
+        overview.setParticipants(getIntegerProperty(xmlDocument, OVERVIEW_PARTICIPANTS));
+        overview.setAverage(getDoubleProperty(xmlDocument, OVERVIEW_AVERAGE));
+        overview.setUserSection((int)Math.round(userGrade));
+
+        return overview;
+    }
+
+    /**
      * Creates GradeEntry objects for all matching elements from html via
      * xPath expression 'iterator' from TransformerMapping.
      *
@@ -106,7 +144,7 @@ public class Transformer {
             gradeEntry.setSemester(calculateGradeEntrySemester(getStringProperty(xmlDocument, SEMESTER)));
             gradeEntry.setGrade(getDoubleProperty(xmlDocument, GRADE, rule.getGradeFactor()));
             gradeEntry.setState(getStringProperty(xmlDocument, STATE));
-            gradeEntry.setCreditPoints(getDoubleProperty(xmlDocument, CREDIT_POINTS, null));
+            gradeEntry.setCreditPoints(getDoubleProperty(xmlDocument, CREDIT_POINTS));
             gradeEntry.setAnnotation(getStringProperty(xmlDocument, ANNOTATION));
             gradeEntry.setAttempt(getStringProperty(xmlDocument, ATTEMPT));
             gradeEntry.setExamDate(getStringProperty(xmlDocument, EXAM_DATE));
@@ -316,6 +354,66 @@ public class Transformer {
         // if factor is given -> multiply
         if (factor != null) {
             property = property * factor;
+        }
+
+        return property;
+    }
+
+    /**
+     * Gets the value from Document determined by type of TransformerMapping as Double.
+     *
+     * @param xmlDocument Document which should get parsed
+     * @param type Type of TransformerMapping regarding to GradeEntry
+     * @return extracted value as Double
+     * @throws ParseException if something goes wrong at parsing
+     */
+    private Double getDoubleProperty(Document xmlDocument, String type) throws ParseException {
+        return getDoubleProperty(xmlDocument, type, null);
+    }
+
+    /**
+     * Gets the value from Document determined by type of TransformerMapping as Integer.
+     *
+     * @param xmlDocument Document which should get parsed
+     * @param type Type of TransformerMapping regarding to Overview
+     * @return extracted value as Integer
+     * @throws ParseException if something goes wrong at parsing
+     */
+    private Integer getIntegerProperty(Document xmlDocument, String type) throws ParseException {
+        return getIntegerProperty(xmlDocument, type, null);
+    }
+
+    /**
+     * Gets the value from Document determined by type of TransformerMapping as Integer.
+     * The integer is extracted from string via Regex.
+     *
+     * @param xmlDocument Document which should get parsed
+     * @param type Type of TransformerMapping regarding to Overview
+     * @param pattern Regex pattern of how to extract Integer
+     * @return extracted value as Integer
+     * @throws ParseException if something goes wrong at parsing
+     */
+    private Integer getIntegerProperty(Document xmlDocument, String type, Pattern pattern) throws ParseException {
+        TransformerMapping transformerMappingVal = transformerMapping.get(type);
+        if (transformerMappingVal == null) {
+            return null;
+        }
+
+        Integer property;
+        String result = parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument).trim();
+
+        if (pattern != null) {
+            Matcher matcher = pattern.matcher(result);
+            if (matcher.find()) {
+                result = matcher.group(0);
+            }
+        }
+
+        // if cannot parse to Integer -> return null
+        try {
+            property = Integer.parseInt(result);
+        } catch (NumberFormatException e) {
+            return null;
         }
 
         return property;

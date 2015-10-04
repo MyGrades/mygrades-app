@@ -134,6 +134,16 @@ public class Parser {
         return createXmlDocument(getNodeAsString(node));
     }
 
+    /**
+     * Creates a XML-document from a String.
+     *
+     * @param string String of content which is wanted
+     * @return content of String as Document
+     * @throws ParseException if something goes wrong with transforming
+     */
+    public Document getStringAsDocument(String string) throws ParseException {
+        return createXmlDocument(string);
+    }
 
 
 
