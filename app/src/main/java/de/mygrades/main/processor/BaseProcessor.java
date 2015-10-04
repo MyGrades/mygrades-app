@@ -3,15 +3,20 @@ package de.mygrades.main.processor;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
+import de.greenrobot.event.EventBus;
 import de.mygrades.MyGradesApplication;
 import de.mygrades.database.dao.DaoSession;
+import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.rest.RestClient;
 
 /**
  * Base class for all processors to hold relevant objects.
  */
 public abstract class BaseProcessor {
+    private static final String TAG = BaseProcessor.class.getSimpleName();
+
     protected Context context;
     protected RestClient restClient;
     protected DaoSession daoSession;
@@ -32,5 +37,28 @@ public abstract class BaseProcessor {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    /**
+     * Post an ErrorEvent on the Event Bus.
+     * @param type type of the Error
+     * @param msg Message of the error
+     * @param e Exception which was raised
+     */
+    protected void postErrorEvent(ErrorEvent.ErrorType type, String msg, Exception e) {
+        postErrorEvent(type, msg);
+
+        Log.e(TAG, msg, e);
+    }
+
+    /**
+     * Post an ErrorEvent on the Event Bus.
+     * @param type type of the Error
+     * @param msg Message of the error
+     */
+    protected void postErrorEvent(ErrorEvent.ErrorType type, String msg) {
+        // post error event to subscribers
+        ErrorEvent errorEvent = new ErrorEvent(type, msg);
+        EventBus.getDefault().post(errorEvent);
     }
 }
