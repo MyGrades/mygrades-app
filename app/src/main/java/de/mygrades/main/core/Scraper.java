@@ -144,8 +144,8 @@ public class Scraper {
                 parsedHtml = parser.parseToStringWithXML(action.getParseExpression(), document.toString());
             }
 
-            // post status event
-            EventBus.getDefault().post(new ScrapeProgressEvent(i + 1, actions.size()));
+            // post intermediate status event
+            EventBus.getDefault().post(new ScrapeProgressEvent(i + 1, actions.size() + 1));
         }
         return parsedHtml;
     }

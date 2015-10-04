@@ -10,6 +10,7 @@ import android.widget.ImageView;
  */
 public class ProgressImageViewOverlay extends ImageView {
     private float progress;
+    private float nextProgress;
 
     public ProgressImageViewOverlay(Context context) {
         super(context);
@@ -31,12 +32,27 @@ public class ProgressImageViewOverlay extends ImageView {
         super.onDraw(canvas);
     }
 
-    public float getProgress() {
-        return progress;
+    /**
+     * Set the progress.
+     *
+     * @param progress - current progress
+     * @param nextProgress - next progress is used as a boundary for the animation
+     */
+    public void setProgress(float progress, float nextProgress) {
+        this.progress = progress;
+        this.nextProgress = nextProgress;
+        invalidate(); // force re-draw
     }
 
-    public void setProgress(float progress) {
-        this.progress = progress;
-        invalidate(); // force re draw
+    /**
+     * Increase the progress.
+     *
+     * @param increase amount to increase
+     */
+    public void increaseProgress(float increase) {
+        if (this.progress + increase <= nextProgress) {
+            this.progress += increase;
+            invalidate(); // force re-draw
+        }
     }
 }

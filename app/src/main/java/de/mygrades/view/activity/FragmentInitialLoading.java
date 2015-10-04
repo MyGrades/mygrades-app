@@ -1,6 +1,7 @@
 package de.mygrades.view.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -20,6 +21,15 @@ public class FragmentInitialLoading extends Fragment {
 
     private ProgressImageViewOverlay progressImageViewOverlay;
 
+    private Handler handler = new Handler();
+    private Runnable progressAnimation = new Runnable() {
+        @Override
+        public void run() {
+            progressImageViewOverlay.increaseProgress(0.001f);
+            handler.postDelayed(progressAnimation, 20);
+        }
+    };
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,13 +37,15 @@ public class FragmentInitialLoading extends Fragment {
 
         progressImageViewOverlay = (ProgressImageViewOverlay) view.findViewById(R.id.iv_progress_overlay);
 
+        // register to events
         EventBus.getDefault().register(this);
 
         return view;
     }
 
     /**
-     * Receive event about scraping progress.
+     * Receive event about scraping progress and set the current progress.
+     * If the current step is the first one, an ongoing animation runnable will be started.
      *
      * @param scrapeProgressEvent ScrapeProgressEvent
      */
@@ -41,9 +53,19 @@ public class FragmentInitialLoading extends Fragment {
         int currentStep = scrapeProgressEvent.getCurrentStep();
         int stepCount = scrapeProgressEvent.getStepCount();
 
-        float progress = ((float)currentStep) / stepCount;
+        float progress = ((float) currentStep) / stepCount;
+        float nextProgress =((float) currentStep + 1) / stepCount;
 
-        progressImageViewOverlay.setProgress(progress);
+        // set current progress
+        progressImageViewOverlay.setProgress(progress, nextProgress);
+
+        if (currentStep == 0) {
+            // start animation at first step, it runs continuously
+            progressAnimation.run();
+        } else if (currentStep == stepCount) {
+            // stop animation, if last step is reached
+            handler.removeCallbacks(progressAnimation);
+        }
     }
 
     @Override
