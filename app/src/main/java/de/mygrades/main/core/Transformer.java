@@ -32,8 +32,8 @@ public class Transformer {
 
     // mapping from TransformerMapping Name -> GradeEntry Property
     private static final String ITERATOR = "iterator";
-    private static final String EXAM_ID = "exam_id";
-    private static final String NAME = "name";
+    public static final String EXAM_ID = "exam_id";
+    public static final String NAME = "name";
     private static final String SEMESTER = "semester";
     private static final String GRADE = "grade";
     private static final String STATE = "state";
