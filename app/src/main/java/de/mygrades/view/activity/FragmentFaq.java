@@ -1,24 +1,102 @@
 package de.mygrades.view.activity;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.animator.RefactoredDefaultItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
+import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
+
 import de.mygrades.R;
+import de.mygrades.view.adapter.FaqExpandableItemAdapter;
+import de.mygrades.view.adapter.dataprovider.FaqDataProvider;
 
 /**
- * Created by tilman on 03.10.15.
+ * Fragment to show Frequently Asked Questions in an expandable RecyclerView.
  */
 public class FragmentFaq extends Fragment {
+
+    private static final String SAVED_STATE_EXPANDABLE_ITEM_MANAGER = "RecyclerViewExpandableItemManager";
+
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.Adapter wrappedAdapter;
+    private RecyclerViewExpandableItemManager recyclerViewExpandableItemManager;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_faq, container, false);
+        return inflater.inflate(R.layout.fragment_faq, container, false);
+    }
 
-        return view;
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // restore state if necessary
+        final Parcelable eimSavedState = (savedInstanceState != null) ? savedInstanceState.getParcelable(SAVED_STATE_EXPANDABLE_ITEM_MANAGER) : null;
+        recyclerViewExpandableItemManager = new RecyclerViewExpandableItemManager(eimSavedState);
+
+        // create data
+        FaqDataProvider faqDataProvider = new FaqDataProvider();
+
+        // create adapter
+        FaqExpandableItemAdapter itemAdapter = new FaqExpandableItemAdapter(faqDataProvider);
+        wrappedAdapter = recyclerViewExpandableItemManager.createWrappedAdapter(itemAdapter);
+
+        // set animation stuff
+        final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();
+        animator.setSupportsChangeAnimations(false);
+
+        // init recycler view
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(wrappedAdapter);  // requires *wrapped* adapter
+        recyclerView.setItemAnimator(animator);
+        recyclerView.setHasFixedSize(false);
+
+        // attach recycler view to item manager, necessary for touch listeners
+        recyclerViewExpandableItemManager.attachRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // save state (orientation change)
+        if (recyclerViewExpandableItemManager != null) {
+            outState.putParcelable(SAVED_STATE_EXPANDABLE_ITEM_MANAGER, recyclerViewExpandableItemManager.getSavedState());
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (recyclerViewExpandableItemManager != null) {
+            recyclerViewExpandableItemManager.release();
+            recyclerViewExpandableItemManager = null;
+        }
+
+        if (recyclerView != null) {
+            recyclerView.setItemAnimator(null);
+            recyclerView.setAdapter(null);
+            recyclerView = null;
+        }
+
+        if (wrappedAdapter != null) {
+            WrapperAdapterUtils.releaseAll(wrappedAdapter);
+        }
+
+        layoutManager = null;
+
+        super.onDestroyView();
     }
 }
