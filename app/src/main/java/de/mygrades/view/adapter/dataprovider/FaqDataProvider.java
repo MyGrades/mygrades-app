@@ -14,9 +14,9 @@ public class FaqDataProvider {
     public FaqDataProvider() {
         data = new ArrayList<>();
 
-        data.add(new Pair(new QuestionData(1, "header 1"), new AnswerData(1, "child 1")));
-        data.add(new Pair(new QuestionData(2, "header 2"), new AnswerData(1, "child 2")));
-        data.add(new Pair(new QuestionData(3, "header 3"), new AnswerData(1, "child 3")));
+        data.add(new Pair(new QuestionData(1, "Wieso weshalb warum?"), new AnswerData(1, "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. \n\nAt vero eos et accusam et justo duo dolores et ea rebum. \n\nStet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.")));
+        data.add(new Pair(new QuestionData(2, "So sieht dann eine etwas längere Frage aus, ist auch nicht so schlimm."), new AnswerData(1, "child 2")));
+        data.add(new Pair(new QuestionData(3, "Geht nicht! Ihr seid doof."), new AnswerData(1, "child 3")));
     }
 
     public int getGroupCount() {
