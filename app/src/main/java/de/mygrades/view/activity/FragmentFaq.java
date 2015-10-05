@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.RefactoredDefaultItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 
@@ -63,6 +65,9 @@ public class FragmentFaq extends Fragment {
         recyclerView.setAdapter(wrappedAdapter);  // requires *wrapped* adapter
         recyclerView.setItemAnimator(animator);
         recyclerView.setHasFixedSize(false);
+
+        // set divider
+        recyclerView.addItemDecoration(new SimpleListDividerDecorator(ContextCompat.getDrawable(getContext(), R.drawable.grade_divider), true));
 
         // attach recycler view to item manager, necessary for touch listeners
         recyclerViewExpandableItemManager.attachRecyclerView(recyclerView);
