@@ -31,7 +31,7 @@ public class MyGradesDaoGenerator {
         addActionParam(schema);
         addTransformerMapping(schema);
         addGradeEntry(schema);
-        /*addOverview(schema);*/
+        addOverview(schema);
 
         DaoGenerator daoGenerator = new DaoGenerator();
         daoGenerator.generateAll(schema, DIR_PATH);
@@ -68,6 +68,7 @@ public class MyGradesDaoGenerator {
         rule.addIntProperty("semesterStartWinter");
         rule.addDoubleProperty("gradeFactor");
         rule.addDateProperty("lastUpdated");
+        rule.addBooleanProperty("overview");
 
         // add 1:n relation for university -> rules
         Property universityId = rule.addLongProperty("universityId").notNull().getProperty();
@@ -160,6 +161,7 @@ public class MyGradesDaoGenerator {
      */
     private static void addOverview(Schema schema) {
         overview = schema.addEntity("Overview");
+        overview.addLongProperty("overviewId").primaryKey().autoincrement();
         overview.addDoubleProperty("average");
         overview.addIntProperty("participants");
         overview.addIntProperty("section1");
@@ -171,7 +173,7 @@ public class MyGradesDaoGenerator {
         overview.setHasKeepSections(true);
 
         // add 1:1 relation for gradeEntry -> overview
-        Property overviewId = gradeEntry.addLongProperty("overviewId").unique().getProperty();
+        Property overviewId = gradeEntry.addLongProperty("overviewId").getProperty();
         gradeEntry.addToOne(overview, overviewId);
     }
 }

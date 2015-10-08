@@ -22,6 +22,7 @@ public class Rule {
     private Integer semesterStartWinter;
     private Double gradeFactor;
     private java.util.Date lastUpdated;
+    private Boolean overview;
     private long universityId;
 
     /** Used to resolve relations */
@@ -43,7 +44,7 @@ public class Rule {
         this.ruleId = ruleId;
     }
 
-    public Rule(Long ruleId, String type, String semesterFormat, String semesterPattern, Integer semesterStartSummer, Integer semesterStartWinter, Double gradeFactor, java.util.Date lastUpdated, long universityId) {
+    public Rule(Long ruleId, String type, String semesterFormat, String semesterPattern, Integer semesterStartSummer, Integer semesterStartWinter, Double gradeFactor, java.util.Date lastUpdated, Boolean overview, long universityId) {
         this.ruleId = ruleId;
         this.type = type;
         this.semesterFormat = semesterFormat;
@@ -52,6 +53,7 @@ public class Rule {
         this.semesterStartWinter = semesterStartWinter;
         this.gradeFactor = gradeFactor;
         this.lastUpdated = lastUpdated;
+        this.overview = overview;
         this.universityId = universityId;
     }
 
@@ -125,6 +127,14 @@ public class Rule {
 
     public void setLastUpdated(java.util.Date lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public Boolean getOverview() {
+        return overview;
+    }
+
+    public void setOverview(Boolean overview) {
+        this.overview = overview;
     }
 
     public long getUniversityId() {

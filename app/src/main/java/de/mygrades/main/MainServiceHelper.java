@@ -100,8 +100,8 @@ public class MainServiceHelper {
      * Starts a worker thread to scrape for the overview of a specific subject.
      * @param gradeHash - Hash of Grade/Subject (unique identifier)
      */
-    public void scrapeForOverview(String gradeHash) {
-        int method = MainService.METHOD_SCRAPE_FOR_OVERVIEW;
+    public void getGradeDetails(String gradeHash) {
+        int method = MainService.METHOD_GET_GRADE_DETAILS;
 
         // set request id
         // TODO: there could be more than one scraping for overview?!

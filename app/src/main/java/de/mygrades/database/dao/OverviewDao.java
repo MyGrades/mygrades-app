@@ -23,7 +23,7 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property OverviewId = new Property(0, Long.class, "overviewId", true, "OVERVIEW_ID");
         public final static Property Average = new Property(1, Double.class, "average", false, "AVERAGE");
         public final static Property Participants = new Property(2, Integer.class, "participants", false, "PARTICIPANTS");
         public final static Property Section1 = new Property(3, Integer.class, "section1", false, "SECTION1");
@@ -47,7 +47,7 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"OVERVIEW\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"OVERVIEW_ID\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: overviewId
                 "\"AVERAGE\" REAL," + // 1: average
                 "\"PARTICIPANTS\" INTEGER," + // 2: participants
                 "\"SECTION1\" INTEGER," + // 3: section1
@@ -69,9 +69,9 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
     protected void bindValues(SQLiteStatement stmt, Overview entity) {
         stmt.clearBindings();
  
-        Long id = entity.getId();
-        if (id != null) {
-            stmt.bindLong(1, id);
+        Long overviewId = entity.getOverviewId();
+        if (overviewId != null) {
+            stmt.bindLong(1, overviewId);
         }
  
         Double average = entity.getAverage();
@@ -125,7 +125,7 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
     @Override
     public Overview readEntity(Cursor cursor, int offset) {
         Overview entity = new Overview( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // overviewId
             cursor.isNull(offset + 1) ? null : cursor.getDouble(offset + 1), // average
             cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // participants
             cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // section1
@@ -141,7 +141,7 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, Overview entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setOverviewId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setAverage(cursor.isNull(offset + 1) ? null : cursor.getDouble(offset + 1));
         entity.setParticipants(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
         entity.setSection1(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
@@ -155,7 +155,7 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
     /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(Overview entity, long rowId) {
-        entity.setId(rowId);
+        entity.setOverviewId(rowId);
         return rowId;
     }
     
@@ -163,7 +163,7 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
     @Override
     public Long getKey(Overview entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getOverviewId();
         } else {
             return null;
         }
