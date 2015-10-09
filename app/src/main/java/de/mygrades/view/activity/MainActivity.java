@@ -8,11 +8,15 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import de.greenrobot.event.EventBus;
@@ -31,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private Toolbar toolbar;
     private ActionBarDrawerToggle drawerToggle;
+    private FrameLayout flInitialScraping;
+    private ImageView ivToolbarLogo;
 
     private static final String TAG_FRAGMENT_INITIAL_SCRAPING = "tag_fragment_initial_scraping";
 
@@ -46,18 +52,10 @@ public class MainActivity extends AppCompatActivity {
         mainServiceHelper = new MainServiceHelper(this);
 
         // init toolbar
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
+        initToolbar();
 
         // setup navigation drawer
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
         setupDrawerContent();
-
-        // init drawer toggle (hamburger menu icon <-> arrow)
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
-        drawerLayout.setDrawerListener(drawerToggle);
 
         // register event bus
         EventBus.getDefault().register(this);
@@ -65,24 +63,33 @@ public class MainActivity extends AppCompatActivity {
         // check initial loading
         if (!checkInitialScrapingDone()) {
             // disable navigation drawer
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            drawerToggle.setDrawerIndicatorEnabled(false);
+            disableNavigationDrawer();
 
-            // hide icon in toolbar
-            ImageView iv = (ImageView) toolbar.findViewById(R.id.iv_mygrades_logo);
-            iv.setAlpha(0f);
+            // hide toolbar icon
+            ivToolbarLogo = (ImageView) findViewById(R.id.iv_mygrades_logo);
+            ivToolbarLogo.setAlpha(0f);
 
+            // show initial scraping frame layout
+            flInitialScraping = (FrameLayout) findViewById(R.id.fl_initial_scraping);
+            flInitialScraping.setVisibility(View.VISIBLE);
+
+            // show initial loading fragment. (its already shown, if savedInstanceState != null)
             if (savedInstanceState == null) {
-                // show initial loading fragment
-                setFragment(FragmentInitialScraping.class);
+                replaceFragment(R.id.fl_initial_scraping, new FragmentInitialScraping(), false);
             }
         } else {
             // set default fragment to overview of grades
             if (savedInstanceState == null) {
-                setFragment(FragmentOverview.class);
+                replaceFragment(R.id.fl_content, new FragmentOverview(), false);
                 navigationView.getMenu().getItem(0).setChecked(true);
             }
         }
+    }
+
+    private void initToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
     }
 
     /**
@@ -125,21 +132,36 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        // show toolbar icon
+        ivToolbarLogo.animate().alpha(1f).setDuration(1000);
+
+        // replace initial scraping fragment with empty fragment (necessary for animation)
+        replaceFragment(R.id.fl_initial_scraping, new FragmentEmptyDummy(), true);
+
         // replace fragment with custom transition
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                       .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.slide_out_to_top)
-                       .replace(R.id.fl_content, new FragmentOverview())
-                       .commit();
+        replaceFragment(R.id.fl_content, new FragmentOverview(), true);
         navigationView.getMenu().getItem(0).setChecked(true);
 
         // enable navigation drawer
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        drawerToggle.setDrawerIndicatorEnabled(true);
+        enableNavigationDrawer();
+    }
 
-        // show icon in toolbar
-        ImageView iv = (ImageView) toolbar.findViewById(R.id.iv_mygrades_logo);
-        iv.animate().alpha(1f).setDuration(1000);
+    /**
+     * Replaces a fragment.
+     *
+     * @param resLayoutId frame layout id, whose content should be replaced
+     * @param newFragment new fragment
+     * @param animate true, if the replacement should be animated
+     */
+    private void replaceFragment( int resLayoutId, Fragment newFragment, boolean animate) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        if (animate) {
+            transaction.setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.slide_out_to_top);
+        }
+
+        transaction.replace(resLayoutId, newFragment);
+        transaction.commit();
     }
 
     @Override
@@ -151,9 +173,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Initialize listener for clicked menu items.
+     * Setup navigation drawer an initialize listener for clicked menu items.
      */
     private void setupDrawerContent() {
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
+
+        // init drawer toggle (hamburger menu icon <-> arrow)
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.setDrawerListener(drawerToggle);
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -169,46 +198,29 @@ public class MainActivity extends AppCompatActivity {
      * @param menuItem clicked menu item
      */
     private void selectDrawerItem(MenuItem menuItem) {
-        Class fragmentClass;
+        Fragment fragment;
 
         switch(menuItem.getItemId()) {
             case R.id.nav_home:
-                fragmentClass = FragmentOverview.class;
+                fragment = new FragmentOverview();
                 break;
             case R.id.nav_faq:
-                fragmentClass = FragmentFaq.class;
+                fragment = new FragmentFaq();
                 break;
             case R.id.nav_logout:
                 logout();
                 return;
             default:
-                fragmentClass = FragmentOverview.class;
+                fragment = new FragmentOverview();
         }
 
         // set current fragment
-        setFragment(fragmentClass);
+        replaceFragment(R.id.fl_content, fragment, false);
 
         // highlight the selected item, update the title and close the drawer
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());
         drawerLayout.closeDrawers();
-    }
-
-    /**
-     * Switches the current fragment with the provided fragment class.
-     *
-     * @param fragmentClass new fragment class
-     */
-    private void setFragment(Class<? extends Fragment> fragmentClass) {
-        try {
-            Fragment fragment = fragmentClass.newInstance();
-
-            // insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fl_content, fragment, TAG_FRAGMENT_INITIAL_SCRAPING).commit();
-        } catch (Exception e) {
-            // do nothing
-        }
     }
 
     @Override
@@ -245,5 +257,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * Disable navigation drawer.
+     */
+    private void disableNavigationDrawer() {
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        drawerToggle.setDrawerIndicatorEnabled(false);
+    }
+
+    /**
+     * Enable navigation drawer.
+     */
+    private void enableNavigationDrawer() {
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        drawerToggle.setDrawerIndicatorEnabled(true);
     }
 }

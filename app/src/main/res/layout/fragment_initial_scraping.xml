@@ -1,37 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
-    android:gravity="center">
+    android:fillViewport="true">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <!-- content wrapper is used to get the total height (used in move-to-center animation) -->
+    <LinearLayout
+        android:id="@+id/ll_content_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:src="@drawable/mygrades_white_64dp"
-            android:layout_width="wrap_content"
+        <!-- status wrapper can be moved to center (animated) -->
+        <LinearLayout
+            android:id="@+id/ll_status_wrapper"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_centerHorizontal="true"
-            android:alpha="0.2" />
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="16dp">
 
-        <de.mygrades.view.ProgressImageViewOverlay
-            android:id="@+id/iv_progress_overlay"
-            android:src="@drawable/mygrades_white_64dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/ll_progress_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Deine Noten werden geladen."
-        android:textColor="#FFFFFF"
-        android:gravity="center"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="?attr/actionBarSize"/>
-</LinearLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:src="@drawable/mygrades_white_64dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_centerHorizontal="true"
+                        android:alpha="0.2" />
+
+                    <de.mygrades.view.ProgressImageViewOverlay
+                        android:id="@+id/iv_progress_overlay"
+                        android:src="@drawable/mygrades_white_64dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_centerHorizontal="true" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Deine Noten werden geladen."
+                    android:textColor="#FFFFFF"
+                    android:gravity="center"
+                    android:layout_marginTop="16dp" />
+
+            </LinearLayout>
+
+            <!-- wrapper for error messages -->
+            <LinearLayout
+                android:id="@+id/ll_error_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_error_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:text="Deine Noten konnten nicht abgerufen werden. Das kann verschiedene Gründe haben:\n\n1. Deine Zugangsdaten sind falsch. \n2. Probleme mit der Internetverbindung oder dem Server der Hochschule. \n3. Die Linkstruktur innerhalb deines Notensystems könnte sich geändert haben und so ist es zur Zeit nicht möglich deine Noten abzurufen."
+                    android:layout_marginBottom="16dp"/>
+
+                <Button
+                    android:id="@+id/btn_try_again"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nochmal versuchen"
+                    android:background="@drawable/white_border_button"
+                    android:layout_marginBottom="16dp"/>
+
+                <Button
+                    android:id="@+id/btn_back_to_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Zurück zum Login"
+                    android:background="@drawable/white_border_button"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
