@@ -196,20 +196,22 @@ public class FragmentInitialScraping extends Fragment {
      * @param scrapeProgressEvent ScrapeProgressEvent
      */
     public void onEventMainThread(ScrapeProgressEvent scrapeProgressEvent) {
-        int currentStep = scrapeProgressEvent.getCurrentStep();
-        int stepCount = scrapeProgressEvent.getStepCount();
+        if (llStatusWrapper != null) {
+            int currentStep = scrapeProgressEvent.getCurrentStep();
+            int stepCount = scrapeProgressEvent.getStepCount();
 
-        float progress = ((float) currentStep) / stepCount;
-        float nextProgress =((float) currentStep + 1) / stepCount;
+            float progress = ((float) currentStep) / stepCount;
+            float nextProgress = ((float) currentStep + 1) / stepCount;
 
-        // set current progress
-        progressImageViewOverlay.setProgress(progress, nextProgress);
+            // set current progress
+            progressImageViewOverlay.setProgress(progress, nextProgress);
 
-        if (currentStep == 0) {
-            // start animation at first step, it runs continuously
-            progressAnimation.run();
-        } else if (currentStep == stepCount) {
-            stopProgressAnimation();
+            if (currentStep == 0) {
+                // start animation at first step, it runs continuously
+                progressAnimation.run();
+            } else if (currentStep == stepCount) {
+                stopProgressAnimation();
+            }
         }
     }
 
@@ -239,22 +241,21 @@ public class FragmentInitialScraping extends Fragment {
         // stop the progress animation
         stopProgressAnimation();
 
-        String errorMessage = "";
-
         // enable try again button
         btnTryAgain.setEnabled(true);
 
+        String errorMessage = "";
         switch (errorType) {
             case NO_NETWORK:
-                errorMessage = "Keine Internetverbindung!";
+                errorMessage = getResources().getString(R.string.error_no_network);
                 btnBackToLogin.setVisibility(View.GONE);
                 break;
             case TIMEOUT:
-                errorMessage = "Timeout von 25 Sekunden erreicht...";
+                errorMessage = getResources().getString(R.string.error_timeout);
                 btnBackToLogin.setVisibility(View.GONE);
                 break;
             case GENERAL:
-                errorMessage = "Genereller Fehler... \n Genereller Fehler...\nGenereller Fehler...\nGenereller Fehler...\nGenereller Fehler...\nGenereller Fehler...";
+                errorMessage = getResources().getString(R.string.error_general);
                 btnBackToLogin.setVisibility(View.VISIBLE);
                 break;
         }
