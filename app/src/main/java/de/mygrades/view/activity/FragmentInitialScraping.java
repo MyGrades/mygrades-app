@@ -1,5 +1,6 @@
 package de.mygrades.view.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -139,7 +140,9 @@ public class FragmentInitialScraping extends Fragment {
         btnBackToLogin.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // back to login
+                // back to login TODO: SelectUniversityActivity -> LoginActivity
+                Intent intent = new Intent(getContext(), SelectUniversityActivity.class);
+                getContext().startActivity(intent);
             }
         });
     }
