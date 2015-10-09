@@ -7,10 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
 import de.mygrades.main.MainServiceHelper;
+import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.ScrapeProgressEvent;
 import de.mygrades.view.ProgressImageViewOverlay;
 
@@ -20,8 +24,23 @@ import de.mygrades.view.ProgressImageViewOverlay;
 public class FragmentInitialScraping extends Fragment {
     private static final String PROGRESS_STATE = "progress_state";
     private static final String NEXT_PROGRESS_STATE = "next_progress_state";
+    private static final String ERROR_TYPE_STATE = "error_type";
+
+    private ErrorEvent.ErrorType receivedErrorType;
+    private static final int ANIMATION_DURATION = 500;
+
+    private MainServiceHelper mainServiceHelper;
 
     private ProgressImageViewOverlay progressImageViewOverlay;
+    private LinearLayout llContentWrapper;
+    private LinearLayout llStatusWrapper;
+    private LinearLayout llErrorWrapper;
+
+    private LinearLayout ll_progress_wrapper;
+
+    private TextView tvErrorMessage;
+    private Button btnTryAgain;
+    private Button btnBackToLogin;
 
     private Handler handler = new Handler();
     private Runnable progressAnimation = new Runnable() {
@@ -37,23 +56,124 @@ public class FragmentInitialScraping extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_initial_scraping, container, false);
 
+        mainServiceHelper = new MainServiceHelper(getContext());
+
+        // initialize all views
         progressImageViewOverlay = (ProgressImageViewOverlay) view.findViewById(R.id.iv_progress_overlay);
+        llContentWrapper = (LinearLayout) view.findViewById(R.id.ll_content_wrapper);
+        llStatusWrapper = (LinearLayout) view.findViewById(R.id.ll_status_wrapper);
+        llErrorWrapper = (LinearLayout) view.findViewById(R.id.ll_error_wrapper);
+        ll_progress_wrapper = (LinearLayout) view.findViewById(R.id.ll_progress_wrapper);
+        tvErrorMessage = (TextView) view.findViewById(R.id.tv_error_message);
+        btnTryAgain = (Button) view.findViewById(R.id.btn_try_again);
+        btnBackToLogin = (Button) view.findViewById(R.id.btn_back_to_login);
+
+        // init buttons
+        initButtons();
 
         // register to events
         EventBus.getDefault().register(this);
 
-        // start scraping
-        MainServiceHelper mainServiceHelper = new MainServiceHelper(getContext());
-        mainServiceHelper.scrapeForGrades(true);
-
+        // restore instance state
         if (savedInstanceState != null) {
+            // set progress
             float progress = savedInstanceState.getFloat(PROGRESS_STATE);
             float nextProgress = savedInstanceState.getFloat(NEXT_PROGRESS_STATE);
             progressImageViewOverlay.setProgress(progress, nextProgress);
-            progressAnimation.run();
+
+            // check if the error type is set
+            String receivedErrorTypeAsString = savedInstanceState.getString(ERROR_TYPE_STATE, null);
+            receivedErrorType = receivedErrorTypeAsString == null ? null : ErrorEvent.ErrorType.valueOf(receivedErrorTypeAsString);
+
+            if (receivedErrorType == null) {
+                progressAnimation.run();
+                hideErrorWrapper();
+            } else {
+                showError(receivedErrorType, 0);
+            }
+        } else {
+            // start scraping
+            mainServiceHelper.scrapeForGrades(true);
+            hideErrorWrapper();
         }
 
+        // (always) move status wrapper to center immediately
+        moveStatusWrapperToCenter(0);
+
         return view;
+    }
+
+    /**
+     * Hides the error wrapper. Only used in onCreateView.
+     */
+    private void hideErrorWrapper() {
+        llErrorWrapper.setVisibility(View.GONE);
+        llErrorWrapper.setAlpha(0f);
+    }
+
+    /**
+     * Initializes the try-again button and back-to-login button.
+     */
+    private void initButtons() {
+        btnTryAgain.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // disable button so it cannot be clicked again
+                btnTryAgain.setEnabled(false);
+
+                // reset progress
+                progressImageViewOverlay.setProgress(0, 0);
+
+                // scrape again
+                mainServiceHelper.scrapeForGrades(true);
+
+                // fade out error wrapper
+                llErrorWrapper.animate().alpha(0f).setDuration(ANIMATION_DURATION);
+                receivedErrorType = null;
+
+                // move progress wrapper to center
+                moveProgressWrapperToCenter(ANIMATION_DURATION);
+            }
+        });
+
+        btnBackToLogin.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // back to login
+            }
+        });
+    }
+
+    /**
+     * Moves the status wrapper to the center (animated).
+     * The status wrapper contains the progressWrapper and errorWrapper.
+     *
+     * @param duration duration of the animation in milliseconds.
+     */
+    private void moveStatusWrapperToCenter(final int duration) {
+        llStatusWrapper.post(new Runnable() {
+            @Override
+            public void run() {
+                int translateY = (int) ((llContentWrapper.getHeight() - llStatusWrapper.getHeight()) / 2f - llStatusWrapper.getTranslationY());
+                llStatusWrapper.animate().translationYBy(translateY).setDuration(duration);
+            }
+        });
+    }
+
+    /**
+     * Moves the status wrapper, so the progressWrapper is in the center.
+     * This is used for the animation, when the errorWrapper is fading out.
+     *
+     * @param duration duration of the animation in milliseconds.
+     */
+    private void moveProgressWrapperToCenter(final int duration) {
+        llStatusWrapper.post(new Runnable() {
+            @Override
+            public void run() {
+                int translateY = (int) ((llStatusWrapper.getHeight() - ll_progress_wrapper.getHeight()) / 2f - ll_progress_wrapper.getTranslationY());
+                llStatusWrapper.animate().translationYBy(translateY).setDuration(duration);
+            }
+        });
     }
 
     @Override
@@ -61,7 +181,12 @@ public class FragmentInitialScraping extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putFloat(PROGRESS_STATE, progressImageViewOverlay.getProgress());
         outState.putFloat(NEXT_PROGRESS_STATE, progressImageViewOverlay.getNextProgress());
-        stopAnimation();
+
+        if (receivedErrorType != null) {
+            outState.putString(ERROR_TYPE_STATE, receivedErrorType.name());
+        }
+
+        stopProgressAnimation();
     }
 
     /**
@@ -84,11 +209,67 @@ public class FragmentInitialScraping extends Fragment {
             // start animation at first step, it runs continuously
             progressAnimation.run();
         } else if (currentStep == stepCount) {
-            stopAnimation();
+            stopProgressAnimation();
         }
     }
 
-    private void stopAnimation() {
+    /**
+     * Receive an ErrorEvent and show an error message depending on the ErrorType.
+     *
+     * @param errorEvent ErrorEvent
+     */
+    public void onEventMainThread(ErrorEvent errorEvent) {
+        if (llErrorWrapper != null) {
+            showError(errorEvent.getType(), ANIMATION_DURATION);
+            moveStatusWrapperToCenter(ANIMATION_DURATION);
+        }
+    }
+
+    /**
+     * Shows an error by the given ErrorType.
+     * If the duration > 0, an fade-in animation is shown.
+     *
+     * @param errorType ErrorType
+     * @param duration duration of fade-in animation
+     */
+    private void showError(ErrorEvent.ErrorType errorType, int duration) {
+        // set receivedErrorType (used to store in instanceState)
+        receivedErrorType = errorType;
+
+        // stop the progress animation
+        stopProgressAnimation();
+
+        String errorMessage = "";
+
+        // enable try again button
+        btnTryAgain.setEnabled(true);
+
+        switch (errorType) {
+            case NO_NETWORK:
+                errorMessage = "Keine Internetverbindung!";
+                btnBackToLogin.setVisibility(View.GONE);
+                break;
+            case TIMEOUT:
+                errorMessage = "Timeout von 25 Sekunden erreicht...";
+                btnBackToLogin.setVisibility(View.GONE);
+                break;
+            case GENERAL:
+                errorMessage = "Genereller Fehler... \n Genereller Fehler...\nGenereller Fehler...\nGenereller Fehler...\nGenereller Fehler...\nGenereller Fehler...";
+                btnBackToLogin.setVisibility(View.VISIBLE);
+                break;
+        }
+
+        tvErrorMessage.setText(errorMessage);
+
+        // show error wrapper
+        llErrorWrapper.setVisibility(View.VISIBLE);
+        llErrorWrapper.animate().alpha(1.0f).setDuration(duration);
+    }
+
+    /**
+     * Stops the progress animation.
+     */
+    private void stopProgressAnimation() {
         // stop animation, if last step is reached
         handler.removeCallbacks(progressAnimation);
     }
