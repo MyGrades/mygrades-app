@@ -322,7 +322,8 @@ public class Transformer {
         if (transformerMappingVal == null) {
             return null;
         }
-        return parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument).trim();
+        String parseResult = parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument).trim();
+        return parseResult.equals("") ? null : parseResult;
     }
 
     /**
