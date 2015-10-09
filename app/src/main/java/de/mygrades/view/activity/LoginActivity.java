@@ -44,9 +44,12 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // get extra data
-        Bundle extras = getIntent().getExtras();
-        universityName = extras.getString(EXTRA_UNIVERSITY_NAME, "");
-        universityId = extras.getLong(EXTRA_UNIVERSITY_ID, 0);
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            universityName = getIntent().getExtras().getString(EXTRA_UNIVERSITY_NAME, "");
+            universityId = getIntent().getExtras().getLong(EXTRA_UNIVERSITY_ID, 0);
+        } else {
+            // TODO: load universityName, universityId from prefs / database (and maybe the username)
+        }
 
         // set university name
         tvUniversityName = (TextView) findViewById(R.id.tv_university_name);
