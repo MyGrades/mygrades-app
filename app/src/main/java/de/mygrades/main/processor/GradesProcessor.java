@@ -8,6 +8,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.database.dao.Action;
@@ -44,18 +45,18 @@ public class GradesProcessor extends BaseProcessor {
         super(context);
     }
 
-    /* TODO
-               1. Check if overview is possible for this university. -> flag in university
-                   -> post Event if not
-                   2. check if overview is already in DB
-                       -> post Event with Overview to GUI
-                       -> post Loading start
-
-            */
+    /**
+     * Get needed information for grade detail with overview.
+     * Retrieves GradeEntry from DB and posts Event.
+     * Scrapes for Overview (and indirectly also grades) and posts a
+     * OverviewEvent if scraping was successful.
+     *
+     * @param gradeHash identify requested gradeEntry
+     */
     public void getGradeDetails(String gradeHash) {
         // TODO: fail while getting Grade from DB -> error message
         // get GradeEntry from DB by hash with Overview (if present)
-        final GradeEntry gradeEntry = daoSession.getGradeEntryDao().queryDeep("WHERE "+ GradeEntryDao.Properties.Hash.columnName +" = ?", gradeHash).get(0);
+        final GradeEntry gradeEntry = daoSession.getGradeEntryDao().queryDeep("WHERE "+ GradeEntryDao.Properties.Hash.columnName +" = ?", gradeHash).get(0); // TODO: Nullpointer possible?
         Log.d(TAG, gradeEntry.toString());
         // post Event with GradeEntry to GUI
         EventBus.getDefault().post(new GradeEntryEvent(gradeEntry));
@@ -71,7 +72,7 @@ public class GradesProcessor extends BaseProcessor {
 
             // get university from DB
             long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
-            // load university from database
+            // load university from database  TODO: load from server?!
             University university = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
 
             // get rule for user
@@ -79,7 +80,7 @@ public class GradesProcessor extends BaseProcessor {
 
             // if an Overview is not possible for this rule -> send event to GUI
             if (!rule.getOverview()) {
-                // TODO: post event no overview for university
+                // TODO: post event no overview for university?
             } else {
                 // otherwise start scraping
                 // No Connection -> event no Connection, abort
@@ -94,20 +95,8 @@ public class GradesProcessor extends BaseProcessor {
                         .where(ActionDao.Properties.Type.notEq(ACTION_TYPE_TABLE_GRADES))
                         .orderAsc(ActionDao.Properties.Position).list();
 
-
-
-                // iterate through actions (type == table_overview) and search for placeholders
-                for (Action action : actions) {
-                    if (action.getType() != null && action.getType().equals(ACTION_TYPE_TABLE_OVERVIEW)) {
-                        String parseExpression = action.getParseExpression();
-                        // replace placeholders
-                        // TODO: compile expression before -> save resources
-                        parseExpression = parseExpression.replaceAll("###"+Transformer.EXAM_ID+"###", gradeEntry.getExamId());
-                        parseExpression = parseExpression.replaceAll("###"+Transformer.NAME+"###", gradeEntry.getName());
-                        action.setParseExpression(parseExpression);
-                    }
-                }
-
+                // replace placeholders in actions parseExpressions
+                replacePlaceholdersInActions(gradeEntry, actions);
 
                 try {
                     // init Parser, Scraper, Transformer
@@ -124,12 +113,11 @@ public class GradesProcessor extends BaseProcessor {
 
                     // save overview in database
                     if (overview != null) {
-                        gradeEntry.setOverviewId(overview.getOverviewId());
                         daoSession.runInTx(new Runnable() {
                             @Override
                             public void run() {
-                                // TODO: check usage of greendao
-                                daoSession.getOverviewDao().insertOrReplace(overview);
+                                long overviewId = daoSession.getOverviewDao().insertOrReplace(overview);
+                                gradeEntry.setOverviewId(overviewId);
                                 daoSession.getGradeEntryDao().insertOrReplace(gradeEntry);
                             }
                         });
@@ -287,5 +275,27 @@ public class GradesProcessor extends BaseProcessor {
         long timestamp = System.currentTimeMillis(); // get utc timestamp
         editor.putLong(Constants.PREF_KEY_LAST_UPDATED_AT, timestamp);
         editor.apply();
+    }
+
+    /**
+     * Iterates through all actions and replaces placeholder with values from gradeEntry.
+     *
+     * @param gradeEntry values to set for placeholders are retrieved from gradeEntry
+     * @param actions actions which parseExpressions should get replaced
+     */
+    private void replacePlaceholdersInActions(GradeEntry gradeEntry, List<Action> actions) {
+        // iterate through actions (type == table_overview) and search for placeholders
+        for (Action action : actions) {
+            if (action.getType() != null && action.getType().equals(ACTION_TYPE_TABLE_OVERVIEW)) {
+                String parseExpression = action.getParseExpression();
+                Pattern patternExamId = Pattern.compile("###" + Transformer.EXAM_ID + "###");
+                Pattern patternName = Pattern.compile("###"+Transformer.NAME+"###");
+
+                // replace placeholders
+                parseExpression = patternExamId.matcher(parseExpression).replaceAll(gradeEntry.getExamId());
+                parseExpression = patternName.matcher(parseExpression).replaceAll(gradeEntry.getName());
+                action.setParseExpression(parseExpression);
+            }
+        }
     }
 }
