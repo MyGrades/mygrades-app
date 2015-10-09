@@ -33,4 +33,25 @@
     <style name="TextAppearance.App.TextInputLayout" parent="@android:style/TextAppearance">
         <item name="android:textColor">#888888</item>
     </style>
+
+
+    <!-- TextView on the right of GradeDetailed Activity -->
+    <style name="GradeDetailTextViewRight">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <!-- TextView on the left of GradeDetailed Activity -->
+    <style name="GradeDetailTextViewLeft">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+    <!-- RelativeLayout Row of GradeDetailed Activity -->
+    <style name="GradeDetailRow">
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 </resources>

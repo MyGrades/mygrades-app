@@ -19,4 +19,21 @@
 
     <!-- Converted from ic_expand_less_24px.svg part of the material-design-icons -->
     <string name="path_expand_less">M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z</string>
+    <string name="tv_grade_detail_exam_id">Prüfungsnummer</string>
+    <string name="tv_grade_detail_semester">Semester</string>
+    <string name="tv_grade_detail_state">Status</string>
+    <string name="tv_grade_detail_credit_points">Credit Points</string>
+    <string name="tv_grade_detail_grade">Note</string>
+    <string name="tv_grade_detail_annotation">Vermerk</string>
+    <string name="tv_grade_detail_attempt">Versuch</string>
+    <string name="tv_grade_detail_exam_date">Prüfungsdatum</string>
+    <string name="tv_overview_participants">Teilnehmer</string>
+    <string name="tv_overview_average">Durchschnitt</string>
+    <string name="tv_overview_label_sections">Notenbereich</string>
+    <string name="tv_overview_label_count">Anzahl</string>
+    <string name="tv_overview_section5">nicht ausreichend (4,3 - 5,0)</string>
+    <string name="tv_overview_section4">ausreichend (3,7 - 4,0)</string>
+    <string name="tv_overview_section3">befriedigend (2,7 - 3,3)</string>
+    <string name="tv_overview_section2">gut (1,7 - 2,3)</string>
+    <string name="tv_overview_section1">sehr gut (1,0 - 1,3)</string>
 </resources>

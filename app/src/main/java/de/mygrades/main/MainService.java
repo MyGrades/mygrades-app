@@ -1,6 +1,5 @@
 package de.mygrades.main;
 
-import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
@@ -36,7 +35,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final int METHOD_GET_GRADES_FROM_DATABASE = 115;
     public static final int METHOD_GET_UNIVERSITIES_FROM_DATABASE = 116;
     public static final int METHOD_LOGOUT = 117;
-    public static final int METHOD_SCRAPE_FOR_OVERVIEW = 118;
+    public static final int METHOD_GET_GRADE_DETAILS = 118;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
@@ -140,9 +139,9 @@ public class MainService extends MultiThreadedIntentService {
             case METHOD_GET_GRADES_FROM_DATABASE:
                 gradesProcessor.getGradesFromDatabase();
                 break;
-            case METHOD_SCRAPE_FOR_OVERVIEW:
+            case METHOD_GET_GRADE_DETAILS:
                 String gradeHash = intent.getStringExtra(GRADE_HASH);
-                gradesProcessor.scrapeForOverview(gradeHash);
+                gradesProcessor.getGradeDetails(gradeHash);
                 break;
             default:
                 Log.e(TAG, "Invalid method call to MainService: "+ method);

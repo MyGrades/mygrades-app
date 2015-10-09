@@ -34,7 +34,8 @@ public class RuleDao extends AbstractDao<Rule, Long> {
         public final static Property SemesterStartWinter = new Property(5, Integer.class, "semesterStartWinter", false, "SEMESTER_START_WINTER");
         public final static Property GradeFactor = new Property(6, Double.class, "gradeFactor", false, "GRADE_FACTOR");
         public final static Property LastUpdated = new Property(7, java.util.Date.class, "lastUpdated", false, "LAST_UPDATED");
-        public final static Property UniversityId = new Property(8, long.class, "universityId", false, "UNIVERSITY_ID");
+        public final static Property Overview = new Property(8, Boolean.class, "overview", false, "OVERVIEW");
+        public final static Property UniversityId = new Property(9, long.class, "universityId", false, "UNIVERSITY_ID");
     };
 
     private DaoSession daoSession;
@@ -62,7 +63,8 @@ public class RuleDao extends AbstractDao<Rule, Long> {
                 "\"SEMESTER_START_WINTER\" INTEGER," + // 5: semesterStartWinter
                 "\"GRADE_FACTOR\" REAL," + // 6: gradeFactor
                 "\"LAST_UPDATED\" INTEGER," + // 7: lastUpdated
-                "\"UNIVERSITY_ID\" INTEGER NOT NULL );"); // 8: universityId
+                "\"OVERVIEW\" INTEGER," + // 8: overview
+                "\"UNIVERSITY_ID\" INTEGER NOT NULL );"); // 9: universityId
     }
 
     /** Drops the underlying database table. */
@@ -111,7 +113,12 @@ public class RuleDao extends AbstractDao<Rule, Long> {
         if (lastUpdated != null) {
             stmt.bindLong(8, lastUpdated.getTime());
         }
-        stmt.bindLong(9, entity.getUniversityId());
+ 
+        Boolean overview = entity.getOverview();
+        if (overview != null) {
+            stmt.bindLong(9, overview ? 1L: 0L);
+        }
+        stmt.bindLong(10, entity.getUniversityId());
     }
 
     @Override
@@ -138,7 +145,8 @@ public class RuleDao extends AbstractDao<Rule, Long> {
             cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5), // semesterStartWinter
             cursor.isNull(offset + 6) ? null : cursor.getDouble(offset + 6), // gradeFactor
             cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // lastUpdated
-            cursor.getLong(offset + 8) // universityId
+            cursor.isNull(offset + 8) ? null : cursor.getShort(offset + 8) != 0, // overview
+            cursor.getLong(offset + 9) // universityId
         );
         return entity;
     }
@@ -154,7 +162,8 @@ public class RuleDao extends AbstractDao<Rule, Long> {
         entity.setSemesterStartWinter(cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5));
         entity.setGradeFactor(cursor.isNull(offset + 6) ? null : cursor.getDouble(offset + 6));
         entity.setLastUpdated(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
-        entity.setUniversityId(cursor.getLong(offset + 8));
+        entity.setOverview(cursor.isNull(offset + 8) ? null : cursor.getShort(offset + 8) != 0);
+        entity.setUniversityId(cursor.getLong(offset + 9));
      }
     
     /** @inheritdoc */
