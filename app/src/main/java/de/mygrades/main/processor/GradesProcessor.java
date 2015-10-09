@@ -22,8 +22,10 @@ import de.mygrades.main.core.Parser;
 import de.mygrades.main.core.Scraper;
 import de.mygrades.main.core.Transformer;
 import de.mygrades.main.events.ErrorEvent;
+import de.mygrades.main.events.GradeEntryEvent;
 import de.mygrades.main.events.GradesEvent;
 import de.mygrades.main.events.InitialScrapingDoneEvent;
+import de.mygrades.main.events.OverviewEvent;
 import de.mygrades.main.events.ScrapeProgressEvent;
 import de.mygrades.util.Constants;
 import de.mygrades.util.exceptions.ParseException;
@@ -42,73 +44,112 @@ public class GradesProcessor extends BaseProcessor {
         super(context);
     }
 
-    /**
-     * Scrape for grades and post OverviewEvent if scraping was successful.
-     * Otherwise, an ErrorEvent will be posted.
-     */
-    public void scrapeForOverview(String gradeHash) {
-        // No Connection -> event no Connection, abort
-        if (!isOnline()) {
-            postErrorEvent(ErrorEvent.ErrorType.NO_NETWORK, "No Internet Connection!");
-            return;
-        }
+    /* TODO
+               1. Check if overview is possible for this university. -> flag in university
+                   -> post Event if not
+                   2. check if overview is already in DB
+                       -> post Event with Overview to GUI
+                       -> post Loading start
 
-        // get shared preferences
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            */
+    public void getGradeDetails(String gradeHash) {
+        // TODO: fail while getting Grade from DB -> error message
+        // get GradeEntry from DB by hash with Overview (if present)
+        final GradeEntry gradeEntry = daoSession.getGradeEntryDao().queryDeep("WHERE "+ GradeEntryDao.Properties.Hash.columnName +" = ?", gradeHash).get(0);
+        Log.d(TAG, gradeEntry.toString());
+        // post Event with GradeEntry to GUI
+        EventBus.getDefault().post(new GradeEntryEvent(gradeEntry));
 
-        // update and get university
-        University university = updateAndGetUniversity(prefs);
+        // if there is an overview for this grade -> post event to gui
+        if (gradeEntry.getOverview() != null) {
+            // post Event with Overview to GUI
+            EventBus.getDefault().post(new OverviewEvent(gradeEntry.getOverview()));
+        } else {
+            // otherwise check if an overview is possible for user's university rule
+            // get shared preferences
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        // get rule for user
-        Rule rule = getUserRule(university);
+            // get university from DB
+            long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
+            // load university from database
+            University university = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
 
-        // get actions for scrape for overview
-        List<Action> actions = daoSession.getActionDao().queryBuilder()
-                .where(ActionDao.Properties.Type.notEq(ACTION_TYPE_TABLE_GRADES))
-                .orderAsc(ActionDao.Properties.Position).list();
+            // get rule for user
+            Rule rule = getUserRule(university);
 
-        // get GradeEntry from DB by hash
-        GradeEntry gradeEntry = daoSession.getGradeEntryDao().queryBuilder()
-                .where(GradeEntryDao.Properties.Hash.eq(gradeHash)).unique();
-
-        // iterate through actions (type == table_overview) and search for placeholders
-        for (Action action : actions) {
-            if (action.getType() != null && action.getType().equals(ACTION_TYPE_TABLE_OVERVIEW)) {
-                String parseExpression = action.getParseExpression();
-                // replace placeholders
-                // TODO: compile expression before -> save resources!
-                parseExpression = parseExpression.replaceAll("###"+Transformer.EXAM_ID+"###", gradeEntry.getExamId());
-                parseExpression = parseExpression.replaceAll("###"+Transformer.NAME+"###", gradeEntry.getName());
-                action.setParseExpression(parseExpression);
-            }
-        }
-
-
-        try {
-            // init Parser, Scraper, Transformer
-            Parser parser = new Parser(context);
-
-            Scraper scraper = new Scraper(actions, parser);
-
-            // start scraping
-            String scrapingResult = scraper.scrape();
-
-            // start transforming
-            Transformer transformer = new Transformer(rule, scrapingResult, parser);
-            Overview overview = transformer.transformOverview(gradeEntry.getGrade());
-
-            Log.d(TAG, overview.toString());
-
-        } catch (ParseException e) {
-            postErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parse Error", e);
-        } catch (IOException e) {
-            if (e instanceof SocketTimeoutException) {
-                postErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout", e);
+            // if an Overview is not possible for this rule -> send event to GUI
+            if (!rule.getOverview()) {
+                // TODO: post event no overview for university
             } else {
-                postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
+                // otherwise start scraping
+                // No Connection -> event no Connection, abort
+                if (!isOnline()) {
+                    postErrorEvent(ErrorEvent.ErrorType.NO_NETWORK, "No Internet Connection!");
+                    return;
+                }
+
+                // TODO: post event start scraping
+                // get actions for scrape for overview
+                List<Action> actions = daoSession.getActionDao().queryBuilder()
+                        .where(ActionDao.Properties.Type.notEq(ACTION_TYPE_TABLE_GRADES))
+                        .orderAsc(ActionDao.Properties.Position).list();
+
+
+
+                // iterate through actions (type == table_overview) and search for placeholders
+                for (Action action : actions) {
+                    if (action.getType() != null && action.getType().equals(ACTION_TYPE_TABLE_OVERVIEW)) {
+                        String parseExpression = action.getParseExpression();
+                        // replace placeholders
+                        // TODO: compile expression before -> save resources
+                        parseExpression = parseExpression.replaceAll("###"+Transformer.EXAM_ID+"###", gradeEntry.getExamId());
+                        parseExpression = parseExpression.replaceAll("###"+Transformer.NAME+"###", gradeEntry.getName());
+                        action.setParseExpression(parseExpression);
+                    }
+                }
+
+
+                try {
+                    // init Parser, Scraper, Transformer
+                    Parser parser = new Parser(context);
+
+                    Scraper scraper = new Scraper(actions, parser);
+
+                    // start scraping
+                    String scrapingResult = scraper.scrape();
+
+                    // start transforming
+                    Transformer transformer = new Transformer(rule, scrapingResult, parser);
+                    final Overview overview = transformer.transformOverview(gradeEntry.getGrade());
+
+                    // save overview in database
+                    if (overview != null) {
+                        gradeEntry.setOverviewId(overview.getOverviewId());
+                        daoSession.runInTx(new Runnable() {
+                            @Override
+                            public void run() {
+                                // TODO: check usage of greendao
+                                daoSession.getOverviewDao().insertOrReplace(overview);
+                                daoSession.getGradeEntryDao().insertOrReplace(gradeEntry);
+                            }
+                        });
+                    }
+
+                    // post Event with Overview to GUI
+                    EventBus.getDefault().post(new OverviewEvent(overview));
+
+                } catch (ParseException e) {
+                    postErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parse Error", e);
+                } catch (IOException e) {
+                    if (e instanceof SocketTimeoutException) {
+                        postErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout", e);
+                    } else {
+                        postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
+                    }
+                } catch (Exception e) {
+                    postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
+                }
             }
-        } catch (Exception e) {
-            postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
         }
     }
 
