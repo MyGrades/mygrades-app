@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
@@ -39,6 +40,7 @@ public class FragmentOverview extends Fragment {
 
     private RecyclerView rvGrades;
     private GradesRecyclerViewAdapter adapter;
+    private TextView tvNoGradesFound;
 
     private MainServiceHelper mainServiceHelper;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -48,6 +50,7 @@ public class FragmentOverview extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
 
+        tvNoGradesFound = (TextView) view.findViewById(R.id.tv_no_grades_found);
         mainServiceHelper = new MainServiceHelper(getContext());
 
         // register event bus
@@ -98,6 +101,11 @@ public class FragmentOverview extends Fragment {
      * @param gradesEvent - grades event
      */
     public void onEventMainThread(GradesEvent gradesEvent) {
+        if (tvNoGradesFound != null && rvGrades != null) {
+            tvNoGradesFound.setVisibility(gradesEvent.getGrades().size() > 0 ? View.GONE : View.VISIBLE);
+            rvGrades.setVisibility(gradesEvent.getGrades().size() > 0 ? View.VISIBLE : View.GONE);
+        }
+
         if (adapter != null) {
             for(GradeEntry gradeEntry : gradesEvent.getGrades()) {
                 GradeItem item = new GradeItem();
