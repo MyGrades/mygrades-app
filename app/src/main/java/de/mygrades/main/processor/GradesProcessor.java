@@ -93,6 +93,7 @@ public class GradesProcessor extends BaseProcessor {
                 // get actions for scrape for overview
                 List<Action> actions = daoSession.getActionDao().queryBuilder()
                         .where(ActionDao.Properties.Type.notEq(ACTION_TYPE_TABLE_GRADES))
+                        .where(ActionDao.Properties.RuleId.eq(rule.getRuleId()))
                         .orderAsc(ActionDao.Properties.Position).list();
 
                 // replace placeholders in actions parseExpressions
@@ -164,6 +165,7 @@ public class GradesProcessor extends BaseProcessor {
         // get actions for scrape for overview
         List<Action> actions = daoSession.getActionDao().queryBuilder()
                 .where(ActionDao.Properties.Type.notEq(ACTION_TYPE_TABLE_OVERVIEW))
+                .where(ActionDao.Properties.RuleId.eq(rule.getRuleId()))
                 .orderAsc(ActionDao.Properties.Position).list();
 
         // post status event (0% done)
