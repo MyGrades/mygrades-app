@@ -26,6 +26,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
     public static final String EXTRA_GRADE_HASH = "grade_hash";
 
     private String gradeHash;
+    private GradeEntry gradeEntry;
+    private MainServiceHelper mainServiceHelper;
 
     // Views
     private TextView tvGradeDetailName;
@@ -47,6 +49,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private TextView tvOverviewSection4;
     private TextView tvOverviewSection5;
 
+    private Button btnScrapeForOverview;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
         // register event bus
         EventBus.getDefault().register(this);
+
+        mainServiceHelper = new MainServiceHelper(this);
 
         // get extra data
         Bundle extras = getIntent().getExtras();
@@ -87,11 +92,28 @@ public class GradeDetailedActivity extends AppCompatActivity {
         tvOverviewSection4 = (TextView) findViewById(R.id.tv_overview_section4);
         tvOverviewSection5 = (TextView) findViewById(R.id.tv_overview_section5);
 
+        initScrapeForOverviewButton();
+
         // start intent to get data for Grade Detail page
-        MainServiceHelper mainServiceHelper = new MainServiceHelper(GradeDetailedActivity.this);
         mainServiceHelper.getGradeDetails(gradeHash);
     }
 
+    /**
+     * Initialize ScrapeForOverview button.
+     */
+    private void initScrapeForOverviewButton() {
+        btnScrapeForOverview = (Button) findViewById(R.id.btn_scrape_for_overview);
+
+        btnScrapeForOverview.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: show loading animation and hide button
+                if (gradeEntry != null) {
+                    mainServiceHelper.scrapeForOverview(gradeEntry.getHash());
+                }
+            }
+        });
+    }
 
     /**
      * Receive an event when the GradeEntry is retrieved from the DB.
@@ -99,7 +121,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
      * @param gradeEntryEvent
      */
     public void onEventMainThread(GradeEntryEvent gradeEntryEvent) {
-        GradeEntry gradeEntry = gradeEntryEvent.getGradeEntry();
+        gradeEntry = gradeEntryEvent.getGradeEntry();
 
         tvGradeDetailName.setText(gradeEntry.getName());
         setTextView(tvGradeDetailExamId, gradeEntry.getExamId());
@@ -121,14 +143,18 @@ public class GradeDetailedActivity extends AppCompatActivity {
         Log.d(TAG, overviewEvent.getOverview().toString());
         Overview overview = overviewEvent.getOverview();
 
-        llOverviewWrapper.setVisibility(View.VISIBLE);
-        tvOverviewParticipants.setText(String.valueOf(overview.getParticipants()));
-        writeDoubleToTextView(tvOverviewAverage, overview.getAverage());
-        tvOverviewSection1.setText(String.valueOf(overview.getSection1()));
-        tvOverviewSection2.setText(String.valueOf(overview.getSection2()));
-        tvOverviewSection3.setText(String.valueOf(overview.getSection3()));
-        tvOverviewSection4.setText(String.valueOf(overview.getSection4()));
-        tvOverviewSection5.setText(String.valueOf(overview.getSection5()));
+        // only set overview if it belongs to current gradeEntry
+        // TODO: overview needs hash of gradeEntry
+        if (gradeEntry != null) {
+            llOverviewWrapper.setVisibility(View.VISIBLE);
+            tvOverviewParticipants.setText(String.valueOf(overview.getParticipants()));
+            writeDoubleToTextView(tvOverviewAverage, overview.getAverage());
+            tvOverviewSection1.setText(String.valueOf(overview.getSection1()));
+            tvOverviewSection2.setText(String.valueOf(overview.getSection2()));
+            tvOverviewSection3.setText(String.valueOf(overview.getSection3()));
+            tvOverviewSection4.setText(String.valueOf(overview.getSection4()));
+            tvOverviewSection5.setText(String.valueOf(overview.getSection5()));
+        }
     }
 
     private void setTextView(TextView textView, String value) {
