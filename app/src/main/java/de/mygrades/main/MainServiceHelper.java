@@ -100,11 +100,27 @@ public class MainServiceHelper {
      * Starts a worker thread to scrape for the overview of a specific subject.
      * @param gradeHash - Hash of Grade/Subject (unique identifier)
      */
+    public void scrapeForOverview(String gradeHash) {
+        int method = MainService.METHOD_SCRAPE_FOR_OVERVIEW;
+
+        // set request id
+        // TODO: block other requests to load overview?
+        long requestId = concatenateLong(method, 0);
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_GRADES, method, requestId);
+        intent.putExtra(MainService.GRADE_HASH, gradeHash);
+        context.startService(intent);
+    }
+
+    /**
+     * Load all information for Grade Detail from Database.
+     * @param gradeHash - Hash of Grade/Subject (unique identifier)
+     */
     public void getGradeDetails(String gradeHash) {
         int method = MainService.METHOD_GET_GRADE_DETAILS;
 
         // set request id
-        // TODO: there could be more than one scraping for overview?!
         long requestId = concatenateLong(method, 0);
 
         // start worker thread in background

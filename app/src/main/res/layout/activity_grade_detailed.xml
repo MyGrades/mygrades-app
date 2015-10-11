@@ -357,6 +357,12 @@
                 </RelativeLayout>
             </LinearLayout>
 
+            <Button
+                android:id="@+id/btn_scrape_for_overview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/get_overview"
+                android:theme="@style/RobotoButtonStyle"/>
 
         </LinearLayout>
 

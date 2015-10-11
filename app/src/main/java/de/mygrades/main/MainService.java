@@ -36,6 +36,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final int METHOD_GET_UNIVERSITIES_FROM_DATABASE = 116;
     public static final int METHOD_LOGOUT = 117;
     public static final int METHOD_GET_GRADE_DETAILS = 118;
+    public static final int METHOD_SCRAPE_FOR_OVERVIEW = 119;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
@@ -130,6 +131,7 @@ public class MainService extends MultiThreadedIntentService {
      */
     private void handleGradesProcessor(int method, Intent intent) {
         GradesProcessor gradesProcessor = new GradesProcessor(this);
+        String gradeHash;
 
         switch (method) {
             case METHOD_SCRAPE_FOR_GRADES:
@@ -140,8 +142,12 @@ public class MainService extends MultiThreadedIntentService {
                 gradesProcessor.getGradesFromDatabase();
                 break;
             case METHOD_GET_GRADE_DETAILS:
-                String gradeHash = intent.getStringExtra(GRADE_HASH);
+                gradeHash = intent.getStringExtra(GRADE_HASH);
                 gradesProcessor.getGradeDetails(gradeHash);
+                break;
+            case METHOD_SCRAPE_FOR_OVERVIEW:
+                gradeHash = intent.getStringExtra(GRADE_HASH);
+                gradesProcessor.scrapeForOverview(gradeHash);
                 break;
             default:
                 Log.e(TAG, "Invalid method call to MainService: "+ method);
