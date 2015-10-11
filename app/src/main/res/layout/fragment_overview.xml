@@ -9,24 +9,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!--<RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">-->
-
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_grades"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <!--<TextView
-                    android:id="@+id/tv_no_grades_found"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/tv_no_grades_found"
-                    android:textSize="16sp"
-                    android:gravity="center"
-                    android:visibility="gone"/>-->
-
-            <!--</RelativeLayout>-->
         </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>
