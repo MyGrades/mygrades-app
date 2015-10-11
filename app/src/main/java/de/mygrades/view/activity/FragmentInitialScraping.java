@@ -8,9 +8,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
@@ -36,10 +36,12 @@ public class FragmentInitialScraping extends Fragment {
     private LinearLayout llContentWrapper;
     private LinearLayout llStatusWrapper;
     private LinearLayout llErrorWrapper;
+    private LinearLayout llProgressWrapper;
 
-    private LinearLayout ll_progress_wrapper;
+    private View inflatedErrorGeneral;
+    private View inflatedErrorTimeout;
+    private View inflatedErrorNoNetwork;
 
-    private TextView tvErrorMessage;
     private Button btnTryAgain;
     private Button btnBackToLogin;
 
@@ -55,7 +57,12 @@ public class FragmentInitialScraping extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_initial_scraping, container, false);
+        return inflater.inflate(R.layout.fragment_initial_scraping, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mainServiceHelper = new MainServiceHelper(getContext());
 
@@ -64,16 +71,12 @@ public class FragmentInitialScraping extends Fragment {
         llContentWrapper = (LinearLayout) view.findViewById(R.id.ll_content_wrapper);
         llStatusWrapper = (LinearLayout) view.findViewById(R.id.ll_status_wrapper);
         llErrorWrapper = (LinearLayout) view.findViewById(R.id.ll_error_wrapper);
-        ll_progress_wrapper = (LinearLayout) view.findViewById(R.id.ll_progress_wrapper);
-        tvErrorMessage = (TextView) view.findViewById(R.id.tv_error_message);
+        llProgressWrapper = (LinearLayout) view.findViewById(R.id.ll_progress_wrapper);
         btnTryAgain = (Button) view.findViewById(R.id.btn_try_again);
         btnBackToLogin = (Button) view.findViewById(R.id.btn_back_to_login);
 
         // init buttons
         initButtons();
-
-        // register to events
-        EventBus.getDefault().register(this);
 
         // restore instance state
         if (savedInstanceState != null) {
@@ -98,10 +101,11 @@ public class FragmentInitialScraping extends Fragment {
             hideErrorWrapper();
         }
 
+        // register to events
+        EventBus.getDefault().register(this);
+
         // (always) move status wrapper to center immediately
         moveStatusWrapperToCenter(0);
-
-        return view;
     }
 
     /**
@@ -173,7 +177,7 @@ public class FragmentInitialScraping extends Fragment {
         llStatusWrapper.post(new Runnable() {
             @Override
             public void run() {
-                int translateY = (int) ((llStatusWrapper.getHeight() - ll_progress_wrapper.getHeight()) / 2f - ll_progress_wrapper.getTranslationY());
+                int translateY = (int) ((llStatusWrapper.getHeight() - llProgressWrapper.getHeight()) / 2f - llProgressWrapper.getTranslationY());
                 llStatusWrapper.animate().translationYBy(translateY).setDuration(duration);
             }
         });
@@ -247,27 +251,58 @@ public class FragmentInitialScraping extends Fragment {
         // enable try again button
         btnTryAgain.setEnabled(true);
 
-        String errorMessage = "";
+        // hide error wrapper if it was shown previously
+        hideInflatedErrors();
+
         switch (errorType) {
             case NO_NETWORK:
-                errorMessage = getResources().getString(R.string.error_no_network);
+                inflatedErrorNoNetwork = inflateViewStub(inflatedErrorNoNetwork, R.id.stub_no_network_error);
                 btnBackToLogin.setVisibility(View.GONE);
                 break;
             case TIMEOUT:
-                errorMessage = getResources().getString(R.string.error_timeout);
+                inflatedErrorTimeout = inflateViewStub(inflatedErrorTimeout, R.id.stub_timeout_error);
                 btnBackToLogin.setVisibility(View.GONE);
                 break;
             case GENERAL:
-                errorMessage = getResources().getString(R.string.error_general);
+                inflatedErrorGeneral = inflateViewStub(inflatedErrorGeneral, R.id.stub_general_error);
                 btnBackToLogin.setVisibility(View.VISIBLE);
                 break;
         }
 
-        tvErrorMessage.setText(errorMessage);
-
         // show error wrapper
         llErrorWrapper.setVisibility(View.VISIBLE);
         llErrorWrapper.animate().alpha(1.0f).setDuration(duration);
+    }
+
+    /**
+     * Inflates a ViewStub if necessary.
+     * If it was already inflated, the visibility is set to VISIBLE.
+     *
+     * @param inflatedError - the view which will be inflated (if necessary)
+     * @param stubResId - StubView id
+     * @return the inflated view
+     */
+    private View inflateViewStub(View inflatedError, int stubResId) {
+        if (inflatedError == null) {
+            inflatedError = ((ViewStub) getView().findViewById(stubResId)).inflate();
+        }
+        inflatedError.setVisibility(View.VISIBLE);
+        return inflatedError;
+    }
+
+    /**
+     * Hides all inflated error views.
+     */
+    private void hideInflatedErrors() {
+        if (inflatedErrorGeneral != null) {
+            inflatedErrorGeneral.setVisibility(View.GONE);
+        }
+        if (inflatedErrorNoNetwork != null) {
+            inflatedErrorNoNetwork.setVisibility(View.GONE);
+        }
+        if (inflatedErrorTimeout != null) {
+            inflatedErrorTimeout.setVisibility(View.GONE);
+        }
     }
 
     /**
