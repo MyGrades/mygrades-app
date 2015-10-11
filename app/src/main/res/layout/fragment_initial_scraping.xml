@@ -17,15 +17,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:padding="16dp">
+            android:gravity="center_horizontal">
 
             <LinearLayout
                 android:id="@+id/ll_progress_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -55,7 +55,6 @@
                     android:textColor="#FFFFFF"
                     android:gravity="center"
                     android:layout_marginTop="16dp" />
-
             </LinearLayout>
 
             <!-- wrapper for error messages -->
@@ -66,30 +65,59 @@
                 android:orientation="vertical"
                 android:gravity="center">
 
-                <TextView
-                    android:id="@+id/tv_error_message"
+                <!-- Divider -->
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"
-                    android:text="Deine Noten konnten nicht abgerufen werden. Das kann verschiedene Gründe haben:\n\n1. Deine Zugangsdaten sind falsch. \n2. Probleme mit der Internetverbindung oder dem Server der Hochschule. \n3. Die Linkstruktur innerhalb deines Notensystems könnte sich geändert haben und so ist es zur Zeit nicht möglich deine Noten abzurufen."
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_height="0.5dp"
+                    android:background="#FFFFFF"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"/>
 
+                <!-- ViewStub to inflate the general error layout -->
+                <ViewStub
+                    android:id="@+id/stub_general_error"
+                    android:layout="@layout/viewstub_error_general"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!-- ViewStub to inflate the timeout error layout -->
+                <ViewStub
+                    android:id="@+id/stub_timeout_error"
+                    android:layout="@layout/viewstub_error_timeout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!-- ViewStub to inflate the no-network error layout -->
+                <ViewStub
+                    android:id="@+id/stub_no_network_error"
+                    android:layout="@layout/viewstub_error_no_network"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!-- try-again button -->
                 <Button
                     android:id="@+id/btn_try_again"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Nochmal versuchen"
-                    android:background="@drawable/white_border_button"
-                    android:layout_marginBottom="16dp"/>
+                    android:theme="@style/InvertedRobotoButtonStyle"
+                    android:textColor="?attr/colorPrimary"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"/>
 
+                <!-- back-to-login button -->
                 <Button
                     android:id="@+id/btn_back_to_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Zurück zum Login"
-                    android:background="@drawable/white_border_button"/>
+                    android:theme="@style/InvertedRobotoButtonStyle"
+                    android:textColor="?attr/colorPrimary"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"/>
             </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>

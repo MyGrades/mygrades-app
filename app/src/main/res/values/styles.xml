@@ -20,6 +20,12 @@
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
+    <style name="InvertedRobotoButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="colorButtonNormal">#FFFFFF</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
     <!-- set EditText style. DO NOT declare the parent view, it will break the colors.
     This style has to be set for each EditText with android:theme="@style/CustomEditTextStyle" -->
     <style name="CustomEditTextStyle">
