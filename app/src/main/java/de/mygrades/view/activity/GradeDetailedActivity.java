@@ -144,8 +144,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         Overview overview = overviewEvent.getOverview();
 
         // only set overview if it belongs to current gradeEntry
-        // TODO: overview needs hash of gradeEntry
-        if (gradeEntry != null) {
+        if (gradeEntry != null && overview.getGradeEntryHash().equals(gradeEntry.getHash())) {
             llOverviewWrapper.setVisibility(View.VISIBLE);
             tvOverviewParticipants.setText(String.valueOf(overview.getParticipants()));
             writeDoubleToTextView(tvOverviewAverage, overview.getAverage());

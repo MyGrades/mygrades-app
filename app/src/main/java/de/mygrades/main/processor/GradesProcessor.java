@@ -135,6 +135,7 @@ public class GradesProcessor extends BaseProcessor {
             // start transforming
             Transformer transformer = new Transformer(rule, scrapingResult, parser);
             final Overview overview = transformer.transformOverview(gradeEntry.getGrade());
+            overview.setGradeEntryHash(gradeEntry.getHash());
 
             // save overview in database
             if (overview != null) {
@@ -333,6 +334,7 @@ public class GradesProcessor extends BaseProcessor {
      * @param event IntermediateTableScrapingResultEvent containing a string of table with grades
      */
     public void onEventAsync(IntermediateTableScrapingResultEvent event){
+        /* TODO: do not override all the overview entries -> before fix insertOrReplace issue
         // get shared preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -369,5 +371,6 @@ public class GradesProcessor extends BaseProcessor {
             // ignore exceptions
             Log.e(TAG, "exception while Parsing table in separate thread", e);
         }
+        */
     }
 }

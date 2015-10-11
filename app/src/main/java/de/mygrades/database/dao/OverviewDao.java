@@ -32,6 +32,7 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
         public final static Property Section4 = new Property(6, Integer.class, "section4", false, "SECTION4");
         public final static Property Section5 = new Property(7, Integer.class, "section5", false, "SECTION5");
         public final static Property UserSection = new Property(8, Integer.class, "userSection", false, "USER_SECTION");
+        public final static Property GradeEntryHash = new Property(9, String.class, "gradeEntryHash", false, "GRADE_ENTRY_HASH");
     };
 
 
@@ -55,7 +56,8 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
                 "\"SECTION3\" INTEGER," + // 5: section3
                 "\"SECTION4\" INTEGER," + // 6: section4
                 "\"SECTION5\" INTEGER," + // 7: section5
-                "\"USER_SECTION\" INTEGER);"); // 8: userSection
+                "\"USER_SECTION\" INTEGER," + // 8: userSection
+                "\"GRADE_ENTRY_HASH\" TEXT);"); // 9: gradeEntryHash
     }
 
     /** Drops the underlying database table. */
@@ -113,6 +115,11 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
         if (userSection != null) {
             stmt.bindLong(9, userSection);
         }
+ 
+        String gradeEntryHash = entity.getGradeEntryHash();
+        if (gradeEntryHash != null) {
+            stmt.bindString(10, gradeEntryHash);
+        }
     }
 
     /** @inheritdoc */
@@ -133,7 +140,8 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
             cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5), // section3
             cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6), // section4
             cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7), // section5
-            cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8) // userSection
+            cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8), // userSection
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9) // gradeEntryHash
         );
         return entity;
     }
@@ -150,6 +158,7 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
         entity.setSection4(cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6));
         entity.setSection5(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));
         entity.setUserSection(cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8));
+        entity.setGradeEntryHash(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
      }
     
     /** @inheritdoc */

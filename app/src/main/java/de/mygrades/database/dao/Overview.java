@@ -18,6 +18,7 @@ public class Overview {
     private Integer section4;
     private Integer section5;
     private Integer userSection;
+    private String gradeEntryHash;
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
@@ -29,7 +30,7 @@ public class Overview {
         this.overviewId = overviewId;
     }
 
-    public Overview(Long overviewId, Double average, Integer participants, Integer section1, Integer section2, Integer section3, Integer section4, Integer section5, Integer userSection) {
+    public Overview(Long overviewId, Double average, Integer participants, Integer section1, Integer section2, Integer section3, Integer section4, Integer section5, Integer userSection, String gradeEntryHash) {
         this.overviewId = overviewId;
         this.average = average;
         this.participants = participants;
@@ -39,6 +40,7 @@ public class Overview {
         this.section4 = section4;
         this.section5 = section5;
         this.userSection = userSection;
+        this.gradeEntryHash = gradeEntryHash;
     }
 
     public Long getOverviewId() {
@@ -111,6 +113,14 @@ public class Overview {
 
     public void setUserSection(Integer userSection) {
         this.userSection = userSection;
+    }
+
+    public String getGradeEntryHash() {
+        return gradeEntryHash;
+    }
+
+    public void setGradeEntryHash(String gradeEntryHash) {
+        this.gradeEntryHash = gradeEntryHash;
     }
 
     // KEEP METHODS - put your custom methods here

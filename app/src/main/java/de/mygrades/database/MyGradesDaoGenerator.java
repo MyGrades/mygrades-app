@@ -170,6 +170,7 @@ public class MyGradesDaoGenerator {
         overview.addIntProperty("section4");
         overview.addIntProperty("section5");
         overview.addIntProperty("userSection");
+        overview.addStringProperty("gradeEntryHash");
         overview.setHasKeepSections(true);
 
         // add 1:1 relation for gradeEntry -> overview
