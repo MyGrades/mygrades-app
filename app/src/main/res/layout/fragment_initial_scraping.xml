@@ -79,7 +79,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Nochmal versuchen"
-                    android:background="@drawable/white_border_button"
+                    android:theme="@style/InvertedRobotoButtonStyle"
+                    android:textColor="?attr/colorPrimary"
                     android:layout_marginBottom="16dp"/>
 
                 <Button
@@ -87,7 +88,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Zurück zum Login"
-                    android:background="@drawable/white_border_button"/>
+                    android:theme="@style/InvertedRobotoButtonStyle"
+                    android:textColor="?attr/colorPrimary"/>
             </LinearLayout>
         </LinearLayout>
 
