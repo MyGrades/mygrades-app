@@ -3,7 +3,7 @@ package de.mygrades.main.events;
 import de.mygrades.database.dao.Overview;
 
 /**
- * Event to send a GradeEntry to subscribers, e.g. activities.
+ * Event to send a Overview to subscribers, e.g. activities.
  */
 public class OverviewEvent {
     private Overview overview;
