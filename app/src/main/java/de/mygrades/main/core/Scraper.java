@@ -30,7 +30,9 @@ import javax.net.ssl.TrustManager;
 import de.greenrobot.event.EventBus;
 import de.mygrades.database.dao.Action;
 import de.mygrades.database.dao.ActionParam;
+import de.mygrades.main.events.IntermediateTableScrapingResultEvent;
 import de.mygrades.main.events.ScrapeProgressEvent;
+import de.mygrades.main.processor.GradesProcessor;
 import de.mygrades.util.Config;
 import de.mygrades.util.Constants;
 import de.mygrades.util.NoSSLv3SocketFactory;
@@ -123,6 +125,19 @@ public class Scraper {
      * @throws ParseException
      */
     public String scrape() throws IOException, ParseException {
+        return scrape(false);
+    }
+
+    /**
+     * Scrape step by step by given Actions.
+     * A clicking user is simulated with Jsoup and different steps to different urls.
+     * Cookies and other request specific Data are transferred.
+     *
+     * @param tableAsInterimResult if set true, Action with table_grades is skipped and sent via EventBus
+     * @throws IOException
+     * @throws ParseException
+     */
+    public String scrape(boolean tableAsInterimResult) throws IOException, ParseException {
         String parsedHtml = null;
 
         // iterate over all actions in order by position
@@ -135,6 +150,19 @@ public class Scraper {
 
             // make request with data, cookies, current method
             makeJsoupRequest(getRequestData(action.getActionParams()), getHttpMethodEnum(action.getMethod()), url);
+
+            // send table of grades to processor, if tableAsInterimResult is set
+            if (tableAsInterimResult && action.getType().equals(GradesProcessor.ACTION_TYPE_TABLE_GRADES)) {
+                // parse with XML
+                String parsedTable = parser.parseToStringWithXML(action.getParseExpression(), document.toString());
+                EventBus.getDefault().post(new IntermediateTableScrapingResultEvent(parsedTable));
+
+                // post intermediate status event
+                EventBus.getDefault().post(new ScrapeProgressEvent(i + 1, actions.size() + 1));
+                // continue with next action
+                i = i + 1;
+                action = actions.get(i);
+            }
 
             // parse Content to String if its not the last action
             if (i < actions.size() - 1) {

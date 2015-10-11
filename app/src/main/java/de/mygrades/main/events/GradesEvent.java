@@ -15,6 +15,10 @@ public class GradesEvent {
         grades = new ArrayList<>();
     }
 
+    public GradesEvent(List<GradeEntry> grades) {
+        this.grades = grades;
+    }
+
     public void setGrades(List<GradeEntry> grades) {
         this.grades = grades;
     }
