@@ -47,16 +47,26 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:fontFamily">sans-serif-medium</item>
+
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">13dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
     <!-- TextView on the left of GradeDetailed Activity -->
     <style name="GradeDetailTextViewLeft">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentLeft">true</item>
+
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingBottom">13dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
     <!-- RelativeLayout Row of GradeDetailed Activity -->
     <style name="GradeDetailRow">
-        <!--<item name="android:visibility">gone</item>-->
+        <item name="android:visibility">gone</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
@@ -66,5 +76,13 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">@drawable/grade_divider</item>
+        <item name="android:layout_alignParentBottom">true</item>
+    </style>
+
+    <style name="h1">
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:textSize">24sp</item>
     </style>
 </resources>

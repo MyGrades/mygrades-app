@@ -16,6 +16,7 @@ import de.mygrades.database.dao.Overview;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.GradeEntryEvent;
 import de.mygrades.main.events.OverviewEvent;
+import de.mygrades.main.events.OverviewPossibleEvent;
 
 /**
  * Created by jonastheis on 03.10.15.
@@ -50,6 +51,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private TextView tvOverviewSection5;
 
     private Button btnScrapeForOverview;
+    private TextView tvOverviewNotPossible;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,6 +95,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         tvOverviewSection5 = (TextView) findViewById(R.id.tv_overview_section5);
 
         initScrapeForOverviewButton();
+        tvOverviewNotPossible = (TextView) findViewById(R.id.tv_overview_not_possible);
 
         // start intent to get data for Grade Detail page
         mainServiceHelper.getGradeDetails(gradeHash);
@@ -145,6 +148,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
         // only set overview if it belongs to current gradeEntry
         if (gradeEntry != null && overview.getGradeEntryHash().equals(gradeEntry.getHash())) {
+            // hide button
+            btnScrapeForOverview.setVisibility(View.GONE);
+
             llOverviewWrapper.setVisibility(View.VISIBLE);
             tvOverviewParticipants.setText(String.valueOf(overview.getParticipants()));
             writeDoubleToTextView(tvOverviewAverage, overview.getAverage());
@@ -153,6 +159,18 @@ public class GradeDetailedActivity extends AppCompatActivity {
             tvOverviewSection3.setText(String.valueOf(overview.getSection3()));
             tvOverviewSection4.setText(String.valueOf(overview.getSection4()));
             tvOverviewSection5.setText(String.valueOf(overview.getSection5()));
+        }
+    }
+
+    /**
+     * Receive an event when its determined whether it is possible to receive a overview.
+     * @param overviewPossibleEvent
+     */
+    public void onEventMainThread(OverviewPossibleEvent overviewPossibleEvent) {
+        if (!overviewPossibleEvent.isOverviewPossible()) {
+            btnScrapeForOverview.setVisibility(View.VISIBLE);
+        } else {
+            tvOverviewNotPossible.setVisibility(View.VISIBLE);
         }
     }
 
