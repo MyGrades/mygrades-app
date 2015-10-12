@@ -67,6 +67,17 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a Document with given XPATH expression and returns result of expression as Boolean.
+     *
+     * @param xmlDocument Document which should get parsed
+     * @param parseExpression XPATH expression
+     * @return parsed result
+     * @throws ParseException if something goes wrong at parsing or initializing Document Builder
+     */
+    public Boolean parseToBoolean(String parseExpression, Document xmlDocument) throws ParseException {
+        return evaluateXpathExpressionBoolean(parseExpression, xmlDocument);
+    }
 
     /**
      * Parses a Document with given XPATH expression and returns result of expression as String.
@@ -194,6 +205,22 @@ public class Parser {
     private String evaluateXpathExpressionString(String parseExpression, Document xmlDocument) throws ParseException {
         try {
             return (String) xPath.compile(parseExpression).evaluate(xmlDocument, XPathConstants.STRING);
+        } catch (XPathExpressionException e) {
+            throw new ParseException("Could not compile XPATH expression!");
+        }
+    }
+
+    /**
+     * Evaluates xPath expression on given document as Boolean.
+     *
+     * @param parseExpression xPath expression
+     * @param xmlDocument document, which should get evaluated against expression
+     * @return evaluated xPath expression as Boolean
+     * @throws ParseException if something goes wrong at parsing
+     */
+    private Boolean evaluateXpathExpressionBoolean(String parseExpression, Document xmlDocument) throws ParseException {
+        try {
+            return (Boolean) xPath.compile(parseExpression).evaluate(xmlDocument, XPathConstants.BOOLEAN);
         } catch (XPathExpressionException e) {
             throw new ParseException("Could not compile XPATH expression!");
         }

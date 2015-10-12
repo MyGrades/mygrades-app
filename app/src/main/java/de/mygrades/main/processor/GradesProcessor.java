@@ -79,7 +79,11 @@ public class GradesProcessor extends BaseProcessor {
             Rule rule = getUserRule(university);
 
             // send event to GUI whether overview is possible
-            EventBus.getDefault().post(new OverviewPossibleEvent(rule.getOverview()));
+            if (rule.getOverview()) { // TODO: separate general message?
+                EventBus.getDefault().post(new OverviewPossibleEvent(gradeEntry.getOverviewPossible()));
+            } else {
+                EventBus.getDefault().post(new OverviewPossibleEvent(false));
+            }
         }
     }
 

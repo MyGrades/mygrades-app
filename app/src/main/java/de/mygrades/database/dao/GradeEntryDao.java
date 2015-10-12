@@ -37,7 +37,8 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         public final static Property ExamDate = new Property(8, String.class, "examDate", false, "EXAM_DATE");
         public final static Property SemesterNumber = new Property(9, Integer.class, "semesterNumber", false, "SEMESTER_NUMBER");
         public final static Property Hash = new Property(10, String.class, "hash", true, "HASH");
-        public final static Property OverviewId = new Property(11, Long.class, "overviewId", false, "OVERVIEW_ID");
+        public final static Property OverviewPossible = new Property(11, Boolean.class, "overviewPossible", false, "OVERVIEW_POSSIBLE");
+        public final static Property OverviewId = new Property(12, Long.class, "overviewId", false, "OVERVIEW_ID");
     };
 
     private DaoSession daoSession;
@@ -67,7 +68,8 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
                 "\"EXAM_DATE\" TEXT," + // 8: examDate
                 "\"SEMESTER_NUMBER\" INTEGER," + // 9: semesterNumber
                 "\"HASH\" TEXT PRIMARY KEY NOT NULL ," + // 10: hash
-                "\"OVERVIEW_ID\" INTEGER);"); // 11: overviewId
+                "\"OVERVIEW_POSSIBLE\" INTEGER," + // 11: overviewPossible
+                "\"OVERVIEW_ID\" INTEGER);"); // 12: overviewId
     }
 
     /** Drops the underlying database table. */
@@ -132,9 +134,14 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             stmt.bindString(11, hash);
         }
  
+        Boolean overviewPossible = entity.getOverviewPossible();
+        if (overviewPossible != null) {
+            stmt.bindLong(12, overviewPossible ? 1L: 0L);
+        }
+ 
         Long overviewId = entity.getOverviewId();
         if (overviewId != null) {
-            stmt.bindLong(12, overviewId);
+            stmt.bindLong(13, overviewId);
         }
     }
 
@@ -165,7 +172,8 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // examDate
             cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9), // semesterNumber
             cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // hash
-            cursor.isNull(offset + 11) ? null : cursor.getLong(offset + 11) // overviewId
+            cursor.isNull(offset + 11) ? null : cursor.getShort(offset + 11) != 0, // overviewPossible
+            cursor.isNull(offset + 12) ? null : cursor.getLong(offset + 12) // overviewId
         );
         return entity;
     }
@@ -184,7 +192,8 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         entity.setExamDate(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setSemesterNumber(cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9));
         entity.setHash(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
-        entity.setOverviewId(cursor.isNull(offset + 11) ? null : cursor.getLong(offset + 11));
+        entity.setOverviewPossible(cursor.isNull(offset + 11) ? null : cursor.getShort(offset + 11) != 0);
+        entity.setOverviewId(cursor.isNull(offset + 12) ? null : cursor.getLong(offset + 12));
      }
     
     /** @inheritdoc */

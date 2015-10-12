@@ -26,6 +26,7 @@ public class GradeEntry {
     private String examDate;
     private Integer semesterNumber;
     private String hash;
+    private Boolean overviewPossible;
     private Long overviewId;
 
     /** Used to resolve relations */
@@ -48,7 +49,7 @@ public class GradeEntry {
         this.hash = hash;
     }
 
-    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String hash, Long overviewId) {
+    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String hash, Boolean overviewPossible, Long overviewId) {
         this.name = name;
         this.grade = grade;
         this.examId = examId;
@@ -60,6 +61,7 @@ public class GradeEntry {
         this.examDate = examDate;
         this.semesterNumber = semesterNumber;
         this.hash = hash;
+        this.overviewPossible = overviewPossible;
         this.overviewId = overviewId;
     }
 
@@ -159,6 +161,14 @@ public class GradeEntry {
         this.hash = hash;
     }
 
+    public Boolean getOverviewPossible() {
+        return overviewPossible;
+    }
+
+    public void setOverviewPossible(Boolean overviewPossible) {
+        this.overviewPossible = overviewPossible;
+    }
+
     public Long getOverviewId() {
         return overviewId;
     }
@@ -248,13 +258,15 @@ public class GradeEntry {
                 ", examDate='" + examDate + '\'' +
                 ", semesterNumber=" + semesterNumber +
                 ", hash='" + hash + '\'' +
+                ", overviewPossible=" + overviewPossible +
                 ", overviewId=" + overviewId +
                 ", daoSession=" + daoSession +
-                ", overview=" + overview +
                 ", myDao=" + myDao +
+                ", overview=" + overview +
                 ", overview__resolvedKey=" + overview__resolvedKey +
                 '}';
     }
+
     // KEEP METHODS END
 
 }
