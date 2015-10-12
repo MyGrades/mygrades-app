@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -53,14 +54,14 @@ public class FragmentOverview extends Fragment {
         // tvNoGradesFound = (TextView) view.findViewById(R.id.tv_no_grades_found);
         mainServiceHelper = new MainServiceHelper(getContext());
 
-        // register event bus
-        EventBus.getDefault().register(this);
-
         // init recycler view
         initGradesRecyclerView(view);
 
         // init swipe to refresh layout
         initSwipeToRefresh(view);
+
+        // register event bus
+        EventBus.getDefault().register(this);
 
         // get all grades
         mainServiceHelper.getGradesFromDatabase();
@@ -134,51 +135,57 @@ public class FragmentOverview extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
         }
 
-        String title;
-        String text;
+        View.OnClickListener tryAgainListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swipeRefreshLayout.setRefreshing(true);
+                mainServiceHelper.scrapeForGrades(false);
+            }
+        };
 
         switch (errorEvent.getType()) {
             case TIMEOUT:
-                title = "Zeitüberschreitung bei der Anfrage";
-                text = "Es hat zu lange gedauert mit dem Server deiner Hochschule zu kommunizieren. \n" +
-                        "Das kann verschiedene Gründe haben: \n" +
-                        "Deine Verbindung zum Internet ist nicht optimal. \n" +
-                        "Das Notensystem deiner Hochschule ist überlastet.";
+                showSnackbar("Zeitüberschreitung", tryAgainListener, "Nochmal");
                 break;
             case NO_NETWORK:
-                title = "Keine Internetverbindung";
-                text = "Du hast zur Zeit keine Verbindung zum Internet. Bitte versuche es erneut!";
+                showSnackbar("Keine Internetverbindung", tryAgainListener, "Nochmal");
                 break;
             case GENERAL:
-                title = "Fehler beim Abrufen der Noten";
-                text = "Deine Noten konnten nicht abgerufen werden. \n" +
-                        "Das kann verschiedene Gründe haben: \n" +
-                        "1. Deine Zugangsdaten sind falsch. \n" +
-                        "2. Probleme mit der Internetverbindung oder dem Server der Hochschule. \n" +
-                        "3. Die Linkstruktur innerhalb deines Notensystems könnte sich geändert haben" +
-                        " und so ist es zur Zeit nicht möglich deine Noten abzurufen.";
-                break;
             default:
-                title = "Fehler beim Abrufen der Noten";
-                text = "Deine Noten konnten nicht abgerufen werden. \n" +
+                String title = "Fehler beim Abrufen der Noten";
+                String text = "Deine Noten konnten nicht abgerufen werden. \n" +
                         "Das kann verschiedene Gründe haben: \n" +
                         "1. Deine Zugangsdaten sind falsch. \n" +
                         "2. Probleme mit der Internetverbindung oder dem Server der Hochschule. \n" +
                         "3. Die Linkstruktur innerhalb deines Notensystems könnte sich geändert haben" +
                         " und so ist es zur Zeit nicht möglich deine Noten abzurufen.";
-        }
 
-        Context context = getContext();
-        if (context != null) {
-            new AlertDialog.Builder(context)
-                    .setTitle(title)
-                    .setMessage(text)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // continue with delete
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
+                if (getContext() != null) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle(title)
+                            .setMessage(text)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // continue with delete
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+        }
+    }
+
+    /**
+     * Shows a snackbar.
+     *
+     * @param text - text to show
+     * @param action - OnClickListener
+     * @param actionText - text for the OnClickListener
+     */
+    private void showSnackbar(String text, View.OnClickListener action, String actionText) {
+        if (getView() != null) {
+            Snackbar.make(getView(), text, Snackbar.LENGTH_LONG)
+                    .setAction(actionText, action)
                     .show();
         }
     }
