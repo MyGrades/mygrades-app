@@ -24,14 +24,13 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="16dp">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/tv_grade_detail_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"/>
+                style="@style/h1"/>
 
             <!--<RelativeLayout
                 style="@style/GradeDetailRow">
@@ -72,9 +71,8 @@
                     style="@style/GradeDetailTextViewRight"
                     android:id="@+id/tv_grade_detail_exam_id"
                     />
-
+                <View style="@style/Divider"/>
             </RelativeLayout>
-            <View style="@style/Divider"/>
 
             <!-- Semester -->
             <RelativeLayout
@@ -192,9 +190,9 @@
                     style="@style/GradeDetailTextViewRight"
                     android:id="@+id/tv_grade_detail_exam_date"
                     />
-
                 <View style="@style/Divider"/>
             </RelativeLayout>
+
 
             <!-- Overview -->
             <LinearLayout
@@ -219,9 +217,10 @@
                         style="@style/GradeDetailTextViewRight"
                         android:id="@+id/tv_overview_participants"
                         />
-
                     <View style="@style/Divider"/>
                 </RelativeLayout>
+
+
 
                 <!-- Overview: Average -->
                 <RelativeLayout
@@ -238,26 +237,29 @@
                         style="@style/GradeDetailTextViewRight"
                         android:id="@+id/tv_overview_average"
                         />
-
                     <View style="@style/Divider"/>
                 </RelativeLayout>
-
 
                 <!-- Overview: Headers  -->
                 <RelativeLayout
                     android:layout_height="wrap_content"
-                    android:layout_width="match_parent">
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="16dp">
 
                     <TextView
                         style="@style/GradeDetailTextViewLeft"
                         android:text="@string/tv_overview_label_sections"
+                        android:textColor="?attr/colorPrimary"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="18sp"
                         />
 
                     <TextView
                         style="@style/GradeDetailTextViewRight"
                         android:text="@string/tv_overview_label_count"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="18sp"
                         />
-
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 
@@ -276,7 +278,6 @@
                         style="@style/GradeDetailTextViewRight"
                         android:id="@+id/tv_overview_section1"
                         />
-
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 
@@ -295,7 +296,6 @@
                         style="@style/GradeDetailTextViewRight"
                         android:id="@+id/tv_overview_section2"
                         />
-
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 
@@ -314,7 +314,6 @@
                         style="@style/GradeDetailTextViewRight"
                         android:id="@+id/tv_overview_section3"
                         />
-
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 
@@ -333,7 +332,6 @@
                         style="@style/GradeDetailTextViewRight"
                         android:id="@+id/tv_overview_section4"
                         />
-
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 
@@ -353,7 +351,6 @@
                         android:id="@+id/tv_overview_section5"
                         />
 
-                    <View style="@style/Divider"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -362,7 +359,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/get_overview"
-                android:theme="@style/RobotoButtonStyle"/>
+                android:theme="@style/RobotoButtonStyle"
+                android:layout_margin="16dp"
+                android:visibility="gone" />
+            
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_overview_not_possible"
+                android:text="@string/overview_not_possible"
+                android:visibility="gone"
+                android:layout_margin="16dp"
+                android:gravity="center_horizontal"
+                />
 
         </LinearLayout>
 
