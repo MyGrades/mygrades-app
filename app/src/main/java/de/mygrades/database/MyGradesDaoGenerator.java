@@ -151,6 +151,8 @@ public class MyGradesDaoGenerator {
         gradeEntry.addStringProperty("examDate");
         gradeEntry.addIntProperty("semesterNumber");
         gradeEntry.addStringProperty("hash").primaryKey();
+        gradeEntry.addBooleanProperty("overviewPossible");
+
         gradeEntry.setHasKeepSections(true);
     }
 

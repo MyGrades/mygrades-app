@@ -41,6 +41,7 @@ public class Transformer {
     private static final String ANNOTATION = "annotation";
     private static final String ATTEMPT = "attempt";
     private static final String EXAM_DATE = "exam_date";
+    private static final String OVERVIEW_POSSIBLE = "overview_possible";
 
     // mapping from TransformerMapping Name -> Overview Property
     private static final String OVERVIEW_SECTION_1 = "overview_section1";
@@ -148,6 +149,7 @@ public class Transformer {
             gradeEntry.setAnnotation(getStringProperty(xmlDocument, ANNOTATION));
             gradeEntry.setAttempt(getStringProperty(xmlDocument, ATTEMPT));
             gradeEntry.setExamDate(getStringProperty(xmlDocument, EXAM_DATE));
+            gradeEntry.setOverviewPossible(getBooleanProperty(xmlDocument, OVERVIEW_POSSIBLE));
 
             // update hash, used as primary key
             gradeEntry.updateHash();
@@ -324,6 +326,27 @@ public class Transformer {
         }
         String parseResult = parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument).trim();
         return parseResult.equals("") ? null : parseResult;
+    }
+
+    /**
+     * Gets the value from Document determined by type of TransformerMapping as String.
+     *
+     * @param xmlDocument Document which should get parsed
+     * @param type Type of TransformerMapping regarding to GradeEntry
+     * @return extracted value as String
+     * @throws ParseException if something goes wrong at parsing
+     */
+    private boolean getBooleanProperty(Document xmlDocument, String type) throws ParseException {
+        TransformerMapping transformerMappingVal = transformerMapping.get(type);
+        if (transformerMappingVal == null) {
+            return false;
+        }
+
+
+        Boolean parseResult = parser.parseToBoolean(transformerMappingVal.getParseExpression(), xmlDocument);
+        System.out.println(parseResult);
+
+        return parseResult == null ? false : parseResult;
     }
 
     /**
