@@ -167,7 +167,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
      * @param overviewPossibleEvent
      */
     public void onEventMainThread(OverviewPossibleEvent overviewPossibleEvent) {
-        if (!overviewPossibleEvent.isOverviewPossible()) {
+        if (overviewPossibleEvent.isOverviewPossible()) {
             btnScrapeForOverview.setVisibility(View.VISIBLE);
         } else {
             tvOverviewNotPossible.setVisibility(View.VISIBLE);
