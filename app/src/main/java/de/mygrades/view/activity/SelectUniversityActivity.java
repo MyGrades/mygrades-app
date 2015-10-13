@@ -26,7 +26,6 @@ import de.mygrades.view.decoration.DividerItemDecoration;
  */
 public class SelectUniversityActivity extends AppCompatActivity {
 
-    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rvUniversities;
     private UniversitiesRecyclerViewAdapter universityAdapter;
 
@@ -40,9 +39,6 @@ public class SelectUniversityActivity extends AppCompatActivity {
 
         // init toolbar
         initToolbar();
-
-        // init app bar layout and swipe to refresh
-        initSwipeToRefresh();
 
         // init recycler view
         initRecyclerView();
@@ -69,20 +65,6 @@ public class SelectUniversityActivity extends AppCompatActivity {
     }
 
     /**
-     * Initialize the swipeToRefresh layout.
-     */
-    private void initSwipeToRefresh() {
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setEnabled(false);
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(true);
-            }
-        });
-    }
-
-    /**
      * Initialize the recycler view and set the adapter.
      */
     private void initRecyclerView() {
@@ -103,10 +85,6 @@ public class SelectUniversityActivity extends AppCompatActivity {
         for(University university : universities) {
             UniversityItem universityItem = new UniversityItem(university.getName(), university.getUniversityId());
             universityAdapter.add(universityItem);
-        }
-
-        if (universityAdapter.getItemCount() > 0 && swipeRefreshLayout != null) {
-            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
