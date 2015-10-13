@@ -67,17 +67,21 @@
     <FrameLayout
         android:id="@+id/fl_loading"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:paddingTop="32dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:visibility="gone">
 
         <com.pnikosis.materialishprogress.ProgressWheel
             android:id="@+id/progress_wheel"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            app:matProg_barColor="#5588FF"
+            android:layout_gravity="center"
+            app:matProg_barColor="?attr/colorPrimary"
             app:matProg_progressIndeterminate="true"
-            android:layout_gravity="center"/>
+            app:matProg_barWidth="2dp"/>
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
