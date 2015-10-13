@@ -1,14 +1,14 @@
 package de.mygrades.view.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import java.util.List;
 
@@ -28,6 +28,7 @@ public class SelectUniversityActivity extends AppCompatActivity {
 
     private RecyclerView rvUniversities;
     private UniversitiesRecyclerViewAdapter universityAdapter;
+    private FrameLayout flLoading;
 
     private MainServiceHelper mainServiceHelper;
 
@@ -36,6 +37,8 @@ public class SelectUniversityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_university);
         mainServiceHelper = new MainServiceHelper(this);
+
+        flLoading = (FrameLayout) findViewById(R.id.fl_loading);
 
         // init toolbar
         initToolbar();
@@ -86,6 +89,9 @@ public class SelectUniversityActivity extends AppCompatActivity {
             UniversityItem universityItem = new UniversityItem(university.getName(), university.getUniversityId());
             universityAdapter.add(universityItem);
         }
+
+        // show only if adapter is empty
+        flLoading.setVisibility(universityAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     /**
