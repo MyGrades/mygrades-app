@@ -37,4 +37,5 @@ dependencies {
     }
     aarLinkSources 'com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.8.0:sources@jar'
     compile 'com.wnafee:vector-compat:1.0.5'
+    compile 'com.pnikosis:materialish-progress:1.7'
 }
