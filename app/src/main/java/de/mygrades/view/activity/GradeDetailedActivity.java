@@ -5,9 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
@@ -17,6 +20,7 @@ import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.GradeEntryEvent;
 import de.mygrades.main.events.OverviewEvent;
 import de.mygrades.main.events.OverviewPossibleEvent;
+import de.mygrades.main.events.ScrapeProgressEvent;
 
 /**
  * Created by jonastheis on 03.10.15.
@@ -52,6 +56,12 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
     private Button btnScrapeForOverview;
     private TextView tvOverviewNotPossible;
+    private ProgressWheel progressWheel;
+
+    private static final float DEFAULT_PROGRESS = 0.025f; // default progress, to indicate the progress bar
+    private static final String IS_SCRAPING_STATE = "is_scraping_state";
+    private static final String PROGRESS_STATE = "progress_state";
+    private boolean isScraping;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,9 +73,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.toolbar_details);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // register event bus
-        EventBus.getDefault().register(this);
 
         mainServiceHelper = new MainServiceHelper(this);
 
@@ -96,6 +103,21 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
         initScrapeForOverviewButton();
         tvOverviewNotPossible = (TextView) findViewById(R.id.tv_overview_not_possible);
+        progressWheel = (ProgressWheel) findViewById(R.id.progress_wheel);
+
+        // restore instance state if necessary
+        if (savedInstanceState != null) {
+            isScraping = savedInstanceState.getBoolean(IS_SCRAPING_STATE);
+            if (isScraping) {
+                progressWheel.setProgress(savedInstanceState.getFloat(PROGRESS_STATE, DEFAULT_PROGRESS));
+                showProgressWheel();
+            }
+        } else {
+            progressWheel.setProgress(DEFAULT_PROGRESS);
+        }
+
+        // register event bus
+        EventBus.getDefault().register(this);
 
         // start intent to get data for Grade Detail page
         mainServiceHelper.getGradeDetails(gradeHash);
@@ -113,9 +135,21 @@ public class GradeDetailedActivity extends AppCompatActivity {
                 // TODO: show loading animation and hide button
                 if (gradeEntry != null) {
                     mainServiceHelper.scrapeForOverview(gradeEntry.getHash());
+                    isScraping = true;
+                    showProgressWheel();
                 }
             }
         });
+    }
+
+    /**
+     * Shows the progress wheel and start its animation.
+     * The scrape-for-overview button will be hidden.
+     */
+    private void showProgressWheel() {
+        btnScrapeForOverview.setVisibility(View.GONE);
+        progressWheel.setVisibility(View.VISIBLE);
+        progressWheel.startAnimation(AnimationUtils.loadAnimation(GradeDetailedActivity.this, R.anim.rotate_indefinitely));
     }
 
     /**
@@ -163,14 +197,39 @@ public class GradeDetailedActivity extends AppCompatActivity {
     }
 
     /**
-     * Receive an event when its determined whether it is possible to receive a overview.
+     * Receive an event when its determined whether it is possible to receive an overview.
      * @param overviewPossibleEvent
      */
     public void onEventMainThread(OverviewPossibleEvent overviewPossibleEvent) {
-        if (overviewPossibleEvent.isOverviewPossible()) {
-            btnScrapeForOverview.setVisibility(View.VISIBLE);
-        } else {
-            tvOverviewNotPossible.setVisibility(View.VISIBLE);
+        if (!isScraping) {
+            if (overviewPossibleEvent.isOverviewPossible()) {
+                btnScrapeForOverview.setVisibility(View.VISIBLE);
+            } else {
+                tvOverviewNotPossible.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    /**
+     * Receive an event about the scraping progress and set the ProgressWheel accordingly.
+     *
+     * @param scrapeProgressEvent ScrapeProgressEvent
+     */
+    public void onEventMainThread(ScrapeProgressEvent scrapeProgressEvent) {
+        if (progressWheel != null) {
+            isScraping = true;
+
+            int currentStep = scrapeProgressEvent.getCurrentStep();
+            int stepCount = scrapeProgressEvent.getStepCount() - 1; // ignore table_overview step
+
+            float progress = ((float) currentStep) / stepCount;
+            progressWheel.setProgress(progress);
+
+            if (currentStep == stepCount) {
+                progressWheel.setAnimation(null);
+                progressWheel.setVisibility(View.GONE);
+                isScraping = false;
+            }
         }
     }
 
@@ -202,5 +261,13 @@ public class GradeDetailedActivity extends AppCompatActivity {
         super.onDestroy();
         // unregister EventBus
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(IS_SCRAPING_STATE, isScraping);
+        outState.putFloat(PROGRESS_STATE, progressWheel.getProgress());
     }
 }
