@@ -373,6 +373,19 @@
                 android:gravity="center_horizontal"
                 />
 
+            <com.pnikosis.materialishprogress.ProgressWheel
+                android:id="@+id/progress_wheel"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                app:matProg_barColor="?attr/colorPrimary"
+                app:matProg_barWidth="2dp"
+                app:matProg_spinSpeed="0.5"
+                app:matProg_linearProgress="true"
+                android:visibility="gone"/>
+
         </LinearLayout>
 
     </ScrollView>
