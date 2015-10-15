@@ -341,10 +341,7 @@ public class Transformer {
         if (transformerMappingVal == null) {
             return false;
         }
-
-
         Boolean parseResult = parser.parseToBoolean(transformerMappingVal.getParseExpression(), xmlDocument);
-        System.out.println(parseResult);
 
         return parseResult == null ? false : parseResult;
     }
