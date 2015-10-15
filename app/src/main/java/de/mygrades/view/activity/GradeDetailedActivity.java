@@ -1,6 +1,7 @@
 package de.mygrades.view.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,6 +18,7 @@ import de.mygrades.R;
 import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.database.dao.Overview;
 import de.mygrades.main.MainServiceHelper;
+import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.GradeEntryEvent;
 import de.mygrades.main.events.OverviewEvent;
 import de.mygrades.main.events.OverviewPossibleEvent;
@@ -57,11 +59,15 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private Button btnScrapeForOverview;
     private TextView tvOverviewNotPossible;
     private ProgressWheel progressWheel;
+    private LinearLayout llRootView; // used to show snackbar
 
     private static final float DEFAULT_PROGRESS = 0.025f; // default progress, to indicate the progress bar
     private static final String IS_SCRAPING_STATE = "is_scraping_state";
+    private static final String IS_OVERVIEW_POSSIBLE_STATE = "is_overview_possible_state";
     private static final String PROGRESS_STATE = "progress_state";
     private boolean isScraping;
+
+    private boolean isOverviewPossible;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,9 +110,11 @@ public class GradeDetailedActivity extends AppCompatActivity {
         initScrapeForOverviewButton();
         tvOverviewNotPossible = (TextView) findViewById(R.id.tv_overview_not_possible);
         progressWheel = (ProgressWheel) findViewById(R.id.progress_wheel);
+        llRootView = (LinearLayout) findViewById(R.id.ll_root_view);
 
         // restore instance state if necessary
         if (savedInstanceState != null) {
+            isOverviewPossible = savedInstanceState.getBoolean(IS_OVERVIEW_POSSIBLE_STATE);
             isScraping = savedInstanceState.getBoolean(IS_SCRAPING_STATE);
             if (isScraping) {
                 progressWheel.setProgress(savedInstanceState.getFloat(PROGRESS_STATE, DEFAULT_PROGRESS));
@@ -134,20 +142,45 @@ public class GradeDetailedActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // TODO: show loading animation and hide button
                 if (gradeEntry != null) {
-                    mainServiceHelper.scrapeForOverview(gradeEntry.getHash());
-                    isScraping = true;
-                    showProgressWheel();
+                    scrapeForOverview();
                 }
             }
         });
     }
 
     /**
+     * Starts the scraping process, hides the button and shows the ProgressWheel.
+     */
+    private void scrapeForOverview() {
+        if (isOverviewPossible) {
+            mainServiceHelper.scrapeForOverview(gradeEntry.getHash());
+            btnScrapeForOverview.setVisibility(View.GONE);
+
+            isScraping = true;
+            showProgressWheel();
+        }
+    }
+
+    /**
+     * Hides the ProgressWheel and shows the button.
+     */
+    private void hideScrapeForOverview() {
+        isScraping = false;
+
+        progressWheel.setAnimation(null);
+        progressWheel.setVisibility(View.GONE);
+
+        if (isOverviewPossible) {
+            btnScrapeForOverview.setVisibility(View.VISIBLE);
+        } else {
+            tvOverviewNotPossible.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
      * Shows the progress wheel and start its animation.
-     * The scrape-for-overview button will be hidden.
      */
     private void showProgressWheel() {
-        btnScrapeForOverview.setVisibility(View.GONE);
         progressWheel.setVisibility(View.VISIBLE);
         progressWheel.startAnimation(AnimationUtils.loadAnimation(GradeDetailedActivity.this, R.anim.rotate_indefinitely));
     }
@@ -202,7 +235,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
      */
     public void onEventMainThread(OverviewPossibleEvent overviewPossibleEvent) {
         if (!isScraping) {
-            if (overviewPossibleEvent.isOverviewPossible()) {
+            isOverviewPossible = overviewPossibleEvent.isOverviewPossible();
+
+            if (isOverviewPossible) {
                 btnScrapeForOverview.setVisibility(View.VISIBLE);
             } else {
                 tvOverviewNotPossible.setVisibility(View.VISIBLE);
@@ -226,11 +261,51 @@ public class GradeDetailedActivity extends AppCompatActivity {
             progressWheel.setProgress(progress);
 
             if (currentStep == stepCount) {
-                progressWheel.setAnimation(null);
-                progressWheel.setVisibility(View.GONE);
-                isScraping = false;
+                hideScrapeForOverview();
             }
         }
+    }
+
+    /**
+     * Receive error events.
+     *
+     * @param errorEvent ErrorEvent
+     */
+    public void onEventMainThread(ErrorEvent errorEvent) {
+        View.OnClickListener tryAgainListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrapeForOverview();
+            }
+        };
+
+        switch (errorEvent.getType()) {
+            case NO_NETWORK:
+                showSnackbar("Keine Internetverbindung", tryAgainListener, "Nochmal");
+                break;
+            case TIMEOUT:
+                showSnackbar("Zeitüberschreitung", tryAgainListener, "Nochmal");
+                break;
+            case GENERAL:
+            default:
+                showSnackbar("Allgemeiner Fehler", null, "FAQ");
+
+        }
+
+        hideScrapeForOverview();
+    }
+
+    /**
+     * Shows a snackbar.
+     *
+     * @param text - text to show
+     * @param action - OnClickListener
+     * @param actionText - text for the OnClickListener
+     */
+    private void showSnackbar(String text, View.OnClickListener action, String actionText) {
+        Snackbar.make(llRootView, text, Snackbar.LENGTH_LONG)
+                .setAction(actionText, action)
+                .show();
     }
 
     private void setTextView(TextView textView, String value) {
@@ -269,5 +344,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
         outState.putBoolean(IS_SCRAPING_STATE, isScraping);
         outState.putFloat(PROGRESS_STATE, progressWheel.getProgress());
+        outState.putBoolean(IS_OVERVIEW_POSSIBLE_STATE, isOverviewPossible);
     }
 }
