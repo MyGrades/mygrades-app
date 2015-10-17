@@ -18,14 +18,25 @@ public class LoginProcessor extends BaseProcessor {
     }
 
     /**
-     * Saves the username and password.
+     * Saves the username and password to the secure preferences,
+     * the selected universityId to the shared preferences.
+     *
+     * Afterwards the initial scraping will be started.
      *
      * @param username - username
      * @param password - password
+     * @param universityId - university id
      */
-    public void login(String username, String password) {
+    public void loginAndScrapeForGrades(String username, String password, long universityId) {
+        // save selected universityId to shared preferences
+        saveSelectedUniversity(universityId);
+
         // save login data to secure preferences
         saveLoginData(username, password);
+
+        // start initial scraping
+        GradesProcessor gradesProcessor = new GradesProcessor(context);
+        gradesProcessor.scrapeForGrades(true);
 
         // TODO: post university id to our server (asynchronous with retrofit)
     }
@@ -47,10 +58,23 @@ public class LoginProcessor extends BaseProcessor {
         editor.remove(Constants.PREF_KEY_UNIVERSITY_ID);
         editor.remove(Constants.PREF_KEY_INITIAL_LOADING_DONE);
         editor.remove(Constants.PREF_KEY_LAST_UPDATED_AT);
-        editor.commit();
+        editor.apply();
 
         // delete all grades
         daoSession.getGradeEntryDao().deleteAll();
+    }
+
+    /**
+     * Saves the selected universityId in the default shared preferences.
+     *
+     * @param universityId - university id
+     */
+    private void saveSelectedUniversity(long universityId) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putLong(Constants.PREF_KEY_UNIVERSITY_ID, universityId);
+        editor.apply();
     }
 
     /**
