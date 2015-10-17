@@ -23,6 +23,7 @@ import de.mygrades.view.decoration.DividerItemDecoration;
 
 /**
  * Activity which shows all universities.
+ * The user can select a university to be forwarded to the LoginActivity.
  */
 public class SelectUniversityActivity extends AppCompatActivity {
 
@@ -81,6 +82,7 @@ public class SelectUniversityActivity extends AppCompatActivity {
 
     /**
      * Add new universities to the adapter.
+     * If the adapter is empty, an indeterminate progress animation will be shown continuously.
      *
      * @param universities list of new universities which should be added
      */
