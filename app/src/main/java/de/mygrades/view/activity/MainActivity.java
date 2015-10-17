@@ -1,5 +1,6 @@
 package de.mygrades.view.activity;
 
+import android.app.usage.UsageEvents;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -56,9 +57,6 @@ public class MainActivity extends AppCompatActivity {
         // setup navigation drawer
         setupDrawerContent();
 
-        // register event bus
-        EventBus.getDefault().register(this);
-
         // check initial loading
         if (!isInitialScrapingDone()) {
             // disable navigation drawer
@@ -83,6 +81,15 @@ public class MainActivity extends AppCompatActivity {
                 navigationView.getMenu().getItem(0).setChecked(true);
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register to sticky events. Sticky events are necessary here,
+        // to get notified even if the activity lost focus during the initial scraping.
+        EventBus.getDefault().registerSticky(this);
     }
 
     /**
@@ -146,6 +153,9 @@ public class MainActivity extends AppCompatActivity {
 
         // enable navigation drawer
         enableNavigationDrawer();
+
+        // remove from sticky events
+        EventBus.getDefault().removeStickyEvent(initialScrapingDoneEvent);
     }
 
     /**
@@ -258,8 +268,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         EventBus.getDefault().unregister(this);
     }
 
