@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -26,7 +24,10 @@ import de.mygrades.main.events.InitialScrapingDoneEvent;
 import de.mygrades.util.Constants;
 
 /**
- * MainActivity uses a NavigationDrawer to switch between multiple fragments.
+ * MainActivity uses a NavigationDrawer to switch its content between multiple fragments.
+ *
+ * On each startup it is checked whether the user is already logged in.
+ * If not, he will be redirected to the SelectUniversityActivity.
  */
 public class MainActivity extends AppCompatActivity {
     private MainServiceHelper mainServiceHelper;
@@ -37,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle drawerToggle;
     private FrameLayout flInitialScraping;
     private ImageView ivToolbarLogo;
-
-    private static final String TAG_FRAGMENT_INITIAL_SCRAPING = "tag_fragment_initial_scraping";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
 
         // check initial loading
-        if (!checkInitialScrapingDone()) {
+        if (!isInitialScrapingDone()) {
             // disable navigation drawer
             disableNavigationDrawer();
 
@@ -86,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Initializes the toolbar.
+     */
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -104,17 +106,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Checks if the initial loading of grades is done.
+     * Checks if the initial scraping of grades is done.
      *
      * @return true or false
      */
-    private boolean checkInitialScrapingDone() {
+    private boolean isInitialScrapingDone() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         return prefs.getBoolean(Constants.PREF_KEY_INITIAL_LOADING_DONE, false);
     }
 
     /**
-     * Starts the SelectUniversityActivity.
+     * Starts an intent to go to the SelectUniversityActivity.
      */
     private void goToUniversitySelection() {
         Intent intent = new Intent(this, SelectUniversityActivity.class);
@@ -123,9 +125,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Receive an event when the initial loading is done and replace fragments afterwards.
+     * Receive an event when the initial scraping is done and replace fragments afterwards.
      *
-     * @param initialScrapingDoneEvent
+     * @param initialScrapingDoneEvent InitialScrapingDoneEvent
      */
     public void onEventMainThread(InitialScrapingDoneEvent initialScrapingDoneEvent) {
         if (navigationView == null || drawerLayout == null || drawerToggle == null || toolbar == null) {
@@ -148,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Replaces a fragment.
+     * If animate==true, a bottom-to-top slide animation will be shown.
      *
      * @param resLayoutId frame layout id, whose content should be replaced
      * @param newFragment new fragment
@@ -173,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Setup navigation drawer an initialize listener for clicked menu items.
+     * Setup NavigationDrawer and initialize listener for clicked menu items.
      */
     private void setupDrawerContent() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -241,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Logout user and goes to SelectUniversityActivity.
+     * The user cannot return to the MainActivity by pressing the back-button.
      */
     private void logout() {
         mainServiceHelper.logout();

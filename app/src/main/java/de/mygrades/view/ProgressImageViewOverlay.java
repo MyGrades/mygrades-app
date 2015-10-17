@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 /**
  * Custom ImageView which clips the image by a given progress.
+ * For example a progress of 0.3f will only show the lower 30% of the canvas.
  */
 public class ProgressImageViewOverlay extends ImageView {
     private float progress;
@@ -33,7 +34,7 @@ public class ProgressImageViewOverlay extends ImageView {
     }
 
     /**
-     * Set the progress.
+     * Set the progress and re-draw.
      *
      * @param progress - current progress
      * @param nextProgress - next progress is used as a boundary for the animation
@@ -45,7 +46,7 @@ public class ProgressImageViewOverlay extends ImageView {
     }
 
     /**
-     * Increase the progress.
+     * Increase the progress and re-draw.
      *
      * @param increase amount to increase
      */

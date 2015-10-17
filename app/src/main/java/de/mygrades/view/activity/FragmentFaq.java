@@ -77,7 +77,7 @@ public class FragmentFaq extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // save state (orientation change)
+        // save state
         if (recyclerViewExpandableItemManager != null) {
             outState.putParcelable(SAVED_STATE_EXPANDABLE_ITEM_MANAGER, recyclerViewExpandableItemManager.getSavedState());
         }
