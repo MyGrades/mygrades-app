@@ -75,7 +75,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validateInput()) {
-                    saveSelectedUniversity();
                     loginAndScrapeForGrades();
                     goToMainActivity();
                 }
@@ -105,29 +104,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Saves the selected universityId to the default shared preferences.
-     */
-    private void saveSelectedUniversity() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putLong(Constants.PREF_KEY_UNIVERSITY_ID, universityId);
-        editor.putBoolean(Constants.PREF_KEY_INITIAL_LOADING_DONE, false);
-        editor.apply();
-    }
-
-    /**
-     * Saves the login data in a background thread, because encryption may take some time.
-     *
-     * TODO: start initial scraping directly after saving? It could happen that the encryption takes
-     *       very long and the initial scraping starts without available user data.
+     * Saves the selected universityId and the login data in a background thread.
+     * The encryption may take some time and afterwards the initial scraping is tarted.
      */
     private void loginAndScrapeForGrades() {
         String username = etUsername.getText().toString();
         String password = etPassword.getText().toString();
 
         MainServiceHelper mainServiceHelper = new MainServiceHelper(LoginActivity.this);
-        mainServiceHelper.login(username, password);
+        mainServiceHelper.loginAndScrapeForGrades(username, password, universityId);
     }
 
     /**
