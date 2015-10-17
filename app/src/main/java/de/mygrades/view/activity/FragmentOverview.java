@@ -1,11 +1,7 @@
 package de.mygrades.view.activity;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -14,15 +10,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
@@ -30,13 +20,12 @@ import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.GradesEvent;
-import de.mygrades.util.Constants;
 import de.mygrades.view.adapter.GradesRecyclerViewAdapter;
 import de.mygrades.view.adapter.model.GradeItem;
 import de.mygrades.view.decoration.GradesDividerItemDecoration;
 
 /**
- * Fragment to show the overview of grades.
+ * Fragment to show the overview of grades with a summary at the top.
  */
 public class FragmentOverview extends Fragment {
 
@@ -50,8 +39,6 @@ public class FragmentOverview extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
-
-        // tvNoGradesFound = (TextView) view.findViewById(R.id.tv_no_grades_found);
         mainServiceHelper = new MainServiceHelper(getContext());
 
         // init recycler view
@@ -83,7 +70,7 @@ public class FragmentOverview extends Fragment {
     }
 
     /**
-     * Initialize recycler view and add dummy items.
+     * Initialize the RecyclerView and set its adapter.
      */
     private void initGradesRecyclerView(View rootView) {
         rvGrades = (RecyclerView) rootView.findViewById(R.id.rv_grades);
@@ -117,6 +104,7 @@ public class FragmentOverview extends Fragment {
                 adapter.addGradeForSemester(item, gradeEntry.getSemesterNumber(), gradeEntry.getSemester());
             }
 
+            // update the summary header
             adapter.updateSummary();
         }
 
@@ -126,9 +114,9 @@ public class FragmentOverview extends Fragment {
     }
 
     /**
-     * Receive an Error Event and displays it to the user.
+     * Receive an ErrorEvent and display it to the user.
      *
-     * @param errorEvent - error event
+     * @param errorEvent - ErrorEvent
      */
     public void onEventMainThread(ErrorEvent errorEvent) {
         if (swipeRefreshLayout != null) {
@@ -176,7 +164,7 @@ public class FragmentOverview extends Fragment {
     }
 
     /**
-     * Shows a snackbar.
+     * Shows a Snackbar with a given text and action.
      *
      * @param text - text to show
      * @param action - OnClickListener

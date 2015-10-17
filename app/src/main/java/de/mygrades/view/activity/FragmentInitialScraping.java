@@ -20,7 +20,7 @@ import de.mygrades.main.events.ScrapeProgressEvent;
 import de.mygrades.view.ProgressImageViewOverlay;
 
 /**
- * Fragment to show initial loading screen.
+ * Fragment to show the initial loading animation.
  */
 public class FragmentInitialScraping extends Fragment {
     private static final String PROGRESS_STATE = "progress_state";
@@ -32,19 +32,19 @@ public class FragmentInitialScraping extends Fragment {
 
     private MainServiceHelper mainServiceHelper;
 
+    // views
     private ProgressImageViewOverlay progressImageViewOverlay;
     private LinearLayout llContentWrapper;
     private LinearLayout llStatusWrapper;
     private LinearLayout llErrorWrapper;
     private LinearLayout llProgressWrapper;
-
     private View inflatedErrorGeneral;
     private View inflatedErrorTimeout;
     private View inflatedErrorNoNetwork;
-
     private Button btnTryAgain;
     private Button btnBackToLogin;
 
+    // the handler is used to show an intermediate progress animation
     private Handler handler = new Handler();
     private Runnable progressAnimation = new Runnable() {
         @Override
@@ -93,7 +93,7 @@ public class FragmentInitialScraping extends Fragment {
                 progressAnimation.run();
                 hideErrorWrapper();
             } else {
-                showError(receivedErrorType, 0);
+                showErrorWrapper(receivedErrorType, 0);
             }
         } else {
             // start scraping
@@ -109,7 +109,7 @@ public class FragmentInitialScraping extends Fragment {
     }
 
     /**
-     * Hides the error wrapper. Only used in onCreateView.
+     * Hides the error wrapper immediately, without animation. Only used in onCreateView.
      */
     private void hideErrorWrapper() {
         llErrorWrapper.setVisibility(View.GONE);
@@ -186,9 +186,11 @@ public class FragmentInitialScraping extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        // save progress
         outState.putFloat(PROGRESS_STATE, progressImageViewOverlay.getProgress());
         outState.putFloat(NEXT_PROGRESS_STATE, progressImageViewOverlay.getNextProgress());
 
+        // save error
         if (receivedErrorType != null) {
             outState.putString(ERROR_TYPE_STATE, receivedErrorType.name());
         }
@@ -197,7 +199,7 @@ public class FragmentInitialScraping extends Fragment {
     }
 
     /**
-     * Receive event about scraping progress and set the current progress.
+     * Receive a ScrapeProgressEvent and set the current progress.
      * If the current step is the first one, an ongoing animation runnable will be started.
      *
      * @param scrapeProgressEvent ScrapeProgressEvent
@@ -229,7 +231,7 @@ public class FragmentInitialScraping extends Fragment {
      */
     public void onEventMainThread(ErrorEvent errorEvent) {
         if (llErrorWrapper != null) {
-            showError(errorEvent.getType(), ANIMATION_DURATION);
+            showErrorWrapper(errorEvent.getType(), ANIMATION_DURATION);
             moveStatusWrapperToCenter(ANIMATION_DURATION);
         }
     }
@@ -241,7 +243,7 @@ public class FragmentInitialScraping extends Fragment {
      * @param errorType ErrorType
      * @param duration duration of fade-in animation
      */
-    private void showError(ErrorEvent.ErrorType errorType, int duration) {
+    private void showErrorWrapper(ErrorEvent.ErrorType errorType, int duration) {
         // set receivedErrorType (used to store in instanceState)
         receivedErrorType = errorType;
 
@@ -276,7 +278,7 @@ public class FragmentInitialScraping extends Fragment {
 
     /**
      * Inflates a ViewStub if necessary.
-     * If it was already inflated, the visibility is set to VISIBLE.
+     * If it was inflated before, the visibility is set to VISIBLE.
      *
      * @param inflatedError - the view which will be inflated (if necessary)
      * @param stubResId - StubView id
@@ -309,7 +311,7 @@ public class FragmentInitialScraping extends Fragment {
      * Stops the progress animation.
      */
     private void stopProgressAnimation() {
-        // stop animation, if last step is reached
+        // stop animation
         handler.removeCallbacks(progressAnimation);
     }
 
