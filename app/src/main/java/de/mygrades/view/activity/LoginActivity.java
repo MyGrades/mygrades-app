@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private String universityName;
     private long universityId;
 
+    // views
     private TextView tvUniversityName;
     private EditText etUsername;
     private EditText etPassword;
@@ -66,14 +67,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Initialize login button.
+     * Initialize the login button.
      */
     private void initLoginButton() {
         btLogin = (Button) findViewById(R.id.bt_login);
         btLogin.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkInput()) {
+                if (validateInput()) {
                     saveSelectedUniversity();
                     loginAndScrapeForGrades();
                     goToMainActivity();
@@ -87,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
      *
      * @return true if input is correct
      */
-    private boolean checkInput() {
+    private boolean validateInput() {
         boolean inputCorrect = true;
 
         if (TextUtils.isEmpty(etUsername.getText().toString())) {
@@ -104,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Saves universityId and logged-in state to preferences.
+     * Saves the selected universityId to the default shared preferences.
      */
     private void saveSelectedUniversity() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -116,7 +117,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Save login data and start scraping through main service.
+     * Saves the login data in a background thread, because encryption may take some time.
+     *
+     * TODO: start initial scraping directly after saving? It could happen that the encryption takes
+     *       very long and the initial scraping starts without available user data.
      */
     private void loginAndScrapeForGrades() {
         String username = etUsername.getText().toString();
@@ -127,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Starts an intent to go to the main activity.
+     * Starts an intent to go to the MainActivity.
      */
     private void goToMainActivity() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
