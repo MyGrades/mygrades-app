@@ -19,6 +19,7 @@ import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.GradesEvent;
+import de.mygrades.view.PtrHeader;
 import de.mygrades.view.adapter.GradesRecyclerViewAdapter;
 import de.mygrades.view.adapter.model.GradeItem;
 import de.mygrades.view.decoration.GradesDividerItemDecoration;
@@ -65,7 +66,7 @@ public class FragmentOverview extends Fragment {
      */
     private void initPullToRefresh(View rootView) {
         ptrFrame = (PtrFrameLayout) rootView.findViewById(R.id.pull_to_refresh);
-        PtrClassicDefaultHeader header = new PtrClassicDefaultHeader(getContext());
+        PtrHeader header = new PtrHeader(getContext());
         ptrFrame.addPtrUIHandler(header);
         ptrFrame.setHeaderView(header);
 
