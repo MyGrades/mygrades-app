@@ -7,7 +7,10 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import de.greenrobot.event.EventBus;
@@ -222,9 +225,7 @@ public class GradesProcessor extends BaseProcessor {
             Log.d(TAG, gradeEntries.toString());
 
             // save grade entries in database
-            if (gradeEntries != null && gradeEntries.size() > 0) {
-                daoSession.getGradeEntryDao().insertOrReplaceInTx(gradeEntries);
-            }
+            saveGradeEntriesToDB(gradeEntries);
 
             // save last_updated_at timestamp
             saveLastUpdatedAt(prefs);
@@ -250,6 +251,65 @@ public class GradesProcessor extends BaseProcessor {
         } catch (Exception e) {
             postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
         }
+    }
+
+    private void saveGradeEntriesToDB(List<GradeEntry> newGradeEntries) {
+        if (newGradeEntries != null && newGradeEntries.size() > 0) {
+            Map<String, GradeEntry> newGradeEntriesMap = createMapForGradeEntries(newGradeEntries);
+            Map<String, GradeEntry> dbGradeEntriesMap = createMapForGradeEntries(daoSession.getGradeEntryDao().loadAll());
+            //Log.d(TAG, dbGradeEntriesMap.values().toString());
+            /**
+             * 1. Create Map: GradeHash -> GradeEntry Object for new and old list (not that hard -> only copy of references not deep copy)
+             * 2. Separate new Entries and updated entries
+             * 3. Update updated Entries and insert new entries
+             */
+            final List<GradeEntry> toInsert = new ArrayList<>();
+            final List<GradeEntry> toUpdate = new ArrayList<>();
+
+            // iterate new and check with equals
+            for (String key : newGradeEntriesMap.keySet()) {
+                // get from db map
+                GradeEntry gradeEntry = dbGradeEntriesMap.get(key);
+
+                // if not present -> new entry
+                if (gradeEntry == null) {
+                    toInsert.add(newGradeEntriesMap.get(key));
+                } else {
+                    // if there -> compare and only add to update list if values changed
+                    GradeEntry newGradeEntry = newGradeEntriesMap.get(key);
+                    if (!gradeEntry.equals(newGradeEntry)) {
+                        gradeEntry.updateGradeEntryFromOther(newGradeEntry);
+                        toUpdate.add(gradeEntry);
+                    }
+                }
+            }
+
+            System.out.println("to insert: " + toInsert);
+            System.out.println("to update: " + toUpdate);
+
+            daoSession.runInTx(new Runnable() {
+                @Override
+                public void run() {
+                    // TODO: catch errors?
+                    for (GradeEntry g : toInsert) {
+                        daoSession.getGradeEntryDao().insert(g);
+                    }
+                    for (GradeEntry g : toUpdate) {
+                        daoSession.getGradeEntryDao().update(g);
+                    }
+                }
+            });
+
+        }
+    }
+
+    private Map<String, GradeEntry> createMapForGradeEntries(List<GradeEntry> gradeEntries) {
+        Map<String, GradeEntry> gradeEntriesMap = new HashMap<>();
+        // add all: GradeHash -> GradeEntry
+        for (GradeEntry gradeEntry : gradeEntries) {
+            gradeEntriesMap.put(gradeEntry.getHash(), gradeEntry);
+        }
+        return gradeEntriesMap;
     }
 
     /**
