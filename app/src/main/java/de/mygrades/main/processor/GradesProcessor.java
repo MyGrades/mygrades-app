@@ -237,7 +237,7 @@ public class GradesProcessor extends BaseProcessor {
             // set initial loading to done and send event to activity
             if (initialScraping) {
                 prefs.edit().putBoolean(Constants.PREF_KEY_INITIAL_LOADING_DONE, true).apply();
-                EventBus.getDefault().post(new InitialScrapingDoneEvent());
+                EventBus.getDefault().postSticky(new InitialScrapingDoneEvent());
             }
         } catch (ParseException e) {
             postErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parse Error", e);

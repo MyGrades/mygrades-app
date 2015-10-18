@@ -88,6 +88,7 @@ public class MainServiceHelper {
         int method = MainService.METHOD_SCRAPE_FOR_GRADES;
 
         // set request id
+        // important: loginAndScrapeForGrades() must use the same requestId to avoid duplicate scraping
         long requestId = concatenateLong(method, 0);
 
         // start worker thread in background
@@ -136,16 +137,18 @@ public class MainServiceHelper {
      * @param username - username
      * @param password - password
      */
-    public void login(String username, String password) {
+    public void loginAndScrapeForGrades(String username, String password, long universityId) {
         int method = MainService.METHOD_LOGIN_AND_SCRAPE_FOR_GRADES;
 
         // set request id
-        long requestId = concatenateLong(method, 0);
+        // important: scrapeForGrades() must use the same requestId, to avoid duplicate scraping.
+        long requestId = concatenateLong(MainService.METHOD_SCRAPE_FOR_GRADES, 0);
 
         // start worker thread in background
         Intent intent = getBasicIntent(MainService.PROCESSOR_LOGIN, method, requestId);
         intent.putExtra(MainService.USERNAME, username);
         intent.putExtra(MainService.PASSWORD, password);
+        intent.putExtra(MainService.UNIVERSITY_ID, universityId);
         context.startService(intent);
     }
 
