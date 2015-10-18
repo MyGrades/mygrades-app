@@ -167,7 +167,9 @@ public class MainService extends MultiThreadedIntentService {
             case METHOD_LOGIN_AND_SCRAPE_FOR_GRADES:
                 String username = intent.getStringExtra(USERNAME);
                 String password = intent.getStringExtra(PASSWORD);
-                loginProcessor.login(username, password);
+                long universityId = intent.getLongExtra(UNIVERSITY_ID, -1);
+
+                loginProcessor.loginAndScrapeForGrades(username, password, universityId);
                 break;
             case METHOD_LOGOUT:
                 loginProcessor.logout();
