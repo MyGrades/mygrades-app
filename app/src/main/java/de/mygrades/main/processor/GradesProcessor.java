@@ -253,16 +253,20 @@ public class GradesProcessor extends BaseProcessor {
         }
     }
 
+    /**
+     * Saves given list of GradeEntries to database.
+     * Only new and updated values are written to database.
+     * 1. Create Map: GradeHash -> GradeEntry Object for new and old list (not that hard -> only copy of references not deep copy)
+     * 2. Separate new Entries and updated entries
+     * 3. Update updated Entries and insert new entries
+     * @param newGradeEntries List of (new) GradeEntries parsed from Website.
+     */
     private void saveGradeEntriesToDB(List<GradeEntry> newGradeEntries) {
         if (newGradeEntries != null && newGradeEntries.size() > 0) {
             Map<String, GradeEntry> newGradeEntriesMap = createMapForGradeEntries(newGradeEntries);
             Map<String, GradeEntry> dbGradeEntriesMap = createMapForGradeEntries(daoSession.getGradeEntryDao().loadAll());
             //Log.d(TAG, dbGradeEntriesMap.values().toString());
-            /**
-             * 1. Create Map: GradeHash -> GradeEntry Object for new and old list (not that hard -> only copy of references not deep copy)
-             * 2. Separate new Entries and updated entries
-             * 3. Update updated Entries and insert new entries
-             */
+
             final List<GradeEntry> toInsert = new ArrayList<>();
             final List<GradeEntry> toUpdate = new ArrayList<>();
 
@@ -284,6 +288,7 @@ public class GradesProcessor extends BaseProcessor {
                 }
             }
 
+            // TODO
             System.out.println("to insert: " + toInsert);
             System.out.println("to update: " + toUpdate);
 
@@ -303,6 +308,11 @@ public class GradesProcessor extends BaseProcessor {
         }
     }
 
+    /**
+     * Creates map Hash -> GradeEntry for all GradeEntries in given list.
+     * @param gradeEntries list of gradeEntries
+     * @return HashMap of Hash -> GradeEntry
+     */
     private Map<String, GradeEntry> createMapForGradeEntries(List<GradeEntry> gradeEntries) {
         Map<String, GradeEntry> gradeEntriesMap = new HashMap<>();
         // add all: GradeHash -> GradeEntry
@@ -398,7 +408,6 @@ public class GradesProcessor extends BaseProcessor {
      * @param event IntermediateTableScrapingResultEvent containing a string of table with grades
      */
     public void onEventAsync(IntermediateTableScrapingResultEvent event){
-        /* TODO: do not override all the overview entries -> before fix insertOrReplace issue
         // get shared preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -419,12 +428,8 @@ public class GradesProcessor extends BaseProcessor {
             Transformer transformer = new Transformer(rule, event.getParsedTable(), parser);
             gradeEntries = transformer.transform();
 
-            Log.d(TAG, gradeEntries.toString());
-
             // save grade entries in database
-            if (gradeEntries != null && gradeEntries.size() > 0) {
-                daoSession.getGradeEntryDao().insertOrReplaceInTx(gradeEntries);
-            }
+            saveGradeEntriesToDB(gradeEntries);
 
             // save last_updated_at timestamp
             saveLastUpdatedAt(prefs);
@@ -435,6 +440,5 @@ public class GradesProcessor extends BaseProcessor {
             // ignore exceptions
             Log.e(TAG, "exception while Parsing table in separate thread", e);
         }
-        */
     }
 }
