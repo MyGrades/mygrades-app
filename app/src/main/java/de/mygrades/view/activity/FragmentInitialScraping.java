@@ -144,8 +144,7 @@ public class FragmentInitialScraping extends Fragment {
         btnBackToLogin.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // back to login TODO: SelectUniversityActivity -> LoginActivity
-                Intent intent = new Intent(getContext(), SelectUniversityActivity.class);
+                Intent intent = new Intent(getContext(), LoginActivity.class);
                 getContext().startActivity(intent);
             }
         });
