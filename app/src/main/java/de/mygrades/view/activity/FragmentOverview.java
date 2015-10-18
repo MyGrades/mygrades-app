@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +22,11 @@ import de.mygrades.main.events.GradesEvent;
 import de.mygrades.view.adapter.GradesRecyclerViewAdapter;
 import de.mygrades.view.adapter.model.GradeItem;
 import de.mygrades.view.decoration.GradesDividerItemDecoration;
+import in.srain.cube.views.ptr.PtrClassicDefaultHeader;
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 
 /**
  * Fragment to show the overview of grades with a summary at the top.
@@ -33,7 +37,7 @@ public class FragmentOverview extends Fragment {
     private GradesRecyclerViewAdapter adapter;
 
     private MainServiceHelper mainServiceHelper;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private PtrFrameLayout ptrFrame;
 
     @Nullable
     @Override
@@ -44,8 +48,8 @@ public class FragmentOverview extends Fragment {
         // init recycler view
         initGradesRecyclerView(view);
 
-        // init swipe to refresh layout
-        initSwipeToRefresh(view);
+        // init pull to refresh layout
+        initPullToRefresh(view);
 
         // register event bus
         EventBus.getDefault().register(this);
@@ -57,14 +61,23 @@ public class FragmentOverview extends Fragment {
     }
 
     /**
-     * Initialize the SwipeRefreshLayout.
+     * Initialize the pull to refresh layout.
      */
-    private void initSwipeToRefresh(View rootView) {
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+    private void initPullToRefresh(View rootView) {
+        ptrFrame = (PtrFrameLayout) rootView.findViewById(R.id.pull_to_refresh);
+        PtrClassicDefaultHeader header = new PtrClassicDefaultHeader(getContext());
+        ptrFrame.addPtrUIHandler(header);
+        ptrFrame.setHeaderView(header);
+
+        ptrFrame.setPtrHandler(new PtrHandler() {
             @Override
-            public void onRefresh() {
+            public void onRefreshBegin(PtrFrameLayout frame) {
                 mainServiceHelper.scrapeForGrades(false);
+            }
+
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
             }
         });
     }
@@ -108,8 +121,8 @@ public class FragmentOverview extends Fragment {
             adapter.updateSummary();
         }
 
-        if (swipeRefreshLayout != null) {
-            swipeRefreshLayout.setRefreshing(false);
+        if (ptrFrame != null) {
+            ptrFrame.refreshComplete();
         }
     }
 
@@ -119,15 +132,15 @@ public class FragmentOverview extends Fragment {
      * @param errorEvent - ErrorEvent
      */
     public void onEventMainThread(ErrorEvent errorEvent) {
-        if (swipeRefreshLayout != null) {
-            swipeRefreshLayout.setRefreshing(false);
+        if (ptrFrame != null) {
+            ptrFrame.refreshComplete();
         }
 
         View.OnClickListener tryAgainListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                swipeRefreshLayout.setRefreshing(true);
-                mainServiceHelper.scrapeForGrades(false);
+                ptrFrame.autoRefresh();
+                //mainServiceHelper.scrapeForGrades(false);
             }
         };
 

@@ -267,6 +267,68 @@ public class GradeEntry {
                 '}';
     }
 
+    /**
+     * Updates GradeEntry with values from other GradeEntry.
+     * @param other GradeEntry from which values should get updated
+     */
+    public void updateGradeEntryFromOther(GradeEntry other) {
+        this.name = other.name;
+        this.grade = other.grade;
+        this.examId = other.examId;
+        this.semester = other.semester;
+        this.state = other.state;
+        this.creditPoints = other.creditPoints;
+        this.annotation = other.annotation;
+        this.attempt = other.attempt;
+        this.examDate = other.examDate;
+        this.semesterNumber = other.semesterNumber;
+        this.overviewPossible = other.overviewPossible;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GradeEntry that = (GradeEntry) o;
+
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (grade != null ? !grade.equals(that.grade) : that.grade != null) return false;
+        if (examId != null ? !examId.equals(that.examId) : that.examId != null) return false;
+        if (semester != null ? !semester.equals(that.semester) : that.semester != null)
+            return false;
+        if (state != null ? !state.equals(that.state) : that.state != null) return false;
+        if (creditPoints != null ? !creditPoints.equals(that.creditPoints) : that.creditPoints != null)
+            return false;
+        if (annotation != null ? !annotation.equals(that.annotation) : that.annotation != null)
+            return false;
+        if (attempt != null ? !attempt.equals(that.attempt) : that.attempt != null) return false;
+        if (examDate != null ? !examDate.equals(that.examDate) : that.examDate != null)
+            return false;
+        if (semesterNumber != null ? !semesterNumber.equals(that.semesterNumber) : that.semesterNumber != null)
+            return false;
+        if (hash != null ? !hash.equals(that.hash) : that.hash != null) return false;
+        return !(overviewPossible != null ? !overviewPossible.equals(that.overviewPossible) : that.overviewPossible != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (grade != null ? grade.hashCode() : 0);
+        result = 31 * result + (examId != null ? examId.hashCode() : 0);
+        result = 31 * result + (semester != null ? semester.hashCode() : 0);
+        result = 31 * result + (state != null ? state.hashCode() : 0);
+        result = 31 * result + (creditPoints != null ? creditPoints.hashCode() : 0);
+        result = 31 * result + (annotation != null ? annotation.hashCode() : 0);
+        result = 31 * result + (attempt != null ? attempt.hashCode() : 0);
+        result = 31 * result + (examDate != null ? examDate.hashCode() : 0);
+        result = 31 * result + (semesterNumber != null ? semesterNumber.hashCode() : 0);
+        result = 31 * result + (hash != null ? hash.hashCode() : 0);
+        result = 31 * result + (overviewPossible != null ? overviewPossible.hashCode() : 0);
+        return result;
+    }
+
     // KEEP METHODS END
 
 }
