@@ -6,6 +6,10 @@ import android.preference.PreferenceManager;
 
 import com.securepreferences.SecurePreferences;
 
+import de.greenrobot.event.EventBus;
+import de.mygrades.database.dao.University;
+import de.mygrades.database.dao.UniversityDao;
+import de.mygrades.main.events.LoginDataEvent;
 import de.mygrades.util.Constants;
 
 /**
@@ -41,12 +45,32 @@ public class LoginProcessor extends BaseProcessor {
         // TODO: post university id to our server (asynchronous with retrofit)
     }
 
+    public void getLoginDataFromDatabase() {
+        // get universityId from shared preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
+
+        // get university name from database
+        University university = daoSession.getUniversityDao().queryBuilder()
+                  .where(UniversityDao.Properties.UniversityId.eq(universityId))
+                  .unique();
+
+        String universityName = university != null ? university.getName() : "";
+
+        // get username from shared preferences
+        SecurePreferences securePrefs = getSecurePreferences();
+        String username = securePrefs.getString(Constants.PREF_KEY_USERNAME, "");
+
+        LoginDataEvent loginDataEvent = new LoginDataEvent(username, universityId, universityName);
+        EventBus.getDefault().post(loginDataEvent);
+    }
+
     /**
      * Remove all userdata and grade entries from the database.
      */
     public void logout() {
         // remove username and password
-        SharedPreferences securePrefs = new SecurePreferences(context, Constants.NOT_SO_SECURE_PREF_PW, Constants.NOT_SO_SECURE_PREF_FILE);
+        SharedPreferences securePrefs = getSecurePreferences();
         SecurePreferences.Editor secureEditor = (SecurePreferences.Editor) securePrefs.edit();
         secureEditor.remove(Constants.PREF_KEY_USERNAME);
         secureEditor.remove(Constants.PREF_KEY_PASSWORD);
@@ -81,10 +105,14 @@ public class LoginProcessor extends BaseProcessor {
      * Saves username and password in secure preferences.
      */
     private void saveLoginData(String username, String password) {
-        SharedPreferences prefs = new SecurePreferences(context, Constants.NOT_SO_SECURE_PREF_PW, Constants.NOT_SO_SECURE_PREF_FILE);
+        SharedPreferences prefs = getSecurePreferences();
         SecurePreferences.Editor editor = (SecurePreferences.Editor) prefs.edit();
         editor.putString(Constants.PREF_KEY_USERNAME, username);
         editor.putString(Constants.PREF_KEY_PASSWORD, password);
         editor.apply();
+    }
+
+    private SecurePreferences getSecurePreferences() {
+        return new SecurePreferences(context, Constants.NOT_SO_SECURE_PREF_PW, Constants.NOT_SO_SECURE_PREF_FILE);
     }
 }

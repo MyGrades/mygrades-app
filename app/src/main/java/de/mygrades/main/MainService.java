@@ -37,6 +37,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final int METHOD_LOGOUT = 117;
     public static final int METHOD_GET_GRADE_DETAILS = 118;
     public static final int METHOD_SCRAPE_FOR_OVERVIEW = 119;
+    public static final int METHOD_GET_LOGIN_DATA_FROM_DATABASE = 120;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
@@ -170,6 +171,9 @@ public class MainService extends MultiThreadedIntentService {
                 long universityId = intent.getLongExtra(UNIVERSITY_ID, -1);
 
                 loginProcessor.loginAndScrapeForGrades(username, password, universityId);
+                break;
+            case METHOD_GET_LOGIN_DATA_FROM_DATABASE:
+                loginProcessor.getLoginDataFromDatabase();
                 break;
             case METHOD_LOGOUT:
                 loginProcessor.logout();
