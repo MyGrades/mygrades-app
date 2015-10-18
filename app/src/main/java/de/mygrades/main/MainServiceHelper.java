@@ -153,6 +153,20 @@ public class MainServiceHelper {
     }
 
     /**
+     * Starts a worker thread to get the username and selected university from database.
+     */
+    public void getLoginDataFromDatabase() {
+        int method = MainService.METHOD_GET_LOGIN_DATA_FROM_DATABASE;
+
+        // set request id
+        long requestId = concatenateLong(method, 0);
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_LOGIN, method, requestId);
+        context.startService(intent);
+    }
+
+    /**
      * Starts a worker thread to delete all userdata and grades from the database.
      */
     public void logout() {

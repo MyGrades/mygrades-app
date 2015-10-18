@@ -1,20 +1,21 @@
 package de.mygrades.view.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import de.greenrobot.event.EventBus;
 import de.mygrades.R;
 import de.mygrades.main.MainServiceHelper;
-import de.mygrades.util.Constants;
+import de.mygrades.main.events.LoginDataEvent;
 
 /**
  * Activity to enter the username and password for the selected university.
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private String universityName;
     private long universityId;
+    private boolean navigateUpFromSameTask;
 
     // views
     private TextView tvUniversityName;
@@ -38,32 +40,48 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // load detailed university
+        MainServiceHelper mainServiceHelper = new MainServiceHelper(this);
+
         // set toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.toolbar_login);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // get extra data
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            universityName = getIntent().getExtras().getString(EXTRA_UNIVERSITY_NAME, "");
-            universityId = getIntent().getExtras().getLong(EXTRA_UNIVERSITY_ID, 0);
-        } else {
-            // TODO: load universityName, universityId from prefs / database (and maybe the username)
-        }
-
-        // set university name
         tvUniversityName = (TextView) findViewById(R.id.tv_university_name);
-        tvUniversityName.setText(universityName);
-
         etUsername = (EditText) findViewById(R.id.et_username);
         etPassword = (EditText) findViewById(R.id.et_passwort);
 
         initLoginButton();
 
-        // load detailed university
-        MainServiceHelper mainServiceHelper = new MainServiceHelper(this);
+        // get extra data
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            universityName = getIntent().getExtras().getString(EXTRA_UNIVERSITY_NAME, "");
+            universityId = getIntent().getExtras().getLong(EXTRA_UNIVERSITY_ID, 0);
+            navigateUpFromSameTask = true;
+        } else {
+            mainServiceHelper.getLoginDataFromDatabase();
+        }
+
+        tvUniversityName.setText(universityName == null ? "" : universityName);
         mainServiceHelper.getDetailedUniversity(universityId);
+
+        // register to events
+        EventBus.getDefault().register(this);
+    }
+
+    /**
+     * Receive a LoginDataEvent with previously entered username and selected university.
+     *
+     * @param loginDataEvent LoginDataEvent
+     */
+    public void onEventMainThread(LoginDataEvent loginDataEvent) {
+        this.universityId = loginDataEvent.getUniversityId();
+        this.universityName = loginDataEvent.getUniversityName();
+
+        tvUniversityName.setText(universityName);
+        etUsername.setText(loginDataEvent.getUsername());
     }
 
     /**
@@ -126,5 +144,27 @@ public class LoginActivity extends AppCompatActivity {
                 Intent.FLAG_ACTIVITY_CLEAR_TASK |
                 Intent.FLAG_ACTIVITY_NEW_TASK);
         LoginActivity.this.startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                if (navigateUpFromSameTask) {
+                    NavUtils.navigateUpFromSameTask(this);
+                } else {
+                    Intent intent = new Intent(this, SelectUniversityActivity.class);
+                    startActivity(intent);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 }
