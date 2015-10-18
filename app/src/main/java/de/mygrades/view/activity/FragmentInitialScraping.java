@@ -16,6 +16,7 @@ import de.greenrobot.event.EventBus;
 import de.mygrades.R;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.ErrorEvent;
+import de.mygrades.main.events.LoginDataEvent;
 import de.mygrades.main.events.ScrapeProgressEvent;
 import de.mygrades.view.ProgressImageViewOverlay;
 
@@ -31,6 +32,11 @@ public class FragmentInitialScraping extends Fragment {
     private static final int ANIMATION_DURATION = 500;
 
     private MainServiceHelper mainServiceHelper;
+
+    // extra data for the LoginActivity
+    private long universityId;
+    private String universityName;
+    private String username;
 
     // views
     private ProgressImageViewOverlay progressImageViewOverlay;
@@ -106,6 +112,9 @@ public class FragmentInitialScraping extends Fragment {
 
         // (always) move status wrapper to center immediately
         moveStatusWrapperToCenter(0);
+
+        // get login data from database, only used if an error occurs and user goes back to login
+        mainServiceHelper.getLoginDataFromDatabase();
     }
 
     /**
@@ -145,6 +154,9 @@ public class FragmentInitialScraping extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), LoginActivity.class);
+                intent.putExtra(LoginActivity.EXTRA_UNIVERSITY_ID, universityId);
+                intent.putExtra(LoginActivity.EXTRA_UNIVERSITY_NAME, universityName);
+                intent.putExtra(LoginActivity.EXTRA_USERNAME, username);
                 getContext().startActivity(intent);
             }
         });
@@ -312,6 +324,17 @@ public class FragmentInitialScraping extends Fragment {
     private void stopProgressAnimation() {
         // stop animation
         handler.removeCallbacks(progressAnimation);
+    }
+
+    /**
+     * Receive a LoginDataEvent with previously entered username and selected university.
+     *
+     * @param loginDataEvent LoginDataEvent
+     */
+    public void onEventMainThread(LoginDataEvent loginDataEvent) {
+        this.universityId = loginDataEvent.getUniversityId();
+        this.universityName = loginDataEvent.getUniversityName();
+        this.username = loginDataEvent.getUsername();
     }
 
     @Override

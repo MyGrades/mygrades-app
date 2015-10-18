@@ -12,10 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import de.greenrobot.event.EventBus;
 import de.mygrades.R;
 import de.mygrades.main.MainServiceHelper;
-import de.mygrades.main.events.LoginDataEvent;
 
 /**
  * Activity to enter the username and password for the selected university.
@@ -24,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String EXTRA_UNIVERSITY_NAME = "university_name";
     public static final String EXTRA_UNIVERSITY_ID = "university_id";
+    public static final String EXTRA_USERNAME = "username";
 
     private String universityName;
     private long universityId;
@@ -57,31 +56,21 @@ public class LoginActivity extends AppCompatActivity {
 
         // get extra data
         if (getIntent() != null && getIntent().getExtras() != null) {
-            universityName = getIntent().getExtras().getString(EXTRA_UNIVERSITY_NAME, "");
             universityId = getIntent().getExtras().getLong(EXTRA_UNIVERSITY_ID, 0);
-            navigateUpFromSameTask = true;
-        } else {
-            mainServiceHelper.getLoginDataFromDatabase();
+
+            universityName = getIntent().getExtras().getString(EXTRA_UNIVERSITY_NAME, "");
+            tvUniversityName.setText(universityName == null ? "" : universityName);
+
+            // if user name is set, it means the user came from the FragmentInitialScraping
+            String username = getIntent().getExtras().getString(EXTRA_USERNAME, null);
+            if(username != null) {
+                etUsername.setText(username);
+            } else {
+                navigateUpFromSameTask = true;
+            }
         }
 
-        tvUniversityName.setText(universityName == null ? "" : universityName);
         mainServiceHelper.getDetailedUniversity(universityId);
-
-        // register to events
-        EventBus.getDefault().register(this);
-    }
-
-    /**
-     * Receive a LoginDataEvent with previously entered username and selected university.
-     *
-     * @param loginDataEvent LoginDataEvent
-     */
-    public void onEventMainThread(LoginDataEvent loginDataEvent) {
-        this.universityId = loginDataEvent.getUniversityId();
-        this.universityName = loginDataEvent.getUniversityName();
-
-        tvUniversityName.setText(universityName);
-        etUsername.setText(loginDataEvent.getUsername());
     }
 
     /**
@@ -160,11 +149,5 @@ public class LoginActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
     }
 }
