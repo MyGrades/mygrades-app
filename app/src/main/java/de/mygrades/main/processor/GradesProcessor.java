@@ -121,6 +121,8 @@ public class GradesProcessor extends BaseProcessor {
         EventBus.getDefault().register(this);
 
         // TODO: post event start scraping
+        // make sure that actions get loaded from DB not cached ones
+        daoSession.clear();
         // get actions for scrape for overview
         List<Action> actions = daoSession.getActionDao().queryBuilder()
                 //.where(ActionDao.Properties.Type.notEq(ACTION_TYPE_TABLE_GRADES))
