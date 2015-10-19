@@ -76,12 +76,12 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
     @Override
     public void onUIRefreshPrepare(PtrFrameLayout frame) {
         tvHeaderText.setText(R.string.ptr_header_pull_to_refresh);
+        progressWheel.startAnimation(getContext());
     }
 
     @Override
     public void onUIRefreshBegin(PtrFrameLayout frame) {
         tvHeaderText.setText(R.string.ptr_header_refreshing);
-        progressWheel.startAnimation(getContext());
     }
 
     @Override

@@ -157,11 +157,11 @@ public class Scraper {
                 String parsedTable = parser.parseToStringWithXML(action.getParseExpression(), document.toString());
                 EventBus.getDefault().post(new IntermediateTableScrapingResultEvent(parsedTable));
 
-                // post intermediate status event
-                EventBus.getDefault().post(new ScrapeProgressEvent(i + 1, actions.size() + 1));
                 // continue with next action
                 i = i + 1;
                 action = actions.get(i);
+                Log.v(TAG, "Action " + (i + 1) + "/" + actions.size() + " -- Last Action used in other Thread.");
+                Log.v(TAG, action.toString());
             }
 
             // parse Content to String if its not the last action
