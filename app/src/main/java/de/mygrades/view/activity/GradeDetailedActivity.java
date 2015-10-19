@@ -1,5 +1,6 @@
 package de.mygrades.view.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,21 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.formatter.YAxisValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.pnikosis.materialishprogress.ProgressWheel;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
@@ -50,16 +65,13 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private LinearLayout llOverviewWrapper;
     private TextView tvOverviewParticipants;
     private TextView tvOverviewAverage;
-    private TextView tvOverviewSection1;
-    private TextView tvOverviewSection2;
-    private TextView tvOverviewSection3;
-    private TextView tvOverviewSection4;
-    private TextView tvOverviewSection5;
 
     private Button btnScrapeForOverview;
     private TextView tvOverviewNotPossible;
     private ProgressWheel progressWheel;
     private LinearLayout llRootView; // used to show snackbar
+
+    private BarChart barChart;
 
     private static final float DEFAULT_PROGRESS = 0.025f; // default progress, to indicate the progress bar
     private static final String IS_SCRAPING_STATE = "is_scraping_state";
@@ -101,11 +113,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         llOverviewWrapper = (LinearLayout) findViewById(R.id.overview_wrapper);
         tvOverviewParticipants = (TextView) findViewById(R.id.tv_overview_participants);
         tvOverviewAverage = (TextView) findViewById(R.id.tv_overview_average);
-        tvOverviewSection1 = (TextView) findViewById(R.id.tv_overview_section1);
-        tvOverviewSection2 = (TextView) findViewById(R.id.tv_overview_section2);
-        tvOverviewSection3 = (TextView) findViewById(R.id.tv_overview_section3);
-        tvOverviewSection4 = (TextView) findViewById(R.id.tv_overview_section4);
-        tvOverviewSection5 = (TextView) findViewById(R.id.tv_overview_section5);
+        barChart = (BarChart) findViewById(R.id.bar_chart);
 
         initScrapeForOverviewButton();
         tvOverviewNotPossible = (TextView) findViewById(R.id.tv_overview_not_possible);
@@ -129,6 +137,77 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
         // start intent to get data for Grade Detail page
         mainServiceHelper.getGradeDetails(gradeHash);
+    }
+
+    /**
+     * Shows the bar chart with data taken from an OverviewEvent.
+     *
+     * @param overviewEvent - overview event
+     */
+    private void showBarChart(OverviewEvent overviewEvent) {
+        // general layout settings
+        barChart.setPinchZoom(false);
+        barChart.setDoubleTapToZoomEnabled(false);
+        barChart.setDescription("");
+        barChart.setDrawBorders(false);
+        barChart.setDrawBarShadow(false);
+        barChart.setDrawGridBackground(false);
+        barChart.getLegend().setEnabled(false);
+
+        // set x-axis
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setSpaceBetweenLabels(0);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setTextColor(Color.GRAY);
+
+        // show left y-axis
+        barChart.getAxisLeft().setDrawAxisLine(false);
+        barChart.getAxisLeft().setGridColor(Color.LTGRAY);
+        barChart.getAxisLeft().setTextColor(Color.GRAY);
+
+        // hide right y-axis
+        barChart.getAxisRight().setDrawGridLines(false);
+        barChart.getAxisRight().setDrawAxisLine(false);
+        barChart.getAxisRight().setDrawLabels(false);
+
+        Overview overview = overviewEvent.getOverview();
+
+        // y-values
+        ArrayList<BarEntry> yValues = new ArrayList<>();
+        yValues.add(new BarEntry(overview.getSection1(), 0));
+        yValues.add(new BarEntry(overview.getSection2(), 1));
+        yValues.add(new BarEntry(overview.getSection3(), 2));
+        yValues.add(new BarEntry(overview.getSection4(), 3));
+        yValues.add(new BarEntry(overview.getSection5(), 4));
+
+        // x-values
+        ArrayList<String> xValues = new ArrayList<>();
+        xValues.add("1,0 - 1,3");
+        xValues.add("1,7 - 2,3");
+        xValues.add("2,7 - 3,3");
+        xValues.add("3,7 - 4,0");
+        xValues.add("4,3 - 5,0");
+
+        int[] CUSTOM_COLORS = { // gradient from primary to secondary color, looks bad
+                Color.rgb(139, 195, 74), Color.rgb(171, 171, 71), Color.rgb(198, 152, 69),
+                Color.rgb(216, 138, 67), Color.rgb(255, 110, 64)
+        };
+
+        BarDataSet dataSet = new BarDataSet(yValues, "");
+        dataSet.setColors(new int[] {Color.rgb(139, 195, 74)});
+        dataSet.setDrawValues(true);
+        dataSet.setBarSpacePercent(35);
+
+        BarData barData = new BarData(xValues, dataSet);
+        barData.setValueFormatter(new MyValueFormatter());
+        barData.setHighlightEnabled(false);
+        barChart.setData(barData);
+
+        // add a nice and smooth animation
+        barChart.animateY(1500);
+        barChart.invalidate();
     }
 
     /**
@@ -221,11 +300,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
             llOverviewWrapper.setVisibility(View.VISIBLE);
             tvOverviewParticipants.setText(String.valueOf(overview.getParticipants()));
             writeDoubleToTextView(tvOverviewAverage, overview.getAverage());
-            tvOverviewSection1.setText(String.valueOf(overview.getSection1()));
-            tvOverviewSection2.setText(String.valueOf(overview.getSection2()));
-            tvOverviewSection3.setText(String.valueOf(overview.getSection3()));
-            tvOverviewSection4.setText(String.valueOf(overview.getSection4()));
-            tvOverviewSection5.setText(String.valueOf(overview.getSection5()));
+
+            showBarChart(overviewEvent);
         }
     }
 
@@ -345,5 +421,20 @@ public class GradeDetailedActivity extends AppCompatActivity {
         outState.putBoolean(IS_SCRAPING_STATE, isScraping);
         outState.putFloat(PROGRESS_STATE, progressWheel.getProgress());
         outState.putBoolean(IS_OVERVIEW_POSSIBLE_STATE, isOverviewPossible);
+    }
+
+    private class MyValueFormatter implements ValueFormatter {
+
+        private DecimalFormat mFormat;
+
+        public MyValueFormatter() {
+            mFormat = new DecimalFormat("#"); // use one decimal
+        }
+
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            // write your logic here
+            return mFormat.format(value);
+        }
     }
 }

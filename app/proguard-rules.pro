@@ -24,3 +24,6 @@
 
 # secure preferences rules
 -keep class com.tozny.crypto.android.AesCbcWithIntegrity$PrngFixes$* { *; }
+
+# MPAndroidChart rules
+-keep class com.github.mikephil.charting.** { *; }

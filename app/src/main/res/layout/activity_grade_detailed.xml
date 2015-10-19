@@ -241,118 +241,12 @@
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 
-                <!-- Overview: Headers  -->
-                <RelativeLayout
-                    android:layout_height="wrap_content"
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/bar_chart"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="16dp">
-
-                    <TextView
-                        style="@style/GradeDetailTextViewLeft"
-                        android:text="@string/tv_overview_label_sections"
-                        android:textColor="?attr/colorPrimary"
-                        android:fontFamily="sans-serif-medium"
-                        android:textSize="18sp"
-                        />
-
-                    <TextView
-                        style="@style/GradeDetailTextViewRight"
-                        android:text="@string/tv_overview_label_count"
-                        android:textColor="?attr/colorPrimary"
-                        android:textSize="18sp"
-                        />
-                    <View style="@style/Divider"/>
-                </RelativeLayout>
-
-                <!-- Overview: Section1 -->
-                <RelativeLayout
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent">
-
-                    <TextView
-                        style="@style/GradeDetailTextViewLeft"
-                        android:id="@+id/tv_overview_label_section1"
-                        android:text="@string/tv_overview_section1"
-                        />
-
-                    <TextView
-                        style="@style/GradeDetailTextViewRight"
-                        android:id="@+id/tv_overview_section1"
-                        />
-                    <View style="@style/Divider"/>
-                </RelativeLayout>
-
-                <!-- Overview: Section2 -->
-                <RelativeLayout
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent">
-
-                    <TextView
-                        style="@style/GradeDetailTextViewLeft"
-                        android:id="@+id/tv_overview_label_section2"
-                        android:text="@string/tv_overview_section2"
-                        />
-
-                    <TextView
-                        style="@style/GradeDetailTextViewRight"
-                        android:id="@+id/tv_overview_section2"
-                        />
-                    <View style="@style/Divider"/>
-                </RelativeLayout>
-
-                <!-- Overview: Section3 -->
-                <RelativeLayout
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent">
-
-                    <TextView
-                        style="@style/GradeDetailTextViewLeft"
-                        android:id="@+id/tv_overview_label_section3"
-                        android:text="@string/tv_overview_section3"
-                        />
-
-                    <TextView
-                        style="@style/GradeDetailTextViewRight"
-                        android:id="@+id/tv_overview_section3"
-                        />
-                    <View style="@style/Divider"/>
-                </RelativeLayout>
-
-                <!-- Overview: Section4 -->
-                <RelativeLayout
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent">
-
-                    <TextView
-                        style="@style/GradeDetailTextViewLeft"
-                        android:id="@+id/tv_overview_label_section4"
-                        android:text="@string/tv_overview_section4"
-                        />
-
-                    <TextView
-                        style="@style/GradeDetailTextViewRight"
-                        android:id="@+id/tv_overview_section4"
-                        />
-                    <View style="@style/Divider"/>
-                </RelativeLayout>
-
-                <!-- Overview: Section5 -->
-                <RelativeLayout
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent">
-
-                    <TextView
-                        style="@style/GradeDetailTextViewLeft"
-                        android:id="@+id/tv_overview_label_section5"
-                        android:text="@string/tv_overview_section5"
-                        />
-
-                    <TextView
-                        style="@style/GradeDetailTextViewRight"
-                        android:id="@+id/tv_overview_section5"
-                        />
-
-                </RelativeLayout>
+                    android:layout_height="240dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"/>
             </LinearLayout>
 
             <Button
@@ -386,8 +280,6 @@
                 app:matProg_spinSpeed="0.5"
                 app:matProg_linearProgress="true"
                 android:visibility="gone"/>
-
         </LinearLayout>
-
     </ScrollView>
 </LinearLayout>
