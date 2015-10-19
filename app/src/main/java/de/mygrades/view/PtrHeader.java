@@ -45,80 +45,50 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by jonastheis on 18.10.15.
+ * Pull to refresh header with ProgressWheel.
  */
 public class PtrHeader extends FrameLayout implements PtrUIHandler {
-    private ProgressWheel progressWheel;
+    private ProgressWheelWrapper progressWheel;
     private TextView tvHeaderText;
-
 
     public PtrHeader(Context context) {
         super(context);
 
         View header = LayoutInflater.from(getContext()).inflate(R.layout.ptr_header, this);
 
-        progressWheel = (ProgressWheel) findViewById(R.id.header_progress_wheel);
-
+        progressWheel = new ProgressWheelWrapper((ProgressWheel) findViewById(R.id.header_progress_wheel));
         tvHeaderText = (TextView) findViewById(R.id.tv_header_text);
-        tvHeaderText.setText("Lasse los um zu laden");
 
-        resetView();
-
-        // register event bus
-        // TODO: maybe nicer to set status of loading via activity/fragment via method call
-        EventBus.getDefault().register(this);
+        progressWheel.reset();
     }
 
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-
-        // unregister EventBus
-        EventBus.getDefault().unregister(this);
-    }
-
-
-    /**
-     * Receive an event about the scraping progress and set the ProgressWheel accordingly.
-     *
-     * @param scrapeProgressEvent ScrapeProgressEvent
-     */
-    public void onEventMainThread(ScrapeProgressEvent scrapeProgressEvent) {
-        if (progressWheel != null) {
-
-            int currentStep = scrapeProgressEvent.getCurrentStep();
-            int stepCount = scrapeProgressEvent.getStepCount();
-
-            float progress = ((float) currentStep) / stepCount;
-            progressWheel.setProgress(progress);
-        }
-    }
-
-    private void resetView() {
-        progressWheel.setProgress(0.025f);
     }
 
     @Override
     public void onUIReset(PtrFrameLayout frame) {
-        resetView();
+        progressWheel.reset();
     }
 
     @Override
     public void onUIRefreshPrepare(PtrFrameLayout frame) {
-        progressWheel.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.rotate_indefinitely));
-        tvHeaderText.setText("Zum Laden runterziehen.");
+        tvHeaderText.setText(R.string.ptr_header_pull_to_refresh);
     }
 
     @Override
     public void onUIRefreshBegin(PtrFrameLayout frame) {
-        tvHeaderText.setText("Lade deine Noten...");
+        tvHeaderText.setText(R.string.ptr_header_refreshing);
+        progressWheel.startAnimation(getContext());
     }
 
     @Override
     public void onUIRefreshComplete(PtrFrameLayout frame) {
-        tvHeaderText.setText("Fertig geladen");
-        progressWheel.setAnimation(null);
+        tvHeaderText.setText(R.string.ptr_header_refresh_complete);
+
+        progressWheel.endAnimation();
     }
 
     @Override
@@ -129,12 +99,22 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
             final int lastPos = ptrIndicator.getLastPosY();
 
             if (currentPos < mOffsetToRefresh && lastPos >= mOffsetToRefresh) {
-                tvHeaderText.setText("Zum Laden runterziehen.");
+                tvHeaderText.setText(R.string.ptr_header_pull_to_refresh);
             } else if (currentPos > mOffsetToRefresh && lastPos <= mOffsetToRefresh) {
-                tvHeaderText.setText("Loslassen zum aktualisieren");
+                tvHeaderText.setText(R.string.ptr_header_release_to_refresh);
             }
         }
-
     }
+
+    /**
+     * Increases progress on progressWheel.
+     *
+     * @param currentStep current step
+     * @param stepCount count of steps
+     */
+    public void increaseProgress(int currentStep, int stepCount) {
+        progressWheel.increaseProgress(currentStep, stepCount);
+    }
+
 }
 

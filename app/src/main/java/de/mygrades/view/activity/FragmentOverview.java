@@ -19,6 +19,7 @@ import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.GradesEvent;
+import de.mygrades.main.events.ScrapeProgressEvent;
 import de.mygrades.view.PtrHeader;
 import de.mygrades.view.adapter.GradesRecyclerViewAdapter;
 import de.mygrades.view.adapter.model.GradeItem;
@@ -39,6 +40,12 @@ public class FragmentOverview extends Fragment {
 
     private MainServiceHelper mainServiceHelper;
     private PtrFrameLayout ptrFrame;
+    private PtrHeader ptrHeader;
+
+    // TODO: ViewHelper for constants and helper methods
+    private static final String IS_SCRAPING_STATE = "is_scraping_state";
+    private static final String PROGRESS_STATE = "progress_state";
+    private boolean isScraping;
 
     @Nullable
     @Override
@@ -58,6 +65,17 @@ public class FragmentOverview extends Fragment {
         // get all grades
         mainServiceHelper.getGradesFromDatabase();
 
+        // restore instance state if necessary
+        /*
+        if (savedInstanceState != null) {
+            // TODO: save instance state
+            isScraping = savedInstanceState.getBoolean(IS_SCRAPING_STATE);
+            if (isScraping) {
+                progressWheel.setProgress(savedInstanceState.getFloat(PROGRESS_STATE, DEFAULT_PROGRESS));
+                showProgressWheel();
+            }
+        }*/
+
         return view;
     }
 
@@ -66,9 +84,9 @@ public class FragmentOverview extends Fragment {
      */
     private void initPullToRefresh(View rootView) {
         ptrFrame = (PtrFrameLayout) rootView.findViewById(R.id.pull_to_refresh);
-        PtrHeader header = new PtrHeader(getContext());
-        ptrFrame.addPtrUIHandler(header);
-        ptrFrame.setHeaderView(header);
+        ptrHeader = new PtrHeader(getContext());
+        ptrFrame.addPtrUIHandler(ptrHeader);
+        ptrFrame.setHeaderView(ptrHeader);
 
         ptrFrame.setPtrHandler(new PtrHandler() {
             @Override
@@ -95,6 +113,17 @@ public class FragmentOverview extends Fragment {
         // set adapter
         adapter = new GradesRecyclerViewAdapter(getContext());
         rvGrades.setAdapter(adapter);
+    }
+
+    /**
+     * Receive an event about the scraping progress and set the ProgressWheel accordingly.
+     *
+     * @param scrapeProgressEvent ScrapeProgressEvent
+     */
+    public void onEventMainThread(ScrapeProgressEvent scrapeProgressEvent) {
+        if (ptrHeader != null) {
+            ptrHeader.increaseProgress(scrapeProgressEvent.getCurrentStep(), scrapeProgressEvent.getStepCount());
+        }
     }
 
     /**
