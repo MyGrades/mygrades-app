@@ -56,7 +56,7 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
 
         View header = LayoutInflater.from(getContext()).inflate(R.layout.ptr_header, this);
 
-        progressWheel = new ProgressWheelWrapper((ProgressWheel) findViewById(R.id.header_progress_wheel));
+        progressWheel = new ProgressWheelWrapper((ProgressWheel) findViewById(R.id.header_progress_wheel), findViewById(R.id.header_progress_wheel_bg));
         tvHeaderText = (TextView) findViewById(R.id.tv_header_text);
 
         progressWheel.reset();
@@ -88,7 +88,7 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
     public void onUIRefreshComplete(PtrFrameLayout frame) {
         tvHeaderText.setText(R.string.ptr_header_refresh_complete);
 
-        progressWheel.endAnimation();
+        progressWheel.loadingFinished(getContext());
     }
 
     @Override

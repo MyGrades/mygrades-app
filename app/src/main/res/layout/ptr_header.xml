@@ -9,17 +9,31 @@
     android:orientation="horizontal"
     android:padding="16dp">
 
-    <com.pnikosis.materialishprogress.ProgressWheel
-        android:id="@+id/header_progress_wheel"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center"
-        app:matProg_barColor="?attr/colorPrimary"
-        app:matProg_barWidth="2dp"
-        app:matProg_spinSpeed="0.5"
-        app:matProg_linearProgress="true"
-        android:visibility="visible"
-        android:layout_marginRight="15dp"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp">
+
+        <com.pnikosis.materialishprogress.ProgressWheel
+            android:id="@+id/header_progress_wheel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            app:matProg_barColor="?attr/colorPrimary"
+            app:matProg_barWidth="2dp"
+            app:matProg_spinSpeed="0.5"
+            app:matProg_linearProgress="true"
+            android:visibility="visible" />
+        <View
+            android:id="@+id/header_progress_wheel_bg"
+            android:layout_gravity="center"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/end_loading_circle"
+            android:visibility="invisible"
+            />
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/tv_header_text"
