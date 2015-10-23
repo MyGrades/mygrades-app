@@ -10,8 +10,8 @@
         android:id="@+id/tv_faq_question"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="?attr/colorPrimary"
         android:textSize="18sp"
+        android:fontFamily="sans-serif-medium"
         android:layout_weight="8"/>
 
     <de.mygrades.view.widget.ExpandableItemIndicator

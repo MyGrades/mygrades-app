@@ -1,9 +1,12 @@
 package de.mygrades.view.adapter.dataprovider;
 
+import android.content.Context;
 import android.support.v4.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.mygrades.R;
 
 /**
  * FaqDataProvider provides access to the underlying FAQ data.
@@ -13,10 +16,23 @@ public class FaqDataProvider {
 
     public FaqDataProvider() {
         data = new ArrayList<>();
+    }
 
-        data.add(new Pair(new QuestionData(1, "Wieso weshalb warum?"), new AnswerData(1, "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. \n\nAt vero eos et accusam et justo duo dolores et ea rebum. \n\nStet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.")));
-        data.add(new Pair(new QuestionData(2, "So sieht dann eine etwas längere Frage aus, ist auch nicht so schlimm."), new AnswerData(1, "child 2")));
-        data.add(new Pair(new QuestionData(3, "Geht nicht! Ihr seid doof."), new AnswerData(1, "child 3")));
+    /**
+     * Reads questions and answers from string-array resources and fills the ArrayList.
+     *
+     * @param context - context, to access resources
+     */
+    public void populateData(Context context) {
+        data.clear();
+        String[] questions = context.getResources().getStringArray(R.array.questions);
+        String[] answers = context.getResources().getStringArray(R.array.answers);
+
+        for (int i = 0; i < questions.length && i < answers.length; i++) {
+            QuestionData question = new QuestionData(i + 1, questions[i]);
+            AnswerData answer = new AnswerData(1, answers[i]);
+            data.add(new Pair(question, answer));
+        }
     }
 
     public int getGroupCount() {
