@@ -3,8 +3,10 @@ package de.mygrades.view;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -19,6 +21,7 @@ import java.util.Date;
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
 import de.mygrades.main.events.ScrapeProgressEvent;
+import de.mygrades.util.Constants;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
@@ -48,6 +51,7 @@ import java.util.Date;
  * Pull to refresh header with ProgressWheel.
  */
 public class PtrHeader extends FrameLayout implements PtrUIHandler {
+    private boolean isScraping;
     private ProgressWheelWrapper progressWheel;
     private TextView tvHeaderText;
 
@@ -82,12 +86,13 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
     @Override
     public void onUIRefreshBegin(PtrFrameLayout frame) {
         tvHeaderText.setText(R.string.ptr_header_refreshing);
+        isScraping = true;
     }
 
     @Override
     public void onUIRefreshComplete(PtrFrameLayout frame) {
         tvHeaderText.setText(R.string.ptr_header_refresh_complete);
-
+        isScraping = false;
         progressWheel.loadingFinished(getContext());
     }
 
@@ -116,5 +121,40 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
         progressWheel.increaseProgress(currentStep, stepCount);
     }
 
+
+    /**
+     * Set progress on progressWheel.
+     *
+     * @param progress Progress of Loading
+     */
+    public void setProgress(float progress) {
+        progressWheel.setProgress(progress);
+    }
+
+    /**
+     * Save attributes regarding ptr to instance state.
+     * @param outState instance state bundle
+     */
+    public void saveInstanceState(Bundle outState) {
+        outState.putBoolean(Constants.INSTANCE_IS_SCRAPING_STATE, isScraping);
+        outState.putFloat(Constants.INSTANCE_PROGRESS_STATE, progressWheel.getProgress());
+    }
+
+    /**
+     * Load attributes from instance state and show Loading animation if it was loading before.
+     * @param savedInstanceState instance state bundle
+     */
+    public void restoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            isScraping = savedInstanceState.getBoolean(Constants.INSTANCE_IS_SCRAPING_STATE);
+            Log.d("test", "restoreInstanceState() called with: " + "savedInstanceState = [" + savedInstanceState + "]");
+            if (isScraping) {
+                float progress = savedInstanceState.getFloat(Constants.INSTANCE_PROGRESS_STATE, 0);
+                progressWheel.startAnimation(getContext());
+                tvHeaderText.setText(R.string.ptr_header_refreshing);
+                setProgress(progress);
+            }
+        }
+    }
 }
 
