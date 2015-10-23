@@ -49,6 +49,7 @@ public class FragmentFaq extends Fragment {
 
         // create data
         FaqDataProvider faqDataProvider = new FaqDataProvider();
+        faqDataProvider.populateData(getContext());
 
         // create adapter
         FaqExpandableItemAdapter itemAdapter = new FaqExpandableItemAdapter(faqDataProvider);
