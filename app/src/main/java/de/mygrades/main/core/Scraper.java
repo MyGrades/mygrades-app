@@ -9,6 +9,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Entities;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -203,8 +204,8 @@ public class Scraper {
 
         // get content from response
         document = response.parse();
+        document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
         document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
-        //Log.v(TAG, document.toString());
 
         // check if there is a redirect via meta-equiv=refresh
         Element metaRefresh = document.select("html head meta[http-equiv=refresh]").first();
