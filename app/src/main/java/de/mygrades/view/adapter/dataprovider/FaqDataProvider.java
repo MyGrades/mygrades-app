@@ -7,12 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.mygrades.R;
+import de.mygrades.view.activity.FragmentFaq;
 
 /**
  * FaqDataProvider provides access to the underlying FAQ data.
  */
 public class FaqDataProvider {
     private List<Pair<QuestionData, AnswerData>> data;
+
+    public static final int GO_TO_GENERAL_ERROR = 100;
 
     public FaqDataProvider() {
         data = new ArrayList<>();
@@ -32,6 +35,22 @@ public class FaqDataProvider {
             QuestionData question = new QuestionData(i + 1, questions[i]);
             AnswerData answer = new AnswerData(1, answers[i]);
             data.add(new Pair(question, answer));
+        }
+    }
+
+    /**
+     * Returns the groupId for a given attribute, e.q. GO_TO_GENERAL_ERROR.
+     * This is passed as a attribute to the FragmentFaq, to directly jump to a specific question.
+     *
+     * @param goToQuestion - constant which specifies the desired question
+     * @return groupId
+     */
+    public int getGroupId(int goToQuestion) {
+        switch (goToQuestion) {
+            case GO_TO_GENERAL_ERROR:
+                return 4;
+            default:
+                return 0;
         }
     }
 

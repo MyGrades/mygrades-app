@@ -1,5 +1,6 @@
 package de.mygrades.view.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -14,14 +15,11 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.formatter.YAxisValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
@@ -38,6 +36,7 @@ import de.mygrades.main.events.GradeEntryEvent;
 import de.mygrades.main.events.OverviewEvent;
 import de.mygrades.main.events.OverviewPossibleEvent;
 import de.mygrades.main.events.ScrapeProgressEvent;
+import de.mygrades.view.adapter.dataprovider.FaqDataProvider;
 
 /**
  * Created by jonastheis on 03.10.15.
@@ -82,6 +81,16 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private boolean isScraping;
 
     private boolean isOverviewPossible;
+
+    // click listener to go to the FAQs and show the general-error question immediately
+    private View.OnClickListener goToFaqListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(GradeDetailedActivity.this, MainActivity.class);
+            intent.putExtra(FragmentFaq.ARGUMENT_GO_TO_QUESTION, FaqDataProvider.GO_TO_GENERAL_ERROR);
+            GradeDetailedActivity.this.startActivity(intent);
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -368,7 +377,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
                 break;
             case GENERAL:
             default:
-                showSnackbar("Allgemeiner Fehler", null, "FAQ");
+                showSnackbar("Allgemeiner Fehler", goToFaqListener, "Was ist das?");
 
         }
 
