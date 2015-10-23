@@ -199,6 +199,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
         }
 
         BarDataSet dataSet = new BarDataSet(yValues, "");
+        dataSet.setValueTextSize(12);
+        dataSet.setValueTextColor(Color.DKGRAY);
         dataSet.setColors(BAR_CHART_COLORS);
         dataSet.setDrawValues(true);
         dataSet.setBarSpacePercent(35);
