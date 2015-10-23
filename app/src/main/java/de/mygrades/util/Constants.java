@@ -15,4 +15,8 @@ public class Constants {
     public static final String PREF_KEY_UNIVERSITY_ID = "university_id";
     public static final String PREF_KEY_INITIAL_LOADING_DONE = "initial_loading_done";
     public static final String PREF_KEY_LAST_UPDATED_AT = "last_updated_at";
+
+    // Scraping status instance state
+    public static final String INSTANCE_IS_SCRAPING_STATE = "is_scraping_state";
+    public static final String INSTANCE_PROGRESS_STATE = "progress_state";
 }
