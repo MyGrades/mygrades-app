@@ -22,24 +22,56 @@ public class ProgressWheelWrapper {
         this.background = background;
     }
 
+    /**
+     * Resets the animation and the progressWheel.
+     */
     public void reset() {
         progressWheel.setProgress(DEFAULT_PROGRESS);
         background.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Starts animation of the progressWheel.
+     * @param context
+     */
     public void startAnimation(Context context) {
         progressWheel.startAnimation(AnimationUtils.loadAnimation(context, R.anim.rotate_indefinitely));
     }
 
-    public void increaseProgress(int currentStep, int stepCount) {
-        float progress = ((float) currentStep) / stepCount;
-        progress = progress == 0 ? DEFAULT_PROGRESS : progress;
-        progressWheel.setProgress(progress);
-    }
-
+    /**
+     * Starts finish animation of background.
+     * @param context Context
+     */
     public void loadingFinished(Context context) {
         progressWheel.setAnimation(null);
         background.startAnimation(AnimationUtils.loadAnimation(context, R.anim.abc_grow_fade_in_from_bottom));
         background.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Increases Progress of the progressWheel.
+     * @param currentStep current step of loading
+     * @param stepCount count of all steps of loading
+     */
+    public void increaseProgress(int currentStep, int stepCount) {
+        float progress = ((float) currentStep) / stepCount;
+        setProgress(progress);
+    }
+
+    /**
+     * Sets Progress of the progressWheel.
+     * @param progress progress to set
+     */
+    public void setProgress(float progress) {
+        progress = progress == 0 ? DEFAULT_PROGRESS : progress;
+        progressWheel.setProgress(progress);
+    }
+
+    /**
+     * Gets Progress of the progressWheel.
+     * @return progess
+     */
+    public float getProgress() {
+        return progressWheel.getProgress();
     }
 }

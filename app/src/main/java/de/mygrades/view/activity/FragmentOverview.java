@@ -1,14 +1,12 @@
 package de.mygrades.view.activity;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +19,10 @@ import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.GradesEvent;
 import de.mygrades.main.events.ScrapeProgressEvent;
 import de.mygrades.view.PtrHeader;
+import de.mygrades.view.UIHelper;
 import de.mygrades.view.adapter.GradesRecyclerViewAdapter;
 import de.mygrades.view.adapter.model.GradeItem;
 import de.mygrades.view.decoration.GradesDividerItemDecoration;
-import in.srain.cube.views.ptr.PtrClassicDefaultHeader;
-import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
@@ -34,18 +31,14 @@ import in.srain.cube.views.ptr.PtrHandler;
  * Fragment to show the overview of grades with a summary at the top.
  */
 public class FragmentOverview extends Fragment {
+    private MainServiceHelper mainServiceHelper;
 
     private RecyclerView rvGrades;
     private GradesRecyclerViewAdapter adapter;
 
-    private MainServiceHelper mainServiceHelper;
     private PtrFrameLayout ptrFrame;
     private PtrHeader ptrHeader;
-
-    // TODO: ViewHelper for constants and helper methods
-    private static final String IS_SCRAPING_STATE = "is_scraping_state";
-    private static final String PROGRESS_STATE = "progress_state";
-    private boolean isScraping;
+    private View.OnClickListener tryAgainListener;
 
     @Nullable
     @Override
@@ -59,6 +52,15 @@ public class FragmentOverview extends Fragment {
         // init pull to refresh layout
         initPullToRefresh(view);
 
+        // init button for snackbar
+        tryAgainListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ptrFrame.autoRefresh();
+                //mainServiceHelper.scrapeForGrades(false);
+            }
+        };
+
         // register event bus
         EventBus.getDefault().register(this);
 
@@ -66,17 +68,16 @@ public class FragmentOverview extends Fragment {
         mainServiceHelper.getGradesFromDatabase();
 
         // restore instance state if necessary
-        /*
-        if (savedInstanceState != null) {
-            // TODO: save instance state
-            isScraping = savedInstanceState.getBoolean(IS_SCRAPING_STATE);
-            if (isScraping) {
-                progressWheel.setProgress(savedInstanceState.getFloat(PROGRESS_STATE, DEFAULT_PROGRESS));
-                showProgressWheel();
-            }
-        }*/
+        ptrHeader.restoreInstanceState(savedInstanceState);
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        ptrHeader.saveInstanceState(outState);
     }
 
     /**
@@ -165,60 +166,7 @@ public class FragmentOverview extends Fragment {
         if (ptrFrame != null) {
             ptrFrame.refreshComplete();
         }
-
-        View.OnClickListener tryAgainListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ptrFrame.autoRefresh();
-                //mainServiceHelper.scrapeForGrades(false);
-            }
-        };
-
-        switch (errorEvent.getType()) {
-            case TIMEOUT:
-                showSnackbar("Zeitüberschreitung", tryAgainListener, "Nochmal");
-                break;
-            case NO_NETWORK:
-                showSnackbar("Keine Internetverbindung", tryAgainListener, "Nochmal");
-                break;
-            case GENERAL:
-            default:
-                String title = "Fehler beim Abrufen der Noten";
-                String text = "Deine Noten konnten nicht abgerufen werden. \n" +
-                        "Das kann verschiedene Gründe haben: \n" +
-                        "1. Deine Zugangsdaten sind falsch. \n" +
-                        "2. Probleme mit der Internetverbindung oder dem Server der Hochschule. \n" +
-                        "3. Die Linkstruktur innerhalb deines Notensystems könnte sich geändert haben" +
-                        " und so ist es zur Zeit nicht möglich deine Noten abzurufen.";
-
-                if (getContext() != null) {
-                    new AlertDialog.Builder(getContext())
-                            .setTitle(title)
-                            .setMessage(text)
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // continue with delete
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-                }
-        }
-    }
-
-    /**
-     * Shows a Snackbar with a given text and action.
-     *
-     * @param text - text to show
-     * @param action - OnClickListener
-     * @param actionText - text for the OnClickListener
-     */
-    private void showSnackbar(String text, View.OnClickListener action, String actionText) {
-        if (getView() != null) {
-            Snackbar.make(getView(), text, Snackbar.LENGTH_LONG)
-                    .setAction(actionText, action)
-                    .show();
-        }
+        UIHelper.displayErrorMessage(getView(), getContext(), errorEvent, tryAgainListener);
     }
 
     @Override
