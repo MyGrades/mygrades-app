@@ -72,6 +72,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private LinearLayout llRootView; // used to show snackbar
 
     private BarChart barChart;
+    private static final int COLOR_GRAY = Color.rgb(233, 233, 233); // light gray
+    private static final int COLOR_HIGHLIGHT = Color.rgb(139, 195, 74); // primary color green
 
     private static final float DEFAULT_PROGRESS = 0.025f; // default progress, to indicate the progress bar
     private static final String IS_SCRAPING_STATE = "is_scraping_state";
@@ -190,13 +192,14 @@ public class GradeDetailedActivity extends AppCompatActivity {
         xValues.add("3,7 - 4,0");
         xValues.add("4,3 - 5,0");
 
-        int[] CUSTOM_COLORS = { // gradient from primary to secondary color, looks bad
-                Color.rgb(139, 195, 74), Color.rgb(171, 171, 71), Color.rgb(198, 152, 69),
-                Color.rgb(216, 138, 67), Color.rgb(255, 110, 64)
-        };
+        // set colors
+        int[] BAR_CHART_COLORS = {COLOR_GRAY, COLOR_GRAY, COLOR_GRAY, COLOR_GRAY, COLOR_GRAY};
+        if (overview.getUserSection() != null && overview.getUserSection() > 0) {
+            BAR_CHART_COLORS[overview.getUserSection() - 1] = COLOR_HIGHLIGHT;
+        }
 
         BarDataSet dataSet = new BarDataSet(yValues, "");
-        dataSet.setColors(new int[] {Color.rgb(139, 195, 74)});
+        dataSet.setColors(BAR_CHART_COLORS);
         dataSet.setDrawValues(true);
         dataSet.setBarSpacePercent(35);
 
@@ -219,7 +222,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
         btnScrapeForOverview.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: show loading animation and hide button
                 if (gradeEntry != null) {
                     scrapeForOverview();
                 }
