@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="questions">
+        <item>Was ist MyGrades?</item>
+        <item>Wie funktioniert es?</item>
+        <item>Wer steckt dahinter?</item>
+        <item>Was ist der Zeitüberschreitungs-Fehler?</item>
+        <item>Was bedeutet \'Allgemeiner Fehler\'?</item>
+    </string-array>
+
+    <string-array name="answers">
+        <item>MyGrades zeigt dir deine Studiumsnoten übersichtlich an.</item>
+        <item>Die App simuliert einen Browser und navigiert automatisch zu deiner Notentabelle.\n\nDiese wird dann lokal auf deinem Handy verarbeitet und bei dir gespeichert.</item>
+        <item>Wir sind zwei Studenten der Medieninformatik an der Hochschule RheinMain.</item>
+        <item>Dieser Fehler tritt auf, wenn eine Anfrage an die Website deiner Hochschule nicht innerhalb von 25 Sekunden erfolgreich war.\n\nDies kann daran liegen, dass deine Internetverbindung schlecht oder der Server deiner Hochschule nicht erreichbar ist.</item>
+        <item>Dieser Fehler kann in verschiedenen Situationen auftreten.\n\n1. Deine Zugangsdaten könnten falsch sein.\n2. Probleme mit dem Server der Hochschule oder Wartungsarbeiten auf der Website.\n3. Die Linkstruktur innerhalb deines Notensystems könnte sich geändert haben und so ist es zur Zeit nicht möglich, deine Noten abzurufen.\n\nWenn der Fehler über längere Zeit auftritt, kannst du gerne mit uns in Kontakt treten.</item>
+    </string-array>
+</resources>
