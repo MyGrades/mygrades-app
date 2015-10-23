@@ -33,6 +33,10 @@ public class FragmentFaq extends Fragment {
     private RecyclerView.Adapter wrappedAdapter;
     private RecyclerViewExpandableItemManager recyclerViewExpandableItemManager;
 
+    // if this is set, the value (an integer) will be used
+    // to determine which question should be expanded
+    public static final String ARGUMENT_GO_TO_QUESTION = "attribute_go_to_question";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,6 +76,15 @@ public class FragmentFaq extends Fragment {
 
         // attach recycler view to item manager, necessary for touch listeners
         recyclerViewExpandableItemManager.attachRecyclerView(recyclerView);
+
+        // jump to specific question if ARGUMENT_GO_TO_QUESTION is provided
+        if (getArguments() != null) {
+            int argumentQuestionId = getArguments().getInt(ARGUMENT_GO_TO_QUESTION);
+            int groupId = faqDataProvider.getGroupId(argumentQuestionId);
+
+            recyclerViewExpandableItemManager.expandGroup(groupId);
+            recyclerView.scrollToPosition(groupId);
+        }
     }
 
     @Override

@@ -75,8 +75,13 @@ public class MainActivity extends AppCompatActivity {
                 replaceFragment(R.id.fl_initial_scraping, new FragmentInitialScraping(), false);
             }
         } else {
-            // set default fragment to overview of grades
-            if (savedInstanceState == null) {
+            if (getIntent() != null && getIntent().getIntExtra(FragmentFaq.ARGUMENT_GO_TO_QUESTION, -1) >= 0) {
+                // go to FAQs
+                FragmentFaq fragmentFaq = new FragmentFaq();
+                fragmentFaq.setArguments(getIntent().getExtras());
+                replaceFragment(R.id.fl_content, fragmentFaq, false);
+            } else if (savedInstanceState == null) {
+                // set default fragment to overview of grades
                 replaceFragment(R.id.fl_content, new FragmentOverview(), false);
                 navigationView.getMenu().getItem(0).setChecked(true);
             }
