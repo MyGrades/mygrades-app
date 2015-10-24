@@ -166,7 +166,7 @@ public class FragmentOverview extends Fragment {
         if (ptrFrame != null) {
             ptrFrame.refreshComplete();
         }
-        UIHelper.displayErrorMessage(getView(), getContext(), errorEvent, tryAgainListener);
+        UIHelper.displayErrorMessage(getView(), errorEvent, tryAgainListener, null);
     }
 
     @Override
