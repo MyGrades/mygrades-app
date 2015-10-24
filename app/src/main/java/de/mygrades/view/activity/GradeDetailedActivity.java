@@ -36,6 +36,7 @@ import de.mygrades.main.events.GradeEntryEvent;
 import de.mygrades.main.events.OverviewEvent;
 import de.mygrades.main.events.OverviewPossibleEvent;
 import de.mygrades.main.events.ScrapeProgressEvent;
+import de.mygrades.view.UIHelper;
 import de.mygrades.view.adapter.dataprovider.FaqDataProvider;
 
 /**
@@ -89,6 +90,14 @@ public class GradeDetailedActivity extends AppCompatActivity {
             Intent intent = new Intent(GradeDetailedActivity.this, MainActivity.class);
             intent.putExtra(FragmentFaq.ARGUMENT_GO_TO_QUESTION, FaqDataProvider.GO_TO_GENERAL_ERROR);
             GradeDetailedActivity.this.startActivity(intent);
+        }
+    };
+
+    // click listener to restart the scraping process
+    private View.OnClickListener tryAgainListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            scrapeForOverview();
         }
     };
 
@@ -361,40 +370,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
      * @param errorEvent ErrorEvent
      */
     public void onEventMainThread(ErrorEvent errorEvent) {
-        View.OnClickListener tryAgainListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scrapeForOverview();
-            }
-        };
-
-        switch (errorEvent.getType()) {
-            case NO_NETWORK:
-                showSnackbar("Keine Internetverbindung", tryAgainListener, "Nochmal");
-                break;
-            case TIMEOUT:
-                showSnackbar("Zeitüberschreitung", tryAgainListener, "Nochmal");
-                break;
-            case GENERAL:
-            default:
-                showSnackbar("Allgemeiner Fehler", goToFaqListener, "Was ist das?");
-
-        }
-
+        UIHelper.displayErrorMessage(llRootView, errorEvent, tryAgainListener, goToFaqListener);
         hideScrapeForOverview();
-    }
-
-    /**
-     * Shows a snackbar.
-     *
-     * @param text - text to show
-     * @param action - OnClickListener
-     * @param actionText - text for the OnClickListener
-     */
-    private void showSnackbar(String text, View.OnClickListener action, String actionText) {
-        Snackbar.make(llRootView, text, Snackbar.LENGTH_LONG)
-                .setAction(actionText, action)
-                .show();
     }
 
     private void setTextView(TextView textView, String value) {
