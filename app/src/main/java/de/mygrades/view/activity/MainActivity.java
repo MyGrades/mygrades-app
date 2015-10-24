@@ -1,6 +1,5 @@
 package de.mygrades.view.activity;
 
-import android.app.usage.UsageEvents;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -30,7 +29,7 @@ import de.mygrades.util.Constants;
  * On each startup it is checked whether the user is already logged in.
  * If not, he will be redirected to the SelectUniversityActivity.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ReplacableFragment {
     private MainServiceHelper mainServiceHelper;
     private DrawerLayout drawerLayout;
 
@@ -163,15 +162,8 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().removeStickyEvent(initialScrapingDoneEvent);
     }
 
-    /**
-     * Replaces a fragment.
-     * If animate==true, a bottom-to-top slide animation will be shown.
-     *
-     * @param resLayoutId frame layout id, whose content should be replaced
-     * @param newFragment new fragment
-     * @param animate true, if the replacement should be animated
-     */
-    private void replaceFragment( int resLayoutId, Fragment newFragment, boolean animate) {
+    @Override
+    public void replaceFragment( int resLayoutId, Fragment newFragment, boolean animate) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         if (animate) {

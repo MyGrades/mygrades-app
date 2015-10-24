@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import de.mygrades.main.events.ScrapeProgressEvent;
 import de.mygrades.view.PtrHeader;
 import de.mygrades.view.UIHelper;
 import de.mygrades.view.adapter.GradesRecyclerViewAdapter;
+import de.mygrades.view.adapter.dataprovider.FaqDataProvider;
 import de.mygrades.view.adapter.model.GradeItem;
 import de.mygrades.view.decoration.GradesDividerItemDecoration;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -38,7 +38,10 @@ public class FragmentOverview extends Fragment {
 
     private PtrFrameLayout ptrFrame;
     private PtrHeader ptrHeader;
+
+    // snackbar buttons
     private View.OnClickListener tryAgainListener;
+    private View.OnClickListener goToFaqListener;
 
     @Nullable
     @Override
@@ -52,12 +55,28 @@ public class FragmentOverview extends Fragment {
         // init pull to refresh layout
         initPullToRefresh(view);
 
-        // init button for snackbar
+        // init tryAgainButton for snackbar
         tryAgainListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ptrFrame.autoRefresh();
                 //mainServiceHelper.scrapeForGrades(false);
+            }
+        };
+
+        // init goToFaqButton for snackbar
+        goToFaqListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getActivity() instanceof ReplacableFragment) {
+                    FragmentFaq fragmentFaq = new FragmentFaq();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(FragmentFaq.ARGUMENT_GO_TO_QUESTION, FaqDataProvider.GO_TO_GENERAL_ERROR);
+                    fragmentFaq.setArguments(bundle);
+
+                    // replace fragment
+                    ((ReplacableFragment) getActivity()).replaceFragment(R.id.fl_content, fragmentFaq, false);
+                }
             }
         };
 
@@ -166,7 +185,8 @@ public class FragmentOverview extends Fragment {
         if (ptrFrame != null) {
             ptrFrame.refreshComplete();
         }
-        UIHelper.displayErrorMessage(getView(), errorEvent, tryAgainListener, null);
+
+        UIHelper.displayErrorMessage(getView(), errorEvent, tryAgainListener, goToFaqListener);
     }
 
     @Override
