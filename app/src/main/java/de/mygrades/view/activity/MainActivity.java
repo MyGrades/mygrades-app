@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
     private FrameLayout flInitialScraping;
     private ImageView ivToolbarLogo;
 
+    private boolean initialScrapingDone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +60,10 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
         // setup navigation drawer
         setupDrawerContent();
 
+        initialScrapingDone = isInitialScrapingDone();
+
         // check initial loading
-        if (!isInitialScrapingDone()) {
+        if (!initialScrapingDone) {
             // disable navigation drawer
             disableNavigationDrawer();
 
@@ -170,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             transaction.setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.slide_out_to_top);
         }
 
-        transaction.replace(resLayoutId, newFragment);
+        transaction.replace(resLayoutId, newFragment, newFragment.getClass().getSimpleName());
         transaction.commit();
     }
 
@@ -180,6 +186,30 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(navigationView)) {
+            drawerLayout.closeDrawers();
+            return;
+        }
+
+        if (!initialScrapingDone) {
+            super.onBackPressed();
+            return;
+        }
+
+        // check if current fragment is FragmentOverview
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment overview = fragmentManager.findFragmentByTag(FragmentOverview.class.getSimpleName());
+        if (overview == null || !overview.isVisible()) {
+            // go to overview (e.g. if user is currently at FAQs and presses back)
+            replaceFragment(R.id.fl_content, new FragmentOverview(), false);
+            return;
+        }
+
+        super.onBackPressed();
     }
 
     /**
