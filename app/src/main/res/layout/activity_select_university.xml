@@ -97,10 +97,8 @@
         android:id="@+id/fl_error_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="32dp"
+        android:padding="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:visibility="gone">
 
         <LinearLayout
