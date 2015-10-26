@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import de.mygrades.database.dao.TransformerMapping;
 import de.mygrades.database.dao.TransformerMappingDao;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
+import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.UniversityEvent;
 import de.mygrades.util.Constants;
 import retrofit.RetrofitError;
@@ -40,26 +42,35 @@ public class UniversityProcessor extends BaseProcessor {
      * @param publishedOnly - load only published universities or all
      */
     public void getUniversities(boolean publishedOnly) {
-        List<University> universities = new ArrayList<>();
+        // No Connection -> event no Connection, abort
+        if (!isOnline()) {
+            postErrorEvent(ErrorEvent.ErrorType.NO_NETWORK, "No Internet Connection!");
+            return;
+        }
 
-        // make synchronous rest call
         try {
             String updatedAtServerPublished = getUpdatedAtServerForUniversities(true);
             String updatedAtServerUnpublished = getUpdatedAtServerForUniversities(false);
-            universities = restClient.getRestApi().getUniversities(publishedOnly, updatedAtServerPublished, updatedAtServerUnpublished);
+
+            // make synchronous rest call
+            List<University> universities = restClient.getRestApi().getUniversities(publishedOnly, updatedAtServerPublished, updatedAtServerUnpublished);
+            universities = universities == null ? new ArrayList<University>() : universities;
+
+            // insert into database
+            daoSession.getUniversityDao().insertOrReplaceInTx(universities);
+
+            // post university event
+            UniversityEvent universityEvent = new UniversityEvent();
+            universityEvent.setUniversities(universities);
+            EventBus.getDefault().post(universityEvent);
         } catch (RetrofitError e) {
+            if (e.getCause() instanceof SocketTimeoutException) {
+                postErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout", e);
+            } else {
+                postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
+            }
             Log.e(TAG, "RetrofitError: " + e.getMessage());
         }
-
-        universities = universities == null ? new ArrayList<University>() : universities;
-
-        // insert into database
-        daoSession.getUniversityDao().insertOrReplaceInTx(universities);
-
-        // post university event
-        UniversityEvent universityEvent = new UniversityEvent();
-        universityEvent.setUniversities(universities);
-        EventBus.getDefault().post(universityEvent);
     }
 
     /**
