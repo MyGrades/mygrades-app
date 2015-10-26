@@ -82,6 +82,44 @@
             app:matProg_barColor="?attr/colorPrimary"
             app:matProg_progressIndeterminate="true"
             app:matProg_barWidth="2dp"/>
+
+        <LinearLayout
+            android:id="@+id/ll_error_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_error_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_error_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fehler..."/>
+
+            <Button
+                android:id="@+id/btn_try_again"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nochmal versuchen"
+                android:theme="@style/RobotoButtonStyle"
+                android:layout_marginTop="16dp"/>
+        </LinearLayout>
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
