@@ -52,4 +52,6 @@
     <string name="nav_logout">Abmelden</string>
 
     <string name="snackbar_refresh_complete">Aktualisieren erfolgreich</string>
+    <string name="error_server_timeout">Zeitüberschreitung bei der Anfrage.\n\nEs hat zu lange gedauert mit unserem Server zu kommunizieren. Bitte versuche es erneut.</string>
+    <string name="error_unknown">Unbekannter Fehler beim Abrufen. Bitte versuche es erneut.</string>
 </resources>
