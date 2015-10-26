@@ -60,7 +60,7 @@ public class FragmentOverview extends Fragment {
             @Override
             public void onClick(View v) {
                 ptrFrame.autoRefresh();
-                //mainServiceHelper.scrapeForGrades(false);
+                //mainServiceHelper.scrapeForGrades(false); TODO: check with behaviour for autorefresh
             }
         };
 
@@ -87,7 +87,7 @@ public class FragmentOverview extends Fragment {
         mainServiceHelper.getGradesFromDatabase();
 
         // restore instance state if necessary
-        ptrHeader.restoreInstanceState(savedInstanceState);
+        ptrHeader.restoreInstanceState(savedInstanceState, ptrFrame);
 
         return view;
     }
@@ -111,7 +111,10 @@ public class FragmentOverview extends Fragment {
         ptrFrame.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-                mainServiceHelper.scrapeForGrades(false);
+                // TODO: better way to do this?
+                if (!ptrFrame.isAutoRefresh()) {
+                    mainServiceHelper.scrapeForGrades(false);
+                }
             }
 
             @Override
@@ -171,7 +174,9 @@ public class FragmentOverview extends Fragment {
             adapter.updateSummary();
         }
 
-        if (ptrFrame != null) {
+        // if it's an result of scraping
+        if (gradesEvent.isScrapingResult() && ptrFrame != null && ptrHeader != null) {
+            UIHelper.showSnackbar(getView(), getString(R.string.snackbar_refresh_complete));
             ptrFrame.refreshComplete();
         }
     }

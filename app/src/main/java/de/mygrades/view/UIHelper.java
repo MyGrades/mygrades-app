@@ -27,6 +27,19 @@ public class UIHelper {
     }
 
     /**
+     * Shows a Snackbar with a given text on the given view.
+     *
+     * @param view view where the snackbar should be shown
+     * @param text text to show
+     */
+    public static void showSnackbar(View view, String text) {
+        if (view != null) {
+            Snackbar.make(view, text, Snackbar.LENGTH_LONG)
+                    .show();
+        }
+    }
+
+    /**
      * Evaluates the Error from errorEvent and displays specific message.
      *
      * @param view view where the error should be shown

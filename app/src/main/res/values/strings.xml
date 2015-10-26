@@ -47,4 +47,6 @@
     <string name="ptr_header_release_to_refresh">Loslassen zum aktualisieren</string>
     <string name="ptr_header_refresh_complete">Fertig.</string>
     <string name="ptr_header_refreshing">Deine Noten werden geladen.</string>
+
+    <string name="snackbar_refresh_complete">Aktualisieren erfolgreich</string>
 </resources>
