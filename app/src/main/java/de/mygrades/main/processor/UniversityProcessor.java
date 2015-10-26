@@ -5,18 +5,18 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import de.greenrobot.dao.query.QueryBuilder;
+import de.greenrobot.dao.query.DeleteQuery;
 import de.greenrobot.event.EventBus;
 import de.mygrades.database.dao.Action;
 import de.mygrades.database.dao.ActionDao;
 import de.mygrades.database.dao.ActionParam;
+import de.mygrades.database.dao.ActionParamDao;
 import de.mygrades.database.dao.Rule;
 import de.mygrades.database.dao.TransformerMapping;
+import de.mygrades.database.dao.TransformerMappingDao;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
 import de.mygrades.main.events.UniversityEvent;
@@ -105,6 +105,8 @@ public class UniversityProcessor extends BaseProcessor {
                     daoSession.getUniversityDao().insertOrReplace(finalUniversity);
 
                     for (Rule rule : finalUniversity.getRulesRaw()) {
+                        clearRule(rule); // delete actions and transformer mappings
+
                         daoSession.getRuleDao().insertOrReplace(rule);
 
                         for (Action action : rule.getActionsRaw()) {
@@ -122,6 +124,39 @@ public class UniversityProcessor extends BaseProcessor {
                 }
             });
         }
+    }
+
+    /**
+     * Deletes all ActionParams, Actions and TransformerMappings for a given rule from database.
+     *
+     * @param rule
+     */
+    private void clearRule(Rule rule) {
+        DeleteQuery deleteActionParams = daoSession.getActionParamDao().queryBuilder()
+                .where(ActionParamDao.Properties.ActionId.eq(-1))
+                .buildDelete();
+
+        DeleteQuery deleteActions = daoSession.getActionDao().queryBuilder()
+                .where(ActionDao.Properties.RuleId.eq(rule.getRuleId()))
+                .buildDelete();
+
+        DeleteQuery deleteTransformerMappings = daoSession.getTransformerMappingDao().queryBuilder()
+                .where(TransformerMappingDao.Properties.RuleId.eq(rule.getRuleId()))
+                .buildDelete();
+
+        // delete actionParams
+        for (Action action : rule.getActionsRaw()) {
+            deleteActionParams.setParameter(0, action.getActionId());
+            deleteActionParams.executeDeleteWithoutDetachingEntities();
+        }
+
+        // delete actions
+        deleteActions.executeDeleteWithoutDetachingEntities();
+
+        // delete transformer mappings
+        deleteTransformerMappings.executeDeleteWithoutDetachingEntities();
+
+        daoSession.clear();
     }
 
     /**
