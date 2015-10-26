@@ -12,6 +12,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Entities;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URI;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -111,10 +115,13 @@ public class Scraper {
      */
     private Parser parser;
 
+    private URI baseUri;
+
     public Scraper(List<Action> actions, Parser parser) {
         this.actions = actions;
         this.cookies = new HashMap<>();
         this.parser = parser;
+        this.baseUri = null;
     }
 
     /**
@@ -125,7 +132,7 @@ public class Scraper {
      * @throws IOException
      * @throws ParseException
      */
-    public String scrape() throws IOException, ParseException {
+    public String scrape() throws IOException, ParseException, URISyntaxException {
         return scrape(false);
     }
 
@@ -138,7 +145,7 @@ public class Scraper {
      * @throws IOException
      * @throws ParseException
      */
-    public String scrape(boolean tableAsInterimResult) throws IOException, ParseException {
+    public String scrape(boolean tableAsInterimResult) throws IOException, ParseException, URISyntaxException {
         String parsedHtml = null;
 
         // iterate over all actions in order by position
@@ -239,9 +246,18 @@ public class Scraper {
      * @param actionUrl url of action, may be null
      * @return url as string
      */
-    private String getUrl(String parsedHtml, String actionUrl) {
+    private String getUrl(String parsedHtml, String actionUrl) throws MalformedURLException, URISyntaxException {
+        // set base uri if it isn't set and action url is set
+        if (baseUri == null && actionUrl != null) {
+            baseUri = new URL(actionUrl).toURI();
+        }
+
         // if url of action == null -> use parse result of previous action
         if (actionUrl == null) {
+            // if url doesn't start with http*
+            if (!parsedHtml.toLowerCase().startsWith("http")) {
+                return baseUri.resolve(parsedHtml).toString();
+            }
             return parsedHtml;
         }
         return actionUrl;
@@ -262,16 +278,20 @@ public class Scraper {
             for (ActionParam actionParam : actionParams) {
                 String value = actionParam.getValue();
                 // check if type == password or username -> get from secure shared preferences
-                if (actionParam.getType().equals("password")) {
-                    if (prefs == null) {
-                        prefs = new SecurePreferences(parser.getContext(), Constants.NOT_SO_SECURE_PREF_PW, Constants.NOT_SO_SECURE_PREF_FILE);
+                if (actionParam.getType() != null) {
+                    if (actionParam.getType().equals("password")) {
+                        if (prefs == null) {
+                            prefs = new SecurePreferences(parser.getContext(), Constants.NOT_SO_SECURE_PREF_PW, Constants.NOT_SO_SECURE_PREF_FILE);
+                        }
+                        value = prefs.getString(Constants.PREF_KEY_PASSWORD, "");
+                    } else if (actionParam.getType().equals("username")) {
+                        if (prefs == null) {
+                            prefs = new SecurePreferences(parser.getContext(), Constants.NOT_SO_SECURE_PREF_PW, Constants.NOT_SO_SECURE_PREF_FILE);
+                        }
+                        value = prefs.getString(Constants.PREF_KEY_USERNAME, "");
                     }
-                    value = prefs.getString(Constants.PREF_KEY_PASSWORD, "");
-                } else if (actionParam.getType().equals("username")) {
-                    if (prefs == null) {
-                        prefs = new SecurePreferences(parser.getContext(), Constants.NOT_SO_SECURE_PREF_PW, Constants.NOT_SO_SECURE_PREF_FILE);
-                    }
-                    value = prefs.getString(Constants.PREF_KEY_USERNAME, "");
+                } else {
+                    value = actionParam.getValue();
                 }
                 requestData.put(actionParam.getKey(), value);
             }

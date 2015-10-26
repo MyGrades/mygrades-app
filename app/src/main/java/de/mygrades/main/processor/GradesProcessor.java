@@ -233,8 +233,7 @@ public class GradesProcessor extends BaseProcessor {
             saveLastUpdatedAt(prefs);
 
             // post event with new grades to activity
-            GradesEvent gradesEvent = new GradesEvent();
-            gradesEvent.setGrades(gradeEntries);
+            GradesEvent gradesEvent = new GradesEvent(gradeEntries, true);
             EventBus.getDefault().post(gradesEvent);
 
             // set initial loading to done and send event to activity

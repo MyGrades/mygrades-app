@@ -144,7 +144,7 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
      * Load attributes from instance state and show Loading animation if it was loading before.
      * @param savedInstanceState instance state bundle
      */
-    public void restoreInstanceState(Bundle savedInstanceState) {
+    public void restoreInstanceState(Bundle savedInstanceState, PtrFrameLayout ptrFrame) {
         if (savedInstanceState != null) {
             isScraping = savedInstanceState.getBoolean(Constants.INSTANCE_IS_SCRAPING_STATE);
             Log.d("test", "restoreInstanceState() called with: " + "savedInstanceState = [" + savedInstanceState + "]");
@@ -153,8 +153,13 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
                 progressWheel.startAnimation(getContext());
                 tvHeaderText.setText(R.string.ptr_header_refreshing);
                 setProgress(progress);
+                ptrFrame.autoRefresh();
             }
         }
+    }
+
+    public boolean isScraping() {
+        return isScraping;
     }
 }
 
