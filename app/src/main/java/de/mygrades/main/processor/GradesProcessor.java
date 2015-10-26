@@ -82,7 +82,7 @@ public class GradesProcessor extends BaseProcessor {
             Rule rule = getUserRule(university);
 
             // send event to GUI whether overview is possible
-            if (rule.getOverview()) { // TODO: separate general message?
+            if (rule.getOverview()) {
                 EventBus.getDefault().post(new OverviewPossibleEvent(gradeEntry.getOverviewPossible()));
             } else {
                 EventBus.getDefault().post(new OverviewPossibleEvent(false));
@@ -159,7 +159,7 @@ public class GradesProcessor extends BaseProcessor {
             }
 
             // post Event with Overview to GUI
-            EventBus.getDefault().post(new OverviewEvent(overview));
+            EventBus.getDefault().post(new OverviewEvent(overview, true));
 
         } catch (ParseException e) {
             postErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parse Error", e);

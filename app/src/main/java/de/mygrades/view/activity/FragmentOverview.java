@@ -188,6 +188,7 @@ public class FragmentOverview extends Fragment {
      */
     public void onEventMainThread(ErrorEvent errorEvent) {
         if (ptrFrame != null) {
+            // TODO: not complete -> error
             ptrFrame.refreshComplete();
         }
 

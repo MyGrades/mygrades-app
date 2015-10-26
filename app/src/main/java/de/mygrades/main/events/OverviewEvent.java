@@ -7,9 +7,15 @@ import de.mygrades.database.dao.Overview;
  */
 public class OverviewEvent {
     private Overview overview;
+    private boolean isScrapingResult;
 
     public OverviewEvent(Overview overview) {
         this.overview = overview;
+    }
+
+    public OverviewEvent(Overview overview, boolean isScrapingResult) {
+        this(overview);
+        this.isScrapingResult = isScrapingResult;
     }
 
     public Overview getOverview() {
@@ -18,5 +24,13 @@ public class OverviewEvent {
 
     public void setOverview(Overview overview) {
         this.overview = overview;
+    }
+
+    public boolean isScrapingResult() {
+        return isScrapingResult;
+    }
+
+    public void setIsScrapingResult(boolean isScrapingResult) {
+        this.isScrapingResult = isScrapingResult;
     }
 }

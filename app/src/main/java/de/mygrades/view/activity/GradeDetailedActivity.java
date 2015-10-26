@@ -36,11 +36,16 @@ import de.mygrades.main.events.GradeEntryEvent;
 import de.mygrades.main.events.OverviewEvent;
 import de.mygrades.main.events.OverviewPossibleEvent;
 import de.mygrades.main.events.ScrapeProgressEvent;
+import de.mygrades.view.PtrHeader;
 import de.mygrades.view.UIHelper;
 import de.mygrades.view.adapter.dataprovider.FaqDataProvider;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 
 /**
- * Created by jonastheis on 03.10.15.
+ * Activity to show detailed information for a specific grade entry.
+ * If available for university and grade entry a diagram for overview of grades is shown.
  */
 public class GradeDetailedActivity extends AppCompatActivity {
     private static final String TAG = GradeDetailedActivity.class.getSimpleName();
@@ -50,6 +55,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private String gradeHash;
     private GradeEntry gradeEntry;
     private MainServiceHelper mainServiceHelper;
+
+    private PtrFrameLayout ptrFrame;
+    private PtrHeader ptrHeader;
 
     // Views
     private TextView tvGradeDetailName;
@@ -66,40 +74,23 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private TextView tvOverviewParticipants;
     private TextView tvOverviewAverage;
 
-    private Button btnScrapeForOverview;
     private TextView tvOverviewNotPossible;
-    private ProgressWheel progressWheel;
+
     private LinearLayout llRootView; // used to show snackbar
 
     private BarChart barChart;
     private static final int COLOR_GRAY = Color.rgb(233, 233, 233); // light gray
     private static final int COLOR_HIGHLIGHT = Color.rgb(139, 195, 74); // primary color green
 
-    private static final float DEFAULT_PROGRESS = 0.025f; // default progress, to indicate the progress bar
-    private static final String IS_SCRAPING_STATE = "is_scraping_state";
     private static final String IS_OVERVIEW_POSSIBLE_STATE = "is_overview_possible_state";
-    private static final String PROGRESS_STATE = "progress_state";
-    private boolean isScraping;
+    private static final String GRADE_HASH_STATE = "grade_hash";
 
     private boolean isOverviewPossible;
 
-    // click listener to go to the FAQs and show the general-error question immediately
-    private View.OnClickListener goToFaqListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(GradeDetailedActivity.this, MainActivity.class);
-            intent.putExtra(FragmentFaq.ARGUMENT_GO_TO_QUESTION, FaqDataProvider.GO_TO_GENERAL_ERROR);
-            GradeDetailedActivity.this.startActivity(intent);
-        }
-    };
+    // snackbar buttons
+    private View.OnClickListener tryAgainListener;
+    private View.OnClickListener goToFaqListener;
 
-    // click listener to restart the scraping process
-    private View.OnClickListener tryAgainListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            scrapeForOverview();
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,6 +109,44 @@ public class GradeDetailedActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         gradeHash = extras.getString(EXTRA_GRADE_HASH, "");
 
+        // click listener to go to the FAQs and show the general-error question immediately
+        goToFaqListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GradeDetailedActivity.this, MainActivity.class);
+                intent.putExtra(FragmentFaq.ARGUMENT_GO_TO_QUESTION, FaqDataProvider.GO_TO_GENERAL_ERROR);
+                GradeDetailedActivity.this.startActivity(intent);
+            }
+        };
+
+        // click listener to restart the scraping process
+        tryAgainListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ptrFrame.autoRefresh();
+            }
+        };
+
+        initViews();
+
+        // restore instance state if necessary
+        if (savedInstanceState != null) {
+            isOverviewPossible = savedInstanceState.getBoolean(IS_OVERVIEW_POSSIBLE_STATE);
+            gradeHash = savedInstanceState.getString(GRADE_HASH_STATE, "");
+            ptrHeader.restoreInstanceState(savedInstanceState, ptrFrame);
+        }
+
+        // register event bus
+        EventBus.getDefault().register(this);
+
+        // start intent to get data for Grade Detail page
+        mainServiceHelper.getGradeDetails(gradeHash);
+    }
+
+    /**
+     * Initialize all needed views.
+     */
+    private void initViews() {
         // get views for grade
         tvGradeDetailName = (TextView) findViewById(R.id.tv_grade_detail_name);
         tvGradeDetailExamId = (TextView) findViewById(R.id.tv_grade_detail_exam_id);
@@ -134,29 +163,32 @@ public class GradeDetailedActivity extends AppCompatActivity {
         tvOverviewParticipants = (TextView) findViewById(R.id.tv_overview_participants);
         tvOverviewAverage = (TextView) findViewById(R.id.tv_overview_average);
         barChart = (BarChart) findViewById(R.id.bar_chart);
-
-        initScrapeForOverviewButton();
         tvOverviewNotPossible = (TextView) findViewById(R.id.tv_overview_not_possible);
-        progressWheel = (ProgressWheel) findViewById(R.id.progress_wheel);
         llRootView = (LinearLayout) findViewById(R.id.ll_root_view);
 
-        // restore instance state if necessary
-        if (savedInstanceState != null) {
-            isOverviewPossible = savedInstanceState.getBoolean(IS_OVERVIEW_POSSIBLE_STATE);
-            isScraping = savedInstanceState.getBoolean(IS_SCRAPING_STATE);
-            if (isScraping) {
-                progressWheel.setProgress(savedInstanceState.getFloat(PROGRESS_STATE, DEFAULT_PROGRESS));
-                showProgressWheel();
+        initPullToRefresh();
+    }
+
+    /**
+     * Initialize the pull to refresh layout.
+     */
+    private void initPullToRefresh() {
+        ptrFrame = (PtrFrameLayout) findViewById(R.id.pull_to_refresh);
+        ptrHeader = new PtrHeader(this);
+        ptrFrame.addPtrUIHandler(ptrHeader);
+        ptrFrame.setHeaderView(ptrHeader);
+
+        ptrFrame.setPtrHandler(new PtrHandler() {
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                mainServiceHelper.scrapeForOverview(gradeHash);
             }
-        } else {
-            progressWheel.setProgress(DEFAULT_PROGRESS);
-        }
 
-        // register event bus
-        EventBus.getDefault().register(this);
-
-        // start intent to get data for Grade Detail page
-        mainServiceHelper.getGradeDetails(gradeHash);
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+            }
+        });
     }
 
     /**
@@ -234,59 +266,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
     }
 
     /**
-     * Initialize ScrapeForOverview button.
-     */
-    private void initScrapeForOverviewButton() {
-        btnScrapeForOverview = (Button) findViewById(R.id.btn_scrape_for_overview);
-
-        btnScrapeForOverview.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (gradeEntry != null) {
-                    scrapeForOverview();
-                }
-            }
-        });
-    }
-
-    /**
-     * Starts the scraping process, hides the button and shows the ProgressWheel.
-     */
-    private void scrapeForOverview() {
-        if (isOverviewPossible) {
-            mainServiceHelper.scrapeForOverview(gradeEntry.getHash());
-            btnScrapeForOverview.setVisibility(View.GONE);
-
-            isScraping = true;
-            showProgressWheel();
-        }
-    }
-
-    /**
-     * Hides the ProgressWheel and shows the button.
-     */
-    private void hideScrapeForOverview() {
-        isScraping = false;
-
-        progressWheel.setAnimation(null);
-        progressWheel.setVisibility(View.GONE);
-
-        if (isOverviewPossible) {
-            btnScrapeForOverview.setVisibility(View.VISIBLE);
-        } else {
-            tvOverviewNotPossible.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     * Shows the progress wheel and start its animation.
-     */
-    private void showProgressWheel() {
-        progressWheel.setVisibility(View.VISIBLE);
-        progressWheel.startAnimation(AnimationUtils.loadAnimation(GradeDetailedActivity.this, R.anim.rotate_indefinitely));
-    }
-
-    /**
      * Receive an event when the GradeEntry is retrieved from the DB.
      * Set TextViews to values from Grade and evaluate which one is shown.
      * @param gradeEntryEvent
@@ -315,9 +294,11 @@ public class GradeDetailedActivity extends AppCompatActivity {
         Overview overview = overviewEvent.getOverview();
 
         // only set overview if it belongs to current gradeEntry
-        if (gradeEntry != null && overview.getGradeEntryHash().equals(gradeEntry.getHash())) {
-            // hide button
-            btnScrapeForOverview.setVisibility(View.GONE);
+        if (gradeEntry != null && overview.getGradeEntryHash().equals(gradeHash)) {
+            // if it's a scraping result
+            if (overviewEvent.isScrapingResult() && ptrFrame != null && ptrHeader != null) {
+                ptrFrame.refreshComplete();
+            }
 
             llOverviewWrapper.setVisibility(View.VISIBLE);
             tvOverviewParticipants.setText(String.valueOf(overview.getParticipants()));
@@ -329,14 +310,15 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
     /**
      * Receive an event when its determined whether it is possible to receive an overview.
+     * Event is only sent if there is no overview for this grade entry in DB.
      * @param overviewPossibleEvent
      */
     public void onEventMainThread(OverviewPossibleEvent overviewPossibleEvent) {
-        if (!isScraping) {
+        if (ptrHeader != null && !ptrHeader.isScraping()) {
             isOverviewPossible = overviewPossibleEvent.isOverviewPossible();
 
             if (isOverviewPossible) {
-                btnScrapeForOverview.setVisibility(View.VISIBLE);
+                ptrFrame.autoRefresh();
             } else {
                 tvOverviewNotPossible.setVisibility(View.VISIBLE);
             }
@@ -349,18 +331,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
      * @param scrapeProgressEvent ScrapeProgressEvent
      */
     public void onEventMainThread(ScrapeProgressEvent scrapeProgressEvent) {
-        if (progressWheel != null) {
-            isScraping = true;
-
-            int currentStep = scrapeProgressEvent.getCurrentStep();
-            int stepCount = scrapeProgressEvent.getStepCount() - 1; // ignore table_overview step
-
-            float progress = ((float) currentStep) / stepCount;
-            progressWheel.setProgress(progress);
-
-            if (currentStep == stepCount) {
-                hideScrapeForOverview();
-            }
+        if (ptrHeader != null) {
+            ptrHeader.increaseProgress(scrapeProgressEvent.getCurrentStep(), scrapeProgressEvent.getStepCount());
         }
     }
 
@@ -370,8 +342,12 @@ public class GradeDetailedActivity extends AppCompatActivity {
      * @param errorEvent ErrorEvent
      */
     public void onEventMainThread(ErrorEvent errorEvent) {
+        if (ptrFrame != null) {
+            // TODO: not complete -> error
+            ptrFrame.refreshComplete();
+        }
+
         UIHelper.displayErrorMessage(llRootView, errorEvent, tryAgainListener, goToFaqListener);
-        hideScrapeForOverview();
     }
 
     private void setTextView(TextView textView, String value) {
@@ -408,9 +384,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(IS_SCRAPING_STATE, isScraping);
-        outState.putFloat(PROGRESS_STATE, progressWheel.getProgress());
+        ptrHeader.saveInstanceState(outState);
         outState.putBoolean(IS_OVERVIEW_POSSIBLE_STATE, isOverviewPossible);
+        outState.putString(GRADE_HASH_STATE, gradeHash);
     }
 
     private class MyValueFormatter implements ValueFormatter {
