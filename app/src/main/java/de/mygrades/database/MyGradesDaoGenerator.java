@@ -61,7 +61,7 @@ public class MyGradesDaoGenerator {
     private static void addRule(Schema schema) {
         rule = schema.addEntity("Rule");
         rule.addLongProperty("ruleId").primaryKey();
-        rule.addStringProperty("type").notNull();
+        rule.addStringProperty("name").notNull();
         rule.addStringProperty("semesterFormat");
         rule.addStringProperty("semesterPattern");
         rule.addIntProperty("semesterStartSummer");

@@ -27,7 +27,7 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     */
     public static class Properties {
         public final static Property RuleId = new Property(0, Long.class, "ruleId", true, "RULE_ID");
-        public final static Property Type = new Property(1, String.class, "type", false, "TYPE");
+        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property SemesterFormat = new Property(2, String.class, "semesterFormat", false, "SEMESTER_FORMAT");
         public final static Property SemesterPattern = new Property(3, String.class, "semesterPattern", false, "SEMESTER_PATTERN");
         public final static Property SemesterStartSummer = new Property(4, Integer.class, "semesterStartSummer", false, "SEMESTER_START_SUMMER");
@@ -56,7 +56,7 @@ public class RuleDao extends AbstractDao<Rule, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"RULE\" (" + //
                 "\"RULE_ID\" INTEGER PRIMARY KEY ," + // 0: ruleId
-                "\"TYPE\" TEXT NOT NULL ," + // 1: type
+                "\"NAME\" TEXT NOT NULL ," + // 1: name
                 "\"SEMESTER_FORMAT\" TEXT," + // 2: semesterFormat
                 "\"SEMESTER_PATTERN\" TEXT," + // 3: semesterPattern
                 "\"SEMESTER_START_SUMMER\" INTEGER," + // 4: semesterStartSummer
@@ -82,7 +82,7 @@ public class RuleDao extends AbstractDao<Rule, Long> {
         if (ruleId != null) {
             stmt.bindLong(1, ruleId);
         }
-        stmt.bindString(2, entity.getType());
+        stmt.bindString(2, entity.getName());
  
         String semesterFormat = entity.getSemesterFormat();
         if (semesterFormat != null) {
@@ -138,7 +138,7 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     public Rule readEntity(Cursor cursor, int offset) {
         Rule entity = new Rule( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // ruleId
-            cursor.getString(offset + 1), // type
+            cursor.getString(offset + 1), // name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // semesterFormat
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // semesterPattern
             cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4), // semesterStartSummer
@@ -155,7 +155,7 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     @Override
     public void readEntity(Cursor cursor, Rule entity, int offset) {
         entity.setRuleId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setType(cursor.getString(offset + 1));
+        entity.setName(cursor.getString(offset + 1));
         entity.setSemesterFormat(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setSemesterPattern(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setSemesterStartSummer(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));

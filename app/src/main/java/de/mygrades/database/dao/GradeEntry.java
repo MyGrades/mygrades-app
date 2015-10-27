@@ -328,7 +328,6 @@ public class GradeEntry {
         result = 31 * result + (overviewPossible != null ? overviewPossible.hashCode() : 0);
         return result;
     }
-
     // KEEP METHODS END
 
 }
