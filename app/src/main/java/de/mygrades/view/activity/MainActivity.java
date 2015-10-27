@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             } else if (savedInstanceState == null) {
                 // set default fragment to overview of grades
                 replaceFragment(R.id.fl_content, new FragmentOverview(), false);
-                navigationView.getMenu().getItem(0).setChecked(true);
             }
         }
     }
@@ -158,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
 
         // replace fragment with custom transition
         replaceFragment(R.id.fl_content, new FragmentOverview(), true);
-        navigationView.getMenu().getItem(0).setChecked(true);
 
         // enable navigation drawer
         enableNavigationDrawer();
@@ -177,6 +175,13 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
 
         transaction.replace(resLayoutId, newFragment, newFragment.getClass().getSimpleName());
         transaction.commit();
+
+        // highlight menu item
+        if (newFragment instanceof FragmentOverview) {
+            navigationView.getMenu().getItem(0).setChecked(true);
+        } else if (newFragment instanceof FragmentFaq) {
+            navigationView.getMenu().getItem(1).setChecked(true);
+        }
     }
 
     @Override
@@ -256,9 +261,7 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
         // set current fragment
         replaceFragment(R.id.fl_content, fragment, false);
 
-        // highlight the selected item, update the title and close the drawer
-        menuItem.setChecked(true);
-        setTitle(menuItem.getTitle());
+        // close the drawer
         drawerLayout.closeDrawers();
     }
 
