@@ -52,6 +52,8 @@
         android:background="@color/background"
         app:menu="@menu/drawer_items"
         app:headerLayout="@layout/navigation_drawer_header"
-        app:itemBackground="@drawable/navigation_drawer_item_background"/>
+        app:itemBackground="@drawable/navigation_drawer_item_background"
+        app:itemTextColor="@color/navigation_drawer_item_text"
+        app:itemIconTint="@color/navigation_drawer_item_text"/>
 
 </android.support.v4.widget.DrawerLayout>
