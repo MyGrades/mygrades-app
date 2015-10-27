@@ -20,8 +20,7 @@ import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.database.dao.GradeEntryDao;
 import de.mygrades.database.dao.Overview;
 import de.mygrades.database.dao.Rule;
-import de.mygrades.database.dao.University;
-import de.mygrades.database.dao.UniversityDao;
+import de.mygrades.database.dao.RuleDao;
 import de.mygrades.main.core.Parser;
 import de.mygrades.main.core.Scraper;
 import de.mygrades.main.core.Transformer;
@@ -73,13 +72,8 @@ public class GradesProcessor extends BaseProcessor {
             // get shared preferences
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-            // get university from DB
-            long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
-            // load university from database
-            University university = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
-
             // get rule for user
-            Rule rule = getUserRule(university);
+            Rule rule = getUserRule(prefs);
 
             // send event to GUI whether overview is possible
             if (rule.getOverview()) {
@@ -112,10 +106,10 @@ public class GradesProcessor extends BaseProcessor {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         // update and get university
-        University university = updateAndGetUniversity(prefs);
+        updateUniversity(prefs);
 
         // get rule for user
-        Rule rule = getUserRule(university);
+        Rule rule = getUserRule(prefs);
 
         // register event bus -> listen for IntermediateTableScrapingResultEvent
         EventBus.getDefault().register(this);
@@ -192,10 +186,10 @@ public class GradesProcessor extends BaseProcessor {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         // update and get university
-        University university = updateAndGetUniversity(prefs);
+        updateUniversity(prefs);
 
         // get rule for user
-        Rule rule = getUserRule(university);
+        Rule rule = getUserRule(prefs);
 
         // get actions for scrape for overview
         List<Action> actions = daoSession.getActionDao().queryBuilder()
@@ -336,36 +330,26 @@ public class GradesProcessor extends BaseProcessor {
     }
 
     /**
-     * Get the rule from university for user.
-     * @param university university object
+     * Get the selected rule from the user.
+     *
+     * @param prefs shared preferences
      * @return selected rule
      */
-    private Rule getUserRule(University university) {
-        // get bachelor rule // TODO: read from preferences?
-        Rule rule = null;
-        for(Rule r : university.getRules()) {
-            if (r.getType().equalsIgnoreCase("bachelor")) {
-                rule = r;
-                break;
-            }
-        }
-        return rule;
+    private Rule getUserRule(SharedPreferences prefs) {
+        long ruleId = prefs.getLong(Constants.PREF_KEY_RULE_ID, -1);
+        return daoSession.getRuleDao().queryBuilder().where(RuleDao.Properties.RuleId.eq(ruleId)).unique();
     }
 
     /**
-     * Update user university (from shared preferences) via rest and return it.
+     * Update user university (from shared preferences) via rest.
      * @param prefs - shared preferences
-     * @return university object
      */
-    private University updateAndGetUniversity(SharedPreferences prefs) {
+    private void updateUniversity(SharedPreferences prefs) {
         long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
 
         // update university and rules
         UniversityProcessor universityProcessor = new UniversityProcessor(context);
         universityProcessor.getDetailedUniversity(universityId);
-
-        // load university from database
-        return daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
     }
 
     /**
@@ -412,12 +396,8 @@ public class GradesProcessor extends BaseProcessor {
         // get shared preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        // load university from database
-        long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
-        University university = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
-
         // get rule for user
-        Rule rule = getUserRule(university);
+        Rule rule = getUserRule(prefs);
 
         try {
             List<GradeEntry> gradeEntries;

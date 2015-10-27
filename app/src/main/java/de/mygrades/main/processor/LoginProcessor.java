@@ -6,7 +6,11 @@ import android.preference.PreferenceManager;
 
 import com.securepreferences.SecurePreferences;
 
+import java.util.List;
+
 import de.greenrobot.event.EventBus;
+import de.mygrades.database.dao.Rule;
+import de.mygrades.database.dao.RuleDao;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
 import de.mygrades.main.events.LoginDataEvent;
@@ -82,6 +86,7 @@ public class LoginProcessor extends BaseProcessor {
         editor.remove(Constants.PREF_KEY_UNIVERSITY_ID);
         editor.remove(Constants.PREF_KEY_INITIAL_LOADING_DONE);
         editor.remove(Constants.PREF_KEY_LAST_UPDATED_AT);
+        editor.remove(Constants.PREF_KEY_RULE_ID);
         editor.apply();
 
         // delete all grades
@@ -97,7 +102,12 @@ public class LoginProcessor extends BaseProcessor {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
 
+        // get first rule and its id TODO: pass selection through pattern
+        List<Rule> rules = daoSession.getRuleDao().queryBuilder().where(RuleDao.Properties.UniversityId.eq(universityId)).build().list();
+        long ruleId = rules.get(0).getRuleId();
+
         editor.putLong(Constants.PREF_KEY_UNIVERSITY_ID, universityId);
+        editor.putLong(Constants.PREF_KEY_RULE_ID, ruleId);
         editor.apply();
     }
 
