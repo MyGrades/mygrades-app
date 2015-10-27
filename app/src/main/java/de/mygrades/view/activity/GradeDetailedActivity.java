@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -371,6 +372,17 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private void writeDoubleToTextView(TextView textView, Double value) {
         String valueAsString = value == null ? "-" : String.format("%.1f", value);
         textView.setText(valueAsString);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return false;
     }
 
     @Override
