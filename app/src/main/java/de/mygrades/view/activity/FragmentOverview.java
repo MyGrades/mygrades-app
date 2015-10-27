@@ -104,7 +104,7 @@ public class FragmentOverview extends Fragment {
      */
     private void initPullToRefresh(View rootView) {
         ptrFrame = (PtrFrameLayout) rootView.findViewById(R.id.pull_to_refresh);
-        ptrHeader = new PtrHeader(getContext());
+        ptrHeader = new PtrHeader(getContext(), getString(R.string.ptr_header_refreshing_grades));
         ptrFrame.addPtrUIHandler(ptrHeader);
         ptrFrame.setHeaderView(ptrHeader);
 
