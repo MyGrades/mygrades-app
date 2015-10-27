@@ -17,11 +17,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import de.greenrobot.event.EventBus;
+import de.mygrades.BuildConfig;
 import de.mygrades.R;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.InitialScrapingDoneEvent;
+import de.mygrades.main.events.LoginDataEvent;
 import de.mygrades.util.Constants;
 
 /**
@@ -35,6 +39,14 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
     private DrawerLayout drawerLayout;
 
     private NavigationView navigationView;
+    private LinearLayout llUserDataWrapper;
+    private TextView tvMyGradesVersion;
+
+    private static final String UNIVERSITY_NAME_STATE = "university_name_state";
+    private static final String USERNAME_STATE = "username_state";
+    private TextView tvUniversityName;
+    private TextView tvUsername;
+
     private Toolbar toolbar;
     private ActionBarDrawerToggle drawerToggle;
     private FrameLayout flInitialScraping;
@@ -57,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
         initToolbar();
 
         // setup navigation drawer
-        setupDrawerContent();
+        setupDrawerContent(savedInstanceState);
 
         initialScrapingDone = isInitialScrapingDone();
 
@@ -98,6 +110,8 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
         // register to sticky events. Sticky events are necessary here,
         // to get notified even if the activity lost focus during the initial scraping.
         EventBus.getDefault().registerSticky(this);
+
+        mainServiceHelper.getLoginDataFromDatabase();
     }
 
     /**
@@ -219,9 +233,22 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
     /**
      * Setup NavigationDrawer and initialize listener for clicked menu items.
      */
-    private void setupDrawerContent() {
+    private void setupDrawerContent(Bundle savedInstanceState) {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
+
+        llUserDataWrapper = (LinearLayout) findViewById(R.id.ll_user_data_wrapper);
+        tvMyGradesVersion = (TextView) findViewById(R.id.tv_mygrades_version);
+        tvMyGradesVersion.setText(getString(R.string.tv_mygrades_version, BuildConfig.VERSION_NAME));
+        tvUniversityName = (TextView) findViewById(R.id.tv_university_name);
+        tvUsername = (TextView) findViewById(R.id.tv_username);
+
+        // restore instance state
+        if (savedInstanceState != null) {
+            tvUniversityName.setText(savedInstanceState.getString(UNIVERSITY_NAME_STATE, ""));
+            tvUsername.setText(savedInstanceState.getString(USERNAME_STATE, ""));
+            llUserDataWrapper.setVisibility(View.VISIBLE);
+        }
 
         // init drawer toggle (hamburger menu icon <-> arrow)
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
@@ -263,6 +290,25 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
 
         // close the drawer
         drawerLayout.closeDrawers();
+    }
+
+    /**
+     * Receive a LoginDataEvent with previously entered username and selected university.
+     *
+     * @param loginDataEvent LoginDataEvent
+     */
+    public void onEventMainThread(LoginDataEvent loginDataEvent) {
+        tvUniversityName.setText(loginDataEvent.getUniversityName());
+        tvUsername.setText(loginDataEvent.getUsername());
+        llUserDataWrapper.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(UNIVERSITY_NAME_STATE, tvUniversityName.getText().toString());
+        outState.putString(USERNAME_STATE, tvUsername.getText().toString());
     }
 
     @Override
