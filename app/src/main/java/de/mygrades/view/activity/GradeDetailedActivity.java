@@ -175,7 +175,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
      */
     private void initPullToRefresh() {
         ptrFrame = (PtrFrameLayout) findViewById(R.id.pull_to_refresh);
-        ptrHeader = new PtrHeader(this);
+        ptrHeader = new PtrHeader(this, getString(R.string.ptr_header_refreshing_overview));
         ptrFrame.addPtrUIHandler(ptrHeader);
         ptrFrame.setHeaderView(ptrHeader);
 
