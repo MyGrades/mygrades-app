@@ -114,7 +114,6 @@ public class GradesProcessor extends BaseProcessor {
         // register event bus -> listen for IntermediateTableScrapingResultEvent
         EventBus.getDefault().register(this);
 
-        // TODO: post event start scraping
         // make sure that actions get loaded from DB not cached ones
         daoSession.clear();
         // get actions for scrape for overview
@@ -139,6 +138,9 @@ public class GradesProcessor extends BaseProcessor {
             Transformer transformer = new Transformer(rule, scrapingResult, parser);
             final Overview newOverview = transformer.transformOverview(gradeEntry.getGrade());
             newOverview.setGradeEntryHash(gradeEntry.getHash());
+
+            // post status event (100% done)
+            EventBus.getDefault().post(new ScrapeProgressEvent(actions.size() + 1, actions.size() + 1));
 
             // if old overview
             Overview existingOverview = gradeEntry.getOverview();
