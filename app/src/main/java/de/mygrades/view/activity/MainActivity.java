@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             ivToolbarLogo.setVisibility(View.VISIBLE);
         } else if (newFragment instanceof FragmentFaq) {
             navigationView.getMenu().getItem(1).setChecked(true);
-            getSupportActionBar().setTitle("FAQs");
+            getSupportActionBar().setTitle(getString(R.string.toolbar_faq_title));
             ivToolbarLogo.setVisibility(View.GONE);
         }
     }
