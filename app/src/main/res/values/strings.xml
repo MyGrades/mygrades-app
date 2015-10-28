@@ -56,4 +56,5 @@
     <string name="error_unknown">Unbekannter Fehler beim Abrufen. Bitte versuche es erneut.</string>
     <string name="nav_header_logged_in_as">Angemeldet als:</string>
     <string name="tv_mygrades_version">MyGrades\n%1$s</string>
+    <string name="toolbar_faq_title">FAQs</string>
 </resources>
