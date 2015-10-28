@@ -54,9 +54,12 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
     private boolean isScraping;
     private ProgressWheelWrapper progressWheel;
     private TextView tvHeaderText;
+    private String refreshLoadingText;
 
-    public PtrHeader(Context context) {
+    public PtrHeader(Context context, String refreshLoadingText) {
         super(context);
+
+        this.refreshLoadingText = refreshLoadingText;
 
         View header = LayoutInflater.from(getContext()).inflate(R.layout.ptr_header, this);
 
@@ -85,7 +88,7 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
 
     @Override
     public void onUIRefreshBegin(PtrFrameLayout frame) {
-        tvHeaderText.setText(R.string.ptr_header_refreshing);
+        tvHeaderText.setText(refreshLoadingText);
         isScraping = true;
     }
 
@@ -151,7 +154,7 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
             if (isScraping) {
                 float progress = savedInstanceState.getFloat(Constants.INSTANCE_PROGRESS_STATE, 0);
                 progressWheel.startAnimation(getContext());
-                tvHeaderText.setText(R.string.ptr_header_refreshing);
+                tvHeaderText.setText(refreshLoadingText);
                 setProgress(progress);
                 ptrFrame.autoRefresh();
             }
