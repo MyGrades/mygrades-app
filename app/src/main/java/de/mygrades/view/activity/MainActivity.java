@@ -44,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
 
     private static final String UNIVERSITY_NAME_STATE = "university_name_state";
     private static final String USERNAME_STATE = "username_state";
+    private static final String TOOLBAR_LOGO_VISIBLE_STATE = "toolbar_icon_state";
+    private static final String TOOLBAR_TITLE_STATE = "toolbar_title_state";
+
     private TextView tvUniversityName;
     private TextView tvUsername;
 
@@ -66,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
         mainServiceHelper = new MainServiceHelper(this);
 
         // init toolbar
-        initToolbar();
+        initToolbar(savedInstanceState);
 
         // setup navigation drawer
         setupDrawerContent(savedInstanceState);
@@ -79,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             disableNavigationDrawer();
 
             // hide toolbar icon
-            ivToolbarLogo = (ImageView) findViewById(R.id.iv_mygrades_logo);
             ivToolbarLogo.setAlpha(0f);
 
             // show initial scraping frame layout
@@ -117,10 +119,21 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
     /**
      * Initializes the toolbar.
      */
-    private void initToolbar() {
+    private void initToolbar(Bundle savedInstanceState) {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+        ivToolbarLogo = (ImageView) findViewById(R.id.iv_mygrades_logo);
+
+        if (savedInstanceState != null) {
+            // set title
+            String title = savedInstanceState.getString(TOOLBAR_TITLE_STATE, "");
+            getSupportActionBar().setTitle(title);
+
+            // set logo visibility
+            int visibility = savedInstanceState.getBoolean(TOOLBAR_LOGO_VISIBLE_STATE) ? View.VISIBLE : View.GONE;
+            ivToolbarLogo.setVisibility(visibility);
+        }
     }
 
     /**
@@ -180,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
     }
 
     @Override
-    public void replaceFragment( int resLayoutId, Fragment newFragment, boolean animate) {
+    public void replaceFragment(int resLayoutId, Fragment newFragment, boolean animate) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         if (animate) {
@@ -190,11 +203,15 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
         transaction.replace(resLayoutId, newFragment, newFragment.getClass().getSimpleName());
         transaction.commit();
 
-        // highlight menu item
+        // highlight menu item and set toolbar
         if (newFragment instanceof FragmentOverview) {
             navigationView.getMenu().getItem(0).setChecked(true);
+            getSupportActionBar().setTitle("");
+            ivToolbarLogo.setVisibility(View.VISIBLE);
         } else if (newFragment instanceof FragmentFaq) {
             navigationView.getMenu().getItem(1).setChecked(true);
+            getSupportActionBar().setTitle("FAQs");
+            ivToolbarLogo.setVisibility(View.GONE);
         }
     }
 
@@ -309,6 +326,10 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
 
         outState.putString(UNIVERSITY_NAME_STATE, tvUniversityName.getText().toString());
         outState.putString(USERNAME_STATE, tvUsername.getText().toString());
+
+        boolean isToolbarLogoVisible = ivToolbarLogo.getVisibility() == View.VISIBLE;
+        outState.putBoolean(TOOLBAR_LOGO_VISIBLE_STATE, isToolbarLogoVisible);
+        outState.putString(TOOLBAR_TITLE_STATE, getSupportActionBar().getTitle().toString());
     }
 
     @Override

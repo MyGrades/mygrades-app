@@ -42,6 +42,9 @@ public class LoginProcessor extends BaseProcessor {
         // save login data to secure preferences
         saveLoginData(username, password);
 
+        // get login data from database to post LoginDataEvent
+        getLoginDataFromDatabase();
+
         // start initial scraping
         GradesProcessor gradesProcessor = new GradesProcessor(context);
         gradesProcessor.scrapeForGrades(true);
