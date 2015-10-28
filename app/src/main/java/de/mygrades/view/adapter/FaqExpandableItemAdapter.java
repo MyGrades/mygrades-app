@@ -3,6 +3,7 @@ package de.mygrades.view.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.h6ah4i.android.widget.advrecyclerview.expandable.ExpandableItemConstants;
@@ -83,15 +84,19 @@ public class FaqExpandableItemAdapter extends AbstractExpandableItemAdapter<FaqE
         // set indicator state / animation
         final int expandState = holder.getExpandStateFlags();
         if ((expandState & ExpandableItemConstants.STATE_FLAG_IS_UPDATED) != 0) {
+            int bgResId;
             boolean isExpanded;
             boolean animateIndicator = ((expandState & ExpandableItemConstants.STATE_FLAG_HAS_EXPANDED_STATE_CHANGED) != 0);
 
             if ((expandState & ExpandableItemConstants.STATE_FLAG_IS_EXPANDED) != 0) {
+                bgResId = R.drawable.faq_question_item_bg_expanded_state;
                 isExpanded = true;
             } else {
+                bgResId = R.drawable.faq_question_item_bg_normal_state;
                 isExpanded = false;
             }
 
+            holder.container.setBackgroundResource(bgResId);
             holder.indicator.setExpandedState(isExpanded, animateIndicator);
         }
     }
@@ -120,9 +125,11 @@ public class FaqExpandableItemAdapter extends AbstractExpandableItemAdapter<FaqE
     public static class QuestionViewHolder extends AbstractExpandableItemViewHolder {
         public TextView tvFaqHeader;
         public ExpandableItemIndicator indicator;
+        public LinearLayout container;
 
         public QuestionViewHolder(View itemView) {
             super(itemView);
+            container = (LinearLayout) itemView.findViewById(R.id.ll_container);
             tvFaqHeader = (TextView) itemView.findViewById(R.id.tv_faq_question);
             indicator = (ExpandableItemIndicator) itemView.findViewById(R.id.indicator);
         }

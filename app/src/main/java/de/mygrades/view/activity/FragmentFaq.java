@@ -72,7 +72,7 @@ public class FragmentFaq extends Fragment {
         recyclerView.setHasFixedSize(false);
 
         // set divider
-        recyclerView.addItemDecoration(new SimpleListDividerDecorator(ContextCompat.getDrawable(getContext(), R.drawable.grade_divider), true));
+        // recyclerView.addItemDecoration(new SimpleListDividerDecorator(ContextCompat.getDrawable(getContext(), R.drawable.grade_divider), true));
 
         // attach recycler view to item manager, necessary for touch listeners
         recyclerViewExpandableItemManager.attachRecyclerView(recyclerView);
