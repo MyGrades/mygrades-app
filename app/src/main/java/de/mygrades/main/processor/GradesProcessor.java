@@ -114,7 +114,6 @@ public class GradesProcessor extends BaseProcessor {
         // register event bus -> listen for IntermediateTableScrapingResultEvent
         EventBus.getDefault().register(this);
 
-        // TODO: post event start scraping
         // make sure that actions get loaded from DB not cached ones
         daoSession.clear();
         // get actions for scrape for overview
@@ -137,24 +136,35 @@ public class GradesProcessor extends BaseProcessor {
 
             // start transforming
             Transformer transformer = new Transformer(rule, scrapingResult, parser);
-            final Overview overview = transformer.transformOverview(gradeEntry.getGrade());
-            overview.setGradeEntryHash(gradeEntry.getHash());
+            final Overview newOverview = transformer.transformOverview(gradeEntry.getGrade());
+            newOverview.setGradeEntryHash(gradeEntry.getHash());
 
-            // save overview in database
-            if (overview != null) {
+            // post status event (100% done)
+            EventBus.getDefault().post(new ScrapeProgressEvent(actions.size() + 1, actions.size() + 1));
+
+            // if old overview
+            Overview existingOverview = gradeEntry.getOverview();
+            if (existingOverview != null) {
+                //if overview equals old one -> do nothing. if different -> update with values
+                if (!existingOverview.equals(newOverview)) {
+                    existingOverview.updateOverviewFromOther(newOverview);
+                    daoSession.getOverviewDao().update(existingOverview);
+                }
+                // post Event with Overview to GUI
+                EventBus.getDefault().post(new OverviewEvent(existingOverview, true));
+            } else {
+                // save new overview in database and update gradeEntry
                 daoSession.runInTx(new Runnable() {
                     @Override
                     public void run() {
-                        long overviewId = daoSession.getOverviewDao().insertOrReplace(overview);
+                        long overviewId = daoSession.getOverviewDao().insertOrReplace(newOverview);
                         gradeEntry.setOverviewId(overviewId);
-                        daoSession.getGradeEntryDao().insertOrReplace(gradeEntry);
+                        daoSession.getGradeEntryDao().update(gradeEntry);
                     }
                 });
+                // post Event with Overview to GUI
+                EventBus.getDefault().post(new OverviewEvent(newOverview, true));
             }
-
-            // post Event with Overview to GUI
-            EventBus.getDefault().post(new OverviewEvent(overview, true));
-
         } catch (ParseException e) {
             postErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parse Error", e);
         } catch (IOException e) {
@@ -290,7 +300,6 @@ public class GradesProcessor extends BaseProcessor {
             daoSession.runInTx(new Runnable() {
                 @Override
                 public void run() {
-                    // TODO: catch errors?
                     for (GradeEntry g : toInsert) {
                         daoSession.getGradeEntryDao().insert(g);
                     }

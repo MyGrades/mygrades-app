@@ -125,6 +125,60 @@ public class Overview {
 
     // KEEP METHODS - put your custom methods here
 
+
+    /**
+     * Updates Overview with values from other Overview.
+     * @param other Overview from which values should get updated
+     */
+    public void updateOverviewFromOther(Overview other) {
+        this.average = other.average;
+        this.participants = other.participants;
+        this.section1 = other.section1;
+        this.section2 = other.section2;
+        this.section3 = other.section3;
+        this.section4 = other.section4;
+        this.section5 = other.section5;
+        this.userSection = other.userSection;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Overview overview = (Overview) o;
+
+        if (average != null ? !average.equals(overview.average) : overview.average != null)
+            return false;
+        if (participants != null ? !participants.equals(overview.participants) : overview.participants != null)
+            return false;
+        if (section1 != null ? !section1.equals(overview.section1) : overview.section1 != null)
+            return false;
+        if (section2 != null ? !section2.equals(overview.section2) : overview.section2 != null)
+            return false;
+        if (section3 != null ? !section3.equals(overview.section3) : overview.section3 != null)
+            return false;
+        if (section4 != null ? !section4.equals(overview.section4) : overview.section4 != null)
+            return false;
+        if (section5 != null ? !section5.equals(overview.section5) : overview.section5 != null)
+            return false;
+        return !(userSection != null ? !userSection.equals(overview.userSection) : overview.userSection != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = average != null ? average.hashCode() : 0;
+        result = 31 * result + (participants != null ? participants.hashCode() : 0);
+        result = 31 * result + (section1 != null ? section1.hashCode() : 0);
+        result = 31 * result + (section2 != null ? section2.hashCode() : 0);
+        result = 31 * result + (section3 != null ? section3.hashCode() : 0);
+        result = 31 * result + (section4 != null ? section4.hashCode() : 0);
+        result = 31 * result + (section5 != null ? section5.hashCode() : 0);
+        result = 31 * result + (userSection != null ? userSection.hashCode() : 0);
+        return result;
+    }
+
     @Override
     public String toString() {
         return "Overview{" +

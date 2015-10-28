@@ -43,10 +43,12 @@
     <string name="get_overview">Notenverteilung abrufen</string>
     <string name="overview_not_possible">Notenverteilung nicht verfügbar für dieses Modul. Warum? -> FAQ</string>
 
-    <string name="ptr_header_pull_to_refresh">Zum Laden runterziehen</string>
-    <string name="ptr_header_release_to_refresh">Loslassen zum aktualisieren</string>
+    <string name="ptr_header_pull_to_refresh">Zum Laden runterziehen.</string>
+    <string name="ptr_header_release_to_refresh">Loslassen zum Aktualisieren.</string>
     <string name="ptr_header_refresh_complete">Fertig.</string>
-    <string name="ptr_header_refreshing">Deine Noten werden geladen.</string>
+    <string name="ptr_header_refreshing_grades">Deine Noten werden geladen.</string>
+    <string name="ptr_header_refreshing_overview">Notenverteilung wird geladen.</string>
+
     <string name="nav_my_grades">Meine Noten</string>
     <string name="nav_faq">FAQ</string>
     <string name="nav_logout">Abmelden</string>
