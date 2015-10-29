@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -211,14 +213,16 @@ public class GradeDetailedActivity extends AppCompatActivity {
         XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setSpaceBetweenLabels(0);
-        xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(false);
-        xAxis.setTextColor(Color.GRAY);
+        xAxis.setDrawGridLines(false);
+        xAxis.setTextColor(ContextCompat.getColor(this, R.color.text87));
 
         // show left y-axis
         barChart.getAxisLeft().setDrawAxisLine(false);
-        barChart.getAxisLeft().setGridColor(Color.LTGRAY);
-        barChart.getAxisLeft().setTextColor(Color.GRAY);
+        barChart.getAxisLeft().setGridColor(ContextCompat.getColor(this, R.color.divider));
+        barChart.getAxisLeft().setTextColor(ContextCompat.getColor(this, R.color.text87));
+        barChart.getAxisLeft().setDrawGridLines(true);
+        barChart.getAxisLeft().setDrawLabels(true);
 
         // hide right y-axis
         barChart.getAxisRight().setDrawGridLines(false);
@@ -251,7 +255,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
         BarDataSet dataSet = new BarDataSet(yValues, "");
         dataSet.setValueTextSize(12);
-        dataSet.setValueTextColor(Color.DKGRAY);
+        dataSet.setValueTextColor(ContextCompat.getColor(this, R.color.text87));
         dataSet.setColors(BAR_CHART_COLORS);
         dataSet.setDrawValues(true);
         dataSet.setBarSpacePercent(35);

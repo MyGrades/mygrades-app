@@ -12,6 +12,7 @@
     <!-- set global TextView font to Roboto light -->
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">@color/text87</item>
     </style>
 
     <!-- set global Button font to Roboto light -->
@@ -75,7 +76,7 @@
 
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">0.5dp</item>
         <item name="android:background">@drawable/grade_divider</item>
         <item name="android:layout_alignParentBottom">true</item>
     </style>
