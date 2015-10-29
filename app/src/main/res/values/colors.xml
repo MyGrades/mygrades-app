@@ -2,5 +2,7 @@
 <resources>
     <color name="background">#FAFAFA</color>
     <color name="background_accent">#FFFFFF</color>
+    <color name="divider">#DDDDDD</color>
+    <color name="text87">#DE000000</color>
     <color name="material_grey_200">#EEEEEE</color>
 </resources>

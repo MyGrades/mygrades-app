@@ -89,10 +89,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <!-- must be set here rather than as ItemDecoration,
+    <!-- divider must be set here rather than as ItemDecoration,
     because of the negative margin (see outer LinearLayout) -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#EEEEEE" />
+    <View style="@style/Divider"/>
 </LinearLayout>
