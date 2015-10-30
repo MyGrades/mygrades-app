@@ -175,6 +175,7 @@ public class Action {
         return "Action{" +
                 "actionId=" + actionId +
                 ", position=" + position +
+                ", type='" + type + '\'' +
                 ", method='" + method + '\'' +
                 ", url='" + url + '\'' +
                 ", parseExpression='" + parseExpression + '\'' +
@@ -184,6 +185,7 @@ public class Action {
                 ", actionParams=" + actionParams +
                 '}';
     }
+
     // KEEP METHODS END
 
 }

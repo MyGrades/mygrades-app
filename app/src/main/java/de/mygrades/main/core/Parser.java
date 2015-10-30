@@ -3,6 +3,7 @@ package de.mygrades.main.core;
 import android.content.Context;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -10,6 +11,8 @@ import org.xml.sax.SAXException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -156,7 +159,25 @@ public class Parser {
         return createXmlDocument(string);
     }
 
+    /**
+     * Extracts HTML-input fields from given html via parseExpression and
+     * transforms them into a key-value map.
+     *
+     * @param html String which should get parsed
+     * @param parseExpression XPATH expression
+     * @return Map of key-value pairs of inputs matching parseExpression
+     * @throws ParseException if something goes wrong at parsing or initializing Document Builder
+     */
+    public Map<String, String> getInputsAsMap(String parseExpression, String html) throws ParseException {
+        NodeList inputs = parseToNodeList(parseExpression, html);
+        Map<String, String> inputsMap = new HashMap<>();
 
+        for (int n=0; n < inputs.getLength(); n++) {
+            Element input = (Element)inputs.item(n);
+            inputsMap.put(input.getAttribute("name"), input.getAttribute("value"));
+        }
+        return inputsMap;
+    }
 
 
 
