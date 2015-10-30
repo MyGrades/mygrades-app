@@ -10,6 +10,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Entities;
+import org.w3c.dom.NodeList;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -147,6 +148,7 @@ public class Scraper {
      */
     public String scrape(boolean tableAsInterimResult) throws IOException, ParseException, URISyntaxException {
         String parsedHtml = null;
+        Map<String, String> requestData = new HashMap<>();
 
         // iterate over all actions in order by position
         for (int i = 0; i < actions.size(); i++) {
@@ -157,7 +159,11 @@ public class Scraper {
             Log.v(TAG, "Action " + (i + 1) + "/" + actions.size() + " -- Sending Request to url: " + url);
 
             // make request with data, cookies, current method
-            makeJsoupRequest(getRequestData(action.getActionParams()), getHttpMethodEnum(action.getMethod()), url);
+            getRequestData(requestData, action.getActionParams());
+            makeJsoupRequest(requestData, getHttpMethodEnum(action.getMethod()), url);
+
+            // reset request data -> now there can be added data for next result
+            requestData = new HashMap<>();
 
             // send table of grades to processor, if tableAsInterimResult is set
             if (tableAsInterimResult && action.getType().equals(GradesProcessor.ACTION_TYPE_TABLE_GRADES)) {
@@ -169,15 +175,25 @@ public class Scraper {
                 i = i + 1;
                 action = actions.get(i);
                 Log.v(TAG, "Action " + (i + 1) + "/" + actions.size() + " -- Last Action used in other Thread.");
-                Log.v(TAG, action.toString());
+                //Log.v(TAG, action.toString());
             }
 
-            // parse Content to String if its not the last action
-            if (i < actions.size() - 1) {
-                parsedHtml = parser.parseToString(action.getParseExpression(), document.toString());
+            // TODO:
+            if (action.getType().equals("normal:form")) {
+                String documentAsString = document.toString();
+                // get URL of form for next request
+                parsedHtml = parser.parseToString(action.getParseExpression() + "/@action", documentAsString);
+                // get all input fields within form -> send key value pairs with next request
+                requestData = parser.getInputsAsMap(action.getParseExpression()+"//input[not(@type=\"submit\")]", documentAsString);
             } else {
-                // parse with XML
-                parsedHtml = parser.parseToStringWithXML(action.getParseExpression(), document.toString());
+
+                // parse Content to String if its not the last action
+                if (i < actions.size() - 1) {
+                    parsedHtml = parser.parseToString(action.getParseExpression(), document.toString());
+                } else {
+                    // parse with XML
+                    parsedHtml = parser.parseToStringWithXML(action.getParseExpression(), document.toString());
+                }
             }
 
             // post intermediate status event
@@ -269,10 +285,10 @@ public class Scraper {
      * @param actionParams action params of current action
      * @return Map of key value pairs for request
      */
-    private Map<String, String> getRequestData(List<ActionParam> actionParams) {
+    private Map<String, String> getRequestData(Map<String, String> requestData, List<ActionParam> actionParams) {
         SharedPreferences prefs = null;
 
-        Map<String, String> requestData = new HashMap<>();
+
         if (actionParams != null) {
             // iterate over all ActionParams and add params to Map
             for (ActionParam actionParam : actionParams) {
