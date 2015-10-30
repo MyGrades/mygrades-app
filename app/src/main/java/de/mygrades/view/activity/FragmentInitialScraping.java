@@ -1,5 +1,7 @@
 package de.mygrades.view.activity;
 
+import android.animation.AnimatorInflater;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
@@ -18,6 +21,7 @@ import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.LoginDataEvent;
 import de.mygrades.main.events.ScrapeProgressEvent;
+import de.mygrades.view.FlipAnimation;
 import de.mygrades.view.ProgressImageViewOverlay;
 
 /**
@@ -49,6 +53,9 @@ public class FragmentInitialScraping extends Fragment {
     private View inflatedErrorNoNetwork;
     private Button btnTryAgain;
     private Button btnBackToLogin;
+    private RelativeLayout rlHeaderWrapper;
+    private RelativeLayout rlStatusHeader;
+    private RelativeLayout rlErrorHeader;
 
     // the handler is used to show an intermediate progress animation
     private Handler handler = new Handler();
@@ -80,6 +87,9 @@ public class FragmentInitialScraping extends Fragment {
         llProgressWrapper = (LinearLayout) view.findViewById(R.id.ll_progress_wrapper);
         btnTryAgain = (Button) view.findViewById(R.id.btn_try_again);
         btnBackToLogin = (Button) view.findViewById(R.id.btn_back_to_login);
+        rlHeaderWrapper = (RelativeLayout) view.findViewById(R.id.rl_header_wrapper);
+        rlStatusHeader = (RelativeLayout) view.findViewById(R.id.rl_status_header);
+        rlErrorHeader = (RelativeLayout) view.findViewById(R.id.rl_error_header);
 
         // init buttons
         initButtons();
@@ -147,6 +157,8 @@ public class FragmentInitialScraping extends Fragment {
 
                 // move progress wrapper to center
                 moveProgressWrapperToCenter(ANIMATION_DURATION);
+
+                flipHeader(ANIMATION_DURATION);
             }
         });
 
@@ -285,6 +297,8 @@ public class FragmentInitialScraping extends Fragment {
         // show error wrapper
         llErrorWrapper.setVisibility(View.VISIBLE);
         llErrorWrapper.animate().alpha(1.0f).setDuration(duration);
+
+        flipHeader(duration);
     }
 
     /**
@@ -316,6 +330,21 @@ public class FragmentInitialScraping extends Fragment {
         if (inflatedErrorTimeout != null) {
             inflatedErrorTimeout.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * Switches the status and error header with a 3D card flip animation.
+     *
+     * @param duration animation duration
+     */
+    private void flipHeader(int duration) {
+        FlipAnimation flipAnimation = new FlipAnimation(rlStatusHeader, rlErrorHeader, duration);
+
+        // if there is no current error, reverse the animation
+        if (receivedErrorType == null) {
+            flipAnimation.reverse();
+        }
+        rlHeaderWrapper.startAnimation(flipAnimation);
     }
 
     /**

@@ -19,43 +19,85 @@
             android:orientation="vertical"
             android:gravity="center_horizontal">
 
-            <LinearLayout
-                android:id="@+id/ll_progress_wrapper"
+            <RelativeLayout
+                android:id="@+id/rl_header_wrapper"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_height="wrap_content">
 
                 <RelativeLayout
-                    android:layout_width="wrap_content"
+                    android:id="@+id/rl_status_header"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:src="@drawable/mygrades_white_64dp"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/ll_progress_wrapper"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_centerHorizontal="true"
-                        android:alpha="0.2" />
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-                    <de.mygrades.view.ProgressImageViewOverlay
-                        android:id="@+id/iv_progress_overlay"
-                        android:src="@drawable/mygrades_white_64dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_centerHorizontal="true" />
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:src="@drawable/mygrades_white_64dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_centerHorizontal="true"
+                                android:alpha="0.2" />
+
+                            <de.mygrades.view.ProgressImageViewOverlay
+                                android:id="@+id/iv_progress_overlay"
+                                android:src="@drawable/mygrades_white_64dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_centerHorizontal="true" />
+                        </RelativeLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Deine Noten werden geladen."
+                            android:textColor="#FFFFFF"
+                            android:gravity="center"
+                            android:layout_marginTop="16dp" />
+                    </LinearLayout>
                 </RelativeLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/rl_error_header"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Deine Noten werden geladen."
-                    android:textColor="#FFFFFF"
                     android:gravity="center"
-                    android:layout_marginTop="16dp" />
-            </LinearLayout>
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:src="@drawable/ic_warning_white_64dp"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:layout_gravity="center"
+                            android:layout_centerHorizontal="true" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Fehler :("
+                            android:textColor="#FFFFFF"
+                            android:gravity="center"
+                            android:layout_marginTop="16dp" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
 
             <!-- wrapper for error messages -->
             <LinearLayout
