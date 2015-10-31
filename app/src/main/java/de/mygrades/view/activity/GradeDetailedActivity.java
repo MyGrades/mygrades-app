@@ -72,6 +72,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private TextView tvGradeDetailAnnotation;
     private TextView tvGradeDetailAttempt;
     private TextView tvGradeDetailExamDate;
+    private TextView tvGradeDetailTester;
 
     private LinearLayout llOverviewWrapper;
     private TextView tvOverviewParticipants;
@@ -160,6 +161,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         tvGradeDetailAnnotation = (TextView) findViewById(R.id.tv_grade_detail_annotation);
         tvGradeDetailAttempt = (TextView) findViewById(R.id.tv_grade_detail_attempt);
         tvGradeDetailExamDate = (TextView) findViewById(R.id.tv_grade_detail_exam_date);
+        tvGradeDetailTester = (TextView) findViewById(R.id.tv_grade_detail_tester);
 
         // get views for overview
         llOverviewWrapper = (LinearLayout) findViewById(R.id.overview_wrapper);
@@ -287,6 +289,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         setTextView(tvGradeDetailAnnotation, gradeEntry.getAnnotation());
         setTextView(tvGradeDetailAttempt, gradeEntry.getAttempt());
         setTextView(tvGradeDetailExamDate, gradeEntry.getExamDate());
+        setTextView(tvGradeDetailTester, gradeEntry.getTester());
     }
 
     /**

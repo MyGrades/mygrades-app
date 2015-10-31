@@ -182,6 +182,23 @@
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 
+                <!-- Tester -->
+                <RelativeLayout
+                    style="@style/GradeDetailRow">
+
+                    <TextView
+                        style="@style/GradeDetailTextViewLeft"
+                        android:id="@+id/tv_grade_detail_label_tester"
+                        android:text="@string/tv_grade_detail_tester"
+                        />
+
+                    <TextView
+                        style="@style/GradeDetailTextViewRight"
+                        android:id="@+id/tv_grade_detail_tester"
+                        />
+                    <View style="@style/Divider"/>
+                </RelativeLayout>
+
 
                 <!-- Overview -->
                 <LinearLayout

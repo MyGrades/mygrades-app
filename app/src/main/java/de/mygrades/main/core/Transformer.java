@@ -41,6 +41,7 @@ public class Transformer {
     private static final String ANNOTATION = "annotation";
     private static final String ATTEMPT = "attempt";
     private static final String EXAM_DATE = "exam_date";
+    private static final String TESTER = "tester";
     private static final String OVERVIEW_POSSIBLE = "overview_possible";
 
     // mapping from TransformerMapping Name -> Overview Property
@@ -149,6 +150,7 @@ public class Transformer {
             gradeEntry.setAnnotation(getStringProperty(xmlDocument, ANNOTATION));
             gradeEntry.setAttempt(getStringProperty(xmlDocument, ATTEMPT));
             gradeEntry.setExamDate(getStringProperty(xmlDocument, EXAM_DATE));
+            gradeEntry.setTester(getStringProperty(xmlDocument, TESTER));
             gradeEntry.setOverviewPossible(getBooleanProperty(xmlDocument, OVERVIEW_POSSIBLE));
 
             // update hash, used as primary key

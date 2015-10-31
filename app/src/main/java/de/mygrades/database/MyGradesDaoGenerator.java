@@ -150,6 +150,7 @@ public class MyGradesDaoGenerator {
         gradeEntry.addStringProperty("attempt");
         gradeEntry.addStringProperty("examDate");
         gradeEntry.addIntProperty("semesterNumber");
+        gradeEntry.addStringProperty("tester");
         gradeEntry.addStringProperty("hash").primaryKey();
         gradeEntry.addBooleanProperty("overviewPossible");
 
