@@ -328,6 +328,18 @@ public class GradeDetailedActivity extends AppCompatActivity {
             if (isOverviewPossible) {
                 ptrFrame.autoRefresh();
             } else {
+                ptrFrame.setPtrHandler(new PtrHandler() {
+                    @Override
+                    public void onRefreshBegin(PtrFrameLayout frame) {
+
+                    }
+
+                    @Override
+                    public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                        return false;
+                    }
+                });
+                
                 tvOverviewNotPossible.setVisibility(View.VISIBLE);
             }
         }
