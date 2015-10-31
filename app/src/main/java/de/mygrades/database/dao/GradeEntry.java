@@ -25,6 +25,7 @@ public class GradeEntry {
     private String attempt;
     private String examDate;
     private Integer semesterNumber;
+    private String tester;
     private String hash;
     private Boolean overviewPossible;
     private Long overviewId;
@@ -49,7 +50,7 @@ public class GradeEntry {
         this.hash = hash;
     }
 
-    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String hash, Boolean overviewPossible, Long overviewId) {
+    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String tester, String hash, Boolean overviewPossible, Long overviewId) {
         this.name = name;
         this.grade = grade;
         this.examId = examId;
@@ -60,6 +61,7 @@ public class GradeEntry {
         this.attempt = attempt;
         this.examDate = examDate;
         this.semesterNumber = semesterNumber;
+        this.tester = tester;
         this.hash = hash;
         this.overviewPossible = overviewPossible;
         this.overviewId = overviewId;
@@ -151,6 +153,14 @@ public class GradeEntry {
 
     public void setSemesterNumber(Integer semesterNumber) {
         this.semesterNumber = semesterNumber;
+    }
+
+    public String getTester() {
+        return tester;
+    }
+
+    public void setTester(String tester) {
+        this.tester = tester;
     }
 
     public String getHash() {
@@ -257,6 +267,7 @@ public class GradeEntry {
                 ", attempt='" + attempt + '\'' +
                 ", examDate='" + examDate + '\'' +
                 ", semesterNumber=" + semesterNumber +
+                ", tester='" + tester + '\'' +
                 ", hash='" + hash + '\'' +
                 ", overviewPossible=" + overviewPossible +
                 ", overviewId=" + overviewId +
@@ -281,6 +292,7 @@ public class GradeEntry {
         this.annotation = other.annotation;
         this.attempt = other.attempt;
         this.examDate = other.examDate;
+        this.tester = other.tester;
         this.semesterNumber = other.semesterNumber;
         this.overviewPossible = other.overviewPossible;
     }
@@ -307,6 +319,7 @@ public class GradeEntry {
             return false;
         if (semesterNumber != null ? !semesterNumber.equals(that.semesterNumber) : that.semesterNumber != null)
             return false;
+        if (tester != null ? !tester.equals(that.tester) : that.tester != null) return false;
         if (hash != null ? !hash.equals(that.hash) : that.hash != null) return false;
         return !(overviewPossible != null ? !overviewPossible.equals(that.overviewPossible) : that.overviewPossible != null);
 
@@ -324,10 +337,12 @@ public class GradeEntry {
         result = 31 * result + (attempt != null ? attempt.hashCode() : 0);
         result = 31 * result + (examDate != null ? examDate.hashCode() : 0);
         result = 31 * result + (semesterNumber != null ? semesterNumber.hashCode() : 0);
+        result = 31 * result + (tester != null ? tester.hashCode() : 0);
         result = 31 * result + (hash != null ? hash.hashCode() : 0);
         result = 31 * result + (overviewPossible != null ? overviewPossible.hashCode() : 0);
         return result;
     }
+
     // KEEP METHODS END
 
 }
