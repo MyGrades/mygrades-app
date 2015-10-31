@@ -140,7 +140,7 @@ public class GradesProcessor extends BaseProcessor {
             newOverview.setGradeEntryHash(gradeEntry.getHash());
 
             // post status event (100% done)
-            EventBus.getDefault().post(new ScrapeProgressEvent(actions.size() + 1, actions.size() + 1));
+            EventBus.getDefault().post(new ScrapeProgressEvent(actions.size() + 1, actions.size() + 1, true));
 
             // if old overview
             Overview existingOverview = gradeEntry.getOverview();
@@ -226,7 +226,7 @@ public class GradesProcessor extends BaseProcessor {
             gradeEntries = transformer.transform();
 
             // post status event (100% done)
-            EventBus.getDefault().post(new ScrapeProgressEvent(actions.size() + 1, actions.size() + 1));
+            EventBus.getDefault().post(new ScrapeProgressEvent(actions.size() + 1, actions.size() + 1, false));
 
             Log.d(TAG, gradeEntries.toString());
 

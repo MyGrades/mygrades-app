@@ -6,10 +6,17 @@ package de.mygrades.main.events;
 public class ScrapeProgressEvent {
     private int currentStep;
     private int stepCount;
+    private boolean isScrapeForOverview;
 
     public ScrapeProgressEvent(int currentStep, int stepCount) {
         this.currentStep = currentStep;
         this.stepCount = stepCount;
+        this.isScrapeForOverview = false;
+    }
+
+    public ScrapeProgressEvent(int currentStep, int stepCount, boolean isScrapeForOverview) {
+        this(currentStep, stepCount);
+        this.isScrapeForOverview = isScrapeForOverview;
     }
 
     public int getCurrentStep() {
@@ -26,5 +33,13 @@ public class ScrapeProgressEvent {
 
     public void setStepCount(int stepCount) {
         this.stepCount = stepCount;
+    }
+
+    public boolean isScrapeForOverview() {
+        return isScrapeForOverview;
+    }
+
+    public void setIsScrapeForOverview(boolean isScrapeForOverview) {
+        this.isScrapeForOverview = isScrapeForOverview;
     }
 }
