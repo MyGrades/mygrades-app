@@ -197,7 +197,7 @@ public class Scraper {
             }
 
             // post intermediate status event
-            EventBus.getDefault().post(new ScrapeProgressEvent(i + 1, actions.size() + 1));
+            EventBus.getDefault().post(new ScrapeProgressEvent(i + 1, actions.size() + 1, tableAsInterimResult));
         }
         return parsedHtml;
     }

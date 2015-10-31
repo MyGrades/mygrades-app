@@ -144,7 +144,7 @@ public class FragmentOverview extends Fragment {
      * @param scrapeProgressEvent ScrapeProgressEvent
      */
     public void onEventMainThread(ScrapeProgressEvent scrapeProgressEvent) {
-        if (ptrHeader != null) {
+        if (ptrHeader != null && !scrapeProgressEvent.isScrapeForOverview()) {
             ptrHeader.increaseProgress(scrapeProgressEvent.getCurrentStep(), scrapeProgressEvent.getStepCount());
         }
     }
