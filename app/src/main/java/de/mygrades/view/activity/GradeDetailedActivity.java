@@ -339,8 +339,10 @@ public class GradeDetailedActivity extends AppCompatActivity {
                         return false;
                     }
                 });
-
-                tvOverviewNotPossible.setVisibility(View.VISIBLE);
+                // only show TextView if its possible in general for university to show a overview
+                if (overviewPossibleEvent.isOverviewPossibleForUniversity()) {
+                    tvOverviewNotPossible.setVisibility(View.VISIBLE);
+                }
             }
         }
     }
