@@ -60,4 +60,5 @@
     <string name="tv_mygrades_version">MyGrades\n%1$s</string>
     <string name="toolbar_faq_title">FAQs</string>
     <string name="tv_grade_detail_tester">Prüfer</string>
+    <string name="ptr_header_refresh_error">Fehler.</string>
 </resources>
