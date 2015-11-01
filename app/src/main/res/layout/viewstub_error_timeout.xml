@@ -15,7 +15,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Es hat zu lange gedauert mit dem Server deiner Hochschule zu kommunizieren. Das kann verschiedene Grüne haben"
+        android:text="Es hat zu lange gedauert mit deinem Notensystem zu kommunizieren. Möglicherweise..."
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:layout_marginTop="8dp"/>
@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="1. Deine Interverbindung ist zu langsam."
+        android:text="... ist deine Internetverbindung zu langsam."
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:layout_marginTop="8dp"/>
@@ -31,7 +31,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="2. Das Notensystem deiner Hochschule ist nicht erreichbar oder überlastet."
+        android:text="... ist das Notensystem deiner Hochschule derzeit nicht erreichbar oder überlastet."
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:layout_marginTop="8dp"/>

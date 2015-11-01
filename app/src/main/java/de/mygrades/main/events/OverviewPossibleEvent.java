@@ -5,9 +5,11 @@ package de.mygrades.main.events;
  */
 public class OverviewPossibleEvent {
     private boolean isOverviewPossible;
+    private boolean isOverviewPossibleForUniversity;
 
-    public OverviewPossibleEvent(boolean isOverviewPossible) {
+    public OverviewPossibleEvent(boolean isOverviewPossible, boolean isOverviewPossibleForUniversity) {
         this.isOverviewPossible = isOverviewPossible;
+        this.isOverviewPossibleForUniversity = isOverviewPossibleForUniversity;
     }
 
     public boolean isOverviewPossible() {
@@ -16,5 +18,13 @@ public class OverviewPossibleEvent {
 
     public void setIsOverviewPossible(boolean isOverviewPossible) {
         this.isOverviewPossible = isOverviewPossible;
+    }
+
+    public boolean isOverviewPossibleForUniversity() {
+        return isOverviewPossibleForUniversity;
+    }
+
+    public void setIsOverviewPossibleForUniversity(boolean isOverviewPossibleForUniversity) {
+        this.isOverviewPossibleForUniversity = isOverviewPossibleForUniversity;
     }
 }
