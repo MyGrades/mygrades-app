@@ -139,6 +139,19 @@ public class University {
     public List<Rule> getRulesRaw() {
         return rules == null ? new java.util.ArrayList<Rule>() : rules;
     }
+
+    @Override
+    public String toString() {
+        return "University{" +
+                "universityId=" + universityId +
+                ", name='" + name + '\'' +
+                ", published=" + published +
+                ", updatedAtServer='" + updatedAtServer + '\'' +
+                ", daoSession=" + daoSession +
+                ", myDao=" + myDao +
+                ", rules=" + rules +
+                '}';
+    }
     // KEEP METHODS END
 
 }
