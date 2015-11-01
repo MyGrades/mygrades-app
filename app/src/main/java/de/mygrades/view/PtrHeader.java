@@ -55,10 +55,11 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
     private ProgressWheelWrapper progressWheel;
     private TextView tvHeaderText;
     private String refreshLoadingText;
+    private boolean isError;
 
     public PtrHeader(Context context, String refreshLoadingText) {
         super(context);
-
+        this.isError = false;
         this.refreshLoadingText = refreshLoadingText;
 
         View header = LayoutInflater.from(getContext()).inflate(R.layout.ptr_header, this);
@@ -78,6 +79,7 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
     @Override
     public void onUIReset(PtrFrameLayout frame) {
         progressWheel.reset();
+        isError = false;
     }
 
     @Override
@@ -94,9 +96,14 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
 
     @Override
     public void onUIRefreshComplete(PtrFrameLayout frame) {
-        tvHeaderText.setText(R.string.ptr_header_refresh_complete);
+        if (isError) {
+            tvHeaderText.setText(R.string.ptr_header_refresh_error);
+        } else {
+            tvHeaderText.setText(R.string.ptr_header_refresh_complete);
+        }
+
+        progressWheel.loadingFinished(getContext(), isError);
         isScraping = false;
-        progressWheel.loadingFinished(getContext());
     }
 
     @Override
@@ -163,6 +170,14 @@ public class PtrHeader extends FrameLayout implements PtrUIHandler {
 
     public boolean isScraping() {
         return isScraping;
+    }
+
+    public boolean isError() {
+        return isError;
+    }
+
+    public void setIsError(boolean isError) {
+        this.isError = isError;
     }
 }
 

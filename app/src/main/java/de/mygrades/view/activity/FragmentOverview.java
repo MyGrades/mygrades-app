@@ -187,8 +187,8 @@ public class FragmentOverview extends Fragment {
      * @param errorEvent - ErrorEvent
      */
     public void onEventMainThread(ErrorEvent errorEvent) {
-        if (ptrFrame != null) {
-            // TODO: not complete -> error
+        if (ptrFrame != null && ptrHeader != null) {
+            ptrHeader.setIsError(true);
             ptrFrame.refreshComplete();
         }
 
