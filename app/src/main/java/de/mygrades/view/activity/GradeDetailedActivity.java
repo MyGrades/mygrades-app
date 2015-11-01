@@ -363,9 +363,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
      * @param errorEvent ErrorEvent
      */
     public void onEventMainThread(ErrorEvent errorEvent) {
-        if (ptrFrame != null) {
-            // TODO: not complete -> error
-            // set boolean in header and decide there what to show
+        if (ptrFrame != null && ptrHeader != null) {
+            ptrHeader.setIsError(true);
             ptrFrame.refreshComplete();
         }
 
