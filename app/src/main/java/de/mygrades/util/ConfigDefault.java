@@ -26,7 +26,16 @@ public class ConfigDefault {
      *
      * @return api credentials as String.
      */
-    String getApiCredentials() {
+    public static String getApiCredentials() {
+        return null; // must be implemented in Config.java
+    }
+
+    /**
+     * Get the key to obfuscate the secure preferences.
+     *
+     * @return secure preferences key as String.
+     */
+    public static String getSecurePreferencesKey() {
         return null; // must be implemented in Config.java
     }
 }

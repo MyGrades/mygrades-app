@@ -6,7 +6,6 @@ package de.mygrades.util;
 public class Constants {
 
     // secure preferences constants
-    public static final String NOT_SO_SECURE_PREF_PW = "i1jß498zu3v9A";
     public static final String NOT_SO_SECURE_PREF_FILE = "userdata";
     public static final String PREF_KEY_USERNAME = "username";
     public static final String PREF_KEY_PASSWORD = "password";

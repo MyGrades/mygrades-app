@@ -14,6 +14,7 @@ import de.mygrades.database.dao.RuleDao;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
 import de.mygrades.main.events.LoginDataEvent;
+import de.mygrades.util.Config;
 import de.mygrades.util.Constants;
 
 /**
@@ -126,6 +127,6 @@ public class LoginProcessor extends BaseProcessor {
     }
 
     private SecurePreferences getSecurePreferences() {
-        return new SecurePreferences(context, Constants.NOT_SO_SECURE_PREF_PW, Constants.NOT_SO_SECURE_PREF_FILE);
+        return new SecurePreferences(context, Config.getSecurePreferencesKey(), Constants.NOT_SO_SECURE_PREF_FILE);
     }
 }
