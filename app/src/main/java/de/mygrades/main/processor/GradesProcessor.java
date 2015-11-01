@@ -58,7 +58,6 @@ public class GradesProcessor extends BaseProcessor {
      * @param gradeHash identify requested gradeEntry
      */
     public void getGradeDetails(String gradeHash) {
-        // TODO: fail while getting Grade from DB -> error message
         // get GradeEntry from DB by hash with Overview (if present)
         GradeEntry gradeEntry = daoSession.getGradeEntryDao().queryDeep("WHERE "+ GradeEntryDao.Properties.Hash.columnName +" = ?", gradeHash).get(0); // TODO: Nullpointer possible?
         Log.d(TAG, gradeEntry.toString());
@@ -144,7 +143,7 @@ public class GradesProcessor extends BaseProcessor {
             newOverview.setGradeEntryHash(gradeEntry.getHash());
 
             // post status event (100% done)
-            EventBus.getDefault().post(new ScrapeProgressEvent(actions.size() + 1, actions.size() + 1, true));
+            EventBus.getDefault().post(new ScrapeProgressEvent(actions.size() + 1, actions.size() + 1, true, gradeHash));
 
             // if old overview
             Overview existingOverview = gradeEntry.getOverview();
@@ -220,7 +219,7 @@ public class GradesProcessor extends BaseProcessor {
 
             // init Parser, Scraper, Transformer
             Parser parser = new Parser(context);
-            Scraper scraper = new Scraper(actions, parser, null);
+            Scraper scraper = new Scraper(actions, parser);
 
             // start scraping
             scrapingResult = scraper.scrape();
@@ -297,9 +296,8 @@ public class GradesProcessor extends BaseProcessor {
                 }
             }
 
-            // TODO
-            System.out.println("to insert: " + toInsert);
-            System.out.println("to update: " + toUpdate);
+            Log.d(TAG, "to insert: " + toInsert);
+            Log.d(TAG, "to update: " + toUpdate);
 
             daoSession.runInTx(new Runnable() {
                 @Override
@@ -406,7 +404,9 @@ public class GradesProcessor extends BaseProcessor {
      * @param event IntermediateTableScrapingResultEvent containing a string of table with grades
      */
     public void onEventAsync(IntermediateTableScrapingResultEvent event){
-        if (this.gradeHash == null || !event.getGradeHash().equals(gradeHash)) {
+        Log.d("Async", "GradeHash: " + gradeHash + " - GradeHash Event: " + event.getGradeHash());
+        if (this.gradeHash == null || !gradeHash.equals(event.getGradeHash())) {
+            Log.d("Async", "    --> ignoring this!");
             return; // ignore event
         }
 
