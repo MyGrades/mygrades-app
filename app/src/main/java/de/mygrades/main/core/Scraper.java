@@ -127,6 +127,10 @@ public class Scraper {
         this.gradeHash = gradeHash;
     }
 
+    public Scraper(List<Action> actions, Parser parser) {
+        this(actions, parser, null);
+    }
+
     /**
      * Scrape step by step by given Actions.
      * A clicking user is simulated with Jsoup and different steps to different urls.
@@ -199,7 +203,7 @@ public class Scraper {
             }
 
             // post intermediate status event
-            EventBus.getDefault().post(new ScrapeProgressEvent(i + 1, actions.size() + 1, tableAsInterimResult));
+            EventBus.getDefault().post(new ScrapeProgressEvent(i + 1, actions.size() + 1, tableAsInterimResult, gradeHash));
         }
         return parsedHtml;
     }

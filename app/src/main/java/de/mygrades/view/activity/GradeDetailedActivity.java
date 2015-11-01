@@ -339,7 +339,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
                         return false;
                     }
                 });
-                
+
                 tvOverviewNotPossible.setVisibility(View.VISIBLE);
             }
         }
@@ -351,7 +351,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
      * @param scrapeProgressEvent ScrapeProgressEvent
      */
     public void onEventMainThread(ScrapeProgressEvent scrapeProgressEvent) {
-        if (ptrHeader != null) {
+        if (ptrHeader != null && scrapeProgressEvent.isScrapeForOverview()
+                && gradeHash != null && gradeHash.equals(scrapeProgressEvent.getGradeHash())) {
             ptrHeader.increaseProgress(scrapeProgressEvent.getCurrentStep(), scrapeProgressEvent.getStepCount());
         }
     }
@@ -364,6 +365,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     public void onEventMainThread(ErrorEvent errorEvent) {
         if (ptrFrame != null) {
             // TODO: not complete -> error
+            // set boolean in header and decide there what to show
             ptrFrame.refreshComplete();
         }
 
