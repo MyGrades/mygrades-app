@@ -33,7 +33,7 @@ public class RestClient {
         RequestInterceptor interceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-                request.addHeader("Authorization", "Basic " + Config.API_BASE64_CREDENTIALS);
+                request.addHeader("Authorization", "Basic " + Config.getApiCredentials());
             }
         };
 
@@ -47,7 +47,7 @@ public class RestClient {
         // initialize RestAdapter
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint(Config.SERVER_URL)
+                .setEndpoint(Config.getServerUrl())
                 .setConverter(new GsonConverter(gson))
                 .setRequestInterceptor(interceptor)
                 .build();
