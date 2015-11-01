@@ -1,6 +1,7 @@
 package de.mygrades.view;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
@@ -42,7 +43,12 @@ public class ProgressWheelWrapper {
      * Starts finish animation of background.
      * @param context Context
      */
-    public void loadingFinished(Context context) {
+    public void loadingFinished(Context context, boolean isError) {
+        if (isError) {
+            background.setBackground(ContextCompat.getDrawable(context, R.drawable.end_loading_circle_error));
+        } else {
+            background.setBackground(ContextCompat.getDrawable(context, R.drawable.end_loading_circle));
+        }
         progressWheel.setAnimation(null);
         background.startAnimation(AnimationUtils.loadAnimation(context, R.anim.abc_grow_fade_in_from_bottom));
         background.setVisibility(View.VISIBLE);
