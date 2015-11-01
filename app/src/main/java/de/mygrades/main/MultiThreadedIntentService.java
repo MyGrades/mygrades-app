@@ -156,7 +156,7 @@ public abstract class MultiThreadedIntentService extends Service {
      * @return The maximum number of concurrent worker threads
      */
     protected int getMaximumNumberOfThreads() {
-        return 4;
+        return 10;
     }
 
     private class IntentRunnable implements Runnable {
