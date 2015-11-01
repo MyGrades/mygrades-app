@@ -29,6 +29,4 @@ public class ConfigDefault {
     String getApiCredentials() {
         return null; // must be implemented in Config.java
     }
-
-
 }
