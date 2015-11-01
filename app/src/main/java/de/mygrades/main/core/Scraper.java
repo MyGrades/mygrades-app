@@ -299,12 +299,12 @@ public class Scraper {
                 if (actionParam.getType() != null) {
                     if (actionParam.getType().equals("password")) {
                         if (prefs == null) {
-                            prefs = new SecurePreferences(parser.getContext(), Constants.NOT_SO_SECURE_PREF_PW, Constants.NOT_SO_SECURE_PREF_FILE);
+                            prefs = new SecurePreferences(parser.getContext(), Config.getSecurePreferencesKey(), Constants.NOT_SO_SECURE_PREF_FILE);
                         }
                         value = prefs.getString(Constants.PREF_KEY_PASSWORD, "");
                     } else if (actionParam.getType().equals("username")) {
                         if (prefs == null) {
-                            prefs = new SecurePreferences(parser.getContext(), Constants.NOT_SO_SECURE_PREF_PW, Constants.NOT_SO_SECURE_PREF_FILE);
+                            prefs = new SecurePreferences(parser.getContext(), Config.getSecurePreferencesKey(), Constants.NOT_SO_SECURE_PREF_FILE);
                         }
                         value = prefs.getString(Constants.PREF_KEY_USERNAME, "");
                     }
