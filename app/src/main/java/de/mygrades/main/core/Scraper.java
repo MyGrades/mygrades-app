@@ -177,8 +177,8 @@ public class Scraper {
                 //Log.v(TAG, action.toString());
             }
 
-            // TODO:
-            if (action.getType().equals("normal:form")) {
+            // if action is a form
+            if (action.getType().endsWith(":form")) {
                 String documentAsString = document.toString();
                 // get URL of form for next request
                 parsedHtml = parser.parseToString(action.getParseExpression() + "/@action", documentAsString);
