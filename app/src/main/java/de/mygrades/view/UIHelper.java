@@ -1,7 +1,9 @@
 package de.mygrades.view;
 
+import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.widget.TextView;
 
 import de.mygrades.main.events.ErrorEvent;
 
@@ -20,9 +22,16 @@ public class UIHelper {
      */
     public static void showSnackbar(View view, String text, View.OnClickListener action, String actionText) {
         if (view != null) {
-            Snackbar.make(view, text, Snackbar.LENGTH_LONG)
-                    .setAction(actionText, action)
-                    .show();
+            Snackbar snackbar = Snackbar
+                    .make(view, text, Snackbar.LENGTH_LONG)
+                    .setAction(actionText, action);
+
+            // change text color
+            View snackbarView = snackbar.getView();
+            TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(Color.WHITE);
+
+            snackbar.show();
         }
     }
 
@@ -33,10 +42,7 @@ public class UIHelper {
      * @param text text to show
      */
     public static void showSnackbar(View view, String text) {
-        if (view != null) {
-            Snackbar.make(view, text, Snackbar.LENGTH_LONG)
-                    .show();
-        }
+        showSnackbar(view, text, null, null);
     }
 
     /**
