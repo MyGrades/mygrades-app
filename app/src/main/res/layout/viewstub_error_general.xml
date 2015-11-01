@@ -8,14 +8,14 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Deine Noten konnten nicht abgerufen werden. Das kann verschiedene Gründe haben."
+        android:text="Deine Noten konnten nicht abgerufen werden. Möglicherweise..."
         android:textColor="#FFFFFF"
         android:textSize="16sp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="1. Deine Zugangsdaten sind falsch."
+        android:text="... sind deine Zugangsdaten falsch."
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:layout_marginTop="8dp"/>
@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="2. Probleme mit der Internetverbindung oder dem Server deiner Hochschule."
+        android:text="... gibt es Probleme mit dem Notensystem deiner Hochschule."
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:layout_marginTop="8dp"/>
@@ -31,7 +31,15 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="3. Die Linkstruktur innerhalb deines Notensystems hat sich geändert und es ist zur Zeit somit nicht möglich, deine Noten abzurufen."
+        android:text="... hat sich der Aufbau deines Notensystems geändert und es ist zur Zeit somit nicht möglich, deine Noten abzurufen."
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sag uns Bescheid, falls dieses Problem länger besteht!"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:layout_marginTop="8dp"/>

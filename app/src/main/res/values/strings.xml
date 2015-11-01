@@ -3,7 +3,7 @@
     <string name="username">Benutzername</string>
     <string name="password">Passwort</string>
     <string name="tv_enter_userdata">Gib die Benutzerdaten für deine Hochschule ein.</string>
-    <string name="tv_login_privacy_info">Deine Benutzerdaten werden nur lokal und verschlüsselt auf deinem Smartphone gespeichert."\n""\n"An unsere Server wird ausschließlich die Auswahl deiner Hochschule gesendet - ohne auf dich zurückführende Daten. Mit einem Klick auf \"Los geht\'s!\" bestätigst du unsere Datenschutzerklärung.</string>
+    <string name="tv_login_privacy_info">Deine Benutzerdaten werden nur lokal und verschlüsselt auf deinem Smartphone gespeichert.\n\nWeiterhin werden <b>keine Daten</b> an uns oder Dritte übermittelt.</string>
     <string name="error_username_not_empty">Benutzername darf nicht leer sein.</string>
     <string name="error_password_not_empty">Passwort darf nicht leer sein.</string>
 
@@ -31,11 +31,6 @@
     <string name="tv_overview_average">Durchschnitt</string>
     <string name="tv_overview_label_sections">Notenbereich</string>
     <string name="tv_overview_label_count">Anzahl</string>
-    <string name="tv_overview_section5">nicht ausreichend (4,3 - 5,0)</string>
-    <string name="tv_overview_section4">ausreichend (3,7 - 4,0)</string>
-    <string name="tv_overview_section3">befriedigend (2,7 - 3,3)</string>
-    <string name="tv_overview_section2">gut (1,7 - 2,3)</string>
-    <string name="tv_overview_section1">sehr gut (1,0 - 1,3)</string>
     <string name="error_no_network">Keine Internetverbindung.\n\nBitte überprüfe deine Internetverbindung und versuche es erneut.</string>
     <string name="error_timeout">Zeitüberschreitung bei der Anfrage.\n\nEs hat zu lange gedauert, mit dem Server deiner Hochschule zu kommunizieren. Das kann verschiedene Gründe haben:\n1. Deine Internetverbindung ist zu langsam.\n2. Das Notensystem deiner Hochschule ist überlastet.</string>
     <string name="error_general">Deine Noten konnten nicht abgerufen werden. Das kann verschiedene Gründe haben:\n\n1. Deine Zugangsdaten sind falsch.\n2. Probleme mit der Internetverbindung oder dem Server deiner Hochschule.\n3. Die Linkstruktur innerhalb deines Notensystems könnte sich geändert haben und so ist es zur Zeit nicht möglich, deine Noten abzurufen.</string>
@@ -43,7 +38,7 @@
     <string name="get_overview">Notenverteilung abrufen</string>
     <string name="overview_not_possible">Notenverteilung nicht verfügbar für dieses Modul. Warum? -> FAQ</string>
 
-    <string name="ptr_header_pull_to_refresh">Zum Laden runterziehen.</string>
+    <string name="ptr_header_pull_to_refresh">Zum Laden herunterziehen.</string>
     <string name="ptr_header_release_to_refresh">Loslassen zum Aktualisieren.</string>
     <string name="ptr_header_refresh_complete">Fertig.</string>
     <string name="ptr_header_refreshing_grades">Deine Noten werden geladen.</string>

@@ -48,7 +48,7 @@ public class FaqDataProvider {
     public int getGroupId(int goToQuestion) {
         switch (goToQuestion) {
             case GO_TO_GENERAL_ERROR:
-                return 4;
+                return 5;
             default:
                 return 0;
         }

@@ -63,6 +63,7 @@
                             android:text="Deine Noten werden geladen."
                             android:textColor="#FFFFFF"
                             android:gravity="center"
+                            android:textSize="16sp"
                             android:layout_marginTop="16dp" />
                     </LinearLayout>
                 </RelativeLayout>
@@ -94,6 +95,7 @@
                             android:text="Fehler :("
                             android:textColor="#FFFFFF"
                             android:gravity="center"
+                            android:textSize="16sp"
                             android:layout_marginTop="16dp" />
                     </LinearLayout>
                 </RelativeLayout>
