@@ -105,8 +105,7 @@ public class MainServiceHelper {
         int method = MainService.METHOD_SCRAPE_FOR_OVERVIEW;
 
         // set request id
-        // TODO: block other requests to load overview?
-        long requestId = concatenateLong(method, 0);
+        long requestId = concatenateLong(method, gradeHash.hashCode());
 
         // start worker thread in background
         Intent intent = getBasicIntent(MainService.PROCESSOR_GRADES, method, requestId);
@@ -205,6 +204,6 @@ public class MainServiceHelper {
      * @return ab as long
      */
     private long concatenateLong(long a, long b) {
-        return Long.parseLong("" + a + b);
+        return Long.parseLong("" + Math.abs(a) + Math.abs(b));
     }
 }

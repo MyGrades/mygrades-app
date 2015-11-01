@@ -117,11 +117,14 @@ public class Scraper {
 
     private URI baseUri;
 
-    public Scraper(List<Action> actions, Parser parser) {
+    private String gradeHash;
+
+    public Scraper(List<Action> actions, Parser parser, String gradeHash) {
         this.actions = actions;
         this.cookies = new HashMap<>();
         this.parser = parser;
         this.baseUri = null;
+        this.gradeHash = gradeHash;
     }
 
     /**
@@ -168,7 +171,7 @@ public class Scraper {
             if (tableAsInterimResult && action.getType().equals(GradesProcessor.ACTION_TYPE_TABLE_GRADES)) {
                 // parse with XML
                 String parsedTable = parser.parseToStringWithXML(action.getParseExpression(), document.toString());
-                EventBus.getDefault().post(new IntermediateTableScrapingResultEvent(parsedTable));
+                EventBus.getDefault().post(new IntermediateTableScrapingResultEvent(parsedTable, gradeHash));
 
                 // continue with next action
                 i = i + 1;

@@ -27,3 +27,25 @@
 
 # MPAndroidChart rules
 -keep class com.github.mikephil.charting.** { *; }
+
+# retrofit rules
+-dontwarn retrofit.**
+-keep class retrofit.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+
+# eventbus rules
+-keepclassmembers class ** {
+    public void onEvent*(**);
+}
+# Only required if you use AsyncExecutor
+-keepclassmembers class * extends de.greenrobot.event.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}
+
+# jsoup
+-keeppackagenames org.jsoup.nodes
+
+-dontwarn freemarker.**
+
+-keep public class * extends android.support.v7.app.AppCompatActivity

@@ -6,9 +6,11 @@ package de.mygrades.main.events;
  */
 public class IntermediateTableScrapingResultEvent {
     private String parsedTable;
+    private String gradeHash;
 
-    public IntermediateTableScrapingResultEvent(String parsedTable) {
+    public IntermediateTableScrapingResultEvent(String parsedTable, String gradeHash) {
         this.parsedTable = parsedTable;
+        this.gradeHash = gradeHash;
     }
 
     public String getParsedTable() {
@@ -17,5 +19,13 @@ public class IntermediateTableScrapingResultEvent {
 
     public void setParsedTable(String parsedTable) {
         this.parsedTable = parsedTable;
+    }
+
+    public String getGradeHash() {
+        return gradeHash;
+    }
+
+    public void setGradeHash(String gradeHash) {
+        this.gradeHash = gradeHash;
     }
 }

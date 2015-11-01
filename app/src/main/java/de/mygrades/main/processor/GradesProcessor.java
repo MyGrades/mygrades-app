@@ -45,6 +45,8 @@ public class GradesProcessor extends BaseProcessor {
     public static final String ACTION_TYPE_TABLE_GRADES = "table_grades";
     public static final String ACTION_TYPE_TABLE_OVERVIEW = "table_overview";
 
+    private String gradeHash;
+
     public GradesProcessor(Context context) {
         super(context);
     }
@@ -91,6 +93,8 @@ public class GradesProcessor extends BaseProcessor {
      * @param gradeHash identify requested gradeEntry
      */
     public void scrapeForOverview(String gradeHash) {
+        this.gradeHash = gradeHash;
+
         // otherwise start scraping
         // No Connection -> event no Connection, abort
         if (!isOnline()) {
@@ -129,7 +133,7 @@ public class GradesProcessor extends BaseProcessor {
             // init Parser, Scraper, Transformer
             Parser parser = new Parser(context);
 
-            Scraper scraper = new Scraper(actions, parser);
+            Scraper scraper = new Scraper(actions, parser, gradeHash);
 
             // start scraping
             String scrapingResult = scraper.scrape(true);
@@ -216,7 +220,7 @@ public class GradesProcessor extends BaseProcessor {
 
             // init Parser, Scraper, Transformer
             Parser parser = new Parser(context);
-            Scraper scraper = new Scraper(actions, parser);
+            Scraper scraper = new Scraper(actions, parser, null);
 
             // start scraping
             scrapingResult = scraper.scrape();
@@ -402,6 +406,10 @@ public class GradesProcessor extends BaseProcessor {
      * @param event IntermediateTableScrapingResultEvent containing a string of table with grades
      */
     public void onEventAsync(IntermediateTableScrapingResultEvent event){
+        if (this.gradeHash == null || !event.getGradeHash().equals(gradeHash)) {
+            return; // ignore event
+        }
+
         // get shared preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
