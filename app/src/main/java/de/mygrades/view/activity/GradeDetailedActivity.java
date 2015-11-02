@@ -128,6 +128,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ptrFrame.autoRefresh();
+                mainServiceHelper.scrapeForOverview(gradeHash);
             }
         };
 
@@ -186,7 +187,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
         ptrFrame.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-                mainServiceHelper.scrapeForOverview(gradeHash);
+                if (!ptrFrame.isAutoRefresh()) {
+                    mainServiceHelper.scrapeForOverview(gradeHash);
+                }
             }
 
             @Override
@@ -327,6 +330,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
             if (isOverviewPossible) {
                 ptrFrame.autoRefresh();
+                mainServiceHelper.scrapeForOverview(gradeHash);
             } else {
                 ptrFrame.setPtrHandler(new PtrHandler() {
                     @Override

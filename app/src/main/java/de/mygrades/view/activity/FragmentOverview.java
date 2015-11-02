@@ -60,7 +60,7 @@ public class FragmentOverview extends Fragment {
             @Override
             public void onClick(View v) {
                 ptrFrame.autoRefresh();
-                //mainServiceHelper.scrapeForGrades(false); TODO: check with behaviour for autorefresh
+                mainServiceHelper.scrapeForGrades(false);
             }
         };
 
@@ -111,7 +111,6 @@ public class FragmentOverview extends Fragment {
         ptrFrame.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-                // TODO: better way to do this?
                 if (!ptrFrame.isAutoRefresh()) {
                     mainServiceHelper.scrapeForGrades(false);
                 }
