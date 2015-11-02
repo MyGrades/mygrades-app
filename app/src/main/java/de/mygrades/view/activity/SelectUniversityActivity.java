@@ -1,6 +1,7 @@
 package de.mygrades.view.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -28,11 +30,14 @@ import de.mygrades.view.decoration.DividerItemDecoration;
  * Activity which shows all universities.
  * The user can select a university to be forwarded to the LoginActivity.
  */
-public class SelectUniversityActivity extends AppCompatActivity {
+public class SelectUniversityActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener{
 
     private RecyclerView rvUniversities;
     private UniversitiesRecyclerViewAdapter universityAdapter;
     private FrameLayout flLoading;
+
+    private AppBarLayout appBarLayout;
+    private ImageView ivToolbarLogo;
 
     private FrameLayout flErrorWrapper;
     private TextView tvErrorMessage;
@@ -42,6 +47,9 @@ public class SelectUniversityActivity extends AppCompatActivity {
     private ErrorEvent.ErrorType actErrorType;
 
     private MainServiceHelper mainServiceHelper;
+
+    public SelectUniversityActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +61,8 @@ public class SelectUniversityActivity extends AppCompatActivity {
         flErrorWrapper = (FrameLayout) findViewById(R.id.fl_error_wrapper);
         tvErrorMessage = (TextView) findViewById(R.id.tv_error_message);
         btnTryAgain = (Button) findViewById(R.id.btn_try_again);
+        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        ivToolbarLogo = (ImageView) findViewById(R.id.iv_mygrades_logo);
         initTryAgainButton();
 
         // init toolbar
@@ -112,9 +122,10 @@ public class SelectUniversityActivity extends AppCompatActivity {
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
 
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(getResources().getString(R.string.app_name));
+        collapsingToolbar.setTitle("");
     }
 
     /**
@@ -209,5 +220,33 @@ public class SelectUniversityActivity extends AppCompatActivity {
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
+        int maxScrollRange = appBarLayout.getTotalScrollRange();
+
+        // show logo in toolbar, as soon as the header fades out.
+        // (offset == 0), if complete header is visible
+        // (Math.abs(offset) == maxScrollRange), if user scrolled down (header invisible)
+
+        // show toolbar icon if only less than 30 percent of the header is visible
+        if (Math.abs(offset) >= maxScrollRange * 0.7f) {
+            ivToolbarLogo.animate().alpha(1f).setDuration(500).start();
+        } else {
+            ivToolbarLogo.animate().alpha(0.0f).setDuration(500).start();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        appBarLayout.addOnOffsetChangedListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        appBarLayout.removeOnOffsetChangedListener(this);
     }
 }
