@@ -170,6 +170,9 @@ public class FragmentInitialScraping extends Fragment {
                 intent.putExtra(LoginActivity.EXTRA_UNIVERSITY_NAME, universityName);
                 intent.putExtra(LoginActivity.EXTRA_USERNAME, username);
                 getContext().startActivity(intent);
+
+                // delete user data
+                mainServiceHelper.logout();
             }
         });
     }

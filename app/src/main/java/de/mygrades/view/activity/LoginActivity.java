@@ -2,7 +2,9 @@ package de.mygrades.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import de.mygrades.R;
 import de.mygrades.main.MainServiceHelper;
+import de.mygrades.util.Constants;
 
 /**
  * Activity to enter the username and password for the selected university.
@@ -123,6 +126,13 @@ public class LoginActivity extends AppCompatActivity {
     private void loginAndScrapeForGrades() {
         String username = etUsername.getText().toString();
         String password = etPassword.getText().toString();
+
+        // immediately save the universityId to shared preferences, because it gets checked in the
+        // MainActivity as an indicator that the user is logged in.
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong(Constants.PREF_KEY_UNIVERSITY_ID, universityId);
+        editor.apply();
 
         MainServiceHelper mainServiceHelper = new MainServiceHelper(LoginActivity.this);
         mainServiceHelper.loginAndScrapeForGrades(username, password, universityId);
