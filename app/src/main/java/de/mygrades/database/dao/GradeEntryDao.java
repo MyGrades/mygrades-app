@@ -1,11 +1,14 @@
 package de.mygrades.database.dao;
 
+import java.util.List;
+import java.util.ArrayList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
+import de.greenrobot.dao.internal.SqlUtils;
 import de.greenrobot.dao.internal.DaoConfig;
 
 import de.mygrades.database.dao.GradeEntry;
@@ -33,8 +36,13 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         public final static Property Attempt = new Property(7, String.class, "attempt", false, "ATTEMPT");
         public final static Property ExamDate = new Property(8, String.class, "examDate", false, "EXAM_DATE");
         public final static Property SemesterNumber = new Property(9, Integer.class, "semesterNumber", false, "SEMESTER_NUMBER");
-        public final static Property Hash = new Property(10, String.class, "hash", true, "HASH");
+        public final static Property Tester = new Property(10, String.class, "tester", false, "TESTER");
+        public final static Property Hash = new Property(11, String.class, "hash", true, "HASH");
+        public final static Property OverviewPossible = new Property(12, Boolean.class, "overviewPossible", false, "OVERVIEW_POSSIBLE");
+        public final static Property OverviewId = new Property(13, Long.class, "overviewId", false, "OVERVIEW_ID");
     };
+
+    private DaoSession daoSession;
 
 
     public GradeEntryDao(DaoConfig config) {
@@ -43,6 +51,7 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
     
     public GradeEntryDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -59,7 +68,10 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
                 "\"ATTEMPT\" TEXT," + // 7: attempt
                 "\"EXAM_DATE\" TEXT," + // 8: examDate
                 "\"SEMESTER_NUMBER\" INTEGER," + // 9: semesterNumber
-                "\"HASH\" TEXT PRIMARY KEY NOT NULL );"); // 10: hash
+                "\"TESTER\" TEXT," + // 10: tester
+                "\"HASH\" TEXT PRIMARY KEY NOT NULL ," + // 11: hash
+                "\"OVERVIEW_POSSIBLE\" INTEGER," + // 12: overviewPossible
+                "\"OVERVIEW_ID\" INTEGER);"); // 13: overviewId
     }
 
     /** Drops the underlying database table. */
@@ -119,16 +131,37 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             stmt.bindLong(10, semesterNumber);
         }
  
+        String tester = entity.getTester();
+        if (tester != null) {
+            stmt.bindString(11, tester);
+        }
+ 
         String hash = entity.getHash();
         if (hash != null) {
-            stmt.bindString(11, hash);
+            stmt.bindString(12, hash);
         }
+ 
+        Boolean overviewPossible = entity.getOverviewPossible();
+        if (overviewPossible != null) {
+            stmt.bindLong(13, overviewPossible ? 1L: 0L);
+        }
+ 
+        Long overviewId = entity.getOverviewId();
+        if (overviewId != null) {
+            stmt.bindLong(14, overviewId);
+        }
+    }
+
+    @Override
+    protected void attachEntity(GradeEntry entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
     }
 
     /** @inheritdoc */
     @Override
     public String readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10);
+        return cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11);
     }    
 
     /** @inheritdoc */
@@ -145,7 +178,10 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // attempt
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // examDate
             cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9), // semesterNumber
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10) // hash
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // tester
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // hash
+            cursor.isNull(offset + 12) ? null : cursor.getShort(offset + 12) != 0, // overviewPossible
+            cursor.isNull(offset + 13) ? null : cursor.getLong(offset + 13) // overviewId
         );
         return entity;
     }
@@ -163,7 +199,10 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         entity.setAttempt(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setExamDate(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setSemesterNumber(cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9));
-        entity.setHash(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setTester(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setHash(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setOverviewPossible(cursor.isNull(offset + 12) ? null : cursor.getShort(offset + 12) != 0);
+        entity.setOverviewId(cursor.isNull(offset + 13) ? null : cursor.getLong(offset + 13));
      }
     
     /** @inheritdoc */
@@ -188,4 +227,95 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         return true;
     }
     
+    private String selectDeep;
+
+    protected String getSelectDeep() {
+        if (selectDeep == null) {
+            StringBuilder builder = new StringBuilder("SELECT ");
+            SqlUtils.appendColumns(builder, "T", getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T0", daoSession.getOverviewDao().getAllColumns());
+            builder.append(" FROM GRADE_ENTRY T");
+            builder.append(" LEFT JOIN OVERVIEW T0 ON T.\"OVERVIEW_ID\"=T0.\"OVERVIEW_ID\"");
+            builder.append(' ');
+            selectDeep = builder.toString();
+        }
+        return selectDeep;
+    }
+    
+    protected GradeEntry loadCurrentDeep(Cursor cursor, boolean lock) {
+        GradeEntry entity = loadCurrent(cursor, 0, lock);
+        int offset = getAllColumns().length;
+
+        Overview overview = loadCurrentOther(daoSession.getOverviewDao(), cursor, offset);
+        entity.setOverview(overview);
+
+        return entity;    
+    }
+
+    public GradeEntry loadDeep(Long key) {
+        assertSinglePk();
+        if (key == null) {
+            return null;
+        }
+
+        StringBuilder builder = new StringBuilder(getSelectDeep());
+        builder.append("WHERE ");
+        SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
+        String sql = builder.toString();
+        
+        String[] keyArray = new String[] { key.toString() };
+        Cursor cursor = db.rawQuery(sql, keyArray);
+        
+        try {
+            boolean available = cursor.moveToFirst();
+            if (!available) {
+                return null;
+            } else if (!cursor.isLast()) {
+                throw new IllegalStateException("Expected unique result, but count was " + cursor.getCount());
+            }
+            return loadCurrentDeep(cursor, true);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
+    public List<GradeEntry> loadAllDeepFromCursor(Cursor cursor) {
+        int count = cursor.getCount();
+        List<GradeEntry> list = new ArrayList<GradeEntry>(count);
+        
+        if (cursor.moveToFirst()) {
+            if (identityScope != null) {
+                identityScope.lock();
+                identityScope.reserveRoom(count);
+            }
+            try {
+                do {
+                    list.add(loadCurrentDeep(cursor, false));
+                } while (cursor.moveToNext());
+            } finally {
+                if (identityScope != null) {
+                    identityScope.unlock();
+                }
+            }
+        }
+        return list;
+    }
+    
+    protected List<GradeEntry> loadDeepAllAndCloseCursor(Cursor cursor) {
+        try {
+            return loadAllDeepFromCursor(cursor);
+        } finally {
+            cursor.close();
+        }
+    }
+    
+
+    /** A raw-style query where you can pass any WHERE clause and arguments. */
+    public List<GradeEntry> queryDeep(String where, String... selectionArg) {
+        Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
+        return loadDeepAllAndCloseCursor(cursor);
+    }
+ 
 }

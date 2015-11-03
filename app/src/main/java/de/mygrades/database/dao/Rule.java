@@ -15,13 +15,14 @@ public class Rule {
 
     private Long ruleId;
     /** Not-null value. */
-    private String type;
+    private String name;
     private String semesterFormat;
     private String semesterPattern;
     private Integer semesterStartSummer;
     private Integer semesterStartWinter;
     private Double gradeFactor;
     private java.util.Date lastUpdated;
+    private Boolean overview;
     private long universityId;
 
     /** Used to resolve relations */
@@ -43,15 +44,16 @@ public class Rule {
         this.ruleId = ruleId;
     }
 
-    public Rule(Long ruleId, String type, String semesterFormat, String semesterPattern, Integer semesterStartSummer, Integer semesterStartWinter, Double gradeFactor, java.util.Date lastUpdated, long universityId) {
+    public Rule(Long ruleId, String name, String semesterFormat, String semesterPattern, Integer semesterStartSummer, Integer semesterStartWinter, Double gradeFactor, java.util.Date lastUpdated, Boolean overview, long universityId) {
         this.ruleId = ruleId;
-        this.type = type;
+        this.name = name;
         this.semesterFormat = semesterFormat;
         this.semesterPattern = semesterPattern;
         this.semesterStartSummer = semesterStartSummer;
         this.semesterStartWinter = semesterStartWinter;
         this.gradeFactor = gradeFactor;
         this.lastUpdated = lastUpdated;
+        this.overview = overview;
         this.universityId = universityId;
     }
 
@@ -70,13 +72,13 @@ public class Rule {
     }
 
     /** Not-null value. */
-    public String getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setType(String type) {
-        this.type = type;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSemesterFormat() {
@@ -125,6 +127,14 @@ public class Rule {
 
     public void setLastUpdated(java.util.Date lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public Boolean getOverview() {
+        return overview;
+    }
+
+    public void setOverview(Boolean overview) {
+        this.overview = overview;
     }
 
     public long getUniversityId() {
@@ -225,7 +235,7 @@ public class Rule {
     public String toString() {
         return "Rule{" +
                 "ruleId=" + ruleId +
-                ", type='" + type + '\'' +
+                ", name='" + name + '\'' +
                 ", semesterFormat='" + semesterFormat + '\'' +
                 ", semesterPattern='" + semesterPattern + '\'' +
                 ", semesterStartSummer=" + semesterStartSummer +
@@ -239,7 +249,6 @@ public class Rule {
                 ", transformerMappings=" + transformerMappings +
                 '}';
     }
-
     // KEEP METHODS END
 
 }

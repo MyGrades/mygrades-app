@@ -23,7 +23,7 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property OverviewId = new Property(0, Long.class, "overviewId", true, "OVERVIEW_ID");
         public final static Property Average = new Property(1, Double.class, "average", false, "AVERAGE");
         public final static Property Participants = new Property(2, Integer.class, "participants", false, "PARTICIPANTS");
         public final static Property Section1 = new Property(3, Integer.class, "section1", false, "SECTION1");
@@ -32,6 +32,7 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
         public final static Property Section4 = new Property(6, Integer.class, "section4", false, "SECTION4");
         public final static Property Section5 = new Property(7, Integer.class, "section5", false, "SECTION5");
         public final static Property UserSection = new Property(8, Integer.class, "userSection", false, "USER_SECTION");
+        public final static Property GradeEntryHash = new Property(9, String.class, "gradeEntryHash", false, "GRADE_ENTRY_HASH");
     };
 
 
@@ -47,7 +48,7 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"OVERVIEW\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"OVERVIEW_ID\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: overviewId
                 "\"AVERAGE\" REAL," + // 1: average
                 "\"PARTICIPANTS\" INTEGER," + // 2: participants
                 "\"SECTION1\" INTEGER," + // 3: section1
@@ -55,7 +56,8 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
                 "\"SECTION3\" INTEGER," + // 5: section3
                 "\"SECTION4\" INTEGER," + // 6: section4
                 "\"SECTION5\" INTEGER," + // 7: section5
-                "\"USER_SECTION\" INTEGER);"); // 8: userSection
+                "\"USER_SECTION\" INTEGER," + // 8: userSection
+                "\"GRADE_ENTRY_HASH\" TEXT);"); // 9: gradeEntryHash
     }
 
     /** Drops the underlying database table. */
@@ -69,9 +71,9 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
     protected void bindValues(SQLiteStatement stmt, Overview entity) {
         stmt.clearBindings();
  
-        Long id = entity.getId();
-        if (id != null) {
-            stmt.bindLong(1, id);
+        Long overviewId = entity.getOverviewId();
+        if (overviewId != null) {
+            stmt.bindLong(1, overviewId);
         }
  
         Double average = entity.getAverage();
@@ -113,6 +115,11 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
         if (userSection != null) {
             stmt.bindLong(9, userSection);
         }
+ 
+        String gradeEntryHash = entity.getGradeEntryHash();
+        if (gradeEntryHash != null) {
+            stmt.bindString(10, gradeEntryHash);
+        }
     }
 
     /** @inheritdoc */
@@ -125,7 +132,7 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
     @Override
     public Overview readEntity(Cursor cursor, int offset) {
         Overview entity = new Overview( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // overviewId
             cursor.isNull(offset + 1) ? null : cursor.getDouble(offset + 1), // average
             cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // participants
             cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // section1
@@ -133,7 +140,8 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
             cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5), // section3
             cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6), // section4
             cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7), // section5
-            cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8) // userSection
+            cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8), // userSection
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9) // gradeEntryHash
         );
         return entity;
     }
@@ -141,7 +149,7 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, Overview entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setOverviewId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setAverage(cursor.isNull(offset + 1) ? null : cursor.getDouble(offset + 1));
         entity.setParticipants(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
         entity.setSection1(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
@@ -150,12 +158,13 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
         entity.setSection4(cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6));
         entity.setSection5(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));
         entity.setUserSection(cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8));
+        entity.setGradeEntryHash(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
      }
     
     /** @inheritdoc */
     @Override
     protected Long updateKeyAfterInsert(Overview entity, long rowId) {
-        entity.setId(rowId);
+        entity.setOverviewId(rowId);
         return rowId;
     }
     
@@ -163,7 +172,7 @@ public class OverviewDao extends AbstractDao<Overview, Long> {
     @Override
     public Long getKey(Overview entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getOverviewId();
         } else {
             return null;
         }

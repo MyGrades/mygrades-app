@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
+    android:fillViewport="true">
+
+    <!-- content wrapper is used to get the total height (used in move-to-center animation) -->
+    <LinearLayout
+        android:id="@+id/ll_content_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- status wrapper can be moved to center (animated) -->
+        <LinearLayout
+            android:id="@+id/ll_status_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <RelativeLayout
+                android:id="@+id/rl_header_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/rl_status_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/ll_progress_wrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:src="@drawable/mygrades_white_64dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_centerHorizontal="true"
+                                android:alpha="0.2" />
+
+                            <de.mygrades.view.ProgressImageViewOverlay
+                                android:id="@+id/iv_progress_overlay"
+                                android:src="@drawable/mygrades_white_64dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_centerHorizontal="true" />
+                        </RelativeLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Deine Noten werden geladen."
+                            android:textColor="#FFFFFF"
+                            android:gravity="center"
+                            android:textSize="16sp"
+                            android:layout_marginTop="16dp" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_error_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:src="@drawable/ic_warning_white_64dp"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:layout_gravity="center"
+                            android:layout_centerHorizontal="true" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Fehler :("
+                            android:textColor="#FFFFFF"
+                            android:gravity="center"
+                            android:textSize="16sp"
+                            android:layout_marginTop="16dp" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <!-- wrapper for error messages -->
+            <LinearLayout
+                android:id="@+id/ll_error_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#FFFFFF"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"/>
+
+                <!-- ViewStub to inflate the general error layout -->
+                <ViewStub
+                    android:id="@+id/stub_general_error"
+                    android:layout="@layout/viewstub_error_general"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!-- ViewStub to inflate the timeout error layout -->
+                <ViewStub
+                    android:id="@+id/stub_timeout_error"
+                    android:layout="@layout/viewstub_error_timeout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!-- ViewStub to inflate the no-network error layout -->
+                <ViewStub
+                    android:id="@+id/stub_no_network_error"
+                    android:layout="@layout/viewstub_error_no_network"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!-- try-again button -->
+                <Button
+                    android:id="@+id/btn_try_again"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nochmal versuchen"
+                    android:theme="@style/InvertedRobotoButtonStyle"
+                    android:textColor="?attr/colorPrimary"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"/>
+
+                <!-- back-to-login button -->
+                <Button
+                    android:id="@+id/btn_back_to_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Zurück zum Login"
+                    android:theme="@style/InvertedRobotoButtonStyle"
+                    android:textColor="?attr/colorPrimary"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

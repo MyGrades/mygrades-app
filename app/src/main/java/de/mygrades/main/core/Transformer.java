@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 
 import de.mygrades.database.dao.GradeEntry;
+import de.mygrades.database.dao.Overview;
 import de.mygrades.database.dao.Rule;
 import de.mygrades.database.dao.TransformerMapping;
 import de.mygrades.util.exceptions.ParseException;
@@ -31,8 +32,8 @@ public class Transformer {
 
     // mapping from TransformerMapping Name -> GradeEntry Property
     private static final String ITERATOR = "iterator";
-    private static final String EXAM_ID = "exam_id";
-    private static final String NAME = "name";
+    public static final String EXAM_ID = "exam_id";
+    public static final String NAME = "name";
     private static final String SEMESTER = "semester";
     private static final String GRADE = "grade";
     private static final String STATE = "state";
@@ -40,13 +41,23 @@ public class Transformer {
     private static final String ANNOTATION = "annotation";
     private static final String ATTEMPT = "attempt";
     private static final String EXAM_DATE = "exam_date";
+    private static final String TESTER = "tester";
+    private static final String OVERVIEW_POSSIBLE = "overview_possible";
+
+    // mapping from TransformerMapping Name -> Overview Property
+    private static final String OVERVIEW_SECTION_1 = "overview_section1";
+    private static final String OVERVIEW_SECTION_2 = "overview_section2";
+    private static final String OVERVIEW_SECTION_3 = "overview_section3";
+    private static final String OVERVIEW_SECTION_4 = "overview_section4";
+    private static final String OVERVIEW_SECTION_5 = "overview_section5";
+    private static final String OVERVIEW_PARTICIPANTS = "overview_participants";
+    private static final String OVERVIEW_AVERAGE = "overview_average";
 
     private static final String SEMESTER_FORMAT_SEMESTER = "semester";
-    private static final String SEMSETER_FORMAT_DATE = "date";
+    private static final String SEMESTER_FORMAT_DATE = "date";
 
-    private static final String SEMSETER_WS = "Wintersemester ";
-    private static final String SEMSETER_SS = "Sommersemester ";
-
+    private static final String SEMESTER_WS = "Wintersemester ";
+    private static final String SEMESTER_SS = "Sommersemester ";
 
     /**
      * Parser to extract values into Models.
@@ -73,14 +84,40 @@ public class Transformer {
      */
     private Pattern semesterPattern;
 
-
     public Transformer(Rule rule, String html, Parser parser) {
         this.rule = rule;
         this.transformerMapping = createTransformerMappingMap(rule.getTransformerMappings());
         this.parser = parser;
         this.html = html;
-
         this.semesterPattern = Pattern.compile(rule.getSemesterPattern());
+    }
+
+    /**
+     * Creates Overview object from HTML via
+     * xPath expressions from TransformerMapping.
+     *
+     * @return Overview
+     * @throws ParseException if something goes wrong at parsing
+     */
+    public Overview transformOverview(Double userGrade) throws ParseException {
+        // get Node as XML document -> so it must not created every time
+        Document xmlDocument = parser.getStringAsDocument(html);
+
+        // create Pattern for Integer Extraction
+        Pattern pattern = Pattern.compile("[0-9]+");
+
+        // extract Overview values
+        Overview overview = new Overview();
+        overview.setSection1(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_1, pattern));
+        overview.setSection2(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_2, pattern));
+        overview.setSection3(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_3, pattern));
+        overview.setSection4(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_4, pattern));
+        overview.setSection5(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_5, pattern));
+        overview.setParticipants(getIntegerProperty(xmlDocument, OVERVIEW_PARTICIPANTS));
+        overview.setAverage(getDoubleProperty(xmlDocument, OVERVIEW_AVERAGE));
+        overview.setUserSection((int)Math.round(userGrade));
+
+        return overview;
     }
 
     /**
@@ -109,10 +146,12 @@ public class Transformer {
             gradeEntry.setSemester(calculateGradeEntrySemester(getStringProperty(xmlDocument, SEMESTER)));
             gradeEntry.setGrade(getDoubleProperty(xmlDocument, GRADE, rule.getGradeFactor()));
             gradeEntry.setState(getStringProperty(xmlDocument, STATE));
-            gradeEntry.setCreditPoints(getDoubleProperty(xmlDocument, CREDIT_POINTS, null));
+            gradeEntry.setCreditPoints(getDoubleProperty(xmlDocument, CREDIT_POINTS));
             gradeEntry.setAnnotation(getStringProperty(xmlDocument, ANNOTATION));
             gradeEntry.setAttempt(getStringProperty(xmlDocument, ATTEMPT));
             gradeEntry.setExamDate(getStringProperty(xmlDocument, EXAM_DATE));
+            gradeEntry.setTester(getStringProperty(xmlDocument, TESTER));
+            gradeEntry.setOverviewPossible(getBooleanProperty(xmlDocument, OVERVIEW_POSSIBLE));
 
             // update hash, used as primary key
             gradeEntry.updateHash();
@@ -144,7 +183,7 @@ public class Transformer {
             Integer extractedYear = 0;
 
             // match pattern to origSemester and get Year and Semester String
-            Matcher matcher = semesterPattern.matcher(origSemester);
+            Matcher matcher = semesterPattern.matcher(origSemester); // TODO: if origSemester = null -> nullpointer
             if (matcher.find()) { // Find first match
                 extractedSemester = matcher.group(1);
 
@@ -162,11 +201,11 @@ public class Transformer {
 
             // if extractedSemester starts with w -> Wintersemester
             if (extractedSemester.toLowerCase().startsWith("w")) {
-                resultSemester += SEMSETER_WS + extractedYear + "/" + (extractedYear+1);
+                resultSemester += SEMESTER_WS + extractedYear + "/" + (extractedYear+1);
             } else {
-                resultSemester += SEMSETER_SS + extractedYear;
+                resultSemester += SEMESTER_SS + extractedYear;
             }
-        } else if (rule.getSemesterFormat().equals(SEMSETER_FORMAT_DATE)) {
+        } else if (rule.getSemesterFormat().equals(SEMESTER_FORMAT_DATE)) {
             Integer extractedYear = 0;
             Integer extractedMonth = 0;
 
@@ -192,12 +231,12 @@ public class Transformer {
 
             // calculate Semester string depending on month and year
             if (extractedMonth >= rule.getSemesterStartSummer() && extractedMonth < rule.getSemesterStartWinter()) { // Sommersemester (04-09)
-                resultSemester += SEMSETER_SS + extractedYear;
+                resultSemester += SEMESTER_SS + extractedYear;
             } else { // Wintersemester
                 if (extractedMonth >= rule.getSemesterStartWinter()) { // first part of Wintersemester (10-12)
-                    resultSemester += SEMSETER_WS + extractedYear + "/" + (extractedYear+1);
+                    resultSemester += SEMESTER_WS + extractedYear + "/" + (extractedYear+1);
                 } else { // second part of Wintersemester (01-03)
-                    resultSemester += SEMSETER_WS + (extractedYear-1) + "/" + extractedYear;
+                    resultSemester += SEMESTER_WS + (extractedYear-1) + "/" + extractedYear;
                 }
             }
 
@@ -264,7 +303,7 @@ public class Transformer {
 
         // create Map Semester -> SemesterNumber for easy adding to GradeEntry
         Map<String, Integer> semesterSemesterNumberMap = new HashMap<>();
-        for (int i=0; i < semestersList.size(); i++) {
+        for (int i = 0; i < semestersList.size(); i++) {
             semesterSemesterNumberMap.put(semestersList.get(i), i+1);
         }
 
@@ -287,7 +326,26 @@ public class Transformer {
         if (transformerMappingVal == null) {
             return null;
         }
-        return parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument).trim();
+        String parseResult = parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument).trim();
+        return parseResult.equals("") ? null : parseResult;
+    }
+
+    /**
+     * Gets the value from Document determined by type of TransformerMapping as String.
+     *
+     * @param xmlDocument Document which should get parsed
+     * @param type Type of TransformerMapping regarding to GradeEntry
+     * @return extracted value as String
+     * @throws ParseException if something goes wrong at parsing
+     */
+    private boolean getBooleanProperty(Document xmlDocument, String type) throws ParseException {
+        TransformerMapping transformerMappingVal = transformerMapping.get(type);
+        if (transformerMappingVal == null) {
+            return false;
+        }
+        Boolean parseResult = parser.parseToBoolean(transformerMappingVal.getParseExpression(), xmlDocument);
+
+        return parseResult == null ? false : parseResult;
     }
 
     /**
@@ -295,6 +353,7 @@ public class Transformer {
      *
      * @param xmlDocument Document which should get parsed
      * @param type Type of TransformerMapping regarding to GradeEntry
+     * @param factor A factor can be used to multiply the double value
      * @return extracted value as Double
      * @throws ParseException if something goes wrong at parsing
      */
@@ -318,6 +377,66 @@ public class Transformer {
         // if factor is given -> multiply
         if (factor != null) {
             property = property * factor;
+        }
+
+        return property;
+    }
+
+    /**
+     * Gets the value from Document determined by type of TransformerMapping as Double.
+     *
+     * @param xmlDocument Document which should get parsed
+     * @param type Type of TransformerMapping regarding to GradeEntry
+     * @return extracted value as Double
+     * @throws ParseException if something goes wrong at parsing
+     */
+    private Double getDoubleProperty(Document xmlDocument, String type) throws ParseException {
+        return getDoubleProperty(xmlDocument, type, null);
+    }
+
+    /**
+     * Gets the value from Document determined by type of TransformerMapping as Integer.
+     *
+     * @param xmlDocument Document which should get parsed
+     * @param type Type of TransformerMapping regarding to Overview
+     * @return extracted value as Integer
+     * @throws ParseException if something goes wrong at parsing
+     */
+    private Integer getIntegerProperty(Document xmlDocument, String type) throws ParseException {
+        return getIntegerProperty(xmlDocument, type, null);
+    }
+
+    /**
+     * Gets the value from Document determined by type of TransformerMapping as Integer.
+     * The integer is extracted from string via Regex.
+     *
+     * @param xmlDocument Document which should get parsed
+     * @param type Type of TransformerMapping regarding to Overview
+     * @param pattern Regex pattern of how to extract Integer
+     * @return extracted value as Integer
+     * @throws ParseException if something goes wrong at parsing
+     */
+    private Integer getIntegerProperty(Document xmlDocument, String type, Pattern pattern) throws ParseException {
+        TransformerMapping transformerMappingVal = transformerMapping.get(type);
+        if (transformerMappingVal == null) {
+            return null;
+        }
+
+        Integer property;
+        String result = parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument).trim();
+
+        if (pattern != null) {
+            Matcher matcher = pattern.matcher(result);
+            if (matcher.find()) {
+                result = matcher.group(0);
+            }
+        }
+
+        // if cannot parse to Integer -> return null
+        try {
+            property = Integer.parseInt(result);
+        } catch (NumberFormatException e) {
+            return null;
         }
 
         return property;

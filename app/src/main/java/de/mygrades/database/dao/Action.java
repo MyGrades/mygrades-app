@@ -15,6 +15,7 @@ public class Action {
 
     private Long actionId;
     private int position;
+    private String type;
     /** Not-null value. */
     private String method;
     private String url;
@@ -39,9 +40,10 @@ public class Action {
         this.actionId = actionId;
     }
 
-    public Action(Long actionId, int position, String method, String url, String parseExpression, long ruleId) {
+    public Action(Long actionId, int position, String type, String method, String url, String parseExpression, long ruleId) {
         this.actionId = actionId;
         this.position = position;
+        this.type = type;
         this.method = method;
         this.url = url;
         this.parseExpression = parseExpression;
@@ -68,6 +70,14 @@ public class Action {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     /** Not-null value. */
@@ -165,6 +175,7 @@ public class Action {
         return "Action{" +
                 "actionId=" + actionId +
                 ", position=" + position +
+                ", type='" + type + '\'' +
                 ", method='" + method + '\'' +
                 ", url='" + url + '\'' +
                 ", parseExpression='" + parseExpression + '\'' +

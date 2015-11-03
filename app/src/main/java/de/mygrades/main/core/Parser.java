@@ -3,6 +3,7 @@ package de.mygrades.main.core;
 import android.content.Context;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -10,6 +11,8 @@ import org.xml.sax.SAXException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,7 +33,6 @@ import de.mygrades.util.exceptions.ParseException;
  * Parses String to Documents and evaluates xPath expressions on them.
  */
 public class Parser {
-    private static final String TAG = Parser.class.getSimpleName();
     private Context context;
 
     /**
@@ -68,6 +70,17 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a Document with given XPATH expression and returns result of expression as Boolean.
+     *
+     * @param xmlDocument Document which should get parsed
+     * @param parseExpression XPATH expression
+     * @return parsed result
+     * @throws ParseException if something goes wrong at parsing or initializing Document Builder
+     */
+    public Boolean parseToBoolean(String parseExpression, Document xmlDocument) throws ParseException {
+        return evaluateXpathExpressionBoolean(parseExpression, xmlDocument);
+    }
 
     /**
      * Parses a Document with given XPATH expression and returns result of expression as String.
@@ -135,8 +148,36 @@ public class Parser {
         return createXmlDocument(getNodeAsString(node));
     }
 
+    /**
+     * Creates a XML-document from a String.
+     *
+     * @param string String of content which is wanted
+     * @return content of String as Document
+     * @throws ParseException if something goes wrong with transforming
+     */
+    public Document getStringAsDocument(String string) throws ParseException {
+        return createXmlDocument(string);
+    }
 
+    /**
+     * Extracts HTML-input fields from given html via parseExpression and
+     * transforms them into a key-value map.
+     *
+     * @param html String which should get parsed
+     * @param parseExpression XPATH expression
+     * @return Map of key-value pairs of inputs matching parseExpression
+     * @throws ParseException if something goes wrong at parsing or initializing Document Builder
+     */
+    public Map<String, String> getInputsAsMap(String parseExpression, String html) throws ParseException {
+        NodeList inputs = parseToNodeList(parseExpression, html);
+        Map<String, String> inputsMap = new HashMap<>();
 
+        for (int n=0; n < inputs.getLength(); n++) {
+            Element input = (Element)inputs.item(n);
+            inputsMap.put(input.getAttribute("name"), input.getAttribute("value"));
+        }
+        return inputsMap;
+    }
 
 
 
@@ -185,6 +226,22 @@ public class Parser {
     private String evaluateXpathExpressionString(String parseExpression, Document xmlDocument) throws ParseException {
         try {
             return (String) xPath.compile(parseExpression).evaluate(xmlDocument, XPathConstants.STRING);
+        } catch (XPathExpressionException e) {
+            throw new ParseException("Could not compile XPATH expression!");
+        }
+    }
+
+    /**
+     * Evaluates xPath expression on given document as Boolean.
+     *
+     * @param parseExpression xPath expression
+     * @param xmlDocument document, which should get evaluated against expression
+     * @return evaluated xPath expression as Boolean
+     * @throws ParseException if something goes wrong at parsing
+     */
+    private Boolean evaluateXpathExpressionBoolean(String parseExpression, Document xmlDocument) throws ParseException {
+        try {
+            return (Boolean) xPath.compile(parseExpression).evaluate(xmlDocument, XPathConstants.BOOLEAN);
         } catch (XPathExpressionException e) {
             throw new ParseException("Could not compile XPATH expression!");
         }

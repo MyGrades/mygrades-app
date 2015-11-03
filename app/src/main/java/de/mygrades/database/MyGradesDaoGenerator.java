@@ -31,7 +31,7 @@ public class MyGradesDaoGenerator {
         addActionParam(schema);
         addTransformerMapping(schema);
         addGradeEntry(schema);
-        /*addOverview(schema);*/
+        addOverview(schema);
 
         DaoGenerator daoGenerator = new DaoGenerator();
         daoGenerator.generateAll(schema, DIR_PATH);
@@ -61,13 +61,14 @@ public class MyGradesDaoGenerator {
     private static void addRule(Schema schema) {
         rule = schema.addEntity("Rule");
         rule.addLongProperty("ruleId").primaryKey();
-        rule.addStringProperty("type").notNull();
+        rule.addStringProperty("name").notNull();
         rule.addStringProperty("semesterFormat");
         rule.addStringProperty("semesterPattern");
         rule.addIntProperty("semesterStartSummer");
         rule.addIntProperty("semesterStartWinter");
         rule.addDoubleProperty("gradeFactor");
         rule.addDateProperty("lastUpdated");
+        rule.addBooleanProperty("overview");
 
         // add 1:n relation for university -> rules
         Property universityId = rule.addLongProperty("universityId").notNull().getProperty();
@@ -86,6 +87,7 @@ public class MyGradesDaoGenerator {
         action = schema.addEntity("Action");
         action.addLongProperty("actionId").primaryKey();
         action.addIntProperty("position").notNull();
+        action.addStringProperty("type");
         action.addStringProperty("method").notNull();
         action.addStringProperty("url");
         action.addStringProperty("parseExpression");
@@ -148,7 +150,10 @@ public class MyGradesDaoGenerator {
         gradeEntry.addStringProperty("attempt");
         gradeEntry.addStringProperty("examDate");
         gradeEntry.addIntProperty("semesterNumber");
+        gradeEntry.addStringProperty("tester");
         gradeEntry.addStringProperty("hash").primaryKey();
+        gradeEntry.addBooleanProperty("overviewPossible");
+
         gradeEntry.setHasKeepSections(true);
     }
 
@@ -159,6 +164,7 @@ public class MyGradesDaoGenerator {
      */
     private static void addOverview(Schema schema) {
         overview = schema.addEntity("Overview");
+        overview.addLongProperty("overviewId").primaryKey().autoincrement();
         overview.addDoubleProperty("average");
         overview.addIntProperty("participants");
         overview.addIntProperty("section1");
@@ -167,9 +173,11 @@ public class MyGradesDaoGenerator {
         overview.addIntProperty("section4");
         overview.addIntProperty("section5");
         overview.addIntProperty("userSection");
+        overview.addStringProperty("gradeEntryHash");
+        overview.setHasKeepSections(true);
 
         // add 1:1 relation for gradeEntry -> overview
-        Property overviewId = gradeEntry.addLongProperty("overviewId").unique().getProperty();
+        Property overviewId = gradeEntry.addLongProperty("overviewId").getProperty();
         gradeEntry.addToOne(overview, overviewId);
     }
 }

@@ -5,27 +5,29 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import java.text.SimpleDateFormat;
+import java.net.ConnectException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import de.greenrobot.dao.query.QueryBuilder;
+import de.greenrobot.dao.query.DeleteQuery;
 import de.greenrobot.event.EventBus;
 import de.mygrades.database.dao.Action;
 import de.mygrades.database.dao.ActionDao;
 import de.mygrades.database.dao.ActionParam;
+import de.mygrades.database.dao.ActionParamDao;
 import de.mygrades.database.dao.Rule;
 import de.mygrades.database.dao.TransformerMapping;
+import de.mygrades.database.dao.TransformerMappingDao;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
+import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.UniversityEvent;
 import de.mygrades.util.Constants;
 import retrofit.RetrofitError;
 
 /**
  * UniversityProcessor is responsible for university resources.
- * It makes rest calls and required inserts / updated to the local database.
+ * It makes rest calls and required inserts / updates to the local database.
  */
 public class UniversityProcessor extends BaseProcessor {
     private static final String TAG = UniversityProcessor.class.getSimpleName();
@@ -35,33 +37,44 @@ public class UniversityProcessor extends BaseProcessor {
     }
 
     /**
-     * Load all universities from the server.
+     * Load all universities from the server and posts an UniversityEvent.
+     *
+     * @param publishedOnly - load only published universities or all
      */
     public void getUniversities(boolean publishedOnly) {
-        List<University> universities = new ArrayList<>();
+        // No Connection -> event no Connection, abort
+        if (!isOnline()) {
+            postErrorEvent(ErrorEvent.ErrorType.NO_NETWORK, "No Internet Connection!");
+            return;
+        }
 
-        // make synchronous rest call
         try {
             String updatedAtServerPublished = getUpdatedAtServerForUniversities(true);
             String updatedAtServerUnpublished = getUpdatedAtServerForUniversities(false);
-            universities = restClient.getRestApi().getUniversities(publishedOnly, updatedAtServerPublished, updatedAtServerUnpublished);
+
+            // make synchronous rest call
+            List<University> universities = restClient.getRestApi().getUniversities(publishedOnly, updatedAtServerPublished, updatedAtServerUnpublished);
+            universities = universities == null ? new ArrayList<University>() : universities;
+
+            // insert into database
+            daoSession.getUniversityDao().insertOrReplaceInTx(universities);
+
+            // post university event
+            UniversityEvent universityEvent = new UniversityEvent();
+            universityEvent.setUniversities(universities);
+            EventBus.getDefault().post(universityEvent);
         } catch (RetrofitError e) {
+            if (e.getCause() instanceof ConnectException) {
+                postErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout", e);
+            } else {
+                postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
+            }
             Log.e(TAG, "RetrofitError: " + e.getMessage());
         }
-
-        universities = universities == null ? new ArrayList<University>() : universities;
-
-        // insert into database
-        daoSession.getUniversityDao().insertOrReplaceInTx(universities);
-
-        // post university event
-        UniversityEvent universityEvent = new UniversityEvent();
-        universityEvent.setNewUniversities(universities);
-        EventBus.getDefault().post(universityEvent);
     }
 
     /**
-     * Load all universities from the database and post an event.
+     * Load all universities from the database and posts an UniversityEvent.
      *
      * @param publishedOnly - select only published universities or all
      */
@@ -75,7 +88,7 @@ public class UniversityProcessor extends BaseProcessor {
 
         // post university event
         UniversityEvent universityEvent = new UniversityEvent();
-        universityEvent.setNewUniversities(universities);
+        universityEvent.setUniversities(universities);
         EventBus.getDefault().post(universityEvent);
     }
 
@@ -103,6 +116,8 @@ public class UniversityProcessor extends BaseProcessor {
                     daoSession.getUniversityDao().insertOrReplace(finalUniversity);
 
                     for (Rule rule : finalUniversity.getRulesRaw()) {
+                        clearRule(rule); // delete actions and transformer mappings
+
                         daoSession.getRuleDao().insertOrReplace(rule);
 
                         for (Action action : rule.getActionsRaw()) {
@@ -123,7 +138,42 @@ public class UniversityProcessor extends BaseProcessor {
     }
 
     /**
+     * Deletes all ActionParams, Actions and TransformerMappings for a given rule from database.
+     *
+     * @param rule
+     */
+    private void clearRule(Rule rule) {
+        DeleteQuery deleteActionParams = daoSession.getActionParamDao().queryBuilder()
+                .where(ActionParamDao.Properties.ActionId.eq(-1))
+                .buildDelete();
+
+        DeleteQuery deleteActions = daoSession.getActionDao().queryBuilder()
+                .where(ActionDao.Properties.RuleId.eq(rule.getRuleId()))
+                .buildDelete();
+
+        DeleteQuery deleteTransformerMappings = daoSession.getTransformerMappingDao().queryBuilder()
+                .where(TransformerMappingDao.Properties.RuleId.eq(rule.getRuleId()))
+                .buildDelete();
+
+        // delete actionParams
+        for (Action action : rule.getActionsRaw()) {
+            deleteActionParams.setParameter(0, action.getActionId());
+            deleteActionParams.executeDeleteWithoutDetachingEntities();
+        }
+
+        // delete actions
+        deleteActions.executeDeleteWithoutDetachingEntities();
+
+        // delete transformer mappings
+        deleteTransformerMappings.executeDeleteWithoutDetachingEntities();
+
+        daoSession.clear();
+    }
+
+    /**
      * Get the latest updated_at_server timestamp for all universities.
+     * The selected university should be excluded from the query, because
+     * it may be already updated multiple times.
      *
      * @param publishedOnly - get timestamp for published or unpublished universities
      * @return timestamp as string
@@ -149,10 +199,10 @@ public class UniversityProcessor extends BaseProcessor {
 
     /**
      * Get the updated_at_server timestamp for the selected university.
-     * Return null, if the selected university has no rules attached (should not happen).
+     * Return null, if the selected university has no rules attached (should only happen at first load).
      *
      * @param universityId - university id
-     * @return timestamp
+     * @return timestamp as string
      */
     private String getUpdatedAtServerForUniversity(long universityId) {
         University u = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();

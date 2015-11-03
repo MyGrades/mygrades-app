@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_root_view"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:animateLayoutChanges="true">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <in.srain.cube.views.ptr.PtrFrameLayout
+        android:id="@+id/pull_to_refresh"
+        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        cube_ptr:ptr_resistance="1.7"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
+        cube_ptr:ptr_duration_to_close="500"
+        cube_ptr:ptr_duration_to_close_header="2000"
+        cube_ptr:ptr_keep_header_when_refresh="true"
+        cube_ptr:ptr_pull_to_fresh="false">
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fitsSystemWindows="true">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_grade_detail_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/h1"/>
+
+                <!-- ExamId -->
+                <RelativeLayout
+                    style="@style/GradeDetailRow">
+
+                    <TextView
+                        style="@style/GradeDetailTextViewLeft"
+                        android:id="@+id/tv_grade_detail_label_exam_id"
+                        android:text="@string/tv_grade_detail_exam_id"
+                        />
+
+                    <TextView
+                        style="@style/GradeDetailTextViewRight"
+                        android:id="@+id/tv_grade_detail_exam_id"
+                        />
+                    <View style="@style/Divider"/>
+                </RelativeLayout>
+
+                <!-- Semester -->
+                <RelativeLayout
+                    style="@style/GradeDetailRow">
+
+                    <TextView
+                        style="@style/GradeDetailTextViewLeft"
+                        android:id="@+id/tv_grade_detail_label_semester"
+                        android:text="@string/tv_grade_detail_semester"
+                        />
+
+                    <TextView
+                        style="@style/GradeDetailTextViewRight"
+                        android:id="@+id/tv_grade_detail_semester"
+                        />
+                    <View style="@style/Divider"/>
+                </RelativeLayout>
+
+                <!-- Exam Date -->
+                <RelativeLayout
+                    style="@style/GradeDetailRow">
+
+                    <TextView
+                        style="@style/GradeDetailTextViewLeft"
+                        android:id="@+id/tv_grade_detail_label_exam_date"
+                        android:text="@string/tv_grade_detail_exam_date"
+                        />
+
+                    <TextView
+                        style="@style/GradeDetailTextViewRight"
+                        android:id="@+id/tv_grade_detail_exam_date"
+                        />
+                    <View style="@style/Divider"/>
+                </RelativeLayout>
+
+                <!-- Tester -->
+                <RelativeLayout
+                    style="@style/GradeDetailRow">
+
+                    <TextView
+                        style="@style/GradeDetailTextViewLeft"
+                        android:id="@+id/tv_grade_detail_label_tester"
+                        android:text="@string/tv_grade_detail_tester"
+                        />
+
+                    <TextView
+                        style="@style/GradeDetailTextViewRight"
+                        android:id="@+id/tv_grade_detail_tester"
+                        />
+                    <View style="@style/Divider"/>
+                </RelativeLayout>
+
+                <!-- Grade -->
+                <RelativeLayout
+                    style="@style/GradeDetailRow">
+
+                    <TextView
+                        style="@style/GradeDetailTextViewLeft"
+                        android:id="@+id/tv_grade_detail_label_grade"
+                        android:text="@string/tv_grade_detail_grade"
+                        />
+
+                    <TextView
+                        style="@style/GradeDetailTextViewRight"
+                        android:id="@+id/tv_grade_detail_grade"
+                        />
+                    <View style="@style/Divider"/>
+                </RelativeLayout>
+
+                <!-- Credit Points -->
+                <RelativeLayout
+                    style="@style/GradeDetailRow">
+
+                    <TextView
+                        style="@style/GradeDetailTextViewLeft"
+                        android:id="@+id/tv_grade_detail_label_credit_points"
+                        android:text="@string/tv_grade_detail_credit_points"
+                        />
+
+                    <TextView
+                        style="@style/GradeDetailTextViewRight"
+                        android:id="@+id/tv_grade_detail_credit_points"
+                        />
+                    <View style="@style/Divider"/>
+                </RelativeLayout>
+
+                <!-- State -->
+                <RelativeLayout
+                    style="@style/GradeDetailRow">
+
+                    <TextView
+                        style="@style/GradeDetailTextViewLeft"
+                        android:id="@+id/tv_grade_detail_label_state"
+                        android:text="@string/tv_grade_detail_state"
+                        />
+
+                    <TextView
+                        style="@style/GradeDetailTextViewRight"
+                        android:id="@+id/tv_grade_detail_state"
+                        />
+                    <View style="@style/Divider"/>
+                </RelativeLayout>
+
+                <!-- Attempt -->
+                <RelativeLayout
+                    style="@style/GradeDetailRow">
+
+                    <TextView
+                        style="@style/GradeDetailTextViewLeft"
+                        android:id="@+id/tv_grade_detail_label_attempt"
+                        android:text="@string/tv_grade_detail_attempt"
+                        />
+
+                    <TextView
+                        style="@style/GradeDetailTextViewRight"
+                        android:id="@+id/tv_grade_detail_attempt"
+                        />
+                    <View style="@style/Divider"/>
+                </RelativeLayout>
+
+                <!-- Annotation -->
+                <RelativeLayout
+                    style="@style/GradeDetailRow">
+
+                    <TextView
+                        style="@style/GradeDetailTextViewLeft"
+                        android:id="@+id/tv_grade_detail_label_annotation"
+                        android:text="@string/tv_grade_detail_annotation"
+                        />
+
+                    <TextView
+                        style="@style/GradeDetailTextViewRight"
+                        android:id="@+id/tv_grade_detail_annotation"
+                        />
+                    <View style="@style/Divider"/>
+                </RelativeLayout>
+
+                <!-- Overview -->
+                <LinearLayout
+                    android:id="@+id/overview_wrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <!-- Overview: Participants -->
+                    <RelativeLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent">
+
+                        <TextView
+                            style="@style/GradeDetailTextViewLeft"
+                            android:id="@+id/tv_overview_label_participants"
+                            android:text="@string/tv_overview_participants"
+                            />
+
+                        <TextView
+                            style="@style/GradeDetailTextViewRight"
+                            android:id="@+id/tv_overview_participants"
+                            />
+                        <View style="@style/Divider"/>
+                    </RelativeLayout>
+
+
+
+                    <!-- Overview: Average -->
+                    <RelativeLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent">
+
+                        <TextView
+                            style="@style/GradeDetailTextViewLeft"
+                            android:id="@+id/tv_overview_label_average"
+                            android:text="@string/tv_overview_average"
+                            />
+
+                        <TextView
+                            style="@style/GradeDetailTextViewRight"
+                            android:id="@+id/tv_overview_average"
+                            />
+                        <View style="@style/Divider"/>
+                    </RelativeLayout>
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/bar_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="240dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_overview_not_possible"
+                    android:text="@string/overview_not_possible"
+                    android:visibility="gone"
+                    android:layout_margin="16dp"
+                    android:gravity="center_horizontal"
+                    />
+
+            </LinearLayout>
+        </ScrollView>
+    </in.srain.cube.views.ptr.PtrFrameLayout>
+</LinearLayout>

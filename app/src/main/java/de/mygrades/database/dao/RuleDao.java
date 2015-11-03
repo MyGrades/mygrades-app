@@ -27,14 +27,15 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     */
     public static class Properties {
         public final static Property RuleId = new Property(0, Long.class, "ruleId", true, "RULE_ID");
-        public final static Property Type = new Property(1, String.class, "type", false, "TYPE");
+        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property SemesterFormat = new Property(2, String.class, "semesterFormat", false, "SEMESTER_FORMAT");
         public final static Property SemesterPattern = new Property(3, String.class, "semesterPattern", false, "SEMESTER_PATTERN");
         public final static Property SemesterStartSummer = new Property(4, Integer.class, "semesterStartSummer", false, "SEMESTER_START_SUMMER");
         public final static Property SemesterStartWinter = new Property(5, Integer.class, "semesterStartWinter", false, "SEMESTER_START_WINTER");
         public final static Property GradeFactor = new Property(6, Double.class, "gradeFactor", false, "GRADE_FACTOR");
         public final static Property LastUpdated = new Property(7, java.util.Date.class, "lastUpdated", false, "LAST_UPDATED");
-        public final static Property UniversityId = new Property(8, long.class, "universityId", false, "UNIVERSITY_ID");
+        public final static Property Overview = new Property(8, Boolean.class, "overview", false, "OVERVIEW");
+        public final static Property UniversityId = new Property(9, long.class, "universityId", false, "UNIVERSITY_ID");
     };
 
     private DaoSession daoSession;
@@ -55,14 +56,15 @@ public class RuleDao extends AbstractDao<Rule, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"RULE\" (" + //
                 "\"RULE_ID\" INTEGER PRIMARY KEY ," + // 0: ruleId
-                "\"TYPE\" TEXT NOT NULL ," + // 1: type
+                "\"NAME\" TEXT NOT NULL ," + // 1: name
                 "\"SEMESTER_FORMAT\" TEXT," + // 2: semesterFormat
                 "\"SEMESTER_PATTERN\" TEXT," + // 3: semesterPattern
                 "\"SEMESTER_START_SUMMER\" INTEGER," + // 4: semesterStartSummer
                 "\"SEMESTER_START_WINTER\" INTEGER," + // 5: semesterStartWinter
                 "\"GRADE_FACTOR\" REAL," + // 6: gradeFactor
                 "\"LAST_UPDATED\" INTEGER," + // 7: lastUpdated
-                "\"UNIVERSITY_ID\" INTEGER NOT NULL );"); // 8: universityId
+                "\"OVERVIEW\" INTEGER," + // 8: overview
+                "\"UNIVERSITY_ID\" INTEGER NOT NULL );"); // 9: universityId
     }
 
     /** Drops the underlying database table. */
@@ -80,7 +82,7 @@ public class RuleDao extends AbstractDao<Rule, Long> {
         if (ruleId != null) {
             stmt.bindLong(1, ruleId);
         }
-        stmt.bindString(2, entity.getType());
+        stmt.bindString(2, entity.getName());
  
         String semesterFormat = entity.getSemesterFormat();
         if (semesterFormat != null) {
@@ -111,7 +113,12 @@ public class RuleDao extends AbstractDao<Rule, Long> {
         if (lastUpdated != null) {
             stmt.bindLong(8, lastUpdated.getTime());
         }
-        stmt.bindLong(9, entity.getUniversityId());
+ 
+        Boolean overview = entity.getOverview();
+        if (overview != null) {
+            stmt.bindLong(9, overview ? 1L: 0L);
+        }
+        stmt.bindLong(10, entity.getUniversityId());
     }
 
     @Override
@@ -131,14 +138,15 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     public Rule readEntity(Cursor cursor, int offset) {
         Rule entity = new Rule( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // ruleId
-            cursor.getString(offset + 1), // type
+            cursor.getString(offset + 1), // name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // semesterFormat
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // semesterPattern
             cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4), // semesterStartSummer
             cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5), // semesterStartWinter
             cursor.isNull(offset + 6) ? null : cursor.getDouble(offset + 6), // gradeFactor
             cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // lastUpdated
-            cursor.getLong(offset + 8) // universityId
+            cursor.isNull(offset + 8) ? null : cursor.getShort(offset + 8) != 0, // overview
+            cursor.getLong(offset + 9) // universityId
         );
         return entity;
     }
@@ -147,14 +155,15 @@ public class RuleDao extends AbstractDao<Rule, Long> {
     @Override
     public void readEntity(Cursor cursor, Rule entity, int offset) {
         entity.setRuleId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setType(cursor.getString(offset + 1));
+        entity.setName(cursor.getString(offset + 1));
         entity.setSemesterFormat(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setSemesterPattern(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setSemesterStartSummer(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));
         entity.setSemesterStartWinter(cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5));
         entity.setGradeFactor(cursor.isNull(offset + 6) ? null : cursor.getDouble(offset + 6));
         entity.setLastUpdated(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
-        entity.setUniversityId(cursor.getLong(offset + 8));
+        entity.setOverview(cursor.isNull(offset + 8) ? null : cursor.getShort(offset + 8) != 0);
+        entity.setUniversityId(cursor.getLong(offset + 9));
      }
     
     /** @inheritdoc */

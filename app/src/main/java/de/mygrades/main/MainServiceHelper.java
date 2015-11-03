@@ -16,6 +16,11 @@ public class MainServiceHelper {
         this.context = context.getApplicationContext();
     }
 
+    /**
+     * Start a worker thread to load all universities from the server.
+     *
+     * @param publishedOnly - only published universities or all.
+     */
     public void getUniversities(boolean publishedOnly) {
         int method = MainService.METHOD_GET_UNIVERSITIES;
 
@@ -28,6 +33,11 @@ public class MainServiceHelper {
         context.startService(intent);
     }
 
+    /**
+     * Starts a worker thread to get a detailed university from the server.
+     *
+     * @param universityId - university id
+     */
     public void getDetailedUniversity(long universityId) {
         int method = MainService.METHOD_GET_DETAILED_UNIVERSITY;
 
@@ -57,7 +67,7 @@ public class MainServiceHelper {
     /**
      * Load all universities from the database.
      *
-     * @param publishedOnly only published universities or all.
+     * @param publishedOnly - only published universities or all.
      */
     public void getUniversitiesFromDatabase(boolean publishedOnly) {
         int method = MainService.METHOD_GET_UNIVERSITIES_FROM_DATABASE;
@@ -72,39 +82,92 @@ public class MainServiceHelper {
     }
 
     /**
-     * Starts an IntentService to scrape for new grades.
+     * Starts a worker thread to scrape for new grades.
      */
-    public void scrapeForGrades() {
+    public void scrapeForGrades(boolean initialScraping) {
         int method = MainService.METHOD_SCRAPE_FOR_GRADES;
+
+        // set request id
+        // important: loginAndScrapeForGrades() must use the same requestId to avoid duplicate scraping
+        long requestId = concatenateLong(method, 0);
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_GRADES, method, requestId);
+        intent.putExtra(MainService.INITIAL_SCRAPING, initialScraping);
+        context.startService(intent);
+    }
+
+    /**
+     * Starts a worker thread to scrape for the overview of a specific subject.
+     * @param gradeHash - Hash of Grade/Subject (unique identifier)
+     */
+    public void scrapeForOverview(String gradeHash) {
+        int method = MainService.METHOD_SCRAPE_FOR_OVERVIEW;
+
+        // set request id
+        long requestId = concatenateLong(method, gradeHash.hashCode());
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_GRADES, method, requestId);
+        intent.putExtra(MainService.GRADE_HASH, gradeHash);
+        context.startService(intent);
+    }
+
+    /**
+     * Load all information for Grade Detail from Database.
+     * @param gradeHash - Hash of Grade/Subject (unique identifier)
+     */
+    public void getGradeDetails(String gradeHash) {
+        int method = MainService.METHOD_GET_GRADE_DETAILS;
 
         // set request id
         long requestId = concatenateLong(method, 0);
 
         // start worker thread in background
         Intent intent = getBasicIntent(MainService.PROCESSOR_GRADES, method, requestId);
+        intent.putExtra(MainService.GRADE_HASH, gradeHash);
         context.startService(intent);
     }
 
     /**
-     * Starts an IntentService to save the username and password
+     * Starts a worker thread to save the username and password
      * and starts scraping for grades afterwards.
      *
      * @param username - username
      * @param password - password
      */
-    public void loginAndScrapeForGrades(String username, String password) {
+    public void loginAndScrapeForGrades(String username, String password, long universityId) {
         int method = MainService.METHOD_LOGIN_AND_SCRAPE_FOR_GRADES;
+
+        // set request id
+        // important: scrapeForGrades() must use the same requestId, to avoid duplicate scraping.
+        long requestId = concatenateLong(MainService.METHOD_SCRAPE_FOR_GRADES, 0);
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_LOGIN, method, requestId);
+        intent.putExtra(MainService.USERNAME, username);
+        intent.putExtra(MainService.PASSWORD, password);
+        intent.putExtra(MainService.UNIVERSITY_ID, universityId);
+        context.startService(intent);
+    }
+
+    /**
+     * Starts a worker thread to get the username and selected university from database.
+     */
+    public void getLoginDataFromDatabase() {
+        int method = MainService.METHOD_GET_LOGIN_DATA_FROM_DATABASE;
 
         // set request id
         long requestId = concatenateLong(method, 0);
 
         // start worker thread in background
         Intent intent = getBasicIntent(MainService.PROCESSOR_LOGIN, method, requestId);
-        intent.putExtra(MainService.USERNAME, username);
-        intent.putExtra(MainService.PASSWORD, password);
         context.startService(intent);
     }
 
+    /**
+     * Starts a worker thread to delete all userdata and grades from the database.
+     */
     public void logout() {
         int method = MainService.METHOD_LOGOUT;
 
@@ -120,7 +183,7 @@ public class MainServiceHelper {
      * Build a basic intent with required extra data for each request.
      *
      * @param processor - processor to create (declared in the MainService)
-     * @param method - method to call by (declared in the MainService)
+     * @param method - method to call (declared in the MainService)
      * @param requestId - request id
      * @return intent
      */
@@ -134,13 +197,13 @@ public class MainServiceHelper {
 
     /**
      * Concatenates two long values.
-     * This is used to generate unique request ids.
+     * This can be used to generate unique request ids.
      *
      * @param a first long value
      * @param b second long value
      * @return ab as long
      */
     private long concatenateLong(long a, long b) {
-        return Long.parseLong("" + a + b);
+        return Long.parseLong("" + Math.abs(a) + Math.abs(b));
     }
 }

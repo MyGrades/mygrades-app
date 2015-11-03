@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="@color/background">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/tv_enter_userdata"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"/>
 
@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/username"
-                    android:inputType="textNoSuggestions"
+                    android:inputType="textNoSuggestions|textVisiblePassword"
                     android:singleLine="true"
                     android:theme="@style/CustomEditTextStyle"/>
             </android.support.design.widget.TextInputLayout>
@@ -85,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/tv_login_privacy_info"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:maxLines="10"/>
@@ -94,7 +94,8 @@
                 android:id="@+id/bt_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Los geht's!"
+                android:text="@string/login_button"
+                android:layout_marginTop="8dp"
                 android:theme="@style/RobotoButtonStyle"/>
         </LinearLayout>
 

@@ -24,3 +24,42 @@
 
 # secure preferences rules
 -keep class com.tozny.crypto.android.AesCbcWithIntegrity$PrngFixes$* { *; }
+
+# MPAndroidChart rules
+-keep class com.github.mikephil.charting.** { *; }
+
+# wnafee/vector-compat rules
+-keep class com.wnafee.vector.** { *; }
+
+# retrofit rules
+-dontwarn retrofit.**
+-keep class retrofit.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+-keep class de.mygrades.database.dao.** { *; }
+
+# eventbus rules
+-keepclassmembers class ** {
+    public void onEvent*(**);
+}
+
+# Only required if you use AsyncExecutor
+-keepclassmembers class * extends de.greenrobot.event.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}
+
+# jsoup
+-keeppackagenames org.jsoup.nodes
+
+# remove freemarker log warnings
+-dontwarn freemarker.**
+
+# remove logging
+-assumenosideeffects class android.util.Log {
+    public static boolean isLoggable(java.lang.String, int);
+    public static int v(...);
+    public static int i(...);
+    public static int w(...);
+    public static int d(...);
+    public static int e(...);
+}
