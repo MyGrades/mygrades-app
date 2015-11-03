@@ -183,7 +183,7 @@ public class Transformer {
             Integer extractedYear = 0;
 
             // match pattern to origSemester and get Year and Semester String
-            Matcher matcher = semesterPattern.matcher(origSemester);
+            Matcher matcher = semesterPattern.matcher(origSemester); // TODO: if origSemester = null -> nullpointer
             if (matcher.find()) { // Find first match
                 extractedSemester = matcher.group(1);
 
