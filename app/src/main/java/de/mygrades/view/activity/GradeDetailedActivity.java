@@ -228,6 +228,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         barChart.getAxisLeft().setTextColor(ContextCompat.getColor(this, R.color.text87));
         barChart.getAxisLeft().setDrawGridLines(true);
         barChart.getAxisLeft().setDrawLabels(true);
+        barChart.getAxisLeft().setLabelCount(6, true);
 
         // hide right y-axis
         barChart.getAxisRight().setDrawGridLines(false);
@@ -235,6 +236,11 @@ public class GradeDetailedActivity extends AppCompatActivity {
         barChart.getAxisRight().setDrawLabels(false);
 
         Overview overview = overviewEvent.getOverview();
+
+        // set max y-value
+        int max = overview.getMaxSection() + 1;
+        max = (int) (Math.ceil(max/10f) * 10); // round to next factor of 10
+        barChart.getAxisLeft().setAxisMaxValue(max);
 
         // y-values
         ArrayList<BarEntry> yValues = new ArrayList<>();

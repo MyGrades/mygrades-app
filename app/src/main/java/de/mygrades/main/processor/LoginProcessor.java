@@ -49,8 +49,6 @@ public class LoginProcessor extends BaseProcessor {
         // start initial scraping
         GradesProcessor gradesProcessor = new GradesProcessor(context);
         gradesProcessor.scrapeForGrades(true);
-
-        // TODO: post university id to our server (asynchronous with retrofit)
     }
 
     public void getLoginDataFromDatabase() {

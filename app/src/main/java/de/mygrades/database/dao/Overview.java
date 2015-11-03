@@ -141,6 +141,20 @@ public class Overview {
         this.userSection = other.userSection;
     }
 
+    /**
+     * Returns the section with most students.
+     *
+     * @return max section as int
+     */
+    public int getMaxSection() {
+        int max = section1;
+        max = section2 > max ? section2 : max;
+        max = section3 > max ? section3 : max;
+        max = section4 > max ? section4 : max;
+        max = section5 > max ? section5 : max;
+        return max;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
