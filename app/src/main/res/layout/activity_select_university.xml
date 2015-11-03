@@ -50,10 +50,10 @@
                         android:id="@+id/title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Wähle Deine\nHochschule aus"
+                        android:text="@string/select_your_university"
                         android:gravity="center"
                         android:textColor="@android:color/white"
-                        android:textSize="30sp"/>
+                        android:textSize="24sp"/>
                 </LinearLayout>
             </FrameLayout>
 
@@ -110,15 +110,6 @@
             app:matProg_barColor="?attr/colorPrimary"
             app:matProg_progressIndeterminate="true"
             app:matProg_barWidth="2dp"/>
-
-        <LinearLayout
-            android:id="@+id/ll_error_wrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-
-        </LinearLayout>
     </FrameLayout>
 
     <FrameLayout

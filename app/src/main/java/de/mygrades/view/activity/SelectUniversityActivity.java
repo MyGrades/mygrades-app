@@ -225,6 +225,7 @@ public class SelectUniversityActivity extends AppCompatActivity implements AppBa
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
         int maxScrollRange = appBarLayout.getTotalScrollRange();
+        int animationDuration = 250;
 
         // show logo in toolbar, as soon as the header fades out.
         // (offset == 0), if complete header is visible
@@ -232,9 +233,9 @@ public class SelectUniversityActivity extends AppCompatActivity implements AppBa
 
         // show toolbar icon if only less than 30 percent of the header is visible
         if (Math.abs(offset) >= maxScrollRange * 0.7f) {
-            ivToolbarLogo.animate().alpha(1f).setDuration(500).start();
+            ivToolbarLogo.animate().alpha(1f).setDuration(animationDuration).start();
         } else {
-            ivToolbarLogo.animate().alpha(0.0f).setDuration(500).start();
+            ivToolbarLogo.animate().alpha(0.0f).setDuration(animationDuration).start();
         }
     }
 
