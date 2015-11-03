@@ -1,0 +1,10 @@
+## Used third-party libraries
+* [jsoup](http://jsoup.org/)
+* [Retrofit](http://square.github.io/retrofit/)
+* [greenDAO](https://github.com/greenrobot/greenDAO)
+* [EventBus](https://github.com/greenrobot/EventBus)
+* [secure-preferences](https://github.com/scottyab/secure-preferences)
+* [android-advancedrecyclerview](https://github.com/h6ah4i/android-advancedrecyclerview)
+* [vector-compat](https://github.com/wnafee/vector-compat)
+* [android-Ultra-Pull-To-Refresh](https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh)
+* [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)
