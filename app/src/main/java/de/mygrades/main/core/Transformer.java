@@ -73,6 +73,10 @@ public class Transformer {
      * Map of String -> TransformerMapping for easy access.
      */
     private Map<String, TransformerMapping> transformerMapping;
+    /**
+     * Map of String -> TransformerMapping for easy access to overview Mappings.
+     */
+    private Map<String, List<TransformerMapping>> transformerMappingOverview;
 
     /**
      * Rule getting transformed
@@ -86,10 +90,11 @@ public class Transformer {
 
     public Transformer(Rule rule, String html, Parser parser) {
         this.rule = rule;
-        this.transformerMapping = createTransformerMappingMap(rule.getTransformerMappings());
         this.parser = parser;
         this.html = html;
         this.semesterPattern = Pattern.compile(rule.getSemesterPattern());
+        // initialize transformerMapping and transformerMappingOverview
+        createTransformerMappingMap(rule.getTransformerMappings());
     }
 
     /**
@@ -443,16 +448,31 @@ public class Transformer {
     }
 
     /**
-     * Creates HashMap for TransformerMappings for easy access.
+     * Creates HashMaps for TransformerMappings for easy access.
      *
-     * @param transformerMappings which are put into Map
-     * @return Map of TransformerMappings
+     * @param transformerMappings which are put into Maps transformerMapping or transformerMappingOverview
      */
-    private Map<String, TransformerMapping> createTransformerMappingMap(List<TransformerMapping> transformerMappings) {
-        Map<String, TransformerMapping> map = new HashMap<>();
-        for (TransformerMapping transformerMapping : transformerMappings) {
-            map.put(transformerMapping.getName(), transformerMapping);
+    private void createTransformerMappingMap(List<TransformerMapping> transformerMappings) {
+        transformerMapping = new HashMap<>();
+        transformerMappingOverview = new HashMap<>();
+
+        // iterate all transformerMappings and add to respective list
+        for (TransformerMapping tsMapping : transformerMappings) {
+            String tsName = tsMapping.getName();
+            if (tsName == null) {
+                continue;
+            }
+
+            if (tsName.startsWith("overview_")) {
+                List<TransformerMapping> list = transformerMappingOverview.get(tsName);
+                if (list == null) {
+                    list = new ArrayList<>();
+                    transformerMappingOverview.put(tsName, list);
+                }
+                list.add(tsMapping);
+            } else {
+                transformerMapping.put(tsMapping.getName(), tsMapping);
+            }
         }
-        return map;
     }
 }
