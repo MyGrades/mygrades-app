@@ -76,7 +76,7 @@ public class Transformer {
     /**
      * Map of String -> TransformerMapping for easy access to overview Mappings.
      */
-    private Map<String, List<TransformerMapping>> transformerMappingOverview;
+    private Map<String, List<TransformerMapping>> transformerMappingOverviewSection;
 
     /**
      * Rule getting transformed
@@ -93,7 +93,7 @@ public class Transformer {
         this.parser = parser;
         this.html = html;
         this.semesterPattern = Pattern.compile(rule.getSemesterPattern());
-        // initialize transformerMapping and transformerMappingOverview
+        // initialize transformerMapping and transformerMappingOverviewSection
         createTransformerMappingMap(rule.getTransformerMappings());
     }
 
@@ -113,14 +113,14 @@ public class Transformer {
 
         // extract Overview values
         Overview overview = new Overview();
-        overview.setSection1(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_1, pattern));
-        overview.setSection2(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_2, pattern));
-        overview.setSection3(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_3, pattern));
-        overview.setSection4(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_4, pattern));
-        overview.setSection5(getIntegerProperty(xmlDocument, OVERVIEW_SECTION_5, pattern));
+        overview.setSection1(getIntegerPropertyOverview(xmlDocument, OVERVIEW_SECTION_1, pattern));
+        overview.setSection2(getIntegerPropertyOverview(xmlDocument, OVERVIEW_SECTION_2, pattern));
+        overview.setSection3(getIntegerPropertyOverview(xmlDocument, OVERVIEW_SECTION_3, pattern));
+        overview.setSection4(getIntegerPropertyOverview(xmlDocument, OVERVIEW_SECTION_4, pattern));
+        overview.setSection5(getIntegerPropertyOverview(xmlDocument, OVERVIEW_SECTION_5, pattern));
         overview.setParticipants(getIntegerProperty(xmlDocument, OVERVIEW_PARTICIPANTS));
         overview.setAverage(getDoubleProperty(xmlDocument, OVERVIEW_AVERAGE));
-        overview.setUserSection((int)Math.round(userGrade));
+        overview.setUserSection((int) Math.round(userGrade));
 
         return overview;
     }
@@ -400,6 +400,31 @@ public class Transformer {
     }
 
     /**
+     * Gets the value for overview_section* from Document determined by type of TransformerMapping as Integer.
+     * The integers are extracted from string via Regex.
+     *
+     * @param xmlDocument Document which should get parsed
+     * @param type Type of TransformerMapping regarding to Overview
+     * @param pattern Regex pattern of how to extract Integer
+     * @return extracted value as Integer
+     * @throws ParseException if something goes wrong at parsing
+     */
+    private Integer getIntegerPropertyOverview(Document xmlDocument, String type, Pattern pattern) throws ParseException {
+        List<TransformerMapping> transformerMappingList = transformerMappingOverviewSection.get(type);
+        Integer propertySum = 0;
+        Integer property;
+
+        // iterate all transformerMappings for specific section and add up results
+        for (TransformerMapping tsMapping : transformerMappingList) {
+            property = extractIntegerFromDoc(xmlDocument, tsMapping, pattern);
+            if (property != null) {
+                propertySum += property;
+            }
+        }
+        return propertySum;
+    }
+
+    /**
      * Gets the value from Document determined by type of TransformerMapping as Integer.
      *
      * @param xmlDocument Document which should get parsed
@@ -423,6 +448,20 @@ public class Transformer {
      */
     private Integer getIntegerProperty(Document xmlDocument, String type, Pattern pattern) throws ParseException {
         TransformerMapping transformerMappingVal = transformerMapping.get(type);
+        return extractIntegerFromDoc(xmlDocument, transformerMappingVal, pattern);
+    }
+
+    /**
+     * Gets the value from Document determined by TransformerMapping as Integer.
+     * The integer is extracted from string via Regex.
+     *
+     * @param xmlDocument Document which should get parsed
+     * @param transformerMappingVal TransformerMapping -> which value should get extracted
+     * @param pattern  Regex pattern of how to extract Integer
+     * @return extracted value as Integer
+     * @throws ParseException if something goes wrong at parsing
+     */
+    private Integer extractIntegerFromDoc(Document xmlDocument, TransformerMapping transformerMappingVal, Pattern pattern) throws ParseException {
         if (transformerMappingVal == null) {
             return null;
         }
@@ -443,18 +482,17 @@ public class Transformer {
         } catch (NumberFormatException e) {
             return null;
         }
-
         return property;
     }
 
     /**
      * Creates HashMaps for TransformerMappings for easy access.
      *
-     * @param transformerMappings which are put into Maps transformerMapping or transformerMappingOverview
+     * @param transformerMappings which are put into Maps transformerMapping or transformerMappingOverviewSection
      */
     private void createTransformerMappingMap(List<TransformerMapping> transformerMappings) {
         transformerMapping = new HashMap<>();
-        transformerMappingOverview = new HashMap<>();
+        transformerMappingOverviewSection = new HashMap<>();
 
         // iterate all transformerMappings and add to respective list
         for (TransformerMapping tsMapping : transformerMappings) {
@@ -463,13 +501,15 @@ public class Transformer {
                 continue;
             }
 
-            if (tsName.startsWith("overview_")) {
-                List<TransformerMapping> list = transformerMappingOverview.get(tsName);
+            if (tsName.startsWith("overview_section")) {
+                List<TransformerMapping> list = transformerMappingOverviewSection.get(tsName);
                 if (list == null) {
                     list = new ArrayList<>();
-                    transformerMappingOverview.put(tsName, list);
+                    list.add(tsMapping);
+                    transformerMappingOverviewSection.put(tsName, list);
+                } else {
+                    list.add(tsMapping);
                 }
-                list.add(tsMapping);
             } else {
                 transformerMapping.put(tsMapping.getName(), tsMapping);
             }
