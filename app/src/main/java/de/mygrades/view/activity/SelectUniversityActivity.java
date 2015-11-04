@@ -21,7 +21,7 @@ import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.UniversityEvent;
 import de.mygrades.view.adapter.UniversitiesRecyclerViewAdapter;
 import de.mygrades.view.adapter.model.UniversityItem;
-import de.mygrades.view.decoration.DividerItemDecoration;
+import de.mygrades.view.decoration.UniversityDividerItemDecoration;
 
 /**
  * Activity which shows all universities.
@@ -122,7 +122,7 @@ public class SelectUniversityActivity extends AppCompatActivity {
     private void initRecyclerView() {
         rvUniversities = (RecyclerView) findViewById(R.id.rv_universities);
         rvUniversities.setLayoutManager(new LinearLayoutManager(rvUniversities.getContext()));
-        rvUniversities.addItemDecoration(new DividerItemDecoration(this, R.drawable.university_divider));
+        rvUniversities.addItemDecoration(new UniversityDividerItemDecoration(this, R.drawable.university_divider));
         rvUniversities.setItemAnimator(new DefaultItemAnimator());
         universityAdapter = new UniversitiesRecyclerViewAdapter();
         rvUniversities.setAdapter(universityAdapter);

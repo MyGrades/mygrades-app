@@ -8,7 +8,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public class DividerItemDecoration extends RecyclerView.ItemDecoration {
+import de.mygrades.view.adapter.UniversitiesRecyclerViewAdapter;
+
+public class UniversityDividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
 
@@ -17,7 +19,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     /**
      * Default divider will be used
      */
-    public DividerItemDecoration(Context context) {
+    public UniversityDividerItemDecoration(Context context) {
         final TypedArray styledAttributes = context.obtainStyledAttributes(ATTRS);
         mDivider = styledAttributes.getDrawable(0);
         styledAttributes.recycle();
@@ -26,7 +28,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     /**
      * Custom divider will be used
      */
-    public DividerItemDecoration(Context context, int resId) {
+    public UniversityDividerItemDecoration(Context context, int resId) {
         mDivider = ContextCompat.getDrawable(context, resId);
     }
 
@@ -38,6 +40,11 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = parent.getChildAt(i);
+
+            // do not show divider beneath header view
+            if (parent.getChildViewHolder(child) instanceof UniversitiesRecyclerViewAdapter.HeaderViewHolder) {
+                continue;
+            }
 
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
 
