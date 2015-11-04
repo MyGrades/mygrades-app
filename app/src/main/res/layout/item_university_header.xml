@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="16dp"
-    android:layout_marginBottom="-16dp">
+    android:layout_marginBottom="-16dp"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_university_header"
@@ -14,4 +16,39 @@
         android:gravity="center"
         android:text="@string/select_your_university"
         android:textColor="?attr/colorPrimary"/>
+
+    <com.pnikosis.materialishprogress.ProgressWheel
+        android:id="@+id/progress_wheel"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        app:matProg_barColor="?attr/colorPrimary"
+        app:matProg_progressIndeterminate="true"
+        app:matProg_barWidth="2dp"/>
+
+    <LinearLayout
+        android:id="@+id/ll_error_wrapper"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tv_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="Tolle Fehlerbeschreibung kommt hier hin."/>
+
+        <Button
+            android:id="@+id/btn_try_again"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nochmal versuchen"
+            android:theme="@style/RobotoButtonStyle"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
 </LinearLayout>

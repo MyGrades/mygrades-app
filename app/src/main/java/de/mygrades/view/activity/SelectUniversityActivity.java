@@ -6,10 +6,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -31,30 +27,17 @@ public class SelectUniversityActivity extends AppCompatActivity {
 
     private RecyclerView rvUniversities;
     private UniversitiesRecyclerViewAdapter universityAdapter;
-    private FrameLayout flLoading;
-    private FrameLayout flErrorWrapper;
-    private TextView tvErrorMessage;
-    private Button btnTryAgain;
 
     private static final String ERROR_TYPE_STATE = "error_type_state";
-    private ErrorEvent.ErrorType actErrorType;
-
     private MainServiceHelper mainServiceHelper;
 
-    public SelectUniversityActivity() {
-    }
+    public SelectUniversityActivity() { }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_university);
         mainServiceHelper = new MainServiceHelper(this);
-
-        flLoading = (FrameLayout) findViewById(R.id.fl_loading);
-        flErrorWrapper = (FrameLayout) findViewById(R.id.fl_error_wrapper);
-        tvErrorMessage = (TextView) findViewById(R.id.tv_error_message);
-        btnTryAgain = (Button) findViewById(R.id.btn_try_again);
-        initTryAgainButton();
 
         // init toolbar
         initToolbar();
@@ -68,10 +51,8 @@ public class SelectUniversityActivity extends AppCompatActivity {
         // restore instance state
         if (savedInstanceState != null) {
             String error = savedInstanceState.getString(ERROR_TYPE_STATE);
-            actErrorType = error == null ? null : ErrorEvent.ErrorType.valueOf(error);
-
-            if (actErrorType != null) {
-                showErrorWrapper(actErrorType);
+            if (error != null) {
+                universityAdapter.showError(ErrorEvent.ErrorType.valueOf(error));
             }
         }
 
@@ -85,26 +66,12 @@ public class SelectUniversityActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        // save error state
+        ErrorEvent.ErrorType actErrorType = universityAdapter.getActErrorType();
         if (actErrorType != null) {
             outState.putString(ERROR_TYPE_STATE, actErrorType.name());
         }
-    }
-
-    /**
-     * Initialize the try-again button.
-     */
-    private void initTryAgainButton() {
-        btnTryAgain.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                flErrorWrapper.setVisibility(View.GONE);
-                flLoading.setVisibility(View.VISIBLE);
-                actErrorType = null;
-
-                // load universities from server
-                mainServiceHelper.getUniversities(true);
-            }
-        });
     }
 
     /**
@@ -124,7 +91,7 @@ public class SelectUniversityActivity extends AppCompatActivity {
         rvUniversities.setLayoutManager(new LinearLayoutManager(rvUniversities.getContext()));
         rvUniversities.addItemDecoration(new UniversityDividerItemDecoration(this, R.drawable.university_divider));
         rvUniversities.setItemAnimator(new DefaultItemAnimator());
-        universityAdapter = new UniversitiesRecyclerViewAdapter();
+        universityAdapter = new UniversitiesRecyclerViewAdapter(getApplicationContext());
         rvUniversities.setAdapter(universityAdapter);
     }
 
@@ -136,7 +103,7 @@ public class SelectUniversityActivity extends AppCompatActivity {
      */
     private void addUniversities(List<University> universities) {
         if (universities.size() > 0) {
-            flErrorWrapper.setVisibility(View.GONE);
+            universityAdapter.showError(null);
         }
 
         for(University university : universities) {
@@ -145,8 +112,8 @@ public class SelectUniversityActivity extends AppCompatActivity {
         }
 
         // show loading animation only if adapter is empty and no error is currently shown
-        if (actErrorType == null) {
-            flLoading.setVisibility(universityAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        if (universityAdapter.getActErrorType() == null) {
+            universityAdapter.showLoadingAnimation(universityAdapter.isEmpty());
         }
     }
 
@@ -167,41 +134,12 @@ public class SelectUniversityActivity extends AppCompatActivity {
      * @param errorEvent ErrorEvent
      */
     public void onEventMainThread(ErrorEvent errorEvent) {
-        if (universityAdapter.getItemCount() > 0) {
+        if (!universityAdapter.isEmpty()) {
             // ignore error
             return;
         }
 
-        actErrorType = errorEvent.getType();
-        showErrorWrapper(errorEvent.getType());
-    }
-
-    /**
-     * Shows the error wrapper with a TextView and Button.
-     *
-     * @param errorType ErrorEvent.ErrorType
-     */
-    private void showErrorWrapper(ErrorEvent.ErrorType errorType) {
-        // hide loading wrapper
-        flLoading.setVisibility(View.GONE);
-
-        // show error wrapper
-        flErrorWrapper.setVisibility(View.VISIBLE);
-
-        String errorMessage;
-        switch (errorType) {
-            case NO_NETWORK:
-                errorMessage = getResources().getString(R.string.error_no_network);
-                break;
-            case TIMEOUT:
-                errorMessage = getResources().getString(R.string.error_server_timeout);
-                break;
-            case GENERAL:
-            default:
-                errorMessage = getResources().getString(R.string.error_unknown);
-        }
-
-        tvErrorMessage.setText(errorMessage);
+        universityAdapter.showError(errorEvent.getType());
     }
 
     @Override

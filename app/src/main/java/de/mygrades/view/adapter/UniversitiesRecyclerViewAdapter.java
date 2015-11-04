@@ -1,17 +1,23 @@
 package de.mygrades.view.adapter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.mygrades.R;
+import de.mygrades.main.MainServiceHelper;
+import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.view.activity.LoginActivity;
 import de.mygrades.view.adapter.model.UniversityAdapterItem;
 import de.mygrades.view.adapter.model.UniversityHeader;
@@ -26,12 +32,21 @@ public class UniversitiesRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     private final int VIEW_TYPE_SECTION = 1;
     private final int VIEW_TYPE_ITEM = 2;
 
-    private List<UniversityAdapterItem> items;
+    private MainServiceHelper mainServiceHelper;
+    private Context context;
 
-    public UniversitiesRecyclerViewAdapter() {
+    private List<UniversityAdapterItem> items;
+    private UniversityHeader header;
+
+    public UniversitiesRecyclerViewAdapter(Context context) {
         super();
+        this.context = context.getApplicationContext();
+        mainServiceHelper = new MainServiceHelper(this.context);
+
+        header = new UniversityHeader();
+
         items = new ArrayList<>();
-        items.add(new UniversityHeader());
+        items.add(header);
     }
 
     /**
@@ -206,13 +221,49 @@ public class UniversitiesRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
             viewHolder.tvSection.setText(universitySection.getSection());
         } else if (holder instanceof HeaderViewHolder) {
-            // TODO: show / hide error wrapper and loading animation
+            HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
+
+            // show/hide progress wheel
+            viewHolder.progressWheel.setVisibility(header.isLoading() ? View.VISIBLE : View.GONE);
+
+            // show/hide error wrapper
+            if (header.getActErrorType() != null) {
+                viewHolder.llErrorWrapper.setVisibility(View.VISIBLE);
+
+                String errorMessage;
+                switch (header.getActErrorType()) {
+                    case NO_NETWORK:
+                        errorMessage = context.getResources().getString(R.string.error_no_network);
+                        break;
+                    case TIMEOUT:
+                        errorMessage = context.getResources().getString(R.string.error_server_timeout);
+                        break;
+                    case GENERAL:
+                    default:
+                        errorMessage = context.getResources().getString(R.string.error_unknown);
+                }
+
+                viewHolder.tvErrorMessage.setText(errorMessage);
+
+            } else {
+                viewHolder.llErrorWrapper.setVisibility(View.GONE);
+            }
         }
     }
 
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    /**
+     * Checks if list contains no universities.
+     * It's important to notice that the list always contains the header view.
+     *
+     * @return true, if list only contains the header view
+     */
+    public boolean isEmpty() {
+        return items.size() == 1;
     }
 
     @Override
@@ -226,6 +277,49 @@ public class UniversitiesRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         }
 
         return -1;
+    }
+
+    /**
+     * Shows or hide the loading animation.
+     *
+     * @param isLoading true, if animation should be shown.
+     */
+    public void showLoadingAnimation(boolean isLoading) {
+        // ignore if nothing would change to avoid notifyItemChanged
+        if (header.isLoading() == isLoading) {
+            return;
+        }
+
+        header.setIsLoading(isLoading);
+        notifyItemChanged(0);
+    }
+
+    /**
+     * Shows the error wrapper and hides the loading animation.
+     *
+     * @param errorType ErrorEvent.ErrorType
+     */
+    public void showError(ErrorEvent.ErrorType errorType) {
+        // ignore if nothing would change to avoid notifyItemChanged
+        if (header.getActErrorType() == errorType) {
+            return;
+        }
+
+        header.setActErrorType(errorType);
+
+        if (errorType != null) {
+            header.setIsLoading(false);
+        }
+        notifyItemChanged(0);
+    }
+
+    /**
+     * The current EventError.ErrorType.
+     *
+     * @return current shown EventError.ErrorType or null.
+     */
+    public ErrorEvent.ErrorType getActErrorType() {
+        return header.getActErrorType();
     }
 
     /**
@@ -268,10 +362,28 @@ public class UniversitiesRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
      */
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
         public final TextView tvHeader;
+        public final ProgressWheel progressWheel;
+        public final LinearLayout llErrorWrapper;
+        public final TextView tvErrorMessage;
+        public final Button btnTryAgain;
 
         public HeaderViewHolder(View rootView) {
             super(rootView);
             tvHeader = (TextView) rootView.findViewById(R.id.tv_university_header);
+            progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
+            llErrorWrapper = (LinearLayout) rootView.findViewById(R.id.ll_error_wrapper);
+            tvErrorMessage = (TextView) rootView.findViewById(R.id.tv_error_message);
+            btnTryAgain = (Button) rootView.findViewById(R.id.btn_try_again);
+            btnTryAgain.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showError(null);
+                    showLoadingAnimation(true);
+
+                    // load universities from server
+                    mainServiceHelper.getUniversities(true);
+                }
+            });
         }
     }
 }
