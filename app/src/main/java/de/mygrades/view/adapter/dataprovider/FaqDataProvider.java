@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.mygrades.R;
-import de.mygrades.view.activity.FragmentFaq;
 
 /**
  * FaqDataProvider provides access to the underlying FAQ data.
@@ -28,8 +27,8 @@ public class FaqDataProvider {
      */
     public void populateData(Context context) {
         data.clear();
-        String[] questions = context.getResources().getStringArray(R.array.questions);
-        String[] answers = context.getResources().getStringArray(R.array.answers);
+        CharSequence[] questions = context.getResources().getTextArray(R.array.questions);
+        CharSequence[] answers = context.getResources().getTextArray(R.array.answers);
 
         for (int i = 0; i < questions.length && i < answers.length; i++) {
             QuestionData question = new QuestionData(i + 1, questions[i]);
@@ -75,9 +74,9 @@ public class FaqDataProvider {
      */
     public static final class QuestionData {
         private final long id; // unique ids are required
-        private final String question;
+        private final CharSequence question;
 
-        public QuestionData(long id, String question) {
+        public QuestionData(long id, CharSequence question) {
             this.id = id;
             this.question = question;
         }
@@ -86,7 +85,7 @@ public class FaqDataProvider {
             return id;
         }
 
-        public String getQuestion() {
+        public CharSequence getQuestion() {
             return question;
         }
     }
@@ -96,9 +95,9 @@ public class FaqDataProvider {
      */
     public static final class AnswerData {
         private final long id; // unique ids are required
-        private final String answer;
+        private final CharSequence answer;
 
-        public AnswerData(long id, String answer) {
+        public AnswerData(long id, CharSequence answer) {
             this.id = id;
             this.answer = answer;
         }
@@ -107,7 +106,7 @@ public class FaqDataProvider {
             return id;
         }
 
-        public String getAnswer() {
+        public CharSequence getAnswer() {
             return answer;
         }
     }

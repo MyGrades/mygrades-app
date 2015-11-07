@@ -8,9 +8,9 @@
         android:id="@+id/tv_faq_answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="asdf"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingBottom="16dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:autoLink="web"/>
 </LinearLayout>

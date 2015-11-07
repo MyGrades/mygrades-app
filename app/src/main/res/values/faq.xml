@@ -10,10 +10,10 @@
     </string-array>
 
     <string-array name="answers">
-        <item>MyGrades zeigt dir deine Studiumsnoten übersichtlich an.</item>
-        <item>Die App simuliert einen Browser und navigiert automatisch zu deiner Notentabelle.\n\nDiese wird dann lokal auf deinem Handy verarbeitet und bei dir gespeichert.</item>
-        <item>Nur lokal.</item>
-        <item>Wir sind zwei Studenten der Medieninformatik an der Hochschule RheinMain.</item>
+        <item>MyGrades ist eine App zum Abrufen deiner Noten aus dem Notensystem deiner Hochschule. Sie erspart dir die mühsame Arbeit dich durch dein Notensystem zu klicken und du hast deine Noten jederzeit lokal und übersichtlich auf deinem Handy verfügbar.</item>
+        <item>Die App simuliert einen browsenden Benutzer und navigiert automatisch zu deiner Notentabelle. Diese wird dann lokal auf deinem Handy verarbeitet und bei dir gespeichert.\n\nGenauere Informationen und den Quelltext der App findest du unter <a href="https://github.com/mygrades/mygrades-app">github.com/mygrades/mygrades-app</a></item>
+        <item>Deine Benutzerdaten werden lokal und verschlüsselt auf deinem Smartphone gespeichert. Die Verarbeitung deiner Notentabelle und Speicherung deiner Noten ist ausschließlich lokal\n\nEs werden <b>keine Daten</b> an uns oder Dritte übermittelt.\n\nGenauere Informationen und den Quelltext der App findest du unter <a href="https://github.com/mygrades/mygrades-app">github.com/mygrades/mygrades-app</a></item>
+        <item>Wir – Jonas und Tilman – sind zwei Studenten der Medieninformatik an der Hochschule RheinMain.</item>
         <item>Dieser Fehler tritt auf, wenn eine Anfrage an die Website deiner Hochschule nicht innerhalb von 25 Sekunden erfolgreich war.\n\nDies kann daran liegen, dass deine Internetverbindung schlecht oder der Server deiner Hochschule nicht erreichbar ist.</item>
         <item>Dieser Fehler kann in verschiedenen Situationen auftreten. Möglicherweise...\n\n... sind deine Zugangsdaten falsch.\n\n... gibt es Probleme mit dem Notensystem deiner Hochschule.\n\n... hat sich der Aufbau deines Notensystems geändert und es ist zur Zeit somit nicht möglich, deine Noten abzurufen.\n\nSag uns Bescheid, falls dieses Problem länger besteht!</item>
     </string-array>
