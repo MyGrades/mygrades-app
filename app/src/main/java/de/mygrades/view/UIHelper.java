@@ -2,9 +2,11 @@ package de.mygrades.view;
 
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 
+import de.mygrades.R;
 import de.mygrades.main.events.ErrorEvent;
 
 /**
@@ -24,7 +26,8 @@ public class UIHelper {
         if (view != null) {
             Snackbar snackbar = Snackbar
                     .make(view, text, Snackbar.LENGTH_LONG)
-                    .setAction(actionText, action);
+                    .setAction(actionText, action)
+                    .setActionTextColor(ContextCompat.getColor(view.getContext(), R.color.colorPrimary));
 
             // change text color
             View snackbarView = snackbar.getView();
