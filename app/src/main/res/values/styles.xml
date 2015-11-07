@@ -2,15 +2,16 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#8BC34A</item>
-        <item name="colorPrimaryDark">#689F38</item>
-        <item name="colorAccent">#FFD740</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="buttonStyle">@style/RobotoButtonStyle</item>
     </style>
 
     <!-- set global TextView font to Roboto light -->
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:textColorLink">@color/colorAccent</item>
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textColor">@color/text87</item>
     </style>

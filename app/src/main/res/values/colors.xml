@@ -5,4 +5,8 @@
     <color name="divider">#DDDDDD</color>
     <color name="text87">#DE000000</color>
     <color name="material_grey_200">#EEEEEE</color>
+
+    <color name="colorPrimary">#8BC34A</color>
+    <color name="colorPrimaryDark">#689F38</color>
+    <color name="colorAccent">#FF6E40</color>
 </resources>
