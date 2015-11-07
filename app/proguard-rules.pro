@@ -37,6 +37,9 @@
 -keepattributes Signature
 -keepattributes Exceptions
 -keep class de.mygrades.database.dao.** { *; }
+-keepclasseswithmembers class * {
+    @retrofit.http.* <methods>;
+}
 
 # eventbus rules
 -keepclassmembers class ** {
