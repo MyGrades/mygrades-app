@@ -3,6 +3,7 @@ package de.mygrades;
 import android.app.Application;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import de.mygrades.database.DatabaseHelper;
 import de.mygrades.database.dao.DaoMaster;
 import de.mygrades.database.dao.DaoSession;
 
@@ -16,7 +17,7 @@ public class MyGradesApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        SQLiteOpenHelper helper = new DaoMaster.DevOpenHelper(this, "mygrades.db", null);
+        SQLiteOpenHelper helper = new DatabaseHelper(this, "mygrades.db", null);
         DaoMaster daoMaster = new DaoMaster(helper.getWritableDatabase());
         daoSession = daoMaster.newSession();
     }

@@ -75,6 +75,16 @@ public class LoginProcessor extends BaseProcessor {
      * Remove all userdata and grade entries from the database.
      */
     public void logout() {
+        deletePreferences();
+
+        // delete all grades
+        daoSession.getGradeEntryDao().deleteAll();
+    }
+
+    /**
+     * Deletes all normal and secure preferences.
+     */
+    public void deletePreferences() {
         // remove username and password
         SharedPreferences securePrefs = getSecurePreferences();
         SecurePreferences.Editor secureEditor = (SecurePreferences.Editor) securePrefs.edit();
@@ -90,9 +100,6 @@ public class LoginProcessor extends BaseProcessor {
         editor.remove(Constants.PREF_KEY_LAST_UPDATED_AT);
         editor.remove(Constants.PREF_KEY_RULE_ID);
         editor.apply();
-
-        // delete all grades
-        daoSession.getGradeEntryDao().deleteAll();
     }
 
     /**
