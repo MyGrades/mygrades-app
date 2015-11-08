@@ -1,16 +1,18 @@
-<img src="assets/logo.png?raw=true" align="left" width="192px" height="192px"/>
-<img align="left" width="0" height="192px" hspace="10"/>
+<img src="assets/logo.png?raw=true" align="left" width="150px" height="150px"/>
+<img align="left" width="0" height="150px" hspace="10"/>
 
-# MyGrades
+> [MyGrades](https://mygrades.de/) Android App
 
+[![Apache2 License](https://img.shields.io/badge/license-APACHE2-blue.svg?style=flat-square)](/LICENSE.md)
+[![MyGrades Version](https://img.shields.io/badge/mygrades-0.2b-8BC34A.svg?style=flat-square)](https://mygrades.de)
 <br><br>
 
 ## Screenshots
 <img src="assets/screen-start.jpg?raw=true" width="230px" />
 <img src="assets/screen-login.jpg?raw=true" width="230px" />
 <img src="assets/screen-overview.jpg?raw=true" width="230px" />
-<img src="assets/screen-detail1.jpg?raw=true" width="350px" />
-<img src="assets/screen-detail2.jpg?raw=true" width="350px" />
+<img src="assets/screen-detail1.jpg?raw=true" width="230px" />
+<img src="assets/screen-detail2.jpg?raw=true" width="230px" />
 
 ## Used third-party libraries
 * [jsoup](http://jsoup.org/)
