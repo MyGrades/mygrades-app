@@ -1,3 +1,15 @@
+<img src="assets/logo.png?raw=true" align="left" width="192px" height="192px"/>
+<img align="left" width="0" height="192px" hspace="10"/>
+
+# MyGrades
+
+## Screenshots
+<img src="assets/screen-start.jpg?raw=true" width="350px" />
+<img src="assets/screen-login.jpg?raw=true" width="350px" />
+<img src="assets/screen-overview.jpg?raw=true" width="350px" />
+<img src="assets/screen-detail1.jpg?raw=true" width="350px" />
+<img src="assets/screen-detail1.jpg?raw=true" width="350px" />
+
 ## Used third-party libraries
 * [jsoup](http://jsoup.org/)
 * [Retrofit](http://square.github.io/retrofit/)
