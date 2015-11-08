@@ -3,12 +3,14 @@
 
 # MyGrades
 
+<br><br>
+
 ## Screenshots
-<img src="assets/screen-start.jpg?raw=true" width="350px" />
-<img src="assets/screen-login.jpg?raw=true" width="350px" />
-<img src="assets/screen-overview.jpg?raw=true" width="350px" />
+<img src="assets/screen-start.jpg?raw=true" width="230px" />
+<img src="assets/screen-login.jpg?raw=true" width="230px" />
+<img src="assets/screen-overview.jpg?raw=true" width="230px" />
 <img src="assets/screen-detail1.jpg?raw=true" width="350px" />
-<img src="assets/screen-detail1.jpg?raw=true" width="350px" />
+<img src="assets/screen-detail2.jpg?raw=true" width="350px" />
 
 ## Used third-party libraries
 * [jsoup](http://jsoup.org/)
