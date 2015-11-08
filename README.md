@@ -3,9 +3,9 @@
 
 > [MyGrades](https://mygrades.de/) Android App
 
-[![Apache2 License](https://img.shields.io/badge/license-APACHE2-blue.svg?style=flat-square)](/LICENSE.md)
+[![Apache2 License](https://img.shields.io/badge/license-APACHE2-blue.svg?style=flat-square)](/LICENSE)
 [![MyGrades Version](https://img.shields.io/badge/mygrades-0.2b-8BC34A.svg?style=flat-square)](https://mygrades.de)
-<br><br>
+<br><br><br>
 
 ## Screenshots
 <img src="assets/screen-start.jpg?raw=true" width="230px" />
