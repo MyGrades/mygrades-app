@@ -254,11 +254,13 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
 
-        llUserDataWrapper = (LinearLayout) findViewById(R.id.ll_user_data_wrapper);
-        tvMyGradesVersion = (TextView) findViewById(R.id.tv_mygrades_version);
+        // set header views
+        View header = navigationView.getHeaderView(0);
+        llUserDataWrapper = (LinearLayout) header.findViewById(R.id.ll_user_data_wrapper);
+        tvMyGradesVersion = (TextView) header.findViewById(R.id.tv_mygrades_version);
         tvMyGradesVersion.setText(getString(R.string.tv_mygrades_version, BuildConfig.VERSION_NAME));
-        tvUniversityName = (TextView) findViewById(R.id.tv_university_name);
-        tvUsername = (TextView) findViewById(R.id.tv_username);
+        tvUniversityName = (TextView) header.findViewById(R.id.tv_university_name);
+        tvUsername = (TextView) header.findViewById(R.id.tv_username);
 
         // restore instance state
         if (savedInstanceState != null) {
