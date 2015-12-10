@@ -60,4 +60,9 @@
     <string name="select_your_university">Wähle Deine\nHochschule aus</string>
     <string name="nav_report_error">Fehler melden</string>
     <string name="toolbar_report_error">Fehler melden</string>
+    <string name="your_name">Name (optional)</string>
+    <string name="email_address">E-Mail-Adresse (optional)</string>
+    <string name="error_description">Fehlerbeschreibung</string>
+    <string name="btn_report_error">Fehler melden</string>
+    <string name="tv_report_error_introduction">Teile uns mit welche Probleme innerhalb der App oder in Bezug auf deine heruntergeladenen Noten bestehen.\n\nBei Angabe deiner E-Mail-Adresse können wir uns bei dir melden oder Bescheid geben, sobald der Fehler gelöst ist.</string>
 </resources>
