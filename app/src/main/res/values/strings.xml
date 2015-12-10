@@ -58,4 +58,6 @@
     <string name="ptr_header_refresh_error">Fehler.</string>
     <string name="login_button">Los geht\'s!</string>
     <string name="select_your_university">Wähle Deine\nHochschule aus</string>
+    <string name="nav_report_error">Fehler melden</string>
+    <string name="toolbar_report_error">Fehler melden</string>
 </resources>

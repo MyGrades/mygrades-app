@@ -212,6 +212,10 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             navigationView.getMenu().getItem(1).setChecked(true);
             getSupportActionBar().setTitle(getString(R.string.toolbar_faq_title));
             ivToolbarLogo.setVisibility(View.GONE);
+        } else if (newFragment instanceof FragmentReportError) {
+            navigationView.getMenu().getItem(2).setChecked(true);
+            getSupportActionBar().setTitle(getString(R.string.toolbar_report_error));
+            ivToolbarLogo.setVisibility(View.GONE);
         }
     }
 
@@ -297,6 +301,9 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             case R.id.nav_faq:
                 fragment = new FragmentFaq();
                 break;
+            case R.id.nav_report_error:
+                fragment = new FragmentReportError();
+                break;
             case R.id.nav_logout:
                 logout();
                 return;
@@ -305,6 +312,7 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
         }
 
         // set current fragment
+        // TODO: do nothing, if same fragment as current fragment is selected
         replaceFragment(R.id.fl_content, fragment, false);
 
         // close the drawer
