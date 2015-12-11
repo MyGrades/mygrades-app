@@ -36,7 +36,7 @@
     <string name="error_general">Deine Noten konnten nicht abgerufen werden. Das kann verschiedene Gründe haben:\n\n1. Deine Zugangsdaten sind falsch.\n2. Probleme mit der Internetverbindung oder dem Server deiner Hochschule.\n3. Die Linkstruktur innerhalb deines Notensystems könnte sich geändert haben und so ist es zur Zeit nicht möglich, deine Noten abzurufen.</string>
     <string name="tv_no_grades_found">Keine Noten gefunden.</string>
     <string name="get_overview">Notenverteilung abrufen</string>
-    <string name="overview_not_possible">Notenverteilung nicht verfügbar für dieses Modul.</string>
+    <string name="overview_not_possible">Notenverteilung für dieses Modul nicht verfügbar. <a href="de.mygrades.view.activity://faq/4">Warum?</a></string>
 
     <string name="ptr_header_pull_to_refresh">Zum Laden herunterziehen.</string>
     <string name="ptr_header_release_to_refresh">Loslassen zum Aktualisieren.</string>

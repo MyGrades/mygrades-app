@@ -40,6 +40,18 @@
                 android:value=".view.activity.SelectUniversityActivity" />
         </activity>
 
+        <!-- LinkIntentActivity -->
+        <activity
+            android:name=".view.activity.LinkIntentActivity"
+            android:parentActivityName=".view.activity.MainActivity">
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW" />
+                <data android:scheme="de.mygrades.view.activity" />
+            </intent-filter>
+        </activity>
+
         <!-- MainService -->
         <service android:name=".main.MainService" android:exported="false" />
     </application>
