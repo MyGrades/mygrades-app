@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -311,9 +312,10 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
                 fragment = new FragmentOverview();
         }
 
-        // set current fragment
-        // TODO: do nothing, if same fragment as current fragment is selected
-        replaceFragment(R.id.fl_content, fragment, false);
+        // replace current fragment if it is not the same as currently shown
+        if (getSupportFragmentManager().findFragmentByTag(fragment.getClass().getSimpleName()) == null) {
+            replaceFragment(R.id.fl_content, fragment, false);
+        }
 
         // close the drawer
         drawerLayout.closeDrawers();
