@@ -65,4 +65,6 @@
     <string name="error_description">Fehlerbeschreibung</string>
     <string name="btn_report_error">Fehler melden</string>
     <string name="tv_report_error_introduction">Teile uns mit welche Probleme innerhalb der App oder in Bezug auf deine heruntergeladenen Noten bestehen.\n\nBei Angabe deiner E-Mail-Adresse können wir uns bei dir melden oder Bescheid geben, sobald der Fehler gelöst ist.</string>
+    <string name="error_message_not_empty">Fehlerbeschreibung darf nicht leer sein</string>
+    <string name="invalid_email_address">Ungültige E-Mail-Adresse</string>
 </resources>

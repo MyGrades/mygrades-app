@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.mygrades.main.processor.ErrorProcessor;
 import de.mygrades.main.processor.GradesProcessor;
 import de.mygrades.main.processor.LoginProcessor;
 import de.mygrades.main.processor.UniversityProcessor;
@@ -25,6 +26,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final int PROCESSOR_UNIVERSITY = 100;
     public static final int PROCESSOR_GRADES = 101;
     public static final int PROCESSOR_LOGIN = 102;
+    public static final int PROCESSOR_ERROR = 103;
 
     // intent extra, methods: key and values
     public static final String METHOD_KEY = "method_key";
@@ -38,6 +40,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final int METHOD_GET_GRADE_DETAILS = 118;
     public static final int METHOD_SCRAPE_FOR_OVERVIEW = 119;
     public static final int METHOD_GET_LOGIN_DATA_FROM_DATABASE = 120;
+    public static final int METHOD_POST_ERROR = 121;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
@@ -47,6 +50,9 @@ public class MainService extends MultiThreadedIntentService {
     public static final String PUBLISHED_ONLY = "published_only";
     public static final String GRADE_HASH = "grade_hash";
     public static final String INITIAL_SCRAPING = "initial_scraping";
+    public static final String NAME = "name";
+    public static final String EMAIL = "email";
+    public static final String ERROR_MESSAGE = "error_message";
 
     // save request ids for pending request in this set, and remove them when its done.
     private Set<Long> pendingRequest;
@@ -88,6 +94,9 @@ public class MainService extends MultiThreadedIntentService {
                 break;
             case PROCESSOR_LOGIN:
                 handleLoginProcessor(method, intent);
+                break;
+            case PROCESSOR_ERROR:
+                handleErrorProcessor(method, intent);
                 break;
             default:
                 Log.e(TAG, "Invalid processor call to MainService: " + processor);
@@ -177,6 +186,28 @@ public class MainService extends MultiThreadedIntentService {
                 break;
             case METHOD_LOGOUT:
                 loginProcessor.logout();
+                break;
+            default:
+                Log.e(TAG, "Invalid method call to MainService: "+ method);
+        }
+    }
+
+    /**
+     * Decides which method to call from error processor.
+     *
+     * @param method - the method to call, represented by an integer
+     * @param intent - intent
+     */
+    private void handleErrorProcessor(int method, Intent intent) {
+        ErrorProcessor errorProcessor = new ErrorProcessor(this);
+
+        switch (method) {
+            case METHOD_POST_ERROR:
+                String name = intent.getStringExtra(NAME);
+                String email = intent.getStringExtra(EMAIL);
+                String errorMessage = intent.getStringExtra(ERROR_MESSAGE);
+
+                errorProcessor.postErrorReport(name, email, errorMessage);
                 break;
             default:
                 Log.e(TAG, "Invalid method call to MainService: "+ method);

@@ -72,7 +72,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:id="@+id/bt_report_error"
+            android:id="@+id/btn_report_error"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_report_error"
