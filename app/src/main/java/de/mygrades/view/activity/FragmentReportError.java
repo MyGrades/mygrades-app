@@ -1,5 +1,6 @@
 package de.mygrades.view.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -31,6 +33,12 @@ public class FragmentReportError extends Fragment {
     private Button btnReportError;
     private TextView tvStatus;
     private ProgressWheel progressWheel;
+
+    private static final String ERROR_TYPE_STATE = "error_type_state";
+    private ErrorEvent.ErrorType actErrorType;
+
+    private static final String ERROR_REPORT_DONE_STATE = "error_report_done_state";
+    private boolean errorReportDone;
 
     private MainServiceHelper mainServiceHelper;
 
@@ -59,13 +67,42 @@ public class FragmentReportError extends Fragment {
                     progressWheel.setVisibility(View.VISIBLE);
                     btnReportError.setVisibility(View.GONE);
                     tvStatus.setText("");
+
+                    // hide keyboard
+                    InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    im.hideSoftInputFromWindow(getActivity().getWindow().getDecorView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
                     postErrorReport();
                 }
             }
         });
 
+        // restore instance state
+        if (savedInstanceState != null) {
+            String error = savedInstanceState.getString(ERROR_TYPE_STATE);
+            if (error != null) {
+                showError(ErrorEvent.ErrorType.valueOf(error));
+            }
+
+            if (savedInstanceState.getBoolean(ERROR_REPORT_DONE_STATE, false)) {
+                showErrorReportDone();
+            }
+        }
+
         // register event bus
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // save error state
+        if (actErrorType != null) {
+            outState.putString(ERROR_TYPE_STATE, actErrorType.name());
+        }
+
+        outState.putBoolean(ERROR_REPORT_DONE_STATE, errorReportDone);
     }
 
     /**
@@ -107,8 +144,7 @@ public class FragmentReportError extends Fragment {
      * @param errorReportDoneEvent - ErrorReportDoneEvent
      */
     public void onEventMainThread(ErrorReportDoneEvent errorReportDoneEvent) {
-        progressWheel.setVisibility(View.GONE);
-        tvStatus.setText(getString(R.string.error_report_done));
+        showErrorReportDone();
     }
 
     /**
@@ -117,11 +153,21 @@ public class FragmentReportError extends Fragment {
      * @param errorEvent - ErrorEvent
      */
     public void onEventMainThread(ErrorEvent errorEvent) {
+        showError(errorEvent.getType());
+    }
+
+    /**
+     * Show error message by given error type.
+     *
+     * @param errorType - ErrorEvent.ErrorType
+     */
+    private void showError(ErrorEvent.ErrorType errorType) {
+        actErrorType = errorType;
         progressWheel.setVisibility(View.GONE);
         btnReportError.setVisibility(View.VISIBLE);
 
         String errorMessage;
-        switch (errorEvent.getType()) {
+        switch (errorType) {
             case NO_NETWORK:
                 errorMessage = getString(R.string.error_no_network);
                 break;
@@ -133,6 +179,18 @@ public class FragmentReportError extends Fragment {
                 errorMessage = getString(R.string.error_post_error_report);
         }
         tvStatus.setText(errorMessage);
+    }
+
+    /**
+     * Show text view that indicates that the report was successfully sent.
+     */
+    private void showErrorReportDone() {
+        actErrorType = null;
+        errorReportDone = true;
+
+        progressWheel.setVisibility(View.GONE);
+        btnReportError.setVisibility(View.GONE);
+        tvStatus.setText(getString(R.string.error_report_done));
     }
 
     @Override
