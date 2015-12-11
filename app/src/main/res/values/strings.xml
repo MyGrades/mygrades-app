@@ -67,4 +67,6 @@
     <string name="tv_report_error_introduction">Teile uns mit welche Probleme innerhalb der App oder in Bezug auf deine heruntergeladenen Noten bestehen.\n\nBei Angabe deiner E-Mail-Adresse können wir uns bei dir melden oder Bescheid geben, sobald der Fehler gelöst ist.</string>
     <string name="error_message_not_empty">Fehlerbeschreibung darf nicht leer sein</string>
     <string name="invalid_email_address">Ungültige E-Mail-Adresse</string>
+    <string name="error_post_error_report">Unbekannter Fehler beim Senden des Fehlerberichts.</string>
+    <string name="error_report_done">Vielen Dank!</string>
 </resources>

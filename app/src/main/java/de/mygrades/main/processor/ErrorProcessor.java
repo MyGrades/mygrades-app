@@ -7,8 +7,10 @@ import android.util.Log;
 
 import java.net.ConnectException;
 
+import de.greenrobot.event.EventBus;
 import de.mygrades.BuildConfig;
 import de.mygrades.main.events.ErrorEvent;
+import de.mygrades.main.events.ErrorReportDoneEvent;
 import de.mygrades.util.Constants;
 import retrofit.RetrofitError;
 
@@ -37,9 +39,11 @@ public class ErrorProcessor extends BaseProcessor {
         }
 
         try {
+            // get university id
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
 
+            // create error report
             Error error = new Error();
             error.setName(name);
             error.setEmail(email);
@@ -47,7 +51,11 @@ public class ErrorProcessor extends BaseProcessor {
             error.setAppVersion(BuildConfig.VERSION_NAME);
             error.setUniversityId(universityId);
 
+            // post to server
             restClient.getRestApi().postError(error);
+
+            // post event
+            EventBus.getDefault().post(new ErrorReportDoneEvent());
         } catch (RetrofitError e) {
             if (e.getCause() instanceof ConnectException) {
                 postErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout", e);

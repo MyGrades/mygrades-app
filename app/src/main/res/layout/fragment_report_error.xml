@@ -78,5 +78,24 @@
             android:text="@string/btn_report_error"
             android:layout_marginTop="8dp"
             android:theme="@style/RobotoButtonStyle"/>
+
+        <com.pnikosis.materialishprogress.ProgressWheel
+            android:id="@+id/progress_wheel"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:matProg_barColor="?attr/colorPrimary"
+            app:matProg_progressIndeterminate="true"
+            app:matProg_barWidth="2dp"/>
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"/>
     </LinearLayout>
 </ScrollView>

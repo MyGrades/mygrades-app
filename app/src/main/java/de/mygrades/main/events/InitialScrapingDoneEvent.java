@@ -1,7 +1,7 @@
 package de.mygrades.main.events;
 
 /**
- * Created by tilman on 03.10.15.
+ * Simple event to indicate that the initial scraping is done.
  */
 public class InitialScrapingDoneEvent {
 }
