@@ -33,12 +33,28 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private final int VIEW_TYPE_SUMMARY = 2;
 
     private Context context;
+    private SharedPreferences prefs;
+    private SharedPreferences.OnSharedPreferenceChangeListener prefsListener;
+
     private List<GradesAdapterItem> items;
 
     public GradesRecyclerViewAdapter(Context context) {
         super();
         items = new ArrayList<>();
         this.context = context;
+        prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
+
+        // register for preference changes
+        prefsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if (key.equals(GradesRecyclerViewAdapter.this.context.getString(R.string.pref_key_max_credit_points))) {
+                    notifyItemChanged(0);
+                }
+            }
+        };
+
+        prefs.registerOnSharedPreferenceChangeListener(prefsListener);
     }
 
     /**
@@ -296,6 +312,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             viewHolder.tvAverage.setText(String.format("%.2f", summaryItem.getAverage()));
             viewHolder.tvCreditPoints.setText(String.format("%.1f", summaryItem.getCreditPoints()));
             viewHolder.tvLastUpdatedAt.setText(summaryItem.getLastUpdatedAt());
+            viewHolder.tvMaxCreditPoints.setText(
+                    context.getString(R.string.tv_max_credit_points, prefs.getString(context.getString(R.string.pref_key_max_credit_points), "")));
         }
     }
 
@@ -371,6 +389,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         public TextView tvAverage;
         public TextView tvCreditPoints;
         public TextView tvLastUpdatedAt;
+        public TextView tvMaxCreditPoints;
 
         public GradesSummaryViewHolder(View itemView) {
             super(itemView);
@@ -378,6 +397,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             tvAverage = (TextView) itemView.findViewById(R.id.tv_average);
             tvCreditPoints = (TextView) itemView.findViewById(R.id.tv_credit_points);
             tvLastUpdatedAt = (TextView) itemView.findViewById(R.id.tv_last_updated_at);
+            tvMaxCreditPoints = (TextView) itemView.findViewById(R.id.tv_max_credit_points);
         }
     }
 }

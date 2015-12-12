@@ -75,4 +75,5 @@
     <string name="pref_key_logout">pref_key_logout</string>
     <string name="dialog_logout_title">Abmelden</string>
     <string name="dialog_logout_message">Möchtest du dich wirklich abmelden und alle lokalen Daten löschen?</string>
+    <string name="tv_max_credit_points">von %1$s</string>
 </resources>
