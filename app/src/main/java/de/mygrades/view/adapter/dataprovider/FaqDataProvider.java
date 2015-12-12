@@ -15,6 +15,7 @@ public class FaqDataProvider {
     private List<Pair<QuestionData, AnswerData>> data;
 
     public static final int GO_TO_GENERAL_ERROR = 100;
+    public static final int GO_TO_WHY_NO_GRADING = 200;
 
     public FaqDataProvider() {
         data = new ArrayList<>();
@@ -47,6 +48,8 @@ public class FaqDataProvider {
     public int getGroupId(int goToQuestion) {
         switch (goToQuestion) {
             case GO_TO_GENERAL_ERROR:
+                return 5;
+            case GO_TO_WHY_NO_GRADING:
                 return 5;
             default:
                 return 0;

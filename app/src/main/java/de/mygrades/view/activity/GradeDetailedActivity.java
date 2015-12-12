@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
@@ -171,6 +172,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         tvOverviewAverage = (TextView) findViewById(R.id.tv_overview_average);
         barChart = (BarChart) findViewById(R.id.bar_chart);
         tvOverviewNotPossible = (TextView) findViewById(R.id.tv_overview_not_possible);
+        tvOverviewNotPossible.setText(Html.fromHtml(getString(R.string.overview_not_possible, FaqDataProvider.GO_TO_WHY_NO_GRADING)));
         tvOverviewNotPossible.setMovementMethod(LinkMovementMethod.getInstance());
         llRootView = (LinearLayout) findViewById(R.id.ll_root_view);
 
