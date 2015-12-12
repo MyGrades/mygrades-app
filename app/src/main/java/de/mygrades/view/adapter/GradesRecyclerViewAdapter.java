@@ -204,7 +204,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 GradeItem grade = (GradeItem) item;
                 float actCreditPoints = (grade.getCreditPoints() == null ? 0f : grade.getCreditPoints());
                 creditPointsSum += actCreditPoints;
-                if (grade.getGrade() != null && actCreditPoints > 0) {
+                if (grade.getGrade() != null && grade.getGrade() > 0 && actCreditPoints > 0) {
                     creditPointsSumForAverage += actCreditPoints;
                 }
                 average += (grade.getGrade() == null ? 0f : grade.getGrade() * actCreditPoints);
