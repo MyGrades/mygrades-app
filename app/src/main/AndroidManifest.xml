@@ -52,6 +52,16 @@
             </intent-filter>
         </activity>
 
+        <!-- SettingsActivity -->
+        <activity
+            android:name=".view.activity.SettingsActivity"
+            android:parentActivityName=".view.activity.MainActivity">
+            <!-- The meta-data element is needed for versions lower than 4.1 -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.activity.MainActivity" />
+        </activity>
+
         <!-- MainService -->
         <service android:name=".main.MainService" android:exported="false" />
     </application>

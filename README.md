@@ -25,6 +25,7 @@ MyGrades is an Android App developed by [Tilman Ginzel](https://github.com/tilma
 * [vector-compat](https://github.com/wnafee/vector-compat)
 * [android-Ultra-Pull-To-Refresh](https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh)
 * [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)
+* [android-support-preference](https://github.com/consp1racy/android-support-preference)
 
 ## License
 

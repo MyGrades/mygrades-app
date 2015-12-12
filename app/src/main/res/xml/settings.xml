@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Allgemein"
+        android:key="pref_key_general">
+
+        <EditTextPreference
+            android:defaultValue="180"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:key="@string/pref_key_max_credit_points"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Erreichbare Credit-Points"/>
+
+        <Preference
+            android:key="@string/pref_key_logout"
+            android:title="Abmelden"
+            android:summary="Alle deine Daten werden gelöscht" />
+    </PreferenceCategory>
+</PreferenceScreen>

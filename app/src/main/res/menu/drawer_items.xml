@@ -12,6 +12,11 @@
             android:id="@+id/nav_faq"
             android:icon="@drawable/ic_question_answer_white_24dp"
             android:title="@string/nav_faq" />
+
+        <item
+            android:id="@+id/nav_report_error"
+            android:icon="@drawable/ic_error_white_24dp"
+            android:title="@string/nav_report_error" />
     </group>
 
     <group
@@ -19,13 +24,8 @@
         android:checkableBehavior="single">
 
         <item
-            android:id="@+id/nav_report_error"
-            android:icon="@drawable/ic_error_white_24dp"
-            android:title="@string/nav_report_error" />
-
-        <item
-            android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_exit_to_app_white_24dp"
-            android:title="@string/nav_logout" />
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_white_24dp"
+            android:title="@string/nav_settings" />
     </group>
 </menu>

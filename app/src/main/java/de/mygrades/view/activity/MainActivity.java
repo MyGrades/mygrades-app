@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 selectDrawerItem(menuItem);
-                return true;
+                return false;
             }
         });
     }
@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
      * @param menuItem clicked menu item
      */
     private void selectDrawerItem(MenuItem menuItem) {
-        Fragment fragment;
+        Fragment fragment = null;
 
         switch(menuItem.getItemId()) {
             case R.id.nav_home:
@@ -305,15 +305,16 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             case R.id.nav_report_error:
                 fragment = new FragmentReportError();
                 break;
-            case R.id.nav_logout:
-                logout();
-                return;
+            case R.id.nav_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                break;
             default:
                 fragment = new FragmentOverview();
         }
 
         // replace current fragment if it is not the same as currently shown
-        if (getSupportFragmentManager().findFragmentByTag(fragment.getClass().getSimpleName()) == null) {
+        if (fragment != null && getSupportFragmentManager().findFragmentByTag(fragment.getClass().getSimpleName()) == null) {
             replaceFragment(R.id.fl_content, fragment, false);
         }
 
@@ -358,21 +359,6 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
 
         // pass any configuration change to the drawer toggle
         drawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    /**
-     * Logout user and goes to SelectUniversityActivity.
-     * The user cannot return to the MainActivity by pressing the back-button.
-     */
-    private void logout() {
-        mainServiceHelper.logout();
-
-        Intent intent = new Intent(this, SelectUniversityActivity.class);
-        // set flags, so the user won't be able to go back to the main activity
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                        Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 
     @Override

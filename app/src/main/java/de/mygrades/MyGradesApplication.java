@@ -2,6 +2,7 @@ package de.mygrades;
 
 import android.app.Application;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
 
 import de.mygrades.database.DatabaseHelper;
 import de.mygrades.database.dao.DaoMaster;
@@ -16,6 +17,9 @@ public class MyGradesApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // set preferences default values
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
         SQLiteOpenHelper helper = new DatabaseHelper(this, "mygrades.db", null);
         DaoMaster daoMaster = new DaoMaster(helper.getWritableDatabase());
