@@ -50,7 +50,7 @@ public class FaqDataProvider {
             case GO_TO_GENERAL_ERROR:
                 return 5;
             case GO_TO_WHY_NO_GRADING:
-                return 5;
+                return 9;
             default:
                 return 0;
         }
