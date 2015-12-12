@@ -59,7 +59,9 @@ public class LinkIntentActivity extends AppCompatActivity implements ReplacableF
                     replaceFragment(R.id.fl_content, fragmentFaq, false);
                     return;
                 }
-
+            } else if ("reporterror".equals(pathSegments.get(0))) {
+                replaceFragment(R.id.fl_content, new FragmentReportError(), false);
+                return;
             }
         }
 
@@ -81,6 +83,8 @@ public class LinkIntentActivity extends AppCompatActivity implements ReplacableF
         // set toolbar title
         if (newFragment instanceof FragmentFaq) {
             getSupportActionBar().setTitle(getString(R.string.toolbar_faq_title));
+        } else if(newFragment instanceof FragmentReportError) {
+            getSupportActionBar().setTitle(getString(R.string.toolbar_report_error));
         }
     }
 }
