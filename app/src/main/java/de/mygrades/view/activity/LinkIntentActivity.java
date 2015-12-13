@@ -4,9 +4,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 
 import java.util.List;
 
@@ -30,10 +32,21 @@ public class LinkIntentActivity extends AppCompatActivity implements ReplacableF
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // go to specified fragment
         evaluateIntentFragment(getIntent().getData());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button and just act like hardware back button
+            case android.R.id.home:
+                finish(); // removes activity from stack and goes to top of stack
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
