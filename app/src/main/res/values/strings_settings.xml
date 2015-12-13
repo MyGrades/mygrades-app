@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="nav_settings">Einstellungen</string>
+    <string name="toolbar_settings">Einstellungen</string>
+    <string name="pref_key_max_credit_points">pref_key_max_credit_points</string>
+    <string name="pref_key_logout">pref_key_logout</string>
+    <string name="dialog_logout_title">Abmelden</string>
+    <string name="dialog_logout_message">Möchtest du dich wirklich abmelden und alle lokalen Daten löschen?</string>
+    <string name="tv_max_credit_points">von %1$s</string>
+    <string name="pref_key_license">pref_key_license</string>
+    <string name="pref_license_title">Lizenz</string>
+    <string name="pref_license_summary">Apache Software License, Version 2.0</string>
+    <string name="pref_key_third_party_license">pref_key_third_party_license</string>
+    <string name="pref_third_party_license_title">Open-Source-Lizenzen</string>
+    <string name="pref_third_party_license_summary">Lizenzdetails für Open-Source-Software</string>
+    <string name="pref_key_build_version">pref_key_build_version</string>
+    <string name="pref_build_version_title">Build-Version</string>
+    <string name="pref_key_github">pref_key_github</string>
+    <string name="pref_github_title">Quellcode der App</string>
+    <string name="pref_github_summary">https://github.com/mygrades/mygrades-app</string>
+    <string name="uri_source_code">https://github.com/mygrades/mygrades-app</string>
+    <string name="settings_general_title">Allgemein</string>
+    <string name="settings_info_title">Info</string>
+
+
+    <string name="settings_premium_title">Premium</string>
+
+    <string name="pref_automatic_scraping_title">Automatisches Abrufen</string>
+    <string name="pref_key_automatic_scraping">pref_key_automatic_scraping</string>
+
+    <string name="pref_scrape_frequency_title">Abruf-Intervall</string>
+    <string name="pref_key_scrape_frequency">pref_key_scrape_frequency</string>
+    <string-array name="pref_scrape_frequency_titles">
+        <item>stündlich</item>
+        <item>alle 2 Stunden</item>
+        <item>alle 4 Stunden</item>
+        <item>1 mal täglich</item>
+    </string-array>
+    <string-array name="pref_scrape_frequency_values">
+        <item>60</item>
+        <item>120</item>
+        <item>240</item>
+        <item>1440</item>
+    </string-array>
+
+    <string name="pref_only_wifi_title">Nur im WLAN</string>
+    <string name="pref_only_wifi_summary">Es werden keine mobilen Daten genutzt</string>
+    <string name="pref_key_only_wifi">pref_key_only_wifi</string>
+</resources>

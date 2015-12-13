@@ -69,25 +69,5 @@
     <string name="invalid_email_address">Ungültige E-Mail-Adresse</string>
     <string name="error_post_error_report">Unbekannter Fehler beim Senden des Fehlerberichts.</string>
     <string name="error_report_done">Vielen Dank!</string>
-    <string name="nav_settings">Einstellungen</string>
-    <string name="toolbar_settings">Einstellungen</string>
-    <string name="pref_key_max_credit_points">pref_key_max_credit_points</string>
-    <string name="pref_key_logout">pref_key_logout</string>
-    <string name="dialog_logout_title">Abmelden</string>
-    <string name="dialog_logout_message">Möchtest du dich wirklich abmelden und alle lokalen Daten löschen?</string>
-    <string name="tv_max_credit_points">von %1$s</string>
-    <string name="pref_key_license">pref_key_license</string>
-    <string name="pref_license_title">Lizenz</string>
-    <string name="pref_license_summary">Apache Software License, Version 2.0</string>
-    <string name="pref_key_third_party_license">pref_key_third_party_license</string>
-    <string name="pref_third_party_license_title">Open-Source-Lizenzen</string>
-    <string name="pref_third_party_license_summary">Lizenzdetails für Open-Source-Software</string>
-    <string name="pref_key_build_version">pref_key_build_version</string>
-    <string name="pref_build_version_title">Build-Version</string>
-    <string name="pref_key_github">pref_key_github</string>
-    <string name="pref_github_title">Quellcode der App</string>
-    <string name="pref_github_summary">https://github.com/mygrades/mygrades-app</string>
-    <string name="uri_source_code">https://github.com/mygrades/mygrades-app</string>
-    <string name="settings_general_title">Allgemein</string>
-    <string name="settings_info_title">Info</string>
+
 </resources>

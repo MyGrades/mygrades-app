@@ -2,6 +2,7 @@ package de.mygrades.view.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -10,9 +11,11 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.XpPreferenceFragment;
 import android.support.v7.widget.PreferenceDividerDecoration;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.webkit.WebView;
+
+import net.xpece.android.support.preference.ListPreference;
 
 import de.mygrades.BuildConfig;
 import de.mygrades.R;
@@ -23,9 +26,13 @@ import de.mygrades.main.MainServiceHelper;
  */
 public class SettingsFragment extends XpPreferenceFragment {
 
+    private SharedPreferences sharedPreferences;
+
     @Override
     public void onCreatePreferences2(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.settings);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         initMaxCreditPointsPreference();
         initLogoutPreference();
@@ -33,11 +40,70 @@ public class SettingsFragment extends XpPreferenceFragment {
         initSourceCodePreference();
         initLicensePreference();
         initOpenSourceLicenses();
+
+        // premium preferences
+        initAutomaticScrapingPreference();
+        initScrapeFrequencyPreference();
     }
 
     @Override
     public void onRecyclerViewCreated(RecyclerView list) {
         list.addItemDecoration(new PreferenceDividerDecoration(getContext()).drawBottom(true));
+    }
+
+    /**
+     * Initializes the automatic scraping preference and sets an alarm.
+     */
+    private void initAutomaticScrapingPreference() {
+        Preference automaticScrapingPreference = findPreference(getString(R.string.pref_key_automatic_scraping));
+
+        // set change listener to set alarm
+        automaticScrapingPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object value) {
+                // TODO: set alarm
+                Log.d("SettingsFragment", "automaticScraping");
+                return true;
+            }
+        });
+    }
+
+    /**
+     * Initializes the scrape frequency preference, updates the summary and sets an alarm.
+     */
+    private void initScrapeFrequencyPreference() {
+        Preference scrapeFrequencyPreference = findPreference(getString(R.string.pref_key_scrape_frequency));
+
+        // set summary
+        scrapeFrequencyPreference.setSummary(getDisplayValue(
+                        (ListPreference) scrapeFrequencyPreference,
+                        sharedPreferences.getString(getString(R.string.pref_key_scrape_frequency), "")
+        ));
+
+        // set change listener to update summary and set alarm
+        scrapeFrequencyPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object value) {
+                // Set the summary to reflect the new value.
+                preference.setSummary(getDisplayValue((ListPreference) preference, value.toString()));
+
+                // TODO: set alarm
+                return true;
+            }
+        });
+    }
+
+    /**
+     * Gets the display value of the given value for listPreference.
+     * @param listPreference current ListPreference
+     * @param value value of which the display value is needed
+     * @return display value of given value
+     */
+    private CharSequence getDisplayValue(ListPreference listPreference, String value) {
+        int index = listPreference.findIndexOfValue(value);
+
+        // Set the summary to reflect the new value.
+        return index >= 0 ? listPreference.getEntries()[index] : null;
     }
 
     /**
@@ -47,9 +113,9 @@ public class SettingsFragment extends XpPreferenceFragment {
         Preference maxCreditPointsPreference = findPreference(getString(R.string.pref_key_max_credit_points));
 
         // set summary
-        maxCreditPointsPreference.setSummary(PreferenceManager
-                .getDefaultSharedPreferences(getContext())
-                .getString(getString(R.string.pref_key_max_credit_points), ""));
+        maxCreditPointsPreference.setSummary(sharedPreferences.getString(
+                getString(R.string.pref_key_max_credit_points), ""
+        ));
 
         // set change listener to validate input and update summary
         maxCreditPointsPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

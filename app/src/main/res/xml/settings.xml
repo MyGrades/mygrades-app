@@ -21,6 +21,33 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/settings_premium_title"
+        android:key="pref_key_premium">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_automatic_scraping"
+            android:title="@string/pref_automatic_scraping_title" />
+
+        <ListPreference
+            android:defaultValue="120"
+            android:entries="@array/pref_scrape_frequency_titles"
+            android:entryValues="@array/pref_scrape_frequency_values"
+            android:key="@string/pref_key_scrape_frequency"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_scrape_frequency_title"
+            android:dependency="@string/pref_key_automatic_scraping" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_only_wifi"
+            android:title="@string/pref_only_wifi_title"
+            android:summary="@string/pref_only_wifi_summary"
+            android:dependency="@string/pref_key_automatic_scraping" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/settings_info_title"
         android:key="pref_key_info">
 
