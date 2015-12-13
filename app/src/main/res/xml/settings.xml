@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="Allgemein"
+        android:title="@string/settings_general_title"
         android:key="pref_key_general">
 
         <EditTextPreference
@@ -18,5 +18,29 @@
             android:key="@string/pref_key_logout"
             android:title="Abmelden"
             android:summary="Alle deine Daten werden gelöscht" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_info_title"
+        android:key="pref_key_info">
+
+        <Preference
+            android:key="@string/pref_key_license"
+            android:title="@string/pref_license_title"
+            android:summary="@string/pref_license_summary" />
+
+        <Preference
+            android:key="@string/pref_key_third_party_license"
+            android:title="@string/pref_third_party_license_title"
+            android:summary="@string/pref_third_party_license_summary" />
+
+        <Preference
+            android:key="@string/pref_key_build_version"
+            android:title="@string/pref_build_version_title" />
+
+        <Preference
+            android:key="@string/pref_key_github"
+            android:title="@string/pref_github_title"
+            android:summary="@string/pref_github_summary" />
     </PreferenceCategory>
 </PreferenceScreen>
