@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.mygrades.R;
+import de.mygrades.util.AverageCalculator;
 import de.mygrades.util.Constants;
 import de.mygrades.view.activity.GradeDetailedActivity;
 import de.mygrades.view.adapter.model.GradeItem;
@@ -210,23 +211,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * Update the summary and set average, creditPoints and lastUpdatedAt.
      */
     public void updateSummary() {
-        float average = 0f;
-        float creditPointsSum = 0f;
-        float creditPointsSumForAverage = 0f; // sum grade_entries may have credit points, but no grade
-
-        // iterate over items, count credit points and calculate average
-        for(GradesAdapterItem item : items) {
-            if (item instanceof GradeItem) {
-                GradeItem grade = (GradeItem) item;
-                float actCreditPoints = (grade.getCreditPoints() == null ? 0f : grade.getCreditPoints());
-                creditPointsSum += actCreditPoints;
-                if (grade.getGrade() != null && grade.getGrade() > 0 && actCreditPoints > 0) {
-                    creditPointsSumForAverage += actCreditPoints;
-                }
-                average += (grade.getGrade() == null ? 0f : grade.getGrade() * actCreditPoints);
-            }
-        }
-        average = creditPointsSumForAverage > 0 ? average/creditPointsSumForAverage : 0f;
+        AverageCalculator calculator = new AverageCalculator();
+        calculator.calculate(items);
 
         // get last updated at
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -236,8 +222,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         // if list is not empty, set summary header
         if (items.size() > 0) {
             GradesSummaryItem summaryItem = (GradesSummaryItem) items.get(0);
-            summaryItem.setAverage(average);
-            summaryItem.setCreditPoints(creditPointsSum);
+            summaryItem.setAverage(calculator.getAverage());
+            summaryItem.setCreditPoints(calculator.getCreditPointsSum());
             summaryItem.setLastUpdatedAt(lastUpdatedAt + " Uhr"); // TODO: better time format + string resource
             notifyItemChanged(0);
         }
