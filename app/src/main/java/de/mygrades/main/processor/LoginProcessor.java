@@ -83,7 +83,7 @@ public class LoginProcessor extends BaseProcessor {
     }
 
     /**
-     * Deletes all normal and secure preferences.
+     * Deletes all normal and secure preferences and restores default values afterwards.
      */
     public void deletePreferences() {
         // remove username and password
@@ -102,6 +102,9 @@ public class LoginProcessor extends BaseProcessor {
         editor.remove(Constants.PREF_KEY_RULE_ID);
         editor.remove(context.getString(R.string.pref_key_max_credit_points));
         editor.apply();
+
+        // restore default preferences
+        PreferenceManager.setDefaultValues(context, R.xml.settings, true);
     }
 
     /**
