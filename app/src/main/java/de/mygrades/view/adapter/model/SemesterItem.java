@@ -3,6 +3,8 @@ package de.mygrades.view.adapter.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.mygrades.util.AverageCalculator;
+
 /**
  * Semester item used in GradesRecyclerViewAdapter.
  */
@@ -17,14 +19,6 @@ public class SemesterItem implements GradesAdapterItem {
         grades = new ArrayList<>();
     }
 
-    public SemesterItem(int semesterNumber, String semester, float average, float creditPoints) {
-        this.semesterNumber = semesterNumber;
-        this.semester = semester;
-        this.average = average;
-        this.creditPoints = creditPoints;
-        grades = new ArrayList<>();
-    }
-
     public void addGrade(GradeItem gradeItem) {
         grades.add(gradeItem);
         update();
@@ -34,26 +28,11 @@ public class SemesterItem implements GradesAdapterItem {
      * Updates the average grade and the sum of credit points.
      */
     public void update() {
-        // update creditPoints and average
-        float average = 0f;
-        float creditPointsSum = 0f;
-        float creditPointsSumForAverage = 0f; // sum grade_entries may have credit points, but no grade
+        AverageCalculator calculator = new AverageCalculator();
+        calculator.calculate(grades);
 
-        for(GradeItem grade : grades) {
-            float actCreditPoints = (grade.getCreditPoints() == null ? 0f : grade.getCreditPoints());
-            creditPointsSum += actCreditPoints;
-
-            if (grade.getGrade() != null && grade.getGrade() > 0 && actCreditPoints > 0) {
-                creditPointsSumForAverage += actCreditPoints;
-            }
-            average += (grade.getGrade() == null ? 0f : grade.getGrade() * actCreditPoints);
-
-        }
-
-        average = creditPointsSumForAverage > 0 ? average/creditPointsSumForAverage : 0f;
-
-        this.average = average;
-        this.creditPoints = creditPointsSum;
+        this.average = calculator.getAverage();
+        this.creditPoints = calculator.getCreditPointsSum();
     }
 
     public int getSemesterNumber() {
