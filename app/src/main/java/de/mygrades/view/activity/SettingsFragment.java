@@ -96,7 +96,7 @@ public class SettingsFragment extends XpPreferenceFragment {
                 // Set the summary to reflect the new value.
                 preference.setSummary(getDisplayValue((ListPreference) preference, value.toString()));
 
-                scrapeAlarmManager.setAlarm((int) value);
+                scrapeAlarmManager.setAlarm(Integer.parseInt(value.toString()));
                 return true;
             }
         });
