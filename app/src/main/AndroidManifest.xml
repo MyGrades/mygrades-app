@@ -2,6 +2,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application android:allowBackup="true" android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme"
@@ -64,6 +65,9 @@
 
         <!-- MainService -->
         <service android:name=".main.MainService" android:exported="false" />
+
+        <!-- AlarmReceiver -->
+        <receiver android:name=".main.alarm.AlarmReceiver" android:enabled="true" />
     </application>
 
 </manifest>

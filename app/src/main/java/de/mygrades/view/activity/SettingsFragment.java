@@ -20,13 +20,16 @@ import net.xpece.android.support.preference.ListPreference;
 import de.mygrades.BuildConfig;
 import de.mygrades.R;
 import de.mygrades.main.MainServiceHelper;
+import de.mygrades.main.alarm.ScrapeAlarmManager;
 
 /**
  * Created by tilman on 12.12.15.
  */
 public class SettingsFragment extends XpPreferenceFragment {
+    private static final String TAG = SettingsFragment.class.getSimpleName();
 
     private SharedPreferences sharedPreferences;
+    private ScrapeAlarmManager scrapeAlarmManager;
 
     @Override
     public void onCreatePreferences2(Bundle bundle, String s) {
@@ -42,6 +45,7 @@ public class SettingsFragment extends XpPreferenceFragment {
         initOpenSourceLicenses();
 
         // premium preferences
+        scrapeAlarmManager = new ScrapeAlarmManager(getContext());
         initAutomaticScrapingPreference();
         initScrapeFrequencyPreference();
     }
@@ -61,8 +65,13 @@ public class SettingsFragment extends XpPreferenceFragment {
         automaticScrapingPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object value) {
-                // TODO: set alarm
-                Log.d("SettingsFragment", "automaticScraping");
+                boolean boolValue = (boolean) value;
+                if (boolValue) {
+                    int interval = Integer.parseInt(sharedPreferences.getString(getString(R.string.pref_key_scrape_frequency), "-1"));
+                    scrapeAlarmManager.setAlarm(interval);
+                } else {
+                    scrapeAlarmManager.cancelAlarm();
+                }
                 return true;
             }
         });
@@ -87,7 +96,7 @@ public class SettingsFragment extends XpPreferenceFragment {
                 // Set the summary to reflect the new value.
                 preference.setSummary(getDisplayValue((ListPreference) preference, value.toString()));
 
-                // TODO: set alarm
+                scrapeAlarmManager.setAlarm((int) value);
                 return true;
             }
         });
