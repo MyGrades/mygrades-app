@@ -85,16 +85,24 @@ public class MainServiceHelper {
      * Starts a worker thread to scrape for new grades.
      */
     public void scrapeForGrades(boolean initialScraping) {
+        Intent intent = getIntentForScrapeForGrades(initialScraping, false);
+        // start worker thread in background
+        context.startService(intent);
+    }
+
+    public Intent getIntentForScrapeForGrades(boolean initialScraping, boolean automaticScraping) {
         int method = MainService.METHOD_SCRAPE_FOR_GRADES;
 
         // set request id
         // important: loginAndScrapeForGrades() must use the same requestId to avoid duplicate scraping
         long requestId = concatenateLong(method, 0);
 
-        // start worker thread in background
+        // prepare intent for intent service
         Intent intent = getBasicIntent(MainService.PROCESSOR_GRADES, method, requestId);
         intent.putExtra(MainService.INITIAL_SCRAPING, initialScraping);
-        context.startService(intent);
+        intent.putExtra(MainService.AUTOMATIC_SCRAPING, automaticScraping);
+
+        return intent;
     }
 
     /**

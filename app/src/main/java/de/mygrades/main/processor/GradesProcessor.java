@@ -183,12 +183,29 @@ public class GradesProcessor extends BaseProcessor {
     /**
      * Scrape for grades and post and GradeEvent if scraping was successful.
      * Otherwise, an ErrorEvent will be posted.
+     * @param initialScraping is this the inital scraping?
      */
     public void scrapeForGrades(boolean initialScraping) {
+        scrapeForGrades(initialScraping, false);
+    }
+
+    /**
+     * Scrape for grades and post and GradeEvent if scraping was successful.
+     * Otherwise, an ErrorEvent will be posted.
+     * @param initialScraping is this the inital scraping?
+     * @param automaticScraping is scraping called automatically?
+     */
+    public void scrapeForGrades(boolean initialScraping, boolean automaticScraping) {
         // No Connection -> event no Connection, abort
         if (!isOnline()) {
             postErrorEvent(ErrorEvent.ErrorType.NO_NETWORK, "No Internet Connection!");
             return;
+        }
+
+        Log.d(TAG, "automaticScraping" + automaticScraping);
+        if (automaticScraping) {
+            // TODO: check if only with wifi
+            // TODO: post errors?
         }
 
         // get shared preferences

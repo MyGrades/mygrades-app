@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.mygrades.main.alarm.AlarmReceiver;
 import de.mygrades.main.processor.ErrorProcessor;
 import de.mygrades.main.processor.GradesProcessor;
 import de.mygrades.main.processor.LoginProcessor;
@@ -50,6 +51,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final String PUBLISHED_ONLY = "published_only";
     public static final String GRADE_HASH = "grade_hash";
     public static final String INITIAL_SCRAPING = "initial_scraping";
+    public static final String AUTOMATIC_SCRAPING = "automatic_scraping";
     public static final String NAME = "name";
     public static final String EMAIL = "email";
     public static final String ERROR_MESSAGE = "error_message";
@@ -146,7 +148,13 @@ public class MainService extends MultiThreadedIntentService {
         switch (method) {
             case METHOD_SCRAPE_FOR_GRADES:
                 boolean initialScraping = intent.getBooleanExtra(INITIAL_SCRAPING, false);
-                gradesProcessor.scrapeForGrades(initialScraping);
+                boolean automaticScraping = intent.getBooleanExtra(AUTOMATIC_SCRAPING, false);
+                gradesProcessor.scrapeForGrades(initialScraping, automaticScraping);
+                // release wake lock if it got called automatically
+                if (automaticScraping) {
+                    Log.d(TAG, "wake lock released.");
+                    AlarmReceiver.completeWakefulIntent(intent);
+                }
                 break;
             case METHOD_GET_GRADES_FROM_DATABASE:
                 gradesProcessor.getGradesFromDatabase();

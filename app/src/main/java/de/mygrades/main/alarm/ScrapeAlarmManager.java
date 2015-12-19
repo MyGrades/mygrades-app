@@ -38,12 +38,8 @@ public class ScrapeAlarmManager {
 
         // minutes * 60 secs * 1000 msec
         long interval = intervalMinutes * 60 * 1000;
-        // first alarm triggers 10 minutes after being set
+        // first alarm triggers minimum 10 minutes after being set
         long trigger = 10 * 60 * 1000;
-
-        // TODO: only for testing purposes
-        interval = 1 * 60 * 1000;
-        trigger = 1 * 60 * 1000;
 
         // we can't use setInexactRepeating, because of the rare predefined intervals
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,

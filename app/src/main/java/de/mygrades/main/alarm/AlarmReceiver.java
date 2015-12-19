@@ -1,18 +1,22 @@
 package de.mygrades.main.alarm;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
+
+import de.mygrades.main.MainServiceHelper;
 
 /**
  * Receiver for alarms from AlarmManager. Operates on main thread!
  * Starts scraping automatically.
  */
-public class AlarmReceiver extends BroadcastReceiver {
+public class AlarmReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("AlarmReceiver", "Alarm received");
-        //TODO: WakefulBroadcastReceiver and start scraping
+
+        MainServiceHelper mainServiceHelper = new MainServiceHelper(context);
+        startWakefulService(context, mainServiceHelper.getIntentForScrapeForGrades(false, true));
     }
 }
