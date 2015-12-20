@@ -5,9 +5,13 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.util.Log;
+
+import de.mygrades.R;
 
 /**
  * Manages all alarm operations to repeat scraping automatically.
@@ -30,6 +34,17 @@ public class ScrapeAlarmManager {
 
         this.bootReceiver = new ComponentName(this.context, BootReceiver.class);
         this.packageManager = this.context.getPackageManager();
+    }
+
+    public void setAlarmFromPrefs() {
+        // get setting from shared preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int intervalMinutes = Integer.parseInt(prefs.getString(
+                context.getResources().getString(R.string.pref_key_scrape_frequency), "-1"
+        ));
+
+        // set alarm accordingly to user's settings
+        setAlarm(intervalMinutes);
     }
 
     /**
