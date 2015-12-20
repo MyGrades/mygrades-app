@@ -69,5 +69,9 @@
     <string name="invalid_email_address">Ungültige E-Mail-Adresse</string>
     <string name="error_post_error_report">Unbekannter Fehler beim Senden des Fehlerberichts.</string>
     <string name="error_report_done">Vielen Dank!</string>
+    <string name="notification_new_grade_title">Neue Note online</string>
+    <string name="notification_new_grades_title">neue Noten online</string>
+    <string name="notification_updated_grade_title">Note hat sich geändert</string>
+    <string name="notification_updated_grades_title">Noten haben sich geändert</string>
 
 </resources>
