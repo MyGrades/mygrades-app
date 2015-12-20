@@ -3,11 +3,7 @@ package de.mygrades.main.alarm;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
-
-import de.mygrades.R;
 
 /**
  * Receiver for BOOT_COMPLETED.
@@ -22,14 +18,8 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "Boot completed received. -> set alarm");
 
-        // get interval from shared prefs
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        int intervalMinutes = Integer.parseInt(prefs.getString(
-                context.getResources().getString(R.string.pref_key_scrape_frequency), "-1"
-        ));
-
         // set alarm
         ScrapeAlarmManager scrapeAlarmManager = new ScrapeAlarmManager(context);
-        scrapeAlarmManager.setAlarm(intervalMinutes);
+        scrapeAlarmManager.setAlarmFromPrefs();
     }
 }

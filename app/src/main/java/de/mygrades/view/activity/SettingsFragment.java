@@ -67,8 +67,7 @@ public class SettingsFragment extends XpPreferenceFragment {
             public boolean onPreferenceChange(Preference preference, Object value) {
                 boolean boolValue = (boolean) value;
                 if (boolValue) {
-                    int interval = Integer.parseInt(sharedPreferences.getString(getString(R.string.pref_key_scrape_frequency), "-1"));
-                    scrapeAlarmManager.setAlarm(interval);
+                    scrapeAlarmManager.setAlarmFromPrefs();
                 } else {
                     scrapeAlarmManager.cancelAlarm();
                 }
