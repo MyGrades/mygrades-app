@@ -247,7 +247,7 @@ public class GradesProcessor extends BaseProcessor {
             Log.d(TAG, gradeEntries.toString());
 
             // save grade entries in database
-            saveGradeEntriesToDB(gradeEntries);
+            saveGradeEntriesToDB(gradeEntries, automaticScraping);
 
             // save last_updated_at timestamp
             saveLastUpdatedAt(prefs);
@@ -282,7 +282,7 @@ public class GradesProcessor extends BaseProcessor {
      * 3. Update updated Entries and insert new entries
      * @param newGradeEntries List of (new) GradeEntries parsed from Website.
      */
-    private void saveGradeEntriesToDB(List<GradeEntry> newGradeEntries) {
+    private void saveGradeEntriesToDB(List<GradeEntry> newGradeEntries, boolean automaticScraping) {
         if (newGradeEntries != null && newGradeEntries.size() > 0) {
             Map<String, GradeEntry> newGradeEntriesMap = createMapForGradeEntries(newGradeEntries);
             Map<String, GradeEntry> dbGradeEntriesMap = createMapForGradeEntries(daoSession.getGradeEntryDao().loadAll());
@@ -312,6 +312,12 @@ public class GradesProcessor extends BaseProcessor {
             Log.d(TAG, "to insert: " + toInsert);
             Log.d(TAG, "to update: " + toUpdate);
 
+            // TODO: check if premium
+            if(automaticScraping) {
+                NotificationProcessor notificationProcessor = new NotificationProcessor(context);
+                notificationProcessor.showNotificationForGrades(toInsert, toUpdate);
+            }
+
             daoSession.runInTx(new Runnable() {
                 @Override
                 public void run() {
@@ -323,7 +329,6 @@ public class GradesProcessor extends BaseProcessor {
                     }
                 }
             });
-
         }
     }
 
@@ -440,7 +445,7 @@ public class GradesProcessor extends BaseProcessor {
             gradeEntries = transformer.transform();
 
             // save grade entries in database
-            saveGradeEntriesToDB(gradeEntries);
+            saveGradeEntriesToDB(gradeEntries, false);
 
             // save last_updated_at timestamp
             saveLastUpdatedAt(prefs);
