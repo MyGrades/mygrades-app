@@ -2,7 +2,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- necessary for AlarmManager: automatic scraping in standby and set alarm when rebooting device -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application android:allowBackup="true" android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme"
@@ -68,6 +71,13 @@
 
         <!-- AlarmReceiver -->
         <receiver android:name=".main.alarm.AlarmReceiver" android:enabled="true" />
+
+        <!-- BootReceiver: default disabled -> only gets enabled if alarm is set -->
+        <receiver android:name=".main.alarm.BootReceiver" android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

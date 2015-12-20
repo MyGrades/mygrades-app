@@ -2,8 +2,10 @@ package de.mygrades.main.alarm;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.SystemClock;
 import android.util.Log;
 
@@ -18,9 +20,16 @@ public class ScrapeAlarmManager {
     private AlarmManager alarmManager;
     private Context context;
 
+    // needed to enable / disable boot receiver
+    private ComponentName bootReceiver;
+    private PackageManager packageManager;
+
     public ScrapeAlarmManager(Context context) {
         this.context = context.getApplicationContext();
-        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        this.bootReceiver = new ComponentName(this.context, BootReceiver.class);
+        this.packageManager = this.context.getPackageManager();
     }
 
     /**
@@ -44,7 +53,13 @@ public class ScrapeAlarmManager {
         // we can't use setInexactRepeating, because of the rare predefined intervals
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime() + trigger, interval, alarmIntent);
-        Log.d(TAG, "Alarm set. Interval: " + interval);
+        Log.d(TAG, "Alarm set. Interval: " + interval + ", Trigger: " + trigger);
+
+        // enable boot receiver to set alarm after reboot
+        packageManager.setComponentEnabledSetting(bootReceiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+        Log.d(TAG, "BootReceiver enabled!");
     }
 
     /**
@@ -57,5 +72,11 @@ public class ScrapeAlarmManager {
 
         alarmManager.cancel(alarmIntent);
         Log.d(TAG, "Alarm canceled");
+
+        // disable boot receiver
+        packageManager.setComponentEnabledSetting(bootReceiver,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP);
+        Log.d(TAG, "BootReceiver disabled!");
     }
 }
