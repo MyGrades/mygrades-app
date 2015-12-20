@@ -67,7 +67,7 @@ public class SettingsFragment extends XpPreferenceFragment {
             public boolean onPreferenceChange(Preference preference, Object value) {
                 boolean boolValue = (boolean) value;
                 if (boolValue) {
-                    scrapeAlarmManager.setAlarmFromPrefs();
+                    scrapeAlarmManager.setAlarmFromPrefs(true, true);
                 } else {
                     scrapeAlarmManager.cancelAlarm();
                 }

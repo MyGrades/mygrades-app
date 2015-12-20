@@ -36,9 +36,34 @@ public class ScrapeAlarmManager {
         this.packageManager = this.context.getPackageManager();
     }
 
-    public void setAlarmFromPrefs() {
-        // get setting from shared preferences
+    /**
+     * Set an alarm for given interval from shared preferences.
+     * @param override override an existing alarm?
+     * @param forceSet force setting of alarm, even if it's not (yet) in shared prefs enabled
+     */
+    public void setAlarmFromPrefs(boolean override, boolean forceSet) {
+        // only if scraping is activated in shared preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean isActiveAutomaticScraping = prefs.getBoolean(
+                context.getResources().getString(R.string.pref_key_automatic_scraping), false
+        );
+        if (!isActiveAutomaticScraping && !forceSet) {
+            Log.d(TAG, "Automatic Scraping not enabled in Shared Preferences. Do nothing.");
+            return;
+        }
+
+        // check if there is an alarm set
+        if (!override) {
+            Intent intent = new Intent(context, AlarmReceiver.class);
+            boolean isSet = (PendingIntent.getBroadcast(context, 0, intent,
+                    PendingIntent.FLAG_NO_CREATE) != null);
+            if (isSet) {
+                Log.d(TAG, "Alarm already set. Do nothing.");
+                return;
+            }
+        }
+
+        // get setting from shared preferences
         int intervalMinutes = Integer.parseInt(prefs.getString(
                 context.getResources().getString(R.string.pref_key_scrape_frequency), "-1"
         ));
@@ -86,6 +111,7 @@ public class ScrapeAlarmManager {
         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         alarmManager.cancel(alarmIntent);
+        alarmIntent.cancel();
         Log.d(TAG, "Alarm canceled");
 
         // disable boot receiver

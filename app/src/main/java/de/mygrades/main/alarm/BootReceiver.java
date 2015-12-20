@@ -20,6 +20,6 @@ public class BootReceiver extends BroadcastReceiver {
 
         // set alarm
         ScrapeAlarmManager scrapeAlarmManager = new ScrapeAlarmManager(context);
-        scrapeAlarmManager.setAlarmFromPrefs();
+        scrapeAlarmManager.setAlarmFromPrefs(true, false);
     }
 }
