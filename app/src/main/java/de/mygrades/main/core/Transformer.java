@@ -22,6 +22,7 @@ import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.database.dao.Overview;
 import de.mygrades.database.dao.Rule;
 import de.mygrades.database.dao.TransformerMapping;
+import de.mygrades.util.Constants;
 import de.mygrades.util.exceptions.ParseException;
 
 /**
@@ -157,6 +158,7 @@ public class Transformer {
             gradeEntry.setExamDate(getStringProperty(xmlDocument, EXAM_DATE));
             gradeEntry.setTester(getStringProperty(xmlDocument, TESTER));
             gradeEntry.setOverviewPossible(getBooleanProperty(xmlDocument, OVERVIEW_POSSIBLE));
+            gradeEntry.setSeen(Constants.GRADE_ENTRY_SEEN);
 
             // update hash, used as primary key
             gradeEntry.updateHash();

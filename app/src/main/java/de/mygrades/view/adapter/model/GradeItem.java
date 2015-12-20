@@ -8,6 +8,7 @@ public class GradeItem implements GradesAdapterItem {
     private Float grade;
     private Float creditPoints;
     private String hash;
+    private int seen;
 
     public GradeItem() {}
 
@@ -73,5 +74,13 @@ public class GradeItem implements GradesAdapterItem {
         }
 
         return true;
+    }
+
+    public void setSeen(int seen) {
+        this.seen = seen;
+    }
+
+    public int getSeen() {
+        return seen;
     }
 }

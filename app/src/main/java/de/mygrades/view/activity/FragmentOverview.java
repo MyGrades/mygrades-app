@@ -166,6 +166,7 @@ public class FragmentOverview extends Fragment {
                 Double grade = gradeEntry.getGrade();
                 item.setGrade(grade == null ? null : grade.floatValue());
 
+                item.setSeen(gradeEntry.getSeen());
                 adapter.addGradeForSemester(item, gradeEntry.getSemesterNumber(), gradeEntry.getSemester());
             }
 
@@ -178,6 +179,9 @@ public class FragmentOverview extends Fragment {
             UIHelper.showSnackbar(getView(), getString(R.string.snackbar_refresh_complete));
             ptrFrame.refreshComplete();
         }
+
+        // remove from sticky events
+        EventBus.getDefault().removeStickyEvent(gradesEvent);
     }
 
     /**

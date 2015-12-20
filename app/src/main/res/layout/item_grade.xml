@@ -7,9 +7,18 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="7"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_gravity="center"
         android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tv_grade_seen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="12sp"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_grade_name"

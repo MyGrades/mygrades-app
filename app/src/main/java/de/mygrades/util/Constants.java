@@ -19,4 +19,9 @@ public class Constants {
     // Scraping status instance state
     public static final String INSTANCE_IS_SCRAPING_STATE = "is_scraping_state";
     public static final String INSTANCE_PROGRESS_STATE = "progress_state";
+
+    // grade entry 'seen' state
+    public static final int GRADE_ENTRY_SEEN = 0;
+    public static final int GRADE_ENTRY_NEW = 1;
+    public static final int GRADE_ENTRY_UPDATED = 2;
 }

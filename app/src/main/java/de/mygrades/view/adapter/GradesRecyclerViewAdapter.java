@@ -95,6 +95,11 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             if (items.get(i) instanceof GradeItem) {
                 GradeItem gradeItem = (GradeItem) items.get(i);
                 if (gradeItem.getHash().equals(newGrade.getHash())) {
+                    if (gradeItem.getSeen() != newGrade.getSeen()) {
+                        gradeItem.setSeen(newGrade.getSeen());
+                        notifyItemChanged(i);
+                    }
+
                     if (!gradeItem.equals(newGrade)) {
                         // update old grade item and notify ui
                         gradeItem.setGrade(newGrade.getGrade());
@@ -291,6 +296,15 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             Float creditPoints = gradeItem.getCreditPoints();
             String creditPointsAsString = creditPoints == null ? "-" : String.format("%.1f", creditPoints);
             viewHolder.tvCreditPoints.setText(creditPointsAsString + " CP");
+
+            viewHolder.tvGradeSeen.setVisibility(gradeItem.getSeen() == Constants.GRADE_ENTRY_SEEN ? View.GONE : View.VISIBLE);
+            String gradeSeen = "";
+            if (gradeItem.getSeen() == Constants.GRADE_ENTRY_NEW) {
+                gradeSeen = context.getString(R.string.tv_grade_seen_new);
+            } else if (gradeItem.getSeen() == Constants.GRADE_ENTRY_UPDATED) {
+                gradeSeen = context.getString(R.string.tv_grade_seen_updated);
+            }
+            viewHolder.tvGradeSeen.setText(gradeSeen);
         } else if (holder instanceof GradesSummaryViewHolder) {
             GradesSummaryViewHolder viewHolder = (GradesSummaryViewHolder) holder;
             GradesSummaryItem summaryItem = (GradesSummaryItem) items.get(position);
@@ -328,6 +342,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         public TextView tvName;
         public TextView tvGrade;
         public TextView tvCreditPoints;
+        public TextView tvGradeSeen;
 
         public GradeViewHolder(View itemView) {
             super(itemView);
@@ -335,6 +350,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             tvName = (TextView) itemView.findViewById(R.id.tv_grade_name);
             tvGrade = (TextView) itemView.findViewById(R.id.tv_grade);
             tvCreditPoints = (TextView) itemView.findViewById(R.id.tv_credit_points);
+            tvGradeSeen = (TextView) itemView.findViewById(R.id.tv_grade_seen);
 
             itemView.setOnClickListener(this);
         }

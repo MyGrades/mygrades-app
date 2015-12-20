@@ -59,7 +59,18 @@ public class GradesProcessor extends BaseProcessor {
      */
     public void getGradeDetails(String gradeHash) {
         // get GradeEntry from DB by hash with Overview (if present)
-        GradeEntry gradeEntry = daoSession.getGradeEntryDao().queryDeep("WHERE "+ GradeEntryDao.Properties.Hash.columnName +" = ?", gradeHash).get(0); // TODO: Nullpointer possible?
+        GradeEntry gradeEntry = daoSession.getGradeEntryDao().queryDeep("WHERE "+ GradeEntryDao.Properties.Hash.columnName +" = ?", gradeHash).get(0);
+
+        // post sticky event to overview if seen state has changed
+        if (gradeEntry.getSeen() != Constants.GRADE_ENTRY_SEEN) {
+            gradeEntry.setSeen(Constants.GRADE_ENTRY_SEEN);
+            daoSession.getGradeEntryDao().update(gradeEntry);
+
+            List<GradeEntry> gradeEntries = new ArrayList<>();
+            gradeEntries.add(gradeEntry);
+            EventBus.getDefault().postSticky(new GradesEvent(gradeEntries));
+        }
+
         Log.d(TAG, gradeEntry.toString());
         // post Event with GradeEntry to GUI
         EventBus.getDefault().post(new GradeEntryEvent(gradeEntry));
@@ -247,13 +258,14 @@ public class GradesProcessor extends BaseProcessor {
             Log.d(TAG, gradeEntries.toString());
 
             // save grade entries in database
-            saveGradeEntriesToDB(gradeEntries, automaticScraping);
+            saveGradeEntriesToDB(gradeEntries, initialScraping, automaticScraping);
 
             // save last_updated_at timestamp
             saveLastUpdatedAt(prefs);
 
             // post event with new grades to activity
-            GradesEvent gradesEvent = new GradesEvent(gradeEntries, true);
+            daoSession.clear();
+            GradesEvent gradesEvent = new GradesEvent(daoSession.getGradeEntryDao().loadAll(), true);
             EventBus.getDefault().post(gradesEvent);
 
             // set initial loading to done and send event to activity
@@ -282,7 +294,7 @@ public class GradesProcessor extends BaseProcessor {
      * 3. Update updated Entries and insert new entries
      * @param newGradeEntries List of (new) GradeEntries parsed from Website.
      */
-    private void saveGradeEntriesToDB(List<GradeEntry> newGradeEntries, boolean automaticScraping) {
+    private void saveGradeEntriesToDB(List<GradeEntry> newGradeEntries, boolean initialScraping, boolean automaticScraping) {
         if (newGradeEntries != null && newGradeEntries.size() > 0) {
             Map<String, GradeEntry> newGradeEntriesMap = createMapForGradeEntries(newGradeEntries);
             Map<String, GradeEntry> dbGradeEntriesMap = createMapForGradeEntries(daoSession.getGradeEntryDao().loadAll());
@@ -298,12 +310,22 @@ public class GradesProcessor extends BaseProcessor {
 
                 // if not present -> new entry
                 if (gradeEntry == null) {
-                    toInsert.add(newGradeEntriesMap.get(key));
+                    GradeEntry newGradeEntry = newGradeEntriesMap.get(key);
+                    if (!initialScraping) {
+                        newGradeEntry.setSeen(Constants.GRADE_ENTRY_NEW);
+                    }
+
+                    toInsert.add(newGradeEntry);
                 } else {
                     // if there -> compare and only add to update list if values changed
                     GradeEntry newGradeEntry = newGradeEntriesMap.get(key);
                     if (!gradeEntry.equals(newGradeEntry)) {
                         gradeEntry.updateGradeEntryFromOther(newGradeEntry);
+
+                        if(!initialScraping) {
+                            gradeEntry.setSeen(Constants.GRADE_ENTRY_UPDATED);
+                        }
+
                         toUpdate.add(gradeEntry);
                     }
                 }
@@ -445,7 +467,7 @@ public class GradesProcessor extends BaseProcessor {
             gradeEntries = transformer.transform();
 
             // save grade entries in database
-            saveGradeEntriesToDB(gradeEntries, false);
+            saveGradeEntriesToDB(gradeEntries, false, false);
 
             // save last_updated_at timestamp
             saveLastUpdatedAt(prefs);

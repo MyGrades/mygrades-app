@@ -28,6 +28,7 @@ public class GradeEntry {
     private String tester;
     private String hash;
     private Boolean overviewPossible;
+    private Integer seen;
     private Long overviewId;
 
     /** Used to resolve relations */
@@ -50,7 +51,7 @@ public class GradeEntry {
         this.hash = hash;
     }
 
-    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String tester, String hash, Boolean overviewPossible, Long overviewId) {
+    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String tester, String hash, Boolean overviewPossible, Integer seen, Long overviewId) {
         this.name = name;
         this.grade = grade;
         this.examId = examId;
@@ -64,6 +65,7 @@ public class GradeEntry {
         this.tester = tester;
         this.hash = hash;
         this.overviewPossible = overviewPossible;
+        this.seen = seen;
         this.overviewId = overviewId;
     }
 
@@ -177,6 +179,14 @@ public class GradeEntry {
 
     public void setOverviewPossible(Boolean overviewPossible) {
         this.overviewPossible = overviewPossible;
+    }
+
+    public Integer getSeen() {
+        return seen;
+    }
+
+    public void setSeen(Integer seen) {
+        this.seen = seen;
     }
 
     public Long getOverviewId() {
