@@ -14,6 +14,7 @@ import de.mygrades.database.dao.Rule;
 import de.mygrades.database.dao.RuleDao;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
+import de.mygrades.main.alarm.ScrapeAlarmManager;
 import de.mygrades.main.events.LoginDataEvent;
 import de.mygrades.util.Config;
 import de.mygrades.util.Constants;
@@ -101,10 +102,19 @@ public class LoginProcessor extends BaseProcessor {
         editor.remove(Constants.PREF_KEY_LAST_UPDATED_AT);
         editor.remove(Constants.PREF_KEY_RULE_ID);
         editor.remove(context.getString(R.string.pref_key_max_credit_points));
+
+        // remove settings for automatic scraping
+        editor.remove(context.getString(R.string.pref_key_automatic_scraping));
+        editor.remove(context.getString(R.string.pref_key_scrape_frequency));
+        editor.remove(context.getString(R.string.pref_key_only_wifi));
         editor.apply();
 
         // restore default preferences
         PreferenceManager.setDefaultValues(context, R.xml.settings, true);
+
+        // cancel possible active alarms
+        ScrapeAlarmManager scrapeAlarmManager = new ScrapeAlarmManager(context);
+        scrapeAlarmManager.cancelAlarm();
     }
 
     /**
