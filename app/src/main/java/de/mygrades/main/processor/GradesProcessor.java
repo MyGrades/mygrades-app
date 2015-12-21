@@ -209,14 +209,8 @@ public class GradesProcessor extends BaseProcessor {
     public void scrapeForGrades(boolean initialScraping, boolean automaticScraping) {
         // No Connection -> event no Connection, abort
         if (!isOnline()) {
-            postErrorEvent(ErrorEvent.ErrorType.NO_NETWORK, "No Internet Connection!");
+            postErrorEvent(ErrorEvent.ErrorType.NO_NETWORK, "No Internet Connection!", automaticScraping);
             return;
-        }
-
-        Log.d(TAG, "automaticScraping" + automaticScraping);
-        if (automaticScraping) {
-            // TODO: check if only with wifi
-            // TODO: post errors?
         }
 
         // get shared preferences
@@ -274,15 +268,15 @@ public class GradesProcessor extends BaseProcessor {
                 EventBus.getDefault().postSticky(new InitialScrapingDoneEvent());
             }
         } catch (ParseException e) {
-            postErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parse Error", e);
+            postErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parse Error", e, automaticScraping);
         } catch (IOException e) {
             if (e instanceof SocketTimeoutException) {
-                postErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout", e);
+                postErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout", e, automaticScraping);
             } else {
-                postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
+                postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e, automaticScraping);
             }
         } catch (Exception e) {
-            postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
+            postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e, automaticScraping);
         }
     }
 
@@ -477,6 +471,31 @@ public class GradesProcessor extends BaseProcessor {
         } catch (Exception e) {
             // ignore exceptions
             Log.e(TAG, "exception while Parsing table in separate thread", e);
+        }
+    }
+
+    /**
+     * Post an ErrorEvent on the Event Bus only if automaticScraping is false.
+     * @param type type of the Error
+     * @param msg Message of the error
+     * @param automaticScraping automatic scraping
+     */
+    private void postErrorEvent(ErrorEvent.ErrorType type, String msg, boolean automaticScraping) {
+        if (!automaticScraping) {
+            super.postErrorEvent(type, msg);
+        }
+    }
+
+    /**
+     * Post an ErrorEvent on the Event Bus only if automaticScraping is false.
+     * @param type type of the Error
+     * @param msg Message of the error
+     * @param e Exception which was raised
+     * @param automaticScraping automatic scraping
+     */
+    private void postErrorEvent(ErrorEvent.ErrorType type, String msg, Exception e, boolean automaticScraping) {
+        if (!automaticScraping) {
+            super.postErrorEvent(type, msg, e);
         }
     }
 }
