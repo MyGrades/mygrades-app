@@ -217,6 +217,10 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             navigationView.getMenu().getItem(2).setChecked(true);
             getSupportActionBar().setTitle(getString(R.string.toolbar_report_error));
             ivToolbarLogo.setVisibility(View.GONE);
+        } else if (newFragment instanceof FragmentGetPremium) {
+            navigationView.getMenu().getItem(3).setChecked(true);
+            getSupportActionBar().setTitle(getString(R.string.toolbar_premium));
+            ivToolbarLogo.setVisibility(View.GONE);
         }
     }
 
@@ -304,6 +308,9 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
                 break;
             case R.id.nav_report_error:
                 fragment = new FragmentReportError();
+                break;
+            case R.id.nav_premium:
+                fragment = new FragmentGetPremium();
                 break;
             case R.id.nav_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);

@@ -17,6 +17,11 @@
             android:id="@+id/nav_report_error"
             android:icon="@drawable/ic_error_white_24dp"
             android:title="@string/nav_report_error" />
+
+        <item
+            android:id="@+id/nav_premium"
+            android:icon="@drawable/ic_loyalty_white_24dp"
+            android:title="@string/nav_premium" />
     </group>
 
     <group

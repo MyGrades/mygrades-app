@@ -75,5 +75,7 @@
     <string name="notification_updated_grades_title">Noten haben sich geändert</string>
     <string name="tv_grade_seen_new">NEU</string>
     <string name="tv_grade_seen_updated">GEÄNDERT</string>
+    <string name="nav_premium">Premium</string>
+    <string name="toolbar_premium">Premium</string>
 
 </resources>
