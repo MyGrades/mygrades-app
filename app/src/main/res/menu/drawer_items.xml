@@ -3,34 +3,33 @@
     <group
         android:id="@+id/group_main"
         android:checkableBehavior="single">
-
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_list_white_24dp"
             android:title="@string/nav_my_grades" />
-        <item
-            android:id="@+id/nav_faq"
-            android:icon="@drawable/ic_question_answer_white_24dp"
-            android:title="@string/nav_faq" />
-
-        <item
-            android:id="@+id/nav_report_error"
-            android:icon="@drawable/ic_error_white_24dp"
-            android:title="@string/nav_report_error" />
 
         <item
             android:id="@+id/nav_premium"
             android:icon="@drawable/ic_loyalty_white_24dp"
             android:title="@string/nav_premium" />
+
+        <item
+            android:id="@+id/nav_faq"
+            android:icon="@drawable/ic_question_answer_white_24dp"
+            android:title="@string/nav_faq" />
     </group>
 
     <group
         android:id="@+id/group_misc"
         android:checkableBehavior="single">
-
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_white_24dp"
             android:title="@string/nav_settings" />
+
+        <item
+            android:id="@+id/nav_report_error"
+            android:icon="@drawable/ic_feedback_white_24dp"
+            android:title="@string/nav_report_error" />
     </group>
 </menu>

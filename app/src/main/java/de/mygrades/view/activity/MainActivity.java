@@ -210,15 +210,15 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             getSupportActionBar().setTitle("");
             ivToolbarLogo.setVisibility(View.VISIBLE);
         } else if (newFragment instanceof FragmentFaq) {
-            navigationView.getMenu().getItem(1).setChecked(true);
+            navigationView.getMenu().getItem(2).setChecked(true);
             getSupportActionBar().setTitle(getString(R.string.toolbar_faq_title));
             ivToolbarLogo.setVisibility(View.GONE);
         } else if (newFragment instanceof FragmentReportError) {
-            navigationView.getMenu().getItem(2).setChecked(true);
+            navigationView.getMenu().getItem(4).setChecked(true);
             getSupportActionBar().setTitle(getString(R.string.toolbar_report_error));
             ivToolbarLogo.setVisibility(View.GONE);
         } else if (newFragment instanceof FragmentGetPremium) {
-            navigationView.getMenu().getItem(3).setChecked(true);
+            navigationView.getMenu().getItem(1).setChecked(true);
             getSupportActionBar().setTitle(getString(R.string.toolbar_premium));
             ivToolbarLogo.setVisibility(View.GONE);
         }
