@@ -28,14 +28,13 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
             if (!wifiConnected(context)) {
                 Log.d(TAG, "No wifi. Eventually try again.");
                 ScrapeAlarmManager scrapeAlarmManager = new ScrapeAlarmManager(context);
-                scrapeAlarmManager.setOneTimeFallbackAlarm();
+                scrapeAlarmManager.setOneTimeFallbackAlarm(false);
                 return;
             }
         }
 
         MainServiceHelper mainServiceHelper = new MainServiceHelper(context);
         startWakefulService(context, mainServiceHelper.getIntentForScrapeForGrades(false, true));
-        //scrapeAlarmManager.resetOneTimeCounter();
     }
 
     /**
@@ -59,6 +58,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     private boolean wifiConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
-        return activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI;
+        return activeNetworkInfo != null && activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI;
     }
 }

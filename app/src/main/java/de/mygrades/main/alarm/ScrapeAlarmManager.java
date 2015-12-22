@@ -91,13 +91,14 @@ public class ScrapeAlarmManager {
         // first alarm triggers minimum 10 minutes after being set
         long trigger = 10 * 60 * 1000;
 
+        /* TODO: remove - just for testing purposes: interval = 10min, trigger = 1min
         interval = 10 * 60 * 1000;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(context.getResources().getString(R.string.pref_key_scrape_frequency), "10");
         editor.commit();
         trigger = 60 * 1000;
-
+        */
         // we can't use setInexactRepeating, because of the rare predefined intervals
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime() + trigger, interval, alarmIntent);
@@ -110,10 +111,24 @@ public class ScrapeAlarmManager {
         Log.d(TAG, "BootReceiver enabled!");
     }
 
-
-    public void setOneTimeFallbackAlarm() {
+    /**
+     * Sets an one time fallback alarm if necessary.
+     * It is set in 1/4 of the original interval time.
+     * So at maximum there can be 3 one time fallback alarms within
+     * an interval of original repeating alarm.
+     * @param isError is this one time alarm caused by an error?
+     */
+    public void setOneTimeFallbackAlarm(boolean isError) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
+
+        if (isError) {
+            int errorCount = prefs.getInt(Constants.PREF_KEY_ALARM_ERROR_SCRAPING_COUNT, 0);
+            Log.d(TAG, "error count: " + errorCount);
+            // TODO: check count and if necessary send notification
+
+            editor.putInt(Constants.PREF_KEY_ALARM_ERROR_SCRAPING_COUNT, errorCount + 1);
+        }
 
         // get scraping fails of current interval from prefs
         int scrapingFailsInterval = prefs.getInt(Constants.PREF_KEY_SCRAPING_FAILS_INTERVAL, 0);
@@ -149,11 +164,16 @@ public class ScrapeAlarmManager {
         editor.apply();
     }
 
-    public void resetOneTimeCounter() {
-        Log.d(TAG, "reset " + Constants.PREF_KEY_SCRAPING_FAILS_INTERVAL);
+    /**
+     * Resets counter for one time fallback and alarm error count.
+     * Must only get called when scraping was successful.
+     */
+    public void resetOneTimeCounters() {
+        Log.d(TAG, "reset " + Constants.PREF_KEY_SCRAPING_FAILS_INTERVAL + ", " + Constants.PREF_KEY_ALARM_ERROR_SCRAPING_COUNT);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(Constants.PREF_KEY_SCRAPING_FAILS_INTERVAL, 0);
+        editor.putInt(Constants.PREF_KEY_ALARM_ERROR_SCRAPING_COUNT, 0);
         editor.apply();
     }
 
