@@ -9,12 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.mygrades.R;
+import de.mygrades.util.Config;
+import de.mygrades.util.billing.IabHelper;
+import de.mygrades.util.billing.IabResult;
 
 /**
  * Created by jonastheis on 21.12.15.
  */
 public class FragmentGetPremium extends Fragment {
     private static final String TAG = FragmentGetPremium.class.getSimpleName();
+
+    private IabHelper mHelper;
+
 
     @Nullable
     @Override
@@ -26,6 +32,19 @@ public class FragmentGetPremium extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mHelper = new IabHelper(getContext(), Config.getPlayStorePublicKey());
+
+        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+            @Override
+            public void onIabSetupFinished(IabResult result) {
+                if (!result.isSuccess()) {
+                    Log.d(TAG, "Problem setting up In-app Billing: " + result);
+                } else {
+                    Log.d(TAG, "successful: " + result);
+                }
+            }
+        });
+
         Log.d(TAG, "onViewCreated");
     }
 
@@ -33,6 +52,8 @@ public class FragmentGetPremium extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
+        if (mHelper != null) mHelper.dispose();
+        mHelper = null;
         Log.d(TAG, "onDestroyView");
     }
 }
