@@ -18,18 +18,24 @@ import static android.support.v7.preference.PreferenceManager.getDefaultSharedPr
  * Starts scraping automatically.
  */
 public class AlarmReceiver extends WakefulBroadcastReceiver {
+    private static final String TAG = AlarmReceiver.class.getSimpleName();
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("AlarmReceiver", "Alarm received");
+        Log.d(TAG, "Alarm received");
 
         if (wifiOnly(context)) {
             if (!wifiConnected(context)) {
+                Log.d(TAG, "No wifi. Eventually try again.");
+                ScrapeAlarmManager scrapeAlarmManager = new ScrapeAlarmManager(context);
+                scrapeAlarmManager.setOneTimeFallbackAlarm();
                 return;
             }
         }
 
         MainServiceHelper mainServiceHelper = new MainServiceHelper(context);
         startWakefulService(context, mainServiceHelper.getIntentForScrapeForGrades(false, true));
+        //scrapeAlarmManager.resetOneTimeCounter();
     }
 
     /**

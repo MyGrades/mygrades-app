@@ -15,6 +15,7 @@ public class Constants {
     public static final String PREF_KEY_RULE_ID = "rule_id";
     public static final String PREF_KEY_INITIAL_LOADING_DONE = "initial_loading_done";
     public static final String PREF_KEY_LAST_UPDATED_AT = "last_updated_at";
+    public static final String PREF_KEY_SCRAPING_FAILS_INTERVAL = "scraping_fails_interval";
 
     // Scraping status instance state
     public static final String INSTANCE_IS_SCRAPING_STATE = "is_scraping_state";

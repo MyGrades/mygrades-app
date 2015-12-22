@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import de.mygrades.R;
+import de.mygrades.util.Constants;
 
 /**
  * Manages all alarm operations to repeat scraping automatically.
@@ -90,6 +91,13 @@ public class ScrapeAlarmManager {
         // first alarm triggers minimum 10 minutes after being set
         long trigger = 10 * 60 * 1000;
 
+        interval = 10 * 60 * 1000;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(context.getResources().getString(R.string.pref_key_scrape_frequency), "10");
+        editor.commit();
+        trigger = 60 * 1000;
+
         // we can't use setInexactRepeating, because of the rare predefined intervals
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime() + trigger, interval, alarmIntent);
@@ -100,6 +108,53 @@ public class ScrapeAlarmManager {
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP);
         Log.d(TAG, "BootReceiver enabled!");
+    }
+
+
+    public void setOneTimeFallbackAlarm() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        // get scraping fails of current interval from prefs
+        int scrapingFailsInterval = prefs.getInt(Constants.PREF_KEY_SCRAPING_FAILS_INTERVAL, 0);
+
+        if (scrapingFailsInterval < 3) {
+            // get interval from shared preferences
+            int intervalMinutes = Integer.parseInt(prefs.getString(
+                    context.getResources().getString(R.string.pref_key_scrape_frequency), "120"
+            ));
+
+            double oneTimeInterval = intervalMinutes / 4.0;
+            int trigger = (int)((oneTimeInterval * 60 * 1000) + SystemClock.elapsedRealtime());
+
+            // prepare intent
+            Intent intent = new Intent(context, AlarmReceiver.class);
+            PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+            // set alarm
+            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    trigger, alarmIntent);
+            Log.d(TAG, "set one time alarm in " + oneTimeInterval + "min");
+
+            // increase
+            scrapingFailsInterval = scrapingFailsInterval + 1;
+        } else {
+            // if there had been 3 one time alarms in between the interval
+            // -> reset counter because next alarm that will trigger is interval alarm
+            scrapingFailsInterval = 0;
+        }
+
+        // write new value to shared preferences
+        editor.putInt(Constants.PREF_KEY_SCRAPING_FAILS_INTERVAL, scrapingFailsInterval);
+        editor.apply();
+    }
+
+    public void resetOneTimeCounter() {
+        Log.d(TAG, "reset " + Constants.PREF_KEY_SCRAPING_FAILS_INTERVAL);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(Constants.PREF_KEY_SCRAPING_FAILS_INTERVAL, 0);
+        editor.apply();
     }
 
     /**
