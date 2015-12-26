@@ -14,6 +14,11 @@
             android:title="@string/nav_premium" />
 
         <item
+            android:id="@+id/nav_statistics"
+            android:icon="@drawable/ic_timeline_white_24dp"
+            android:title="@string/nav_statistics" />
+
+        <item
             android:id="@+id/nav_faq"
             android:icon="@drawable/ic_question_answer_white_24dp"
             android:title="@string/nav_faq" />

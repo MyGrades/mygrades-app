@@ -1,7 +1,9 @@
 package de.mygrades.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.view.adapter.model.GradeItem;
 import de.mygrades.view.adapter.model.GradesAdapterItem;
 
@@ -36,6 +38,19 @@ public class AverageCalculator {
             average += (grade.getGrade() == null ? 0f : grade.getGrade() * actCreditPoints);
         }
         average = creditPointsSumForAverage > 0 ? average/creditPointsSumForAverage : 0f;
+    }
+
+    /**
+     * Converts grade entries to grade items and calculates the average and credit points sum.
+     *
+     * @param gradeEntries - list of grade entries
+     */
+    public void calculateFromGradeEntries(List<GradeEntry> gradeEntries) {
+        List<GradeItem> gradeItems = new ArrayList<>();
+        for(GradeEntry entry : gradeEntries) {
+            gradeItems.add(new GradeItem(entry));
+        }
+        calculate(gradeItems);
     }
 
     public float getAverage() {

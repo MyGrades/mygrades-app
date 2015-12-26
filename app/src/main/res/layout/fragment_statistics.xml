@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            style="@style/StatisticsRow">
+
+            <TextView
+                style="@style/GradeDetailTextViewLeft"
+                android:text="@string/tv_average_label" />
+
+            <TextView
+                style="@style/GradeDetailTextViewRight"
+                android:id="@+id/tv_average" />
+            <View style="@style/Divider"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/StatisticsRow">
+
+            <TextView
+                style="@style/GradeDetailTextViewLeft"
+                android:text="@string/tv_credit_points_label" />
+
+            <TextView
+                style="@style/GradeDetailTextViewRight"
+                android:id="@+id/tv_credit_points" />
+            <View style="@style/Divider"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/StatisticsRow">
+
+            <TextView
+                style="@style/GradeDetailTextViewLeft"
+                android:text="@string/tv_credit_points_per_semester_label" />
+
+            <TextView
+                style="@style/GradeDetailTextViewRight"
+                android:id="@+id/tv_credit_points_per_semester" />
+            <View style="@style/Divider"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/StatisticsRow">
+
+            <TextView
+                style="@style/GradeDetailTextViewLeft"
+                android:text="@string/tv_study_progress_label" />
+
+            <TextView
+                style="@style/GradeDetailTextViewRight"
+                android:id="@+id/tv_study_progress" />
+            <View style="@style/Divider"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/StatisticsRow">
+
+            <TextView
+                style="@style/GradeDetailTextViewLeft"
+                android:text="@string/tv_grade_count_label" />
+
+            <TextView
+                style="@style/GradeDetailTextViewRight"
+                android:id="@+id/tv_grade_count" />
+            <View style="@style/Divider"/>
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>

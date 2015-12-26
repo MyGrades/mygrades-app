@@ -1,5 +1,7 @@
 package de.mygrades.view.adapter.model;
 
+import de.mygrades.database.dao.GradeEntry;
+
 /**
  * GradeItem is used in GradesRecyclerViewAdapter.
  */
@@ -11,6 +13,24 @@ public class GradeItem implements GradesAdapterItem {
     private int seen;
 
     public GradeItem() {}
+
+    /**
+     * Create GradeItem from GradeEntry.
+     *
+     * @param gradeEntry - grade entry
+     */
+    public GradeItem(GradeEntry gradeEntry) {
+        setName(gradeEntry.getName());
+        setHash(gradeEntry.getHash());
+
+        Double creditPoints = gradeEntry.getCreditPoints();
+        setCreditPoints(creditPoints == null ? null : creditPoints.floatValue());
+
+        Double grade = gradeEntry.getGrade();
+        setGrade(grade == null ? null : grade.floatValue());
+
+        setSeen(gradeEntry.getSeen());
+    }
 
     public String getName() {
         return name;

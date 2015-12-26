@@ -10,6 +10,7 @@ import de.mygrades.main.alarm.AlarmReceiver;
 import de.mygrades.main.processor.ErrorProcessor;
 import de.mygrades.main.processor.GradesProcessor;
 import de.mygrades.main.processor.LoginProcessor;
+import de.mygrades.main.processor.StatisticsProcessor;
 import de.mygrades.main.processor.UniversityProcessor;
 
 /**
@@ -28,6 +29,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final int PROCESSOR_GRADES = 101;
     public static final int PROCESSOR_LOGIN = 102;
     public static final int PROCESSOR_ERROR = 103;
+    public static final int PROCESSOR_STATISTICS = 104;
 
     // intent extra, methods: key and values
     public static final String METHOD_KEY = "method_key";
@@ -42,6 +44,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final int METHOD_SCRAPE_FOR_OVERVIEW = 119;
     public static final int METHOD_GET_LOGIN_DATA_FROM_DATABASE = 120;
     public static final int METHOD_POST_ERROR = 121;
+    public static final int METHOD_GET_STATISTICS = 122;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
@@ -99,6 +102,9 @@ public class MainService extends MultiThreadedIntentService {
                 break;
             case PROCESSOR_ERROR:
                 handleErrorProcessor(method, intent);
+                break;
+            case PROCESSOR_STATISTICS:
+                handleStatisticsProcessor(method, intent);
                 break;
             default:
                 Log.e(TAG, "Invalid processor call to MainService: " + processor);
@@ -216,6 +222,24 @@ public class MainService extends MultiThreadedIntentService {
                 String errorMessage = intent.getStringExtra(ERROR_MESSAGE);
 
                 errorProcessor.postErrorReport(name, email, errorMessage);
+                break;
+            default:
+                Log.e(TAG, "Invalid method call to MainService: "+ method);
+        }
+    }
+
+    /**
+     * Decides which method to call from statistics processor.
+     *
+     * @param method - the method to call, represented by an integer
+     * @param intent - intent
+     */
+    private void handleStatisticsProcessor(int method, Intent intent) {
+        StatisticsProcessor statisticsProcessor = new StatisticsProcessor(this);
+
+        switch (method) {
+            case METHOD_GET_STATISTICS:
+                statisticsProcessor.getStatistics();
                 break;
             default:
                 Log.e(TAG, "Invalid method call to MainService: "+ method);

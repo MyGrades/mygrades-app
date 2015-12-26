@@ -205,6 +205,20 @@ public class MainServiceHelper {
     }
 
     /**
+     * Starts a worker thread to create and get statistics.
+     */
+    public void getStatistics() {
+        int method = MainService.METHOD_GET_STATISTICS;
+
+        // set request id
+        long requestId = concatenateLong(method, 0);
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_STATISTICS, method, requestId);
+        context.startService(intent);
+    }
+
+    /**
      * Build a basic intent with required extra data for each request.
      *
      * @param processor - processor to create (declared in the MainService)
