@@ -1,5 +1,10 @@
 package de.mygrades.main.events;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import de.mygrades.view.adapter.model.SemesterItem;
+
 /**
  * Event to post statistics to subscribers.
  */
@@ -9,8 +14,11 @@ public class StatisticsEvent {
     private float creditPointsPerSemester;
     private float studyProgress;
     private int gradeCount;
+    private List<SemesterItem> semesterItems;
 
-    public StatisticsEvent() {}
+    public StatisticsEvent() {
+        semesterItems = new ArrayList<>();
+    }
 
     public float getAverage() {
         return average;
@@ -50,5 +58,13 @@ public class StatisticsEvent {
 
     public void setGradeCount(int gradeCount) {
         this.gradeCount = gradeCount;
+    }
+
+    public List<SemesterItem> getSemesterItems() {
+        return semesterItems;
+    }
+
+    public void setSemesterItems(List<SemesterItem> semesterItems) {
+        this.semesterItems = semesterItems;
     }
 }

@@ -212,6 +212,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         // general layout settings
         barChart.setPinchZoom(false);
         barChart.setDoubleTapToZoomEnabled(false);
+        barChart.setScaleEnabled(false);
         barChart.setDescription("");
         barChart.setDrawBorders(false);
         barChart.setDrawBarShadow(false);

@@ -72,5 +72,50 @@
                 android:id="@+id/tv_grade_count" />
             <View style="@style/Divider"/>
         </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Credit Points Fortschritt"
+            android:paddingLeft="16dp"
+            android:layout_marginTop="32dp"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart_credit_points"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_margin="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Credit Points pro Semester"
+            android:paddingLeft="16dp"
+            android:layout_marginTop="32dp"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart_credit_points_per_semester"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_margin="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Notendurchschnitt pro Semester"
+            android:paddingLeft="16dp"
+            android:layout_marginTop="32dp"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart_average_grade_per_semester"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_margin="8dp"/>
     </LinearLayout>
 </ScrollView>

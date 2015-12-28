@@ -8,7 +8,7 @@ import de.mygrades.util.AverageCalculator;
 /**
  * Semester item used in GradesRecyclerViewAdapter.
  */
-public class SemesterItem implements GradesAdapterItem {
+public class SemesterItem implements GradesAdapterItem, Comparable<SemesterItem> {
     private int semesterNumber;
     private String semester;
     private float average;
@@ -19,9 +19,12 @@ public class SemesterItem implements GradesAdapterItem {
         grades = new ArrayList<>();
     }
 
-    public void addGrade(GradeItem gradeItem) {
+    public void addGrade(GradeItem gradeItem, boolean updateImmediately) {
         grades.add(gradeItem);
-        update();
+
+        if (updateImmediately) {
+            update();
+        }
     }
 
     /**
@@ -65,5 +68,14 @@ public class SemesterItem implements GradesAdapterItem {
 
     public void setCreditPoints(float creditPoints) {
         this.creditPoints = creditPoints;
+    }
+
+    public List<GradeItem> getGrades() {
+        return grades;
+    }
+
+    @Override
+    public int compareTo(SemesterItem item) {
+        return getSemesterNumber() - item.getSemesterNumber();
     }
 }

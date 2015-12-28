@@ -146,7 +146,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         // add grade to semester and update semester header
         SemesterItem semesterItem = (SemesterItem) items.get(semesterIndex);
-        semesterItem.addGrade(newGrade);
+        semesterItem.addGrade(newGrade, true);
         notifyItemChanged(semesterIndex);
 
         // add grade to the item list
