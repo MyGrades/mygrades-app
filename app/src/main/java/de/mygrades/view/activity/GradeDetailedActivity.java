@@ -3,9 +3,7 @@ package de.mygrades.view.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -13,8 +11,6 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,7 +22,6 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
-import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -228,9 +223,11 @@ public class GradeDetailedActivity extends AppCompatActivity {
         xAxis.setTextColor(ContextCompat.getColor(this, R.color.text87));
 
         // hide left y-axis
-        barChart.getAxisLeft().setDrawGridLines(false);
+        barChart.getAxisLeft().setDrawGridLines(true);
         barChart.getAxisLeft().setDrawAxisLine(false);
         barChart.getAxisLeft().setDrawLabels(false);
+        barChart.getAxisLeft().setGridColor(ContextCompat.getColor(this, R.color.divider));
+        barChart.getAxisLeft().setLabelCount(6, true);
 
         // hide right y-axis
         barChart.getAxisRight().setDrawGridLines(false);
@@ -238,11 +235,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
         barChart.getAxisRight().setDrawLabels(false);
 
         Overview overview = overviewEvent.getOverview();
-
-        // set max y-value
-        int max = overview.getMaxSection() + 1;
-        max = (int) (Math.ceil(max/10f) * 10); // round to next factor of 10
-        barChart.getAxisLeft().setAxisMaxValue(max);
 
         // y-values
         ArrayList<BarEntry> yValues = new ArrayList<>();
