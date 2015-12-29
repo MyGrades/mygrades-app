@@ -227,13 +227,10 @@ public class GradeDetailedActivity extends AppCompatActivity {
         xAxis.setDrawGridLines(false);
         xAxis.setTextColor(ContextCompat.getColor(this, R.color.text87));
 
-        // show left y-axis
+        // hide left y-axis
+        barChart.getAxisLeft().setDrawGridLines(false);
         barChart.getAxisLeft().setDrawAxisLine(false);
-        barChart.getAxisLeft().setGridColor(ContextCompat.getColor(this, R.color.divider));
-        barChart.getAxisLeft().setTextColor(ContextCompat.getColor(this, R.color.text87));
-        barChart.getAxisLeft().setDrawGridLines(true);
-        barChart.getAxisLeft().setDrawLabels(true);
-        barChart.getAxisLeft().setLabelCount(6, true);
+        barChart.getAxisLeft().setDrawLabels(false);
 
         // hide right y-axis
         barChart.getAxisRight().setDrawGridLines(false);

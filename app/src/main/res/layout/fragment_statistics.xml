@@ -117,5 +117,20 @@
             android:layout_width="match_parent"
             android:layout_height="240dp"
             android:layout_margin="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Deine Notenverteilung"
+            android:paddingLeft="16dp"
+            android:layout_marginTop="32dp"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium" />
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/chart_grade_distribution"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_margin="8dp"/>
     </LinearLayout>
 </ScrollView>

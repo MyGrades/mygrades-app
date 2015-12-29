@@ -16,8 +16,12 @@ public class StatisticsEvent {
     private int gradeCount;
     private List<SemesterItem> semesterItems;
 
+    // sections for grade distribution [1.0 -1.3, 1.7-2.3, 2.7-3.3, 3.7 - 4.0, 4.3 - 5.0]
+    private int[] gradeDistribution;
+
     public StatisticsEvent() {
         semesterItems = new ArrayList<>();
+        gradeDistribution = new int[5];
     }
 
     public float getAverage() {
@@ -66,5 +70,13 @@ public class StatisticsEvent {
 
     public void setSemesterItems(List<SemesterItem> semesterItems) {
         this.semesterItems = semesterItems;
+    }
+
+    public int[] getGradeDistribution() {
+        return gradeDistribution;
+    }
+
+    public void setGradeDistribution(int[] gradeDistribution) {
+        this.gradeDistribution = gradeDistribution;
     }
 }

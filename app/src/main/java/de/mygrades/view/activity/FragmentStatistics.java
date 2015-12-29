@@ -1,24 +1,29 @@
 package de.mygrades.view.activity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +47,7 @@ public class FragmentStatistics extends Fragment {
     private LineChart chartCreditPoints;
     private LineChart chartCreditPointsPerSemester;
     private LineChart chartAverageGradePerSemester;
+    private BarChart chartGradeDistribution;
 
     @Nullable
     @Override
@@ -60,6 +66,7 @@ public class FragmentStatistics extends Fragment {
         chartCreditPoints = (LineChart) view.findViewById(R.id.chart_credit_points);
         chartCreditPointsPerSemester = (LineChart) view.findViewById(R.id.chart_credit_points_per_semester);
         chartAverageGradePerSemester = (LineChart) view.findViewById(R.id.chart_average_grade_per_semester);
+        chartGradeDistribution = (BarChart) view.findViewById(R.id.chart_grade_distribution);
 
         EventBus.getDefault().register(this);
 
@@ -82,6 +89,7 @@ public class FragmentStatistics extends Fragment {
         initCreditPointsChart(statisticsEvent.getSemesterItems());
         initCreditPointsPerSemesterChart(statisticsEvent.getSemesterItems());
         initAverageGradePerSemesterChart(statisticsEvent.getSemesterItems());
+        initGradeDistributionChart(statisticsEvent.getGradeDistribution());
     }
 
     /**
@@ -106,7 +114,8 @@ public class FragmentStatistics extends Fragment {
         LineData data = new LineData(xVals, dataset);
         chartCreditPoints.setData(data);
 
-        setLineChartStyle(chartCreditPoints, dataset);
+        setChartStyle(chartCreditPoints);
+        setLineDataSetStyle(dataset);
         chartCreditPoints.invalidate();
     }
 
@@ -130,7 +139,8 @@ public class FragmentStatistics extends Fragment {
         LineData data = new LineData(xVals, dataset);
         chartCreditPointsPerSemester.setData(data);
 
-        setLineChartStyle(chartCreditPointsPerSemester, dataset);
+        setChartStyle(chartCreditPointsPerSemester);
+        setLineDataSetStyle(dataset);
         chartCreditPointsPerSemester.invalidate();
     }
 
@@ -154,17 +164,53 @@ public class FragmentStatistics extends Fragment {
         LineData data = new LineData(xVals, dataset);
         chartAverageGradePerSemester.setData(data);
 
-        setLineChartStyle(chartAverageGradePerSemester, dataset);
+        setChartStyle(chartAverageGradePerSemester);
+        setLineDataSetStyle(dataset);
         chartAverageGradePerSemester.invalidate();
     }
 
     /**
-     * Sets basic lLineChart and DataSet styles.
+     * Initializes the grade distribution bar chart.
+     *
+     * @param gradeDistribution array with grade distributions
+     */
+    private void initGradeDistributionChart(int[] gradeDistribution) {
+        // y-values
+        ArrayList<BarEntry> yValues = new ArrayList<>();
+        for(int i = 0; i < gradeDistribution.length; i++) {
+            yValues.add(new BarEntry(gradeDistribution[i], i));
+        }
+
+        // x-values
+        ArrayList<String> xValues = new ArrayList<>();
+        xValues.add("1,0 - 1,3");
+        xValues.add("1,7 - 2,3");
+        xValues.add("2,7 - 3,3");
+        xValues.add("3,7 - 4,0");
+        xValues.add("4,3 - 5,0");
+
+        BarDataSet dataSet = new BarDataSet(yValues, "");
+        dataSet.setValueTextSize(12);
+        dataSet.setValueTextColor(ContextCompat.getColor(getContext(), R.color.text87));
+        dataSet.setColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+        dataSet.setDrawValues(true);
+        dataSet.setBarSpacePercent(35);
+
+        BarData barData = new BarData(xValues, dataSet);
+        barData.setValueFormatter(new MyValueFormatter());
+        barData.setHighlightEnabled(false);
+        chartGradeDistribution.setData(barData);
+
+        setChartStyle(chartGradeDistribution);
+        chartGradeDistribution.invalidate();
+    }
+
+    /**
+     * Sets basic chart styles.
      *
      * @param chart LineChart where basic styles will be applied.
-     * @param dataSet DataSet where basic styles will be applied.
      */
-    private void setLineChartStyle(LineChart chart, LineDataSet dataSet) {
+    private void setChartStyle(BarLineChartBase<?> chart) {
         // general style
         chart.setPinchZoom(false);
         chart.setScaleEnabled(false);
@@ -196,12 +242,33 @@ public class FragmentStatistics extends Fragment {
         rightYAxis.setDrawGridLines(false);
         rightYAxis.setDrawAxisLine(false);
         rightYAxis.setDrawLabels(false);
+    }
 
-        // style dataSet
+    /**
+     * Sets basic LineDataSet styles.
+     *
+     * @param dataSet LineDataSet
+     */
+    private void setLineDataSetStyle(LineDataSet dataSet) {
         dataSet.setCircleColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
         dataSet.setColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
         dataSet.setDrawCircleHole(false);
         dataSet.setCircleSize(5);
+    }
+
+    private class MyValueFormatter implements ValueFormatter {
+
+        private DecimalFormat mFormat;
+
+        public MyValueFormatter() {
+            mFormat = new DecimalFormat("#"); // use one decimal
+        }
+
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            // write your logic here
+            return mFormat.format(value);
+        }
     }
 
     @Override
