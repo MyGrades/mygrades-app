@@ -221,6 +221,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         xAxis.setDrawAxisLine(false);
         xAxis.setDrawGridLines(false);
         xAxis.setTextColor(ContextCompat.getColor(this, R.color.text87));
+        xAxis.setLabelsToSkip(0);
 
         // hide left y-axis
         barChart.getAxisLeft().setDrawGridLines(true);

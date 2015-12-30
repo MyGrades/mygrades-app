@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -87,8 +88,8 @@ public class FragmentStatistics extends Fragment {
         tvGradeCount.setText("" + statisticsEvent.getGradeCount());
 
         initCreditPointsChart(statisticsEvent.getSemesterItems());
-        initCreditPointsPerSemesterChart(statisticsEvent.getSemesterItems());
-        initAverageGradePerSemesterChart(statisticsEvent.getSemesterItems());
+        initCreditPointsPerSemesterChart(statisticsEvent.getSemesterItems(), statisticsEvent.getCreditPointsPerSemester());
+        initAverageGradePerSemesterChart(statisticsEvent.getSemesterItems(), statisticsEvent.getAverage());
         initGradeDistributionChart(statisticsEvent.getGradeDistribution());
     }
 
@@ -116,7 +117,7 @@ public class FragmentStatistics extends Fragment {
 
         setChartStyle(chartCreditPoints);
         setLineDataSetStyle(dataset);
-        chartCreditPoints.invalidate();
+        chartCreditPoints.animateY(800);
     }
 
     /**
@@ -124,7 +125,7 @@ public class FragmentStatistics extends Fragment {
      *
      * @param semesterItems list of semester items
      */
-    private void initCreditPointsPerSemesterChart(List<SemesterItem> semesterItems) {
+    private void initCreditPointsPerSemesterChart(List<SemesterItem> semesterItems, float creditPointsPerSemester) {
         List<String> xVals = new ArrayList<>();
         for(SemesterItem item : semesterItems) {
             xVals.add("" + item.getSemesterNumber());
@@ -134,6 +135,9 @@ public class FragmentStatistics extends Fragment {
         for(int i = 0; i < semesterItems.size(); i++) {
             yVals.add(new Entry(semesterItems.get(i).getCreditPoints(), i));
         }
+
+        // add limit line
+        addLimitLine(chartCreditPointsPerSemester, creditPointsPerSemester, "%.1f");
 
         LineDataSet dataset = new LineDataSet(yVals, "");
         LineData data = new LineData(xVals, dataset);
@@ -149,7 +153,7 @@ public class FragmentStatistics extends Fragment {
      *
      * @param semesterItems list of semester items
      */
-    private void initAverageGradePerSemesterChart(List<SemesterItem> semesterItems) {
+    private void initAverageGradePerSemesterChart(List<SemesterItem> semesterItems, float averageGrade) {
         List<String> xVals = new ArrayList<>();
         for(SemesterItem item : semesterItems) {
             xVals.add("" + item.getSemesterNumber());
@@ -160,8 +164,12 @@ public class FragmentStatistics extends Fragment {
             yVals.add(new Entry(semesterItems.get(i).getAverage(), i));
         }
 
+        // add limit line
+        addLimitLine(chartAverageGradePerSemester, averageGrade, "%.2f");
+
         LineDataSet dataset = new LineDataSet(yVals, "");
         LineData data = new LineData(xVals, dataset);
+        data.setValueFormatter(new DecimalValueFormatter("#.00"));
         chartAverageGradePerSemester.setData(data);
 
         setChartStyle(chartAverageGradePerSemester);
@@ -197,11 +205,12 @@ public class FragmentStatistics extends Fragment {
         dataSet.setBarSpacePercent(35);
 
         BarData barData = new BarData(xValues, dataSet);
-        barData.setValueFormatter(new MyValueFormatter());
+        barData.setValueFormatter(new DecimalValueFormatter("#"));
         barData.setHighlightEnabled(false);
         chartGradeDistribution.setData(barData);
 
         setChartStyle(chartGradeDistribution);
+        chartGradeDistribution.getXAxis().setLabelsToSkip(0);
         chartGradeDistribution.invalidate();
     }
 
@@ -236,6 +245,7 @@ public class FragmentStatistics extends Fragment {
         leftYAxis.setGridColor(ContextCompat.getColor(getContext(), R.color.divider));
         leftYAxis.setDrawAxisLine(false);
         leftYAxis.setDrawLabels(false);
+        leftYAxis.setLabelCount(6, true);
 
         // hide right y-axis
         YAxis rightYAxis = chart.getAxisRight();
@@ -256,17 +266,37 @@ public class FragmentStatistics extends Fragment {
         dataSet.setCircleSize(5);
     }
 
-    private class MyValueFormatter implements ValueFormatter {
+    /**
+     * Adds a LimitLine to the given chart.
+     *
+     * @param chart LineChart
+     * @param value value for the LimitLine
+     * @param format decimal format
+     */
+    private void addLimitLine(LineChart chart, float value, String format) {
+        LimitLine ll = new LimitLine(value);
+        ll.setLabel(String.format(format, value));
+        ll.setLineColor(ContextCompat.getColor(getContext(), R.color.text87));
+        ll.setLineWidth(0.2f);
+        ll.setTextSize(11);
+        ll.setTextColor(ContextCompat.getColor(getContext(), R.color.text87));
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.addLimitLine(ll);
+        leftAxis.setDrawLimitLinesBehindData(true);
+    }
 
+    /**
+     * Custom DecimalValueFormatter.
+     */
+    private class DecimalValueFormatter implements ValueFormatter {
         private DecimalFormat mFormat;
 
-        public MyValueFormatter() {
-            mFormat = new DecimalFormat("#"); // use one decimal
+        public DecimalValueFormatter(String format) {
+            mFormat = new DecimalFormat(format);
         }
 
         @Override
         public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-            // write your logic here
             return mFormat.format(value);
         }
     }

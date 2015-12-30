@@ -76,7 +76,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Credit Points Fortschritt"
+            android:text="@string/chart_credit_points"
             android:paddingLeft="16dp"
             android:layout_marginTop="32dp"
             android:textSize="16sp"
@@ -91,7 +91,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Credit Points pro Semester"
+            android:text="@string/chart_credit_points_per_semester"
             android:paddingLeft="16dp"
             android:layout_marginTop="32dp"
             android:textSize="16sp"
@@ -106,7 +106,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Notendurchschnitt pro Semester"
+            android:text="@string/chart_average_grade_per_semester"
             android:paddingLeft="16dp"
             android:layout_marginTop="32dp"
             android:textSize="16sp"
@@ -121,7 +121,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Deine Notenverteilung"
+            android:text="@string/chart_grade_distribution"
             android:paddingLeft="16dp"
             android:layout_marginTop="32dp"
             android:textSize="16sp"
@@ -131,6 +131,7 @@
             android:id="@+id/chart_grade_distribution"
             android:layout_width="match_parent"
             android:layout_height="240dp"
-            android:layout_margin="8dp"/>
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
     </LinearLayout>
 </ScrollView>
