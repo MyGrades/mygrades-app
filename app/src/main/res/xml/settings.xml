@@ -21,8 +21,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/settings_premium_title"
-        android:key="pref_key_premium">
+        android:title="@string/settings_notifications_title"
+        android:key="pref_key_notifications">
 
         <SwitchPreference
             android:defaultValue="false"

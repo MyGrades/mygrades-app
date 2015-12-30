@@ -13,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -217,12 +216,12 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             navigationView.getMenu().getItem(5).setChecked(true);
             getSupportActionBar().setTitle(getString(R.string.toolbar_report_error));
             ivToolbarLogo.setVisibility(View.GONE);
-        } else if (newFragment instanceof FragmentGetPremium) {
-            navigationView.getMenu().getItem(1).setChecked(true);
-            getSupportActionBar().setTitle(getString(R.string.toolbar_premium));
+        } else if (newFragment instanceof FragmentDonation) {
+            navigationView.getMenu().getItem(2).setChecked(true);
+            getSupportActionBar().setTitle(getString(R.string.toolbar_donation));
             ivToolbarLogo.setVisibility(View.GONE);
         } else if (newFragment instanceof FragmentStatistics) {
-            navigationView.getMenu().getItem(2).setChecked(true);
+            navigationView.getMenu().getItem(1).setChecked(true);
             getSupportActionBar().setTitle(getString(R.string.toolbar_statistics));
             ivToolbarLogo.setVisibility(View.GONE);
         }
@@ -313,8 +312,8 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             case R.id.nav_report_error:
                 fragment = new FragmentReportError();
                 break;
-            case R.id.nav_premium:
-                fragment = new FragmentGetPremium();
+            case R.id.nav_donation:
+                fragment = new FragmentDonation();
                 break;
             case R.id.nav_statistics:
                 fragment = new FragmentStatistics();

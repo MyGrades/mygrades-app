@@ -9,14 +9,14 @@
             android:title="@string/nav_my_grades" />
 
         <item
-            android:id="@+id/nav_premium"
-            android:icon="@drawable/ic_loyalty_white_24dp"
-            android:title="@string/nav_premium" />
-
-        <item
             android:id="@+id/nav_statistics"
             android:icon="@drawable/ic_timeline_white_24dp"
             android:title="@string/nav_statistics" />
+
+        <item
+            android:id="@+id/nav_donation"
+            android:icon="@drawable/ic_loyalty_white_24dp"
+            android:title="@string/nav_donation" />
 
         <item
             android:id="@+id/nav_faq"

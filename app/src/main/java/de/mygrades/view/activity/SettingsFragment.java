@@ -44,7 +44,7 @@ public class SettingsFragment extends XpPreferenceFragment {
         initLicensePreference();
         initOpenSourceLicenses();
 
-        // premium preferences
+        // notification preferences
         scrapeAlarmManager = new ScrapeAlarmManager(getContext());
         initAutomaticScrapingPreference();
         initScrapeFrequencyPreference();

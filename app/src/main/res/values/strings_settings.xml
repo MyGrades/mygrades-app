@@ -24,7 +24,7 @@
     <string name="settings_info_title">Info</string>
 
 
-    <string name="settings_premium_title">Premium</string>
+    <string name="settings_notifications_title">Benachrichtigungen</string>
 
     <string name="pref_automatic_scraping_title">Automatisches Abrufen</string>
     <string name="pref_key_automatic_scraping">pref_key_automatic_scraping</string>

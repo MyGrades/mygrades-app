@@ -16,8 +16,8 @@ import de.mygrades.util.billing.IabResult;
 /**
  * Created by jonastheis on 21.12.15.
  */
-public class FragmentGetPremium extends Fragment {
-    private static final String TAG = FragmentGetPremium.class.getSimpleName();
+public class FragmentDonation extends Fragment {
+    private static final String TAG = FragmentDonation.class.getSimpleName();
 
     private IabHelper mHelper;
 
@@ -25,7 +25,7 @@ public class FragmentGetPremium extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_get_premium, container, false);
+        return inflater.inflate(R.layout.fragment_donation, container, false);
     }
 
     @Override

@@ -335,7 +335,6 @@ public class GradesProcessor extends BaseProcessor {
             Log.d(TAG, "to insert: " + toInsert);
             Log.d(TAG, "to update: " + toUpdate);
 
-            // TODO: check if premium
             if(automaticScraping) {
                 NotificationProcessor notificationProcessor = new NotificationProcessor(context);
                 notificationProcessor.showNotificationForGrades(toInsert, toUpdate);
