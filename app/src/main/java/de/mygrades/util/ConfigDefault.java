@@ -13,6 +13,15 @@ public class ConfigDefault {
     public static final String BROWSER_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36";
 
     /**
+     * Get the API url.
+     *
+     * @return API url as String
+     */
+    public static String getApiUrl() {
+        return null; // must be implemented in Config.java
+    }
+
+    /**
      * Get the server url.
      *
      * @return server url as String
