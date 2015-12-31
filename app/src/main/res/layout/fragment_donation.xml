@@ -4,4 +4,66 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.pnikosis.materialishprogress.ProgressWheel
+            android:id="@+id/progress_wheel"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            app:matProg_barColor="?attr/colorPrimary"
+            app:matProg_progressIndeterminate="true"
+            app:matProg_barWidth="2dp"
+            android:visibility="gone" />
+
+
+        <LinearLayout
+            android:id="@+id/donation_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unterstütze uns!" />
+
+            <Button
+                android:id="@+id/bt_donation2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2€ Spende"
+                android:layout_marginTop="8dp"
+                android:theme="@style/RobotoButtonStyle"/>
+            <Button
+                android:id="@+id/bt_donation5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5€ Spende"
+                android:layout_marginTop="8dp"
+                android:theme="@style/RobotoButtonStyle"/>
+            <Button
+                android:id="@+id/bt_donation10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="10€ Spende"
+                android:layout_marginTop="8dp"
+                android:theme="@style/RobotoButtonStyle"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/donation_thanks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
 </ScrollView>
