@@ -322,6 +322,9 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.nav_privacy_policy:
+                
+                break;
             default:
                 fragment = new FragmentOverview();
         }

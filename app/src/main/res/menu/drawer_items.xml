@@ -36,5 +36,10 @@
             android:id="@+id/nav_report_error"
             android:icon="@drawable/ic_feedback_white_24dp"
             android:title="@string/nav_report_error" />
+
+        <item
+            android:id="@+id/nav_privacy_policy"
+            android:icon="@drawable/ic_security_white_24dp"
+            android:title="@string/nav_privacy_policy" />
     </group>
 </menu>
