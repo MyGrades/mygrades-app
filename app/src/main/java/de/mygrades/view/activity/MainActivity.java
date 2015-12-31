@@ -224,6 +224,10 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             navigationView.getMenu().getItem(1).setChecked(true);
             getSupportActionBar().setTitle(getString(R.string.toolbar_statistics));
             ivToolbarLogo.setVisibility(View.GONE);
+        } else if (newFragment instanceof FragmentPrivacyPolicy) {
+            navigationView.getMenu().getItem(6).setChecked(true);
+            getSupportActionBar().setTitle(getString(R.string.toolbar_privacy_policy));
+            ivToolbarLogo.setVisibility(View.GONE);
         }
     }
 
@@ -323,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
                 startActivity(intent);
                 break;
             case R.id.nav_privacy_policy:
-                
+                fragment = new FragmentPrivacyPolicy();
                 break;
             default:
                 fragment = new FragmentOverview();
