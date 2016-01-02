@@ -21,6 +21,7 @@ import de.mygrades.BuildConfig;
 import de.mygrades.R;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.alarm.ScrapeAlarmManager;
+import de.mygrades.util.Config;
 
 /**
  * Created by tilman on 12.12.15.
@@ -43,6 +44,7 @@ public class SettingsFragment extends XpPreferenceFragment {
         initSourceCodePreference();
         initLicensePreference();
         initOpenSourceLicenses();
+        initLegalNotice();
 
         // notification preferences
         scrapeAlarmManager = new ScrapeAlarmManager(getContext());
@@ -247,6 +249,26 @@ public class SettingsFragment extends XpPreferenceFragment {
                 view.loadUrl("file:///android_asset/open_source_licenses.html");
                 new AlertDialog.Builder(getContext())
                         .setTitle(getString(R.string.pref_third_party_license_title))
+                        .setView(view)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
+                return false;
+            }
+        });
+    }
+
+    /**
+     * Show legal notice in dialog.
+     */
+    private void initLegalNotice() {
+        Preference legalNotice = findPreference(getString(R.string.pref_key_legal_notice));
+        legalNotice.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                WebView view = (WebView) LayoutInflater.from(getContext()).inflate(R.layout.dialog_licenses, null);
+                view.loadUrl(Config.getServerUrl() + "/impressum");
+                new AlertDialog.Builder(getContext())
+                        .setTitle(getString(R.string.pref_legal_notice_title))
                         .setView(view)
                         .setPositiveButton(android.R.string.ok, null)
                         .show();
