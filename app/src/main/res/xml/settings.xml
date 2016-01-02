@@ -69,5 +69,9 @@
             android:key="@string/pref_key_github"
             android:title="@string/pref_github_title"
             android:summary="@string/pref_github_summary" />
+
+        <Preference
+            android:key="@string/pref_key_legal_notice"
+            android:title="@string/pref_legal_notice_title" />
     </PreferenceCategory>
 </PreferenceScreen>

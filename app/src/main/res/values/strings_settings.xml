@@ -47,4 +47,7 @@
     <string name="pref_only_wifi_title">Nur im WLAN</string>
     <string name="pref_only_wifi_summary">Es werden keine mobilen Daten genutzt</string>
     <string name="pref_key_only_wifi">pref_key_only_wifi</string>
+
+    <string name="pref_key_legal_notice">pref_key_legal_notice</string>
+    <string name="pref_legal_notice_title">Impressum</string>
 </resources>
