@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -401,5 +402,16 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
     private void enableNavigationDrawer() {
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         drawerToggle.setDrawerIndicatorEnabled(true);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // check if FragmentDonation is the currently active fragment and call method
+        FragmentDonation fragmentDonation = (FragmentDonation) getSupportFragmentManager().findFragmentByTag(FragmentDonation.class.getSimpleName());
+        if (fragmentDonation != null && fragmentDonation.isVisible()) {
+            fragmentDonation.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

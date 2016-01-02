@@ -91,4 +91,5 @@
     <string name="chart_average_grade_per_semester">Notendurchschnitt pro Semester</string>
     <string name="chart_grade_distribution">Deine Notenverteilung</string>
 
+    <string name="snackbar_error_iab">Ups. Bitte nochmal!</string>
 </resources>
