@@ -8,7 +8,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 import de.mygrades.R;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.util.Constants;
+import de.mygrades.view.adapter.dataprovider.FaqDataProvider;
 
 /**
  * Activity to enter the username and password for the selected university.
@@ -56,6 +59,10 @@ public class LoginActivity extends AppCompatActivity {
         tvUniversityName = (TextView) findViewById(R.id.tv_university_name);
         etUsername = (EditText) findViewById(R.id.et_username);
         etPassword = (EditText) findViewById(R.id.et_passwort);
+
+        TextView tvLoginPrivacyInfo = (TextView) findViewById(R.id.tv_login_privacy_info);
+        tvLoginPrivacyInfo.setText(Html.fromHtml(getString(R.string.tv_login_privacy_info)));
+        tvLoginPrivacyInfo.setMovementMethod(LinkMovementMethod.getInstance());
 
         initLoginButton();
 

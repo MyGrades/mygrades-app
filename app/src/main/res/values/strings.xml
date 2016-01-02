@@ -3,7 +3,7 @@
     <string name="username">Benutzername</string>
     <string name="password">Passwort</string>
     <string name="tv_enter_userdata">Gib die Benutzerdaten für deine Hochschule ein.</string>
-    <string name="tv_login_privacy_info">Deine Benutzerdaten werden nur lokal und verschlüsselt auf deinem Smartphone gespeichert.\n\nWeiterhin werden <b>keine Daten</b> an uns oder Dritte übermittelt.</string>
+    <string name="tv_login_privacy_info"><![CDATA[Deine Benutzerdaten werden nur lokal und verschlüsselt auf deinem Smartphone gespeichert.<br/><br/>Weiterhin werden <b>keine</b> personenbezogenen Daten oder deine Noten an uns oder Dritte übermittelt. Genauere <a href="de.mygrades.view.activity://goto.fragment/privacy">Informationen</a> zum Schutz deiner Daten.]]></string>
     <string name="error_username_not_empty">Benutzername darf nicht leer sein.</string>
     <string name="error_password_not_empty">Passwort darf nicht leer sein.</string>
 

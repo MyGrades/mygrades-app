@@ -82,9 +82,9 @@
             </android.support.design.widget.TextInputLayout>
 
             <TextView
+                android:id="@+id/tv_login_privacy_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/tv_login_privacy_info"
                 android:textSize="16sp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
