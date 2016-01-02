@@ -11,6 +11,7 @@
         <item>Warum sind die Noten im falschen Semester?</item>
         <item>Warum stimmt die Anzahl meiner gesamt CP nicht?</item>
         <item>Warum gibt es keine Notenverteilung?</item>
+        <item>Warum bekomme ich keine Benachrichtigung, wenn eine neue Note da ist?</item>
     </string-array>
 
     <string-array name="answers">
@@ -20,9 +21,10 @@
         <item>Wir – Jonas und Tilman – sind zwei Studenten der Medieninformatik an der Hochschule RheinMain.</item>
         <item>Dieser Fehler tritt auf, wenn eine Anfrage an die Website deiner Hochschule nicht innerhalb von 25 Sekunden erfolgreich war.\n\nDies kann daran liegen, dass deine Internetverbindung schlecht oder der Server deiner Hochschule nicht erreichbar ist.</item>
         <item>Dieser Fehler kann in verschiedenen Situationen auftreten. Möglicherweise...\n\n... sind deine Zugangsdaten falsch.\n\n... gibt es Probleme mit dem Notensystem deiner Hochschule.\n\n... hat sich der Aufbau deines Notensystems geändert und es ist zur Zeit somit nicht möglich, deine Noten abzurufen.\n\nSag uns Bescheid, falls dieses Problem länger besteht!</item>
-        <item>TODO</item>
-        <item>TODO</item>
-        <item>TODO</item>
-        <item>TODO</item>
+        <item>Die Berechnung des Notendurchschnitts erfolgt ohne Gewichtung einzelner Noten oder Semester, da dies meist spezifisch für einen Studiengang ist.\nWeiterhin werden Fächer mit 0 CPs nicht in die Berechnung mit einberechnet.</item>
+        <item>Die Nummer des Semesters wird von der App automatisch anhand der vorliegenden Noten und deren Zeitpunkt berechnet. Um eine fortlaufende richtige Nummerierung zu erreichen muss also in jedem Semester mindestens eine Leistung eingetragen sein. Beispiele:\n\n- Du hast am Ende des 2. Semesters den Studiengang gewechselt. Die App erkennt nur die Leistungen deines neuen Studiengangs und ordnet diese dem 1. Semester zu.\n- Du hast ein Urlaubssemester eingelegt. Die App findet in dem Urlaubssemester keine Leistungen und ignoriert dieses daher.</item>
+        <item>Wir gehen vom Standardwert von 180 CP aus. Wenn dieser bei dir nicht zutrifft, kannst du diesen einfach in den Einstellungen anpassen.</item>
+        <item>Eine Notenverteilung für eine Klausur kann nur unter folgenden Bedingungen geladen werden:\n\n- deine Hochschule veröffentlicht die Notenverteilung in deinem Notensystem\n- du hast an der Leistung teilgenommen</item>
+        <item>Dies kann verschiedene Gründe haben. Zuerst solltest du überprüfen, ob die entsprechenden Einstellungen zum automatischen Abrufen bei dir gesetzt sind. Weiterhin kann es sein, dass dein Notensystem während dem automatischen Abrufen nicht erreichbar war und es somit zu einem Fehler kam.\n\nWenn du die Noten per Hand abrufst, werden keine Benachrichtigungen angezeigt.</item>
     </string-array>
 </resources>
