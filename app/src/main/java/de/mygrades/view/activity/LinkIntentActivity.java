@@ -108,6 +108,8 @@ public class LinkIntentActivity extends AppCompatActivity implements ReplacableF
             getSupportActionBar().setTitle(getString(R.string.toolbar_faq_title));
         } else if(newFragment instanceof FragmentReportError) {
             getSupportActionBar().setTitle(getString(R.string.toolbar_report_error));
+        } else if(newFragment instanceof FragmentPrivacyPolicy) {
+            getSupportActionBar().setTitle(getString(R.string.toolbar_privacy_policy));
         }
     }
 }
