@@ -149,7 +149,12 @@ public class Transformer {
             GradeEntry gradeEntry = new GradeEntry();
             gradeEntry.setExamId(getStringProperty(xmlDocument, EXAM_ID));
             gradeEntry.setName(getStringProperty(xmlDocument, NAME));
-            gradeEntry.setSemester(calculateGradeEntrySemester(getStringProperty(xmlDocument, SEMESTER)));
+            // ignore entry if there could no semester determined
+            String semester = calculateGradeEntrySemester(getStringProperty(xmlDocument, SEMESTER));
+            if (semester == null) {
+                continue;
+            }
+            gradeEntry.setSemester(semester);
             gradeEntry.setGrade(getDoubleProperty(xmlDocument, GRADE, rule.getGradeFactor()));
             gradeEntry.setState(getStringProperty(xmlDocument, STATE));
             gradeEntry.setCreditPoints(getDoubleProperty(xmlDocument, CREDIT_POINTS));
@@ -183,6 +188,11 @@ public class Transformer {
      * @return formatted semester string
      */
     private String calculateGradeEntrySemester(String origSemester) {
+        // if origSemester is null -> return null so this entry will get ignored
+        if (origSemester == null) {
+            return null;
+        }
+
         String resultSemester = "";
 
         if (rule.getSemesterFormat().equals(SEMESTER_FORMAT_SEMESTER)) {
@@ -190,7 +200,7 @@ public class Transformer {
             Integer extractedYear = 0;
 
             // match pattern to origSemester and get Year and Semester String
-            Matcher matcher = semesterPattern.matcher(origSemester); // TODO: if origSemester = null -> nullpointer
+            Matcher matcher = semesterPattern.matcher(origSemester);
             if (matcher.find()) { // Find first match
                 extractedSemester = matcher.group(1);
 
