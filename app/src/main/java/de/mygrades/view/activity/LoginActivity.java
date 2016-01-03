@@ -81,8 +81,6 @@ public class LoginActivity extends AppCompatActivity {
                 navigateUpFromSameTask = true;
             }
         }
-
-        mainServiceHelper.getDetailedUniversity(universityId);
     }
 
     /**

@@ -56,8 +56,29 @@ public class UniversityProcessor extends BaseProcessor {
             List<University> universities = restClient.getRestApi().getUniversities(publishedOnly, updatedAtServerPublished, updatedAtServerUnpublished);
             universities = universities == null ? new ArrayList<University>() : universities;
 
-            // insert into database
-            daoSession.getUniversityDao().insertOrReplaceInTx(universities);
+            // insert universities into database
+            final List<University> finalUniversities = universities;
+            daoSession.runInTx(new Runnable() {
+                @Override
+                public void run() {
+                    for (University university : finalUniversities) {
+                        daoSession.getUniversityDao().insertOrReplace(university);
+
+                        // insert rules into database, important: only rule_id and name are inserted
+                        for (Rule rule : university.getRulesRaw()) {
+                            Rule ruleInDb = daoSession.getRuleDao().load(rule.getRuleId());
+                            if (ruleInDb == null) {
+                                // insert rule only if it not exists already
+                                daoSession.getRuleDao().insert(rule);
+                            } else {
+                                // update rule name only
+                                ruleInDb.setName(rule.getName());
+                                daoSession.getRuleDao().update(ruleInDb);
+                            }
+                        }
+                    }
+                }
+            });
 
             // post university event
             UniversityEvent universityEvent = new UniversityEvent();
@@ -199,7 +220,7 @@ public class UniversityProcessor extends BaseProcessor {
 
     /**
      * Get the updated_at_server timestamp for the selected university.
-     * Return null, if the selected university has no rules attached (should only happen at first load).
+     * Return null, if the selected university has no rules with actions attached (should only happen at first load).
      *
      * @param universityId - university id
      * @return timestamp as string
@@ -207,8 +228,18 @@ public class UniversityProcessor extends BaseProcessor {
     private String getUpdatedAtServerForUniversity(long universityId) {
         University u = daoSession.getUniversityDao().queryBuilder().where(UniversityDao.Properties.UniversityId.eq(universityId)).unique();
 
+        // should not happen
         if (u == null || u.getRules() == null || u.getRules().size() == 0) {
             return null;
+        }
+
+        // check if each rule has actions, otherwise return null
+        if (u.getRules().size() > 0) {
+            for (Rule rule : u.getRules()) {
+                if (rule.getActions() == null || rule.getActions().size() == 0) {
+                    return null;
+                }
+            }
         }
 
         return u.getUpdatedAtServer();
