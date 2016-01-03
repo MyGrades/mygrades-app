@@ -77,8 +77,8 @@
     <string name="notification_updated_grades_title">Noten haben sich geändert</string>
     <string name="tv_grade_seen_new">NEU</string>
     <string name="tv_grade_seen_updated">GEÄNDERT</string>
-    <string name="nav_donation">Unterstütze uns</string>
-    <string name="toolbar_donation">Unterstütze uns</string>
+    <string name="nav_donation">Unterstütze uns!</string>
+    <string name="toolbar_donation">Unterstütze uns!</string>
     <string name="tv_average_label">Notendurchschnitt</string>
     <string name="tv_credit_points_label">Credit Points</string>
     <string name="tv_credit_points_per_semester_label">CPs pro Semester</string>
