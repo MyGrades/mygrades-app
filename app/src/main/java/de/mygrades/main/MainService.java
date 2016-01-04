@@ -49,6 +49,7 @@ public class MainService extends MultiThreadedIntentService {
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
     public static final String UNIVERSITY_ID = "university_id";
+    public static final String RULE_ID = "rule_id";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String PUBLISHED_ONLY = "published_only";
@@ -192,8 +193,9 @@ public class MainService extends MultiThreadedIntentService {
                 String username = intent.getStringExtra(USERNAME);
                 String password = intent.getStringExtra(PASSWORD);
                 long universityId = intent.getLongExtra(UNIVERSITY_ID, -1);
+                long ruleId = intent.getLongExtra(RULE_ID, -1);
 
-                loginProcessor.loginAndScrapeForGrades(username, password, universityId);
+                loginProcessor.loginAndScrapeForGrades(username, password, universityId, ruleId);
                 break;
             case METHOD_GET_LOGIN_DATA_FROM_DATABASE:
                 loginProcessor.getLoginDataFromDatabase();

@@ -1,32 +1,44 @@
 package de.mygrades.view.activity;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.animator.RefactoredDefaultItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
+import de.mygrades.database.dao.Rule;
 import de.mygrades.database.dao.University;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.UniversityEvent;
-import de.mygrades.view.adapter.UniversitiesRecyclerViewAdapter;
+import de.mygrades.view.adapter.UniversitiesAdapter;
+import de.mygrades.view.adapter.dataprovider.UniversitiesDataProvider;
+import de.mygrades.view.adapter.model.RuleItem;
 import de.mygrades.view.adapter.model.UniversityItem;
-import de.mygrades.view.decoration.UniversityDividerItemDecoration;
 
 /**
  * Activity which shows all universities.
  * The user can select a university to be forwarded to the LoginActivity.
  */
 public class SelectUniversityActivity extends AppCompatActivity {
+    private static final String SAVED_STATE_EXPANDABLE_ITEM_MANAGER = "RecyclerViewExpandableItemManager";
 
     private RecyclerView rvUniversities;
-    private UniversitiesRecyclerViewAdapter universityAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.Adapter wrappedAdapter;
+    private RecyclerViewExpandableItemManager recyclerViewExpandableItemManager;
+    private UniversitiesAdapter universitiesAdapter;
+    private UniversitiesDataProvider dataProvider;
 
     private static final String ERROR_TYPE_STATE = "error_type_state";
     private MainServiceHelper mainServiceHelper;
@@ -43,7 +55,7 @@ public class SelectUniversityActivity extends AppCompatActivity {
         initToolbar();
 
         // init recycler view
-        initRecyclerView();
+        initRecyclerView(savedInstanceState);
 
         // register event bus
         EventBus.getDefault().register(this);
@@ -52,7 +64,7 @@ public class SelectUniversityActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             String error = savedInstanceState.getString(ERROR_TYPE_STATE);
             if (error != null) {
-                universityAdapter.showError(ErrorEvent.ErrorType.valueOf(error));
+                universitiesAdapter.showError(ErrorEvent.ErrorType.valueOf(error));
             }
         }
 
@@ -68,7 +80,7 @@ public class SelectUniversityActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
         // save error state
-        ErrorEvent.ErrorType actErrorType = universityAdapter.getActErrorType();
+        ErrorEvent.ErrorType actErrorType = universitiesAdapter.getActErrorType();
         if (actErrorType != null) {
             outState.putString(ERROR_TYPE_STATE, actErrorType.name());
         }
@@ -86,13 +98,32 @@ public class SelectUniversityActivity extends AppCompatActivity {
     /**
      * Initialize the recycler view and set the adapter.
      */
-    private void initRecyclerView() {
+    private void initRecyclerView(Bundle savedInstanceState) {
+                // restore state if necessary
+        final Parcelable eimSavedState = (savedInstanceState != null) ? savedInstanceState.getParcelable(SAVED_STATE_EXPANDABLE_ITEM_MANAGER) : null;
+        recyclerViewExpandableItemManager = new RecyclerViewExpandableItemManager(eimSavedState);
+
+        // create data provider
+        dataProvider = new UniversitiesDataProvider();
+
+        // create adapter
+        universitiesAdapter = new UniversitiesAdapter(this, dataProvider, recyclerViewExpandableItemManager);
+        wrappedAdapter = recyclerViewExpandableItemManager.createWrappedAdapter(universitiesAdapter);
+
+        // set animation stuff
+        final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();
+        animator.setSupportsChangeAnimations(false);
+
+        // init recycler view
+        layoutManager = new LinearLayoutManager(this);
         rvUniversities = (RecyclerView) findViewById(R.id.rv_universities);
-        rvUniversities.setLayoutManager(new LinearLayoutManager(rvUniversities.getContext()));
-        rvUniversities.addItemDecoration(new UniversityDividerItemDecoration(this, R.drawable.university_divider));
-        rvUniversities.setItemAnimator(new DefaultItemAnimator());
-        universityAdapter = new UniversitiesRecyclerViewAdapter(getApplicationContext());
-        rvUniversities.setAdapter(universityAdapter);
+        rvUniversities.setLayoutManager(layoutManager);
+        rvUniversities.setAdapter(wrappedAdapter);
+        rvUniversities.setItemAnimator(animator);
+        rvUniversities.setHasFixedSize(false);
+
+        // attach recycler view to item manager, necessary for touch listeners
+        recyclerViewExpandableItemManager.attachRecyclerView(rvUniversities);
     }
 
     /**
@@ -103,17 +134,29 @@ public class SelectUniversityActivity extends AppCompatActivity {
      */
     private void addUniversities(List<University> universities) {
         if (universities.size() > 0) {
-            universityAdapter.showError(null);
+            universitiesAdapter.showError(null);
         }
 
+
+        List<UniversityItem> universityDataList = new ArrayList<>();
         for(University university : universities) {
-            UniversityItem universityItem = new UniversityItem(university.getName(), university.getUniversityId());
-            universityAdapter.add(universityItem);
+            UniversityItem universityData = new UniversityItem(university.getUniversityId());
+            universityData.setName(university.getName());
+            universityData.setUniversityId(university.getUniversityId());
+
+            for (Rule rule : university.getRules()) {
+                RuleItem ruleData = new RuleItem(rule.getRuleId());
+                ruleData.setName(rule.getName());
+                ruleData.setRuleId(rule.getRuleId());
+                universityData.addRuleData(ruleData);
+            }
+            universityDataList.add(universityData);
         }
+        universitiesAdapter.addUniversities(universityDataList);
 
         // show loading animation only if adapter is empty and no error is currently shown
-        if (universityAdapter.getActErrorType() == null) {
-            universityAdapter.showLoadingAnimation(universityAdapter.isEmpty());
+        if (universitiesAdapter.getActErrorType() == null) {
+            universitiesAdapter.showLoadingAnimation(universitiesAdapter.isEmpty());
         }
     }
 
@@ -123,7 +166,7 @@ public class SelectUniversityActivity extends AppCompatActivity {
      * @param universityEvent - university event
      */
     public void onEventMainThread(UniversityEvent universityEvent) {
-        if (universityAdapter != null) {
+        if (wrappedAdapter != null) {
             addUniversities(universityEvent.getUniversities(true));
         }
     }
@@ -134,12 +177,12 @@ public class SelectUniversityActivity extends AppCompatActivity {
      * @param errorEvent ErrorEvent
      */
     public void onEventMainThread(ErrorEvent errorEvent) {
-        if (!universityAdapter.isEmpty()) {
+        if (!universitiesAdapter.isEmpty()) {
             // ignore error
             return;
         }
 
-        universityAdapter.showError(errorEvent.getType());
+        universitiesAdapter.showError(errorEvent.getType());
     }
 
     @Override

@@ -1,15 +1,23 @@
 package de.mygrades.view.adapter.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * University item used in UniversitiesRecyclerViewAdapter.
+ * POJO for expandable university items.
  */
-public class UniversityItem implements UniversityAdapterItem {
+public class UniversityItem extends UniversityGroupItem {
+    private long groupId;
     private String name;
     private long universityId;
+    private boolean isSectionHeader;
+    private String sectionTitle;
 
-    public UniversityItem(String name, long universityId) {
-        this.name = name;
-        this.universityId = universityId;
+    private List<RuleItem> rules;
+
+    public UniversityItem(long groupId) {
+        this.groupId = groupId;
+        rules = new ArrayList<>();
     }
 
     public String getName() {
@@ -18,6 +26,7 @@ public class UniversityItem implements UniversityAdapterItem {
 
     public void setName(String name) {
         this.name = name;
+        this.sectionTitle = String.valueOf(name.toUpperCase().charAt(0));
     }
 
     public long getUniversityId() {
@@ -26,5 +35,30 @@ public class UniversityItem implements UniversityAdapterItem {
 
     public void setUniversityId(long universityId) {
         this.universityId = universityId;
+    }
+
+    public boolean isSectionHeader() {
+        return isSectionHeader;
+    }
+
+    public void setIsSectionHeader(boolean isSectionHeader) {
+        this.isSectionHeader = isSectionHeader;
+    }
+
+    public List<RuleItem> getRules() {
+        return rules;
+    }
+
+    public void addRuleData(RuleItem ruleItem) {
+        this.rules.add(ruleItem);
+    }
+
+    public String getSectionTitle() {
+        return sectionTitle;
+    }
+
+    @Override
+    public long getGroupId() {
+        return groupId;
     }
 }

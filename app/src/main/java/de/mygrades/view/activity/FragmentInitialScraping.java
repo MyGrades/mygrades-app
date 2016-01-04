@@ -1,7 +1,5 @@
 package de.mygrades.view.activity;
 
-import android.animation.AnimatorInflater;
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +37,7 @@ public class FragmentInitialScraping extends Fragment {
 
     // extra data for the LoginActivity
     private long universityId;
+    private long ruleId;
     private String universityName;
     private String username;
 
@@ -167,6 +166,7 @@ public class FragmentInitialScraping extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 intent.putExtra(LoginActivity.EXTRA_UNIVERSITY_ID, universityId);
+                intent.putExtra(LoginActivity.EXTRA_RULE_ID, ruleId);
                 intent.putExtra(LoginActivity.EXTRA_UNIVERSITY_NAME, universityName);
                 intent.putExtra(LoginActivity.EXTRA_USERNAME, username);
                 getContext().startActivity(intent);
@@ -365,6 +365,7 @@ public class FragmentInitialScraping extends Fragment {
      */
     public void onEventMainThread(LoginDataEvent loginDataEvent) {
         this.universityId = loginDataEvent.getUniversityId();
+        this.ruleId = loginDataEvent.getRuleId();
         this.universityName = loginDataEvent.getUniversityName();
         this.username = loginDataEvent.getUsername();
     }

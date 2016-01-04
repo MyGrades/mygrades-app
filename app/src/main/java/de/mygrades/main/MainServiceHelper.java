@@ -144,7 +144,7 @@ public class MainServiceHelper {
      * @param username - username
      * @param password - password
      */
-    public void loginAndScrapeForGrades(String username, String password, long universityId) {
+    public void loginAndScrapeForGrades(String username, String password, long universityId, long ruleId) {
         int method = MainService.METHOD_LOGIN_AND_SCRAPE_FOR_GRADES;
 
         // set request id
@@ -156,6 +156,7 @@ public class MainServiceHelper {
         intent.putExtra(MainService.USERNAME, username);
         intent.putExtra(MainService.PASSWORD, password);
         intent.putExtra(MainService.UNIVERSITY_ID, universityId);
+        intent.putExtra(MainService.RULE_ID, ruleId);
         context.startService(intent);
     }
 

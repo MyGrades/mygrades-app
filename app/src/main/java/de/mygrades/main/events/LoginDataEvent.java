@@ -8,11 +8,13 @@ package de.mygrades.main.events;
 public class LoginDataEvent {
     private String username;
     private long universityId;
+    private long ruleId;
     private String universityName;
 
-    public LoginDataEvent(String username, long universityId, String universityName) {
+    public LoginDataEvent(String username, long universityId, long ruleId, String universityName) {
         this.username = username;
         this.universityId = universityId;
+        this.ruleId = ruleId;
         this.universityName = universityName;
     }
 
@@ -26,5 +28,13 @@ public class LoginDataEvent {
 
     public String getUniversityName() {
         return universityName;
+    }
+
+    public long getRuleId() {
+        return ruleId;
+    }
+
+    public void setRuleId(long ruleId) {
+        this.ruleId = ruleId;
     }
 }

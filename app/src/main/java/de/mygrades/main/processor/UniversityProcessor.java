@@ -107,6 +107,11 @@ public class UniversityProcessor extends BaseProcessor {
                 .orderAsc(UniversityDao.Properties.Name)
                 .list();
 
+        // eager load all rules
+        for (University university : universities) {
+            university.getRules();
+        }
+
         // post university event
         UniversityEvent universityEvent = new UniversityEvent();
         universityEvent.setUniversities(universities);
