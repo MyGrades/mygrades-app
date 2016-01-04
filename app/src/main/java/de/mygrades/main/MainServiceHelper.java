@@ -144,7 +144,7 @@ public class MainServiceHelper {
      * @param username - username
      * @param password - password
      */
-    public void loginAndScrapeForGrades(String username, String password, long universityId) {
+    public void loginAndScrapeForGrades(String username, String password, long universityId, long ruleId) {
         int method = MainService.METHOD_LOGIN_AND_SCRAPE_FOR_GRADES;
 
         // set request id
@@ -156,6 +156,7 @@ public class MainServiceHelper {
         intent.putExtra(MainService.USERNAME, username);
         intent.putExtra(MainService.PASSWORD, password);
         intent.putExtra(MainService.UNIVERSITY_ID, universityId);
+        intent.putExtra(MainService.RULE_ID, ruleId);
         context.startService(intent);
     }
 
@@ -189,6 +190,10 @@ public class MainServiceHelper {
 
     /**
      * Starts a worker thread to post an error report to the server.
+     *
+     * @param name name
+     * @param email email
+     * @param errorMessage error message
      */
     public void postErrorReport(String name, String email, String errorMessage) {
         int method = MainService.METHOD_POST_ERROR;
@@ -201,6 +206,29 @@ public class MainServiceHelper {
         intent.putExtra(MainService.NAME, name);
         intent.putExtra(MainService.EMAIL, email);
         intent.putExtra(MainService.ERROR_MESSAGE, errorMessage);
+        context.startService(intent);
+    }
+
+    /**
+     * Starts a worker thread to post an university wish to the server.
+     *
+     * @param universityName university name
+     * @param name name
+     * @param email email
+     * @param message message
+     */
+    public void postWish(String universityName, String name, String email, String message) {
+        int method = MainService.METHOD_POST_WISH;
+
+        // set request id
+        long requestId = concatenateLong(method, 0);
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_WISH, method, requestId);
+        intent.putExtra(MainService.UNIVERSITY_NAME, universityName);
+        intent.putExtra(MainService.NAME, name);
+        intent.putExtra(MainService.EMAIL, email);
+        intent.putExtra(MainService.WISH_MESSAGE, message);
         context.startService(intent);
     }
 

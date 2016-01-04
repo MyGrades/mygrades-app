@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:id="@+id/container">
+    android:id="@+id/container"
+    android:visibility="gone">
 
     <LinearLayout
-        android:id="@+id/ll_university_section_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -18,8 +18,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:textColor="?attr/colorPrimary"
-            android:padding="16dp"/>
+            android:textColor="?attr/colorAccent"
+            android:padding="16dp"
+            android:text="@string/tv_footer_uni_not_present"/>
 
         <View style="@style/Divider"/>
     </LinearLayout>
@@ -31,12 +32,10 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/tv_university_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:text="@string/tv_footer_contact_us"/>
 
     </LinearLayout>
-
-    <View style="@style/Divider"/>
 </LinearLayout>

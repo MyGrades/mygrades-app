@@ -92,4 +92,13 @@
     <string name="chart_grade_distribution">Deine Notenverteilung</string>
 
     <string name="snackbar_error_iab">Ups. Bitte nochmal!</string>
+    <string name="tv_post_wish_introduction">Teile uns mit welche Hochschule du gerne hinzugefügt haben möchtest.\n\nBei Angabe deiner E-Mail-Adresse können wir, wenn nötig, mit dir in Kontakt treten falls wir weitere Fragen haben oder sobald die Hochschule hinzugefügt ist.</string>
+    <string name="tv_post_wish_privacy_info"><![CDATA[Genauere <a href="de.mygrades.view.activity://goto.fragment/privacy">Informationen</a> zum Schutz deiner Daten.]]></string>
+    <string name="university_name">Name der Hochschule</string>
+    <string name="et_message">Nachricht (optional)</string>
+    <string name="btn_post_wish">Wunsch absenden</string>
+    <string name="university_name_not_empty">Hochschule darf nicht leer sein</string>
+    <string name="toolbar_post_wish">Wunsch senden</string>
+    <string name="tv_footer_uni_not_present">Hochschule nicht dabei?</string>
+    <string name="tv_footer_contact_us">Gib uns Bescheid!</string>
 </resources>

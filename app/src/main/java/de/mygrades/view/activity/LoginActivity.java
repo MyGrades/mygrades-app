@@ -21,7 +21,6 @@ import android.widget.TextView;
 import de.mygrades.R;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.util.Constants;
-import de.mygrades.view.adapter.dataprovider.FaqDataProvider;
 
 /**
  * Activity to enter the username and password for the selected university.
@@ -30,10 +29,12 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String EXTRA_UNIVERSITY_NAME = "university_name";
     public static final String EXTRA_UNIVERSITY_ID = "university_id";
+    public static final String EXTRA_RULE_ID = "rule_id";
     public static final String EXTRA_USERNAME = "username";
 
     private String universityName;
     private long universityId;
+    private long ruleId;
     private boolean navigateUpFromSameTask;
 
     // views
@@ -46,9 +47,6 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        // load detailed university
-        MainServiceHelper mainServiceHelper = new MainServiceHelper(this);
 
         // set toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -69,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
         // get extra data
         if (getIntent() != null && getIntent().getExtras() != null) {
             universityId = getIntent().getExtras().getLong(EXTRA_UNIVERSITY_ID, 0);
-
+            ruleId = getIntent().getExtras().getLong(EXTRA_RULE_ID, 0);
             universityName = getIntent().getExtras().getString(EXTRA_UNIVERSITY_NAME, "");
             tvUniversityName.setText(universityName == null ? "" : universityName);
 
@@ -140,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
         editor.apply();
 
         MainServiceHelper mainServiceHelper = new MainServiceHelper(LoginActivity.this);
-        mainServiceHelper.loginAndScrapeForGrades(username, password, universityId);
+        mainServiceHelper.loginAndScrapeForGrades(username, password, universityId, ruleId);
     }
 
     /**

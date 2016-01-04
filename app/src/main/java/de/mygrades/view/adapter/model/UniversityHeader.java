@@ -6,7 +6,7 @@ import de.mygrades.main.events.ErrorEvent;
  * Header above list of sectioned universities.
  * It holds the state for the loading animation and current error.
  */
-public class UniversityHeader implements UniversityAdapterItem {
+public class UniversityHeader extends UniversityGroupItem {
     private boolean isLoading;
     private ErrorEvent.ErrorType actErrorType;
 
@@ -29,5 +29,10 @@ public class UniversityHeader implements UniversityAdapterItem {
 
     public void setActErrorType(ErrorEvent.ErrorType actErrorType) {
         this.actErrorType = actErrorType;
+    }
+
+    @Override
+    public long getGroupId() {
+        return 0;
     }
 }

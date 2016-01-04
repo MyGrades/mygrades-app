@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.mygrades.database.dao.University;
 import de.mygrades.main.processor.ErrorProcessor;
+import de.mygrades.main.processor.WishProcessor;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Header;
@@ -26,8 +27,8 @@ public interface RestApi {
     University getUniversity(@Path("university_id") long universityId,
                              @Header("Updated-At-Server") String updatedAtServer);
 
-    @POST("/wishlist")
-    Void postWish();
+    @POST("/wishes")
+    Void postWish(@Body WishProcessor.Wish wish);
 
     @POST("/errors")
     Void postError(@Body ErrorProcessor.Error error);

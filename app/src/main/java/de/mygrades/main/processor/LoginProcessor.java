@@ -38,9 +38,9 @@ public class LoginProcessor extends BaseProcessor {
      * @param password - password
      * @param universityId - university id
      */
-    public void loginAndScrapeForGrades(String username, String password, long universityId) {
+    public void loginAndScrapeForGrades(String username, String password, long universityId, long ruleId) {
         // save selected universityId to shared preferences
-        saveSelectedUniversity(universityId);
+        saveSelectedUniversity(universityId, ruleId);
 
         // save login data to secure preferences
         saveLoginData(username, password);
@@ -57,6 +57,7 @@ public class LoginProcessor extends BaseProcessor {
         // get universityId from shared preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
+        long ruleId = prefs.getLong(Constants.PREF_KEY_RULE_ID, -1);
 
         // get university name from database
         University university = daoSession.getUniversityDao().queryBuilder()
@@ -69,7 +70,7 @@ public class LoginProcessor extends BaseProcessor {
         SecurePreferences securePrefs = getSecurePreferences();
         String username = securePrefs.getString(Constants.PREF_KEY_USERNAME, "");
 
-        LoginDataEvent loginDataEvent = new LoginDataEvent(username, universityId, universityName);
+        LoginDataEvent loginDataEvent = new LoginDataEvent(username, universityId, ruleId, universityName);
         EventBus.getDefault().post(loginDataEvent);
     }
 
@@ -122,13 +123,9 @@ public class LoginProcessor extends BaseProcessor {
      *
      * @param universityId - university id
      */
-    private void saveSelectedUniversity(long universityId) {
+    private void saveSelectedUniversity(long universityId, long ruleId) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
-
-        // get first rule and its id TODO: pass selection through pattern
-        List<Rule> rules = daoSession.getRuleDao().queryBuilder().where(RuleDao.Properties.UniversityId.eq(universityId)).build().list();
-        long ruleId = rules.get(0).getRuleId();
 
         editor.putLong(Constants.PREF_KEY_UNIVERSITY_ID, universityId);
         editor.putLong(Constants.PREF_KEY_RULE_ID, ruleId);
