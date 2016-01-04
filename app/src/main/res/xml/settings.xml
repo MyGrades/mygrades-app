@@ -27,7 +27,8 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/pref_key_automatic_scraping"
-            android:title="@string/pref_automatic_scraping_title" />
+            android:title="@string/pref_automatic_scraping_title"
+            android:summary="@string/pref_automatic_scraping_summary" />
 
         <ListPreference
             android:defaultValue="120"

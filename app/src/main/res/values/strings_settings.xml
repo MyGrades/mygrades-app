@@ -27,6 +27,7 @@
     <string name="settings_notifications_title">Benachrichtigungen</string>
 
     <string name="pref_automatic_scraping_title">Automatisches Abrufen</string>
+    <string name="pref_automatic_scraping_summary">Lasse die App für dich nach neuen Noten suchen und dich benachrichtigen</string>
     <string name="pref_key_automatic_scraping">pref_key_automatic_scraping</string>
 
     <string name="pref_scrape_frequency_title">Abruf-Intervall</string>
