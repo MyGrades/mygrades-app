@@ -20,7 +20,7 @@
             android:textSize="18sp"
             android:textColor="?attr/colorAccent"
             android:padding="16dp"
-            android:text="Hochschule nicht dabei?"/>
+            android:text="@string/tv_footer_uni_not_present"/>
 
         <View style="@style/Divider"/>
     </LinearLayout>
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="Gib uns Bescheid!"/>
+            android:text="@string/tv_footer_contact_us"/>
 
     </LinearLayout>
 </LinearLayout>
