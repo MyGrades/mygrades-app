@@ -13,9 +13,27 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/tv_report_error_introduction"
             android:textSize="16sp"
-            android:paddingBottom="8dp"/>
+            android:paddingBottom="8dp"
+            android:text="@string/tv_post_wish_introduction" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textColorHint="#888888"
+            app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
+
+            <EditText
+                android:id="@+id/et_university_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/university_name"
+                android:inputType="textNoSuggestions|textVisiblePassword"
+                android:singleLine="true"
+                android:theme="@style/CustomEditTextStyle"/>
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -62,20 +80,20 @@
             app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
             <EditText
-                android:id="@+id/et_error"
+                android:id="@+id/et_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/error_description"
+                android:hint="@string/et_message"
                 android:inputType="textMultiLine"
                 android:singleLine="true"
                 android:theme="@style/CustomEditTextStyle"/>
         </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:id="@+id/btn_report_error"
+            android:id="@+id/btn_post_wish"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btn_report_error"
+            android:text="@string/btn_post_wish"
             android:layout_marginTop="8dp"
             android:theme="@style/RobotoButtonStyle"/>
 

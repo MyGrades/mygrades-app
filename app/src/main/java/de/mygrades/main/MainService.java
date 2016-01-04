@@ -12,6 +12,7 @@ import de.mygrades.main.processor.GradesProcessor;
 import de.mygrades.main.processor.LoginProcessor;
 import de.mygrades.main.processor.StatisticsProcessor;
 import de.mygrades.main.processor.UniversityProcessor;
+import de.mygrades.main.processor.WishProcessor;
 
 /**
  * This service is used to handle ongoing operations in the background.
@@ -30,6 +31,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final int PROCESSOR_LOGIN = 102;
     public static final int PROCESSOR_ERROR = 103;
     public static final int PROCESSOR_STATISTICS = 104;
+    public static final int PROCESSOR_WISH = 105;
 
     // intent extra, methods: key and values
     public static final String METHOD_KEY = "method_key";
@@ -45,6 +47,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final int METHOD_GET_LOGIN_DATA_FROM_DATABASE = 120;
     public static final int METHOD_POST_ERROR = 121;
     public static final int METHOD_GET_STATISTICS = 122;
+    public static final int METHOD_POST_WISH = 123;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
@@ -59,6 +62,8 @@ public class MainService extends MultiThreadedIntentService {
     public static final String NAME = "name";
     public static final String EMAIL = "email";
     public static final String ERROR_MESSAGE = "error_message";
+    public static final String UNIVERSITY_NAME = "university_name";
+    public static final String WISH_MESSAGE = "wish_message";
 
     // save request ids for pending request in this set, and remove them when its done.
     private Set<Long> pendingRequest;
@@ -106,6 +111,9 @@ public class MainService extends MultiThreadedIntentService {
                 break;
             case PROCESSOR_STATISTICS:
                 handleStatisticsProcessor(method, intent);
+                break;
+            case PROCESSOR_WISH:
+                handleWishProcessor(method, intent);
                 break;
             default:
                 Log.e(TAG, "Invalid processor call to MainService: " + processor);
@@ -242,6 +250,29 @@ public class MainService extends MultiThreadedIntentService {
         switch (method) {
             case METHOD_GET_STATISTICS:
                 statisticsProcessor.getStatistics();
+                break;
+            default:
+                Log.e(TAG, "Invalid method call to MainService: "+ method);
+        }
+    }
+
+    /**
+     * Decides which method to call from wish processor.
+     *
+     * @param method - the method to call, represented by an integer
+     * @param intent - intent
+     */
+    private void handleWishProcessor(int method, Intent intent) {
+        WishProcessor wishProcessor = new WishProcessor(this);
+
+        switch (method) {
+            case METHOD_POST_WISH:
+                String universityName = intent.getStringExtra(UNIVERSITY_NAME);
+                String name = intent.getStringExtra(NAME);
+                String email = intent.getStringExtra(EMAIL);
+                String message = intent.getStringExtra(WISH_MESSAGE);
+
+                wishProcessor.postWish(universityName, name, email, message);
                 break;
             default:
                 Log.e(TAG, "Invalid method call to MainService: "+ method);

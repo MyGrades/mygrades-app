@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.mygrades.view.adapter.model.RuleItem;
+import de.mygrades.view.adapter.model.UniversityFooter;
 import de.mygrades.view.adapter.model.UniversityGroupItem;
 import de.mygrades.view.adapter.model.UniversityHeader;
 import de.mygrades.view.adapter.model.UniversityItem;
@@ -17,11 +18,15 @@ import de.mygrades.view.adapter.model.UniversityItem;
 public class UniversitiesDataProvider {
     private List<UniversityGroupItem> items;
     private UniversityHeader header;
+    private UniversityFooter footer;
 
     public UniversitiesDataProvider() {
         header = new UniversityHeader();
+        footer = new UniversityFooter();
+
         items = new ArrayList<>();
         items.add(header);
+        items.add(footer);
     }
 
     /**
@@ -49,7 +54,7 @@ public class UniversitiesDataProvider {
      * @return true, if university was updated
      */
     private boolean checkUpdateUniversity(RecyclerViewExpandableItemManager expandableItemManager, UniversityItem newUniversity) {
-        for(int i = 1; i < items.size(); i++) {
+        for(int i = 1; i < items.size() - 1; i++) {
             UniversityItem universityItem = (UniversityItem) items.get(i);
 
             if (universityItem.getUniversityId() == newUniversity.getUniversityId()) {
@@ -101,9 +106,9 @@ public class UniversitiesDataProvider {
      * @param newUniversity UniversityItem to add
      */
     private void addUniversity(RecyclerViewExpandableItemManager expandableItemManager, UniversityItem newUniversity) {
-        int newUniversityIndex = items.size(); // add to end, if no proper index was found
+        int newUniversityIndex = items.size() - 1; // add to end, if no proper index was found
 
-        for(int i = 1; i < items.size(); i++) {
+        for(int i = 1; i < items.size() - 1; i++) {
             UniversityItem universityItem = (UniversityItem) items.get(i);
 
             if (newUniversity.getName().compareToIgnoreCase(universityItem.getName()) <= 0) {
@@ -124,7 +129,8 @@ public class UniversitiesDataProvider {
      * @param expandableItemManager RecyclerViewExpandableItemManager
      */
     private void updateSections(RecyclerViewExpandableItemManager expandableItemManager) {
-        for(int i = items.size() - 1; i >= 1; i--) {
+        // iterate backwards over list, ignores footer and header
+        for(int i = items.size() - 2; i >= 1; i--) {
             UniversityItem universityItem = (UniversityItem) items.get(i);
 
             if (i == 1) {
@@ -151,10 +157,10 @@ public class UniversitiesDataProvider {
     }
 
     public int getChildCount(int groupPosition) {
-        if (groupPosition > 0)
+        if (groupPosition > 0 && groupPosition < getGroupCount() - 1)
             return ((UniversityItem) items.get(groupPosition)).getRules().size();
         else
-            return 0; // header has no children
+            return 0; // header and footer have no children
     }
 
     public UniversityGroupItem getGroupItem(int groupPosition) {
@@ -162,14 +168,18 @@ public class UniversitiesDataProvider {
     }
 
     public RuleItem getChildItem(int groupPosition, int childPosition) {
-        if (groupPosition > 0)
+        if (groupPosition > 0 && groupPosition < getGroupCount() - 1)
             return ((UniversityItem) items.get(groupPosition)).getRules().get(childPosition);
         else {
-            return null; // header has no RuleItem as child
+            return null; // header and footer have no children
         }
     }
 
     public UniversityHeader getHeader() {
         return header;
+    }
+
+    public UniversityFooter getFooter() {
+        return footer;
     }
 }

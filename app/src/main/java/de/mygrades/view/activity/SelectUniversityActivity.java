@@ -135,24 +135,25 @@ public class SelectUniversityActivity extends AppCompatActivity {
     private void addUniversities(List<University> universities) {
         if (universities.size() > 0) {
             universitiesAdapter.showError(null);
+            universitiesAdapter.showFooter();
         }
 
 
-        List<UniversityItem> universityDataList = new ArrayList<>();
+        List<UniversityItem> universityItems = new ArrayList<>();
         for(University university : universities) {
-            UniversityItem universityData = new UniversityItem(university.getUniversityId());
-            universityData.setName(university.getName());
-            universityData.setUniversityId(university.getUniversityId());
+            UniversityItem universityItem = new UniversityItem(university.getUniversityId());
+            universityItem.setName(university.getName());
+            universityItem.setUniversityId(university.getUniversityId());
 
             for (Rule rule : university.getRules()) {
                 RuleItem ruleData = new RuleItem(rule.getRuleId());
                 ruleData.setName(rule.getName());
                 ruleData.setRuleId(rule.getRuleId());
-                universityData.addRuleData(ruleData);
+                universityItem.addRuleData(ruleData);
             }
-            universityDataList.add(universityData);
+            universityItems.add(universityItem);
         }
-        universitiesAdapter.addUniversities(universityDataList);
+        universitiesAdapter.addUniversities(universityItems);
 
         // show loading animation only if adapter is empty and no error is currently shown
         if (universitiesAdapter.getActErrorType() == null) {

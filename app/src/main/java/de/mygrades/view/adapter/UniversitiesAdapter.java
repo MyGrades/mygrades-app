@@ -22,6 +22,7 @@ import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.view.adapter.dataprovider.UniversitiesDataProvider;
 import de.mygrades.view.adapter.model.RuleItem;
+import de.mygrades.view.adapter.model.UniversityFooter;
 import de.mygrades.view.adapter.model.UniversityHeader;
 import de.mygrades.view.adapter.model.UniversityItem;
 
@@ -36,6 +37,7 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
 
     private final int GROUP_VIEW_TYPE_UNIVERSITY = 1;
     private final int GROUP_VIEW_TYPE_HEADER = 2;
+    private final int GROUP_VIEW_TYPE_FOOTER = 3;
 
     /**
      * General click listener for group and child items.
@@ -92,8 +94,10 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
 
     @Override
     public int getGroupItemViewType(int groupPosition) {
-        if (groupPosition > 0) {
+        if (groupPosition > 0 && groupPosition < getGroupCount() - 1) {
             return GROUP_VIEW_TYPE_UNIVERSITY;
+        } else if (groupPosition == getGroupCount() - 1) {
+            return GROUP_VIEW_TYPE_FOOTER;
         } else {
             return GROUP_VIEW_TYPE_HEADER;
         }
@@ -101,7 +105,7 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
 
     @Override
     public int getChildItemViewType(int groupPosition, int childPosition) {
-        return 0; // This method will not be called.
+        return 0;
     }
 
     @Override
@@ -114,6 +118,9 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
             case GROUP_VIEW_TYPE_HEADER:
                 final View headerView = inflater.inflate(R.layout.item_university_header, parent, false);
                 return new HeaderViewHolder(headerView);
+            case GROUP_VIEW_TYPE_FOOTER:
+                final View footerView = inflater.inflate(R.layout.item_university_footer, parent, false);
+                return new FooterViewHolder(footerView, itemOnClickListener);
         }
         return null;
     }
@@ -172,6 +179,15 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
                     viewHolder.llErrorWrapper.setVisibility(View.GONE);
                 }
                 break;
+            case GROUP_VIEW_TYPE_FOOTER:
+                FooterViewHolder footerHolder = (FooterViewHolder) holder;
+                UniversityFooter footer = dataProvider.getFooter();
+
+                if (footer.isVisible()) {
+                    footerHolder.llContainer.setVisibility(View.VISIBLE);
+                } else {
+                    footerHolder.llContainer.setVisibility(View.GONE);
+                }
         }
     }
 
@@ -223,15 +239,19 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
      * @param groupPosition group position
      */
     private void handleOnClickGroupItemContainerView(View v, int groupPosition) {
-        UniversityItem universityData = (UniversityItem) dataProvider.getGroupItem(groupPosition);
-        if (universityData.getRules().size() > 1) {
-            if (expandableItemManager.isGroupExpanded(groupPosition)) {
-                expandableItemManager.collapseGroup(groupPosition);
-            } else {
-                expandableItemManager.expandGroup(groupPosition);
+        if (getGroupItemViewType(groupPosition) == GROUP_VIEW_TYPE_UNIVERSITY) {
+            UniversityItem universityData = (UniversityItem) dataProvider.getGroupItem(groupPosition);
+            if (universityData.getRules().size() > 1) {
+                if (expandableItemManager.isGroupExpanded(groupPosition)) {
+                    expandableItemManager.collapseGroup(groupPosition);
+                } else {
+                    expandableItemManager.expandGroup(groupPosition);
+                }
+            } else if (universityData.getRules().size() == 1) {
+                universityData.getRules().get(0).goToLogin(v.getContext(), universityData);
             }
-        } else if (universityData.getRules().size() == 1) {
-            universityData.getRules().get(0).goToLogin(v.getContext(), universityData);
+        } else if (getGroupItemViewType(groupPosition) == GROUP_VIEW_TYPE_FOOTER) {
+            dataProvider.getFooter().goToSubmitWish(v.getContext());
         }
     }
 
@@ -309,6 +329,19 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
         }
     }
 
+    /**
+     * ViewHolder for footer. 'university not found?'
+     */
+    public class FooterViewHolder extends GroupViewHolder {
+        public final LinearLayout llContainer;
+
+        public FooterViewHolder(View itemView, View.OnClickListener clickListener) {
+            super(itemView);
+            llContainer = (LinearLayout) itemView.findViewById(R.id.container);
+            itemView.setOnClickListener(clickListener);
+        }
+    }
+
     public abstract class GroupViewHolder extends AbstractExpandableItemViewHolder {
         public GroupViewHolder(View itemView) {
             super(itemView);
@@ -358,13 +391,17 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
         return dataProvider.getHeader().getActErrorType();
     }
 
+    public void showFooter() {
+        dataProvider.getFooter().setVisible(true);
+    }
+
     /**
      * Checks if list contains no universities.
-     * It's important to notice that the list always contains the header view.
+     * It's important to notice that the list always contains the header and footer view.
      *
      * @return true, if list only contains the header view
      */
     public boolean isEmpty() {
-        return dataProvider.getGroupCount() == 1;
+        return dataProvider.getGroupCount() == 2;
     }
 }

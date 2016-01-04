@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,32 +21,33 @@ import de.greenrobot.event.EventBus;
 import de.mygrades.R;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.ErrorEvent;
-import de.mygrades.main.events.ErrorReportDoneEvent;
+import de.mygrades.main.events.PostWishDoneEvent;
 
 /**
- * Fragment with input fields to report an error.
+ * Fragment with input fields to post a university wish.
  */
-public class FragmentReportError extends Fragment {
+public class FragmentPostWish extends Fragment {
 
+    private EditText etUniversityName;
     private EditText etName;
     private EditText etEmail;
-    private EditText etErrorMessage;
-    private Button btnReportError;
+    private EditText etMessage;
+    private Button btnPostWish;
     private TextView tvStatus;
     private ProgressWheel progressWheel;
 
     private static final String ERROR_TYPE_STATE = "error_type_state";
     private ErrorEvent.ErrorType actErrorType;
 
-    private static final String ERROR_REPORT_DONE_STATE = "error_report_done_state";
-    private boolean errorReportDone;
+    private static final String POST_WISH_DONE_STATE = "error_report_done_state";
+    private boolean postWishDone;
 
     private MainServiceHelper mainServiceHelper;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_report_error, container, false);
+        return inflater.inflate(R.layout.fragment_post_wish, container, false);
     }
 
     @Override
@@ -55,10 +55,11 @@ public class FragmentReportError extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mainServiceHelper = new MainServiceHelper(getContext());
 
+        etUniversityName = (EditText) view.findViewById(R.id.et_university_name);
         etName = (EditText) view.findViewById(R.id.et_name);
         etEmail = (EditText) view.findViewById(R.id.et_email);
-        etErrorMessage = (EditText) view.findViewById(R.id.et_error);
-        btnReportError = (Button) view.findViewById(R.id.btn_report_error);
+        etMessage = (EditText) view.findViewById(R.id.et_message);
+        btnPostWish = (Button) view.findViewById(R.id.btn_post_wish);
         tvStatus = (TextView) view.findViewById(R.id.tv_status);
         progressWheel = (ProgressWheel) view.findViewById(R.id.progress_wheel);
 
@@ -66,19 +67,19 @@ public class FragmentReportError extends Fragment {
         tvPrivacyInfo.setText(Html.fromHtml(getString(R.string.tv_post_wish_privacy_info)));
         tvPrivacyInfo.setMovementMethod(LinkMovementMethod.getInstance());
 
-        btnReportError.setOnClickListener(new Button.OnClickListener() {
+        btnPostWish.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (validateInput()) {
                     progressWheel.setVisibility(View.VISIBLE);
-                    btnReportError.setVisibility(View.GONE);
+                    btnPostWish.setVisibility(View.GONE);
                     tvStatus.setText("");
 
                     // hide keyboard
                     InputMethodManager im = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     im.hideSoftInputFromWindow(getActivity().getWindow().getDecorView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
-                    postErrorReport();
+                    postWish();
                 }
             }
         });
@@ -90,8 +91,8 @@ public class FragmentReportError extends Fragment {
                 showError(ErrorEvent.ErrorType.valueOf(error));
             }
 
-            if (savedInstanceState.getBoolean(ERROR_REPORT_DONE_STATE, false)) {
-                showErrorReportDone();
+            if (savedInstanceState.getBoolean(POST_WISH_DONE_STATE, false)) {
+                showPostWishDone();
             }
         }
 
@@ -108,58 +109,35 @@ public class FragmentReportError extends Fragment {
             outState.putString(ERROR_TYPE_STATE, actErrorType.name());
         }
 
-        outState.putBoolean(ERROR_REPORT_DONE_STATE, errorReportDone);
+        outState.putBoolean(POST_WISH_DONE_STATE, postWishDone);
     }
 
     /**
-     * Post the error report.
+     * Posts the university wish.
      */
-    private void postErrorReport() {
+    private void postWish() {
+        String universityName = etUniversityName.getText().toString();
         String name = etName.getText().toString();
         String email = etEmail.getText().toString();
-        String errorMessage = etErrorMessage.getText().toString();
+        String message = etMessage.getText().toString();
 
-        mainServiceHelper.postErrorReport(name, email, errorMessage);
+        mainServiceHelper.postWish(universityName, name, email, message);
     }
 
     /**
-     * Checks if the error message is not empty and validates the email address, if present.
+     * Checks if the university name is provided.
      *
      * @return true if input is correct
      */
     private boolean validateInput() {
         boolean inputCorrect = true;
 
-        if (TextUtils.isEmpty(etErrorMessage.getText().toString())) {
-            etErrorMessage.setError(getResources().getString(R.string.error_message_not_empty));
-            inputCorrect = false;
-        }
-
-        String email = etEmail.getText().toString();
-        if (!TextUtils.isEmpty(email) && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etEmail.setError(getResources().getString(R.string.invalid_email_address));
+        if (TextUtils.isEmpty(etUniversityName.getText().toString())) {
+            etUniversityName.setError(getResources().getString(R.string.university_name_not_empty));
             inputCorrect = false;
         }
 
         return inputCorrect;
-    }
-
-    /**
-     * Receive the ErrorReportDoneEvent, after the post was successful.
-     *
-     * @param errorReportDoneEvent - ErrorReportDoneEvent
-     */
-    public void onEventMainThread(ErrorReportDoneEvent errorReportDoneEvent) {
-        showErrorReportDone();
-    }
-
-    /**
-     * Receive error events and show error message.
-     *
-     * @param errorEvent - ErrorEvent
-     */
-    public void onEventMainThread(ErrorEvent errorEvent) {
-        showError(errorEvent.getType());
     }
 
     /**
@@ -170,7 +148,7 @@ public class FragmentReportError extends Fragment {
     private void showError(ErrorEvent.ErrorType errorType) {
         actErrorType = errorType;
         progressWheel.setVisibility(View.GONE);
-        btnReportError.setVisibility(View.VISIBLE);
+        btnPostWish.setVisibility(View.VISIBLE);
 
         String errorMessage;
         switch (errorType) {
@@ -188,14 +166,32 @@ public class FragmentReportError extends Fragment {
     }
 
     /**
-     * Show text view that indicates that the report was successfully sent.
+     * Receive the PostWishDoneEvent, after the post was successful.
+     *
+     * @param postWishDoneEvent - PostWishDoneEvent
      */
-    private void showErrorReportDone() {
+    public void onEventMainThread(PostWishDoneEvent postWishDoneEvent) {
+        showPostWishDone();
+    }
+
+    /**
+     * Receive error events and show error message.
+     *
+     * @param errorEvent - ErrorEvent
+     */
+    public void onEventMainThread(ErrorEvent errorEvent) {
+        showError(errorEvent.getType());
+    }
+
+    /**
+     * Show text view that indicates the the wish has been posted successfully.
+     */
+    private void showPostWishDone() {
         actErrorType = null;
-        errorReportDone = true;
+        postWishDone = true;
 
         progressWheel.setVisibility(View.GONE);
-        btnReportError.setVisibility(View.GONE);
+        btnPostWish.setVisibility(View.GONE);
         tvStatus.setText(getString(R.string.error_report_done));
     }
 

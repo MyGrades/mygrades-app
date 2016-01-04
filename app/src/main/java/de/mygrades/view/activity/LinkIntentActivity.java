@@ -24,6 +24,7 @@ public class LinkIntentActivity extends AppCompatActivity implements ReplacableF
     private static final String FAQ_PATH_SEGMENT = "faq";
     private static final String REPORT_ERROR_PATH_SEGMENT = "reporterror";
     private static final String PRIVACY_PATH_SEGMENT = "privacy";
+    private static final String POST_WISH_PATH_SEGMENT = "postwish";
 
     private Toolbar toolbar;
 
@@ -39,7 +40,9 @@ public class LinkIntentActivity extends AppCompatActivity implements ReplacableF
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // go to specified fragment
-        evaluateIntentFragment(getIntent().getData());
+        if (savedInstanceState == null) {
+            evaluateIntentFragment(getIntent().getData());
+        }
     }
 
     @Override
@@ -85,6 +88,9 @@ public class LinkIntentActivity extends AppCompatActivity implements ReplacableF
             } else if (PRIVACY_PATH_SEGMENT.equals(firstPathSegment)) {
                 replaceFragment(R.id.fl_content, new FragmentPrivacyPolicy(), false);
                 return;
+            } else if (POST_WISH_PATH_SEGMENT.equals(firstPathSegment)) {
+                replaceFragment(R.id.fl_content, new FragmentPostWish(), false);
+                return;
             }
         }
 
@@ -110,6 +116,8 @@ public class LinkIntentActivity extends AppCompatActivity implements ReplacableF
             getSupportActionBar().setTitle(getString(R.string.toolbar_report_error));
         } else if(newFragment instanceof FragmentPrivacyPolicy) {
             getSupportActionBar().setTitle(getString(R.string.toolbar_privacy_policy));
+        } else if (newFragment instanceof FragmentPostWish) {
+            getSupportActionBar().setTitle(getString(R.string.toolbar_post_wish));
         }
     }
 }
