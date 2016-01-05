@@ -147,13 +147,62 @@ public class FragmentOverview extends Fragment {
      */
     private void showInfoBox() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        boolean dismissedNotificationInfo = prefs.getBoolean(Constants.PREF_KEY_DISMISSED_NOTIFICATION_INFO, false);
 
+        boolean dismissedNotificationInfo = prefs.getBoolean(Constants.PREF_KEY_DISMISSED_NOTIFICATION_INFO, false);
         if (!dismissedNotificationInfo) {
             String title = getString(R.string.info_notifications_title, "");
             String message = getString(R.string.info_notifications_message, "");
             adapter.showInfoBox(title, message, Constants.PREF_KEY_DISMISSED_NOTIFICATION_INFO);
         }
+
+        int counter = prefs.getInt(Constants.PREF_KEY_APPLICATION_LAUNCHES_COUNTER, 0);
+        if (counter == 0) {
+            return;
+        }
+
+        // show donation info at 8 or multiples of 20 app launches
+        boolean dismissedDonationInfo = prefs.getBoolean(Constants.PREF_KEY_DISMISSED_DONATION_INFO, false);
+        if (counter == 8 || counter % 20 == 0) {
+            if (!dismissedDonationInfo)
+                showDonationInfo(prefs);
+        } else {
+            prefs.edit().putBoolean(Constants.PREF_KEY_DISMISSED_DONATION_INFO, false).apply();
+        }
+
+        // show rating info at 15 app launches
+        boolean dismissedRatingInfo = prefs.getBoolean(Constants.PREF_KEY_DISMISSED_RATING_INFO, false);
+        if (counter == 15) {
+            if (!dismissedRatingInfo)
+                showRatingInfo(prefs);
+        } else {
+            prefs.edit().putBoolean(Constants.PREF_KEY_DISMISSED_RATING_INFO, false);
+        }
+    }
+
+    /**
+     * Shows the donation info box.
+     *
+     * @param prefs shared preferences.
+     */
+    private void showDonationInfo(SharedPreferences prefs) {
+        prefs.edit().putBoolean(Constants.PREF_KEY_DISMISSED_DONATION_INFO, false).apply();
+
+        String title = getString(R.string.info_donation_title, "");
+        String message = getString(R.string.info_donation_message, "");
+        adapter.showInfoBox(title, message, Constants.PREF_KEY_DISMISSED_DONATION_INFO);
+    }
+
+    /**
+     * Shows the rating info box.
+     *
+     * @param prefs shared preferences.
+     */
+    private void showRatingInfo(SharedPreferences prefs) {
+        prefs.edit().putBoolean(Constants.PREF_KEY_DISMISSED_RATING_INFO, false).apply();
+
+        String title = getString(R.string.info_rating_title, "");
+        String message = getString(R.string.info_rating_message, "");
+        adapter.showInfoBox(title, message, Constants.PREF_KEY_DISMISSED_RATING_INFO);
     }
 
     /**

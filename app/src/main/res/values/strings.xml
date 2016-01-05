@@ -103,6 +103,10 @@
     <string name="tv_footer_contact_us">Gib uns Bescheid!</string>
     <string name="info_notifications_message">Wenn du Benachrichtigungen über neue Noten erhalten möchtest, musst du in den Einstellungen das automatische Abrufen aktivieren.</string>
     <string name="info_notifications_title">Hinweis</string>
+    <string name="info_donation_title">Unterstütze uns!</string>
+    <string name="info_donation_message"><![CDATA[Wir freuen uns, dass du die App regelmäßig nutzt. Nimm dir kurz Zeit und denke über eine <a href="de.mygrades.view.activity://goto.fragment/donation">Unterstützung</a> nach!]]></string>
+    <string name="info_rating_title">Bewerte die App</string>
+    <string name="info_rating_message">Wir würden uns über dein Feedback im PlayStore freuen.</string>
 
     <string name="donation2">2€</string>
     <string name="donation5">5€</string>

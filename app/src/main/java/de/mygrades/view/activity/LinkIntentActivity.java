@@ -25,6 +25,7 @@ public class LinkIntentActivity extends AppCompatActivity implements ReplacableF
     private static final String REPORT_ERROR_PATH_SEGMENT = "reporterror";
     private static final String PRIVACY_PATH_SEGMENT = "privacy";
     private static final String POST_WISH_PATH_SEGMENT = "postwish";
+    private static final String DONATION_PATH_SEGMENT = "donation";
 
     private Toolbar toolbar;
 
@@ -91,6 +92,9 @@ public class LinkIntentActivity extends AppCompatActivity implements ReplacableF
             } else if (POST_WISH_PATH_SEGMENT.equals(firstPathSegment)) {
                 replaceFragment(R.id.fl_content, new FragmentPostWish(), false);
                 return;
+            } else if (DONATION_PATH_SEGMENT.equals(firstPathSegment)) {
+                replaceFragment(R.id.fl_content, new FragmentDonation(), false);
+                return;
             }
         }
 
@@ -118,6 +122,8 @@ public class LinkIntentActivity extends AppCompatActivity implements ReplacableF
             getSupportActionBar().setTitle(getString(R.string.toolbar_privacy_policy));
         } else if (newFragment instanceof FragmentPostWish) {
             getSupportActionBar().setTitle(getString(R.string.toolbar_post_wish));
+        } else if (newFragment instanceof  FragmentDonation) {
+            getSupportActionBar().setTitle(getString(R.string.toolbar_donation));
         }
     }
 }
