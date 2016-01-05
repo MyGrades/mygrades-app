@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.pnikosis.materialishprogress.ProgressWheel;
 
@@ -35,7 +36,7 @@ public class FragmentDonation extends Fragment {
 
     // Views
     private ProgressWheel progressWheel;
-    private LinearLayout llDonationInfo;
+    private ScrollView svDonationInfo;
     private Button btDonate2;
     private Button btDonate5;
     private Button btDonate10;
@@ -66,7 +67,7 @@ public class FragmentDonation extends Fragment {
      */
     private void initViews(View view) {
         progressWheel = (ProgressWheel) view.findViewById(R.id.progress_wheel);
-        llDonationInfo = (LinearLayout) view.findViewById(R.id.donation_info);
+        svDonationInfo = (ScrollView) view.findViewById(R.id.donation_info);
         btDonate2 = (Button) view.findViewById(R.id.bt_donation2);
         btDonate5 = (Button) view.findViewById(R.id.bt_donation5);
         btDonate10 = (Button) view.findViewById(R.id.bt_donation10);
@@ -184,7 +185,7 @@ public class FragmentDonation extends Fragment {
      * Shows the thanks screen within the fragment and hides loading and info.
      */
     private void showThanksScreen() {
-        llDonationInfo.setVisibility(View.GONE);
+        svDonationInfo.setVisibility(View.GONE);
         progressWheel.setVisibility(View.GONE);
         llDonationThanks.setVisibility(View.VISIBLE);
     }
@@ -193,7 +194,7 @@ public class FragmentDonation extends Fragment {
      * Shows the loading screen within the fragment and hides loading and thanks.
      */
     private void showLoadingScreen() {
-        llDonationInfo.setVisibility(View.GONE);
+        svDonationInfo.setVisibility(View.GONE);
         llDonationThanks.setVisibility(View.GONE);
         progressWheel.setVisibility(View.VISIBLE);
     }
@@ -204,7 +205,7 @@ public class FragmentDonation extends Fragment {
     private void showDonationInfoScreen() {
         llDonationThanks.setVisibility(View.GONE);
         progressWheel.setVisibility(View.GONE);
-        llDonationInfo.setVisibility(View.VISIBLE);
+        svDonationInfo.setVisibility(View.VISIBLE);
     }
 
     /**

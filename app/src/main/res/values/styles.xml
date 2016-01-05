@@ -118,4 +118,12 @@
         <item name="android:paddingRight">16dp</item>
         <item name="android:textSize">24sp</item>
     </style>
+
+
+    <!-- Fragment Donation -->
+    <style name="FragmentDonationIconText">
+        <item name="android:drawablePadding">2dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">11sp</item>
+    </style>
 </resources>

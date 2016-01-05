@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<FrameLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
 
-    <FrameLayout
+    <com.pnikosis.materialishprogress.ProgressWheel
+        android:id="@+id/progress_wheel"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center"
+        app:matProg_barColor="?attr/colorPrimary"
+        app:matProg_progressIndeterminate="true"
+        app:matProg_barWidth="2dp"
+        android:visibility="gone" />
+
+
+    <ScrollView
+        android:id="@+id/donation_info"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.pnikosis.materialishprogress.ProgressWheel
-            android:id="@+id/progress_wheel"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_gravity="center"
-            app:matProg_barColor="?attr/colorPrimary"
-            app:matProg_progressIndeterminate="true"
-            app:matProg_barWidth="2dp"
-            android:visibility="gone" />
-
-
+        android:layout_height="match_parent">
         <LinearLayout
-            android:id="@+id/donation_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -30,44 +33,161 @@
                 android:layout_height="wrap_content"
                 android:text="Unterstütze uns!" />
 
-            <Button
-                android:id="@+id/bt_donation2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="2€ Spende"
-                android:layout_marginTop="8dp"
-                android:theme="@style/RobotoButtonStyle"/>
-            <Button
-                android:id="@+id/bt_donation5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="5€ Spende"
-                android:layout_marginTop="8dp"
-                android:theme="@style/RobotoButtonStyle"/>
-            <Button
-                android:id="@+id/bt_donation10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="10€ Spende"
-                android:layout_marginTop="8dp"
-                android:theme="@style/RobotoButtonStyle"/>
-        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/donation_thanks"
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="4" >
+
+                <!-- 2€ donation -->
+                <TableRow android:layout_marginBottom="15dp">
+                    <Button
+                        android:id="@+id/bt_donation2"
+                        android:text="@string/donation2"
+                        android:theme="@style/RobotoButtonStyle"
+                        android:layout_marginRight="12dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+
+                    <!-- left side -->
+                    <TextView
+                        android:drawableTop="@drawable/ic_doubt3"
+                        style="@style/FragmentDonationIconText"
+                        android:layout_marginRight="5dp"
+                        android:text="@string/donation_jonas" />
+
+                    <!-- no beers :( -->
+                    <View />
+                    <View />
+
+                    <View />
+
+                    <!-- 1 beer -->
+                    <View />
+                    <TextView
+                        android:drawableTop="@drawable/ic_drink24"
+                        style="@style/FragmentDonationIconText"
+                        android:text="@string/donation_beer" />
+
+                    <!-- right side -->
+                    <TextView
+                        android:drawableTop="@drawable/ic_sad38"
+                        style="@style/FragmentDonationIconText"
+                        android:layout_marginLeft="5dp"
+                        android:text="@string/donation_tilman" />
+                </TableRow>
+
+
+                <!-- 5€ donation -->
+                <TableRow android:layout_marginBottom="15dp">
+                <Button
+                        android:id="@+id/bt_donation5"
+                        android:text="@string/donation5"
+                        android:theme="@style/RobotoButtonStyle"
+                        android:layout_marginRight="12dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+
+                    <!-- left side -->
+                    <TextView
+                        android:drawableTop="@drawable/ic_emoticon87"
+                        style="@style/FragmentDonationIconText"
+                        android:layout_marginRight="5dp"
+                        android:text="@string/donation_jonas" />
+
+                    <!-- 1 beer -->
+                    <TextView
+                        android:drawableTop="@drawable/ic_drink24_left"
+                        style="@style/FragmentDonationIconText"
+                        android:text="@string/donation_beer" />
+                    <View />
+
+                    <View />
+
+                    <!-- 1 beer -->
+                    <View />
+                    <TextView
+                        android:drawableTop="@drawable/ic_drink24"
+                        style="@style/FragmentDonationIconText"
+                        android:text="@string/donation_beer" />
+
+                    <!-- right side -->
+                    <TextView
+                        android:drawableTop="@drawable/ic_emoticon87"
+                        style="@style/FragmentDonationIconText"
+                        android:layout_marginLeft="5dp"
+                        android:text="@string/donation_tilman" />
+                </TableRow>
+
+
+                <!-- 10€ donation -->
+                <TableRow android:layout_marginBottom="15dp">
+                <Button
+                        android:id="@+id/bt_donation10"
+                        android:text="@string/donation10"
+                        android:theme="@style/RobotoButtonStyle"
+                        android:layout_marginRight="12dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+
+                    <!-- left side -->
+                    <TextView
+                        android:drawableTop="@drawable/ic_emoticon85"
+                        style="@style/FragmentDonationIconText"
+                        android:layout_marginRight="5dp"
+                        android:text="@string/donation_jonas" />
+
+                    <!-- beers -->
+                    <TextView
+                        android:drawableTop="@drawable/ic_drink24_left"
+                        style="@style/FragmentDonationIconText"
+                        android:text="@string/donation_beer" />
+                    <TextView
+                        android:drawableTop="@drawable/ic_drink24_left"
+                        style="@style/FragmentDonationIconText"
+                        android:text="@string/donation_beer" />
+
+                    <View />
+
+                    <!-- beers -->
+                    <TextView
+                        android:drawableTop="@drawable/ic_drink24"
+                        style="@style/FragmentDonationIconText"
+                        android:text="@string/donation_beer" />
+                    <TextView
+                        android:drawableTop="@drawable/ic_drink24"
+                        style="@style/FragmentDonationIconText"
+                        android:text="@string/donation_beer" />
+
+                    <!-- right side -->
+                    <TextView
+                        android:drawableTop="@drawable/ic_emoticon85"
+                        style="@style/FragmentDonationIconText"
+                        android:layout_marginLeft="5dp"
+                        android:text="@string/donation_tilman" />
+                </TableRow>
+
+            </TableLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/donation_thanks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_gravity="center"
+            android:textSize="24sp"
+            android:text="@string/donation_thankyou" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vielen Dank!" />
-
-        </LinearLayout>
+    </LinearLayout>
 
 
-    </FrameLayout>
-
-</ScrollView>
+</FrameLayout>

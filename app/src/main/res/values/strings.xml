@@ -103,4 +103,12 @@
     <string name="tv_footer_contact_us">Gib uns Bescheid!</string>
     <string name="info_notifications_message">Wenn du Benachrichtigungen über neue Noten erhalten möchtest, musst du in den Einstellungen das automatische Abrufen aktivieren.</string>
     <string name="info_notifications_title">Hinweis</string>
+
+    <string name="donation2">2€</string>
+    <string name="donation5">5€</string>
+    <string name="donation10">10€</string>
+    <string name="donation_jonas">Jonas</string>
+    <string name="donation_tilman">Tilman</string>
+    <string name="donation_beer">Bier</string>
+    <string name="donation_thankyou">Vielen Dank für deine Unterstützung</string>
 </resources>
