@@ -6,12 +6,8 @@ import android.preference.PreferenceManager;
 
 import com.securepreferences.SecurePreferences;
 
-import java.util.List;
-
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
-import de.mygrades.database.dao.Rule;
-import de.mygrades.database.dao.RuleDao;
 import de.mygrades.database.dao.University;
 import de.mygrades.database.dao.UniversityDao;
 import de.mygrades.main.alarm.ScrapeAlarmManager;
@@ -95,19 +91,10 @@ public class LoginProcessor extends BaseProcessor {
         secureEditor.remove(Constants.PREF_KEY_PASSWORD);
         secureEditor.commit();
 
-        // remove normal preferences
+        // clear normal preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.remove(Constants.PREF_KEY_UNIVERSITY_ID);
-        editor.remove(Constants.PREF_KEY_INITIAL_LOADING_DONE);
-        editor.remove(Constants.PREF_KEY_LAST_UPDATED_AT);
-        editor.remove(Constants.PREF_KEY_RULE_ID);
-        editor.remove(context.getString(R.string.pref_key_max_credit_points));
-
-        // remove settings for automatic scraping
-        editor.remove(context.getString(R.string.pref_key_automatic_scraping));
-        editor.remove(context.getString(R.string.pref_key_scrape_frequency));
-        editor.remove(context.getString(R.string.pref_key_only_wifi));
+        editor.clear();
         editor.apply();
 
         // restore default preferences

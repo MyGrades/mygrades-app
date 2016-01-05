@@ -120,13 +120,13 @@ public class StatisticsProcessor extends BaseProcessor {
 
     /**
      * Creates an integer array with the grade distribution.
-     * [1.0 -1.3, 1.7-2.3, 2.7-3.3, 3.7 - 4.0, 4.3 - 5.0]
+     * [1.0 -1.3, 1.7-2.3, 2.7-3.3, 3.7 - 4.0, 4.3 - 5.0, others]
      *
      * @param gradeEntries list of grade entries
      * @return integer array with grade distribution
      */
     private int[] getGradeDistribution(List<GradeEntry> gradeEntries) {
-        int[] gradeDistribution = new int[5];
+        int[] gradeDistribution = new int[6];
 
         for (GradeEntry gradeEntry : gradeEntries) {
             if (gradeEntry.getGrade() != null && gradeEntry.getGrade() > 0) {
@@ -134,6 +134,8 @@ public class StatisticsProcessor extends BaseProcessor {
                 if (grade > 0) {
                     gradeDistribution[grade - 1] += 1;
                 }
+            } else {
+                gradeDistribution[5] += 1;
             }
         }
 

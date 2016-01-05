@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -42,6 +44,11 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     public GradesRecyclerViewAdapter(Context context) {
         super();
         items = new ArrayList<>();
+
+        GradesSummaryItem summary = new GradesSummaryItem();
+        items.add(0, summary);
+        notifyItemInserted(0);
+
         this.context = context;
         prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
 
@@ -65,14 +72,6 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * @param semesterNumber - semester term count
      */
     public void addGradeForSemester(GradeItem newGrade, int semesterNumber, String semester) {
-        // add summary if necessary
-        if (items.size() == 0) {
-            // always add summary to top
-            GradesSummaryItem summary = new GradesSummaryItem();
-            items.add(0, summary);
-            notifyItemInserted(0);
-        }
-
         // find semester index, where the grade should be added
         int semesterIndex = getIndexForSemester(semesterNumber, semester);
 
@@ -314,6 +313,15 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             viewHolder.tvLastUpdatedAt.setText(summaryItem.getLastUpdatedAt());
             viewHolder.tvMaxCreditPoints.setText(
                     context.getString(R.string.tv_max_credit_points, prefs.getString(context.getString(R.string.pref_key_max_credit_points), "")));
+
+            // info box
+            if (summaryItem.isInfoBoxVisible()) {
+                viewHolder.infoBox.setVisibility(View.VISIBLE);
+                viewHolder.infoBoxTitle.setText(summaryItem.getInfoBoxTitle());
+                viewHolder.infoBoxMessage.setText(summaryItem.getInfoBoxMessage());
+            } else {
+                viewHolder.infoBox.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -333,6 +341,36 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         return -1;
+    }
+
+    /**
+     * Shows an info box.
+     *
+     * @param title title
+     * @param message message
+     * @param dismissPrefKey preference key which should be set to true, when info box is dismissed
+     */
+    public void showInfoBox(String title, String message, String dismissPrefKey) {
+        GradesSummaryItem summary = (GradesSummaryItem) items.get(0);
+        summary.setInfoBoxTitle(title);
+        summary.setInfoBoxMessage(message);
+        summary.setInfoBoxVisible(true);
+        summary.setDismissPrefKey(dismissPrefKey);
+
+        notifyItemChanged(0);
+    }
+
+    /**
+     * Hides the info box.
+     */
+    public void hideInfoBox() {
+        GradesSummaryItem summary = (GradesSummaryItem) items.get(0);
+        summary.setInfoBoxVisible(false);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().putBoolean(summary.getDismissPrefKey(), true).apply();
+
+        notifyItemChanged(0);
     }
 
     /**
@@ -392,14 +430,28 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         public TextView tvCreditPoints;
         public TextView tvLastUpdatedAt;
         public TextView tvMaxCreditPoints;
+        public LinearLayout infoBox;
+        public TextView infoBoxTitle;
+        public TextView infoBoxMessage;
+        public ImageView dismissInfoBox;
 
-        public GradesSummaryViewHolder(View itemView) {
+        public GradesSummaryViewHolder(final View itemView) {
             super(itemView);
 
             tvAverage = (TextView) itemView.findViewById(R.id.tv_average);
             tvCreditPoints = (TextView) itemView.findViewById(R.id.tv_credit_points);
             tvLastUpdatedAt = (TextView) itemView.findViewById(R.id.tv_last_updated_at);
             tvMaxCreditPoints = (TextView) itemView.findViewById(R.id.tv_max_credit_points);
+            infoBox = (LinearLayout) itemView.findViewById(R.id.info_box);
+            infoBoxMessage = (TextView) itemView.findViewById(R.id.info_box_message);
+            infoBoxTitle = (TextView) itemView.findViewById(R.id.info_box_title);
+            dismissInfoBox = (ImageView) itemView.findViewById(R.id.iv_dismiss_info);
+            dismissInfoBox.setOnClickListener(new ImageView.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    hideInfoBox();
+                }
+            });
         }
     }
 }
