@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -267,7 +269,9 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             return new GradeViewHolder(v);
         } else if (viewType == VIEW_TYPE_SUMMARY) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grades_summary, parent, false);
-            return new GradesSummaryViewHolder(v);
+            GradesSummaryViewHolder gradesSummaryViewHolder = new GradesSummaryViewHolder(v);
+            gradesSummaryViewHolder.infoBoxMessage.setMovementMethod(LinkMovementMethod.getInstance());
+            return gradesSummaryViewHolder;
         }
         return null;
     }
@@ -318,7 +322,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             if (summaryItem.isInfoBoxVisible()) {
                 viewHolder.infoBox.setVisibility(View.VISIBLE);
                 viewHolder.infoBoxTitle.setText(summaryItem.getInfoBoxTitle());
-                viewHolder.infoBoxMessage.setText(summaryItem.getInfoBoxMessage());
+                viewHolder.infoBoxMessage.setText(Html.fromHtml(summaryItem.getInfoBoxMessage()));
             } else {
                 viewHolder.infoBox.setVisibility(View.GONE);
             }

@@ -36,6 +36,7 @@ import de.mygrades.util.Constants;
  * If not, he will be redirected to the SelectUniversityActivity.
  */
 public class MainActivity extends AppCompatActivity implements ReplacableFragment {
+    private SharedPreferences prefs;
     private MainServiceHelper mainServiceHelper;
     private DrawerLayout drawerLayout;
 
@@ -61,12 +62,15 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
         if (!checkLogin()) {
             goToUniversitySelection();
             return;
         }
 
         setContentView(R.layout.activity_main);
+
         mainServiceHelper = new MainServiceHelper(this);
 
         // init toolbar
@@ -94,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
                 replaceFragment(R.id.fl_initial_scraping, new FragmentInitialScraping(), false);
             }
         } else {
+            increaseApplicationLaunchesCounter(savedInstanceState);
+
             if (getIntent() != null && getIntent().getIntExtra(FragmentFaq.ARGUMENT_GO_TO_QUESTION, -1) >= 0) {
                 // go to FAQs
                 FragmentFaq fragmentFaq = new FragmentFaq();
@@ -115,6 +121,20 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
         EventBus.getDefault().registerSticky(this);
 
         mainServiceHelper.getLoginDataFromDatabase();
+    }
+
+    /**
+     * Increases the app launch counter if savedInstanceState is null.
+     * The counter is used to show re-occurring info boxes.
+     *
+     * @param savedInstanceState saved instance state.
+     */
+    private void increaseApplicationLaunchesCounter(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            int count = prefs.getInt(Constants.PREF_KEY_APPLICATION_LAUNCHES_COUNTER, 0);
+            count += 1;
+            prefs.edit().putInt(Constants.PREF_KEY_APPLICATION_LAUNCHES_COUNTER, count).apply();
+        }
     }
 
     /**
@@ -143,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
      * @return true if user is logged in.
      */
     private boolean checkLogin() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
         return universityId > 0;
     }
@@ -154,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
      * @return true or false
      */
     private boolean isInitialScrapingDone() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         return prefs.getBoolean(Constants.PREF_KEY_INITIAL_LOADING_DONE, false);
     }
 
