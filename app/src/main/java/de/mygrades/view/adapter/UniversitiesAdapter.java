@@ -117,7 +117,7 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
                 return new UniversityViewHolder(universityView, itemOnClickListener);
             case GROUP_VIEW_TYPE_HEADER:
                 final View headerView = inflater.inflate(R.layout.item_university_header, parent, false);
-                return new HeaderViewHolder(headerView);
+                return new HeaderViewHolder(headerView, tryAgainListener);
             case GROUP_VIEW_TYPE_FOOTER:
                 final View footerView = inflater.inflate(R.layout.item_university_footer, parent, false);
                 return new FooterViewHolder(footerView, itemOnClickListener);
@@ -271,7 +271,7 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
     /**
      * ViewHolder for selected universities (group item).
      */
-    public class UniversityViewHolder extends GroupViewHolder {
+    public static class UniversityViewHolder extends GroupViewHolder {
         public final TextView tvUniversityName;
         public final TextView tvSection;
         public final LinearLayout llSectionWrapper;
@@ -286,40 +286,45 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
     }
 
     /**
+     * Click listener to retry getUniversities request.
+     */
+    private Button.OnClickListener tryAgainListener = new Button.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            showError(null);
+            showLoadingAnimation(true);
+
+            // load universities from server
+            MainServiceHelper mainServiceHelper = new MainServiceHelper(v.getContext());
+            mainServiceHelper.getUniversities(true);
+        }
+    };
+
+    /**
      * ViewHolder for the header view.
      */
-    public class HeaderViewHolder extends GroupViewHolder{
+    public static class HeaderViewHolder extends GroupViewHolder{
         public final TextView tvHeader;
         public final ProgressWheel progressWheel;
         public final LinearLayout llErrorWrapper;
         public final TextView tvErrorMessage;
         public final Button btnTryAgain;
 
-        public HeaderViewHolder(View rootView) {
+        public HeaderViewHolder(View rootView, Button.OnClickListener tryAgainListener) {
             super(rootView);
             tvHeader = (TextView) rootView.findViewById(R.id.tv_university_header);
             progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
             llErrorWrapper = (LinearLayout) rootView.findViewById(R.id.ll_error_wrapper);
             tvErrorMessage = (TextView) rootView.findViewById(R.id.tv_error_message);
             btnTryAgain = (Button) rootView.findViewById(R.id.btn_try_again);
-            btnTryAgain.setOnClickListener(new Button.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showError(null);
-                    showLoadingAnimation(true);
-
-                    // load universities from server
-                    MainServiceHelper mainServiceHelper = new MainServiceHelper(v.getContext());
-                    mainServiceHelper.getUniversities(true);
-                }
-            });
+            btnTryAgain.setOnClickListener(tryAgainListener);
         }
     }
 
     /**
      * ViewHolder for selectable rules (child item).
      */
-    public class RuleViewHolder extends AbstractExpandableItemViewHolder  {
+    public static class RuleViewHolder extends AbstractExpandableItemViewHolder  {
         public final TextView tvRuleName;
 
         public RuleViewHolder(View itemView, View.OnClickListener clickListener) {
@@ -332,7 +337,7 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
     /**
      * ViewHolder for footer. 'university not found?'
      */
-    public class FooterViewHolder extends GroupViewHolder {
+    public static class FooterViewHolder extends GroupViewHolder {
         public final LinearLayout llContainer;
 
         public FooterViewHolder(View itemView, View.OnClickListener clickListener) {
@@ -342,7 +347,7 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
         }
     }
 
-    public abstract class GroupViewHolder extends AbstractExpandableItemViewHolder {
+    public static abstract class GroupViewHolder extends AbstractExpandableItemViewHolder {
         public GroupViewHolder(View itemView) {
             super(itemView);
         }

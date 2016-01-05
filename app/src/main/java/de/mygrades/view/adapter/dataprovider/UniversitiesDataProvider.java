@@ -78,11 +78,12 @@ public class UniversitiesDataProvider {
                         return true;
                     }
                 }
+
+                return true;
             }
         }
         return false;
     }
-
 
     /**
      * Updates an university if it exists already.
