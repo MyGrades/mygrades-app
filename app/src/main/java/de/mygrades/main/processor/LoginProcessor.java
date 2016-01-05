@@ -103,6 +103,7 @@ public class LoginProcessor extends BaseProcessor {
         editor.remove(Constants.PREF_KEY_LAST_UPDATED_AT);
         editor.remove(Constants.PREF_KEY_RULE_ID);
         editor.remove(context.getString(R.string.pref_key_max_credit_points));
+        editor.remove(Constants.PREF_KEY_DISMISSED_NOTIFICATION_INFO);
 
         // remove settings for automatic scraping
         editor.remove(context.getString(R.string.pref_key_automatic_scraping));

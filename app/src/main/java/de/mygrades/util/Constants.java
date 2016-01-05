@@ -17,6 +17,7 @@ public class Constants {
     public static final String PREF_KEY_LAST_UPDATED_AT = "last_updated_at";
     public static final String PREF_KEY_SCRAPING_FAILS_INTERVAL = "scraping_fails_interval";
     public static final String PREF_KEY_ALARM_ERROR_SCRAPING_COUNT = "alarm_error_scraping_count";
+    public static final String PREF_KEY_DISMISSED_NOTIFICATION_INFO = "dismissed_notification_info";
 
     // Scraping status instance state
     public static final String INSTANCE_IS_SCRAPING_STATE = "is_scraping_state";

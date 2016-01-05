@@ -101,4 +101,6 @@
     <string name="toolbar_post_wish">Wunsch senden</string>
     <string name="tv_footer_uni_not_present">Hochschule nicht dabei?</string>
     <string name="tv_footer_contact_us">Gib uns Bescheid!</string>
+    <string name="info_notifications_message">Wenn du Benachrichtigungen über neue Noten erhalten möchtest, musst du in den Einstellungen das automatische Abrufen aktivieren.</string>
+    <string name="info_notifications_title">Hinweis</string>
 </resources>

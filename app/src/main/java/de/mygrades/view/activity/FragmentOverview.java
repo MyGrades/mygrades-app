@@ -1,6 +1,8 @@
 package de.mygrades.view.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,6 +19,7 @@ import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.GradesEvent;
 import de.mygrades.main.events.ScrapeProgressEvent;
+import de.mygrades.util.Constants;
 import de.mygrades.view.PtrHeader;
 import de.mygrades.view.UIHelper;
 import de.mygrades.view.adapter.GradesRecyclerViewAdapter;
@@ -54,6 +57,8 @@ public class FragmentOverview extends Fragment {
 
         // init pull to refresh layout
         initPullToRefresh(view);
+
+        showInfoBox();
 
         // init tryAgainButton for snackbar
         tryAgainListener = new View.OnClickListener() {
@@ -135,6 +140,20 @@ public class FragmentOverview extends Fragment {
         // set adapter
         adapter = new GradesRecyclerViewAdapter(getContext());
         rvGrades.setAdapter(adapter);
+    }
+
+    /**
+     * Decides if an info box should be shown.
+     */
+    private void showInfoBox() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean dismissedNotificationInfo = prefs.getBoolean(Constants.PREF_KEY_DISMISSED_NOTIFICATION_INFO, false);
+
+        if (!dismissedNotificationInfo) {
+            String title = getString(R.string.info_notifications_title, "");
+            String message = getString(R.string.info_notifications_message, "");
+            adapter.showInfoBox(title, message, Constants.PREF_KEY_DISMISSED_NOTIFICATION_INFO);
+        }
     }
 
     /**

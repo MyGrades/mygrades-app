@@ -7,6 +7,10 @@ public class GradesSummaryItem implements GradesAdapterItem {
     private float average;
     private float creditPoints;
     private String lastUpdatedAt;
+    private String infoBoxTitle;
+    private String infoBoxMessage;
+    private boolean infoBoxVisible;
+    private String dismissPrefKey;
 
     public GradesSummaryItem() {
     }
@@ -33,5 +37,37 @@ public class GradesSummaryItem implements GradesAdapterItem {
 
     public void setLastUpdatedAt(String lastUpdatedAt) {
         this.lastUpdatedAt = lastUpdatedAt;
+    }
+
+    public String getInfoBoxTitle() {
+        return infoBoxTitle;
+    }
+
+    public void setInfoBoxTitle(String infoBoxTitle) {
+        this.infoBoxTitle = infoBoxTitle;
+    }
+
+    public String getInfoBoxMessage() {
+        return infoBoxMessage;
+    }
+
+    public void setInfoBoxMessage(String infoBoxMessage) {
+        this.infoBoxMessage = infoBoxMessage;
+    }
+
+    public boolean isInfoBoxVisible() {
+        return infoBoxVisible;
+    }
+
+    public void setInfoBoxVisible(boolean infoBoxVisible) {
+        this.infoBoxVisible = infoBoxVisible;
+    }
+
+    public String getDismissPrefKey() {
+        return dismissPrefKey;
+    }
+
+    public void setDismissPrefKey(String dismissPrefKey) {
+        this.dismissPrefKey = dismissPrefKey;
     }
 }
