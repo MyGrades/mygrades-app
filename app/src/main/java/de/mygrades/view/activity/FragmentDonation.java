@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.pnikosis.materialishprogress.ProgressWheel;
 
@@ -40,7 +41,7 @@ public class FragmentDonation extends Fragment {
     private Button btDonate2;
     private Button btDonate5;
     private Button btDonate10;
-    private LinearLayout llDonationThanks;
+    private TextView tvDonationThanks;
 
     // IAB
     private IabHelper mHelper;
@@ -71,7 +72,7 @@ public class FragmentDonation extends Fragment {
         btDonate2 = (Button) view.findViewById(R.id.bt_donation2);
         btDonate5 = (Button) view.findViewById(R.id.bt_donation5);
         btDonate10 = (Button) view.findViewById(R.id.bt_donation10);
-        llDonationThanks = (LinearLayout) view.findViewById(R.id.donation_thanks);
+        tvDonationThanks = (TextView) view.findViewById(R.id.donation_thanks);
     }
 
     /**
@@ -187,7 +188,7 @@ public class FragmentDonation extends Fragment {
     private void showThanksScreen() {
         svDonationInfo.setVisibility(View.GONE);
         progressWheel.setVisibility(View.GONE);
-        llDonationThanks.setVisibility(View.VISIBLE);
+        tvDonationThanks.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -195,7 +196,7 @@ public class FragmentDonation extends Fragment {
      */
     private void showLoadingScreen() {
         svDonationInfo.setVisibility(View.GONE);
-        llDonationThanks.setVisibility(View.GONE);
+        tvDonationThanks.setVisibility(View.GONE);
         progressWheel.setVisibility(View.VISIBLE);
     }
 
@@ -203,7 +204,7 @@ public class FragmentDonation extends Fragment {
      * Shows the info screen within the fragment and hides loading and thanks.
      */
     private void showDonationInfoScreen() {
-        llDonationThanks.setVisibility(View.GONE);
+        tvDonationThanks.setVisibility(View.GONE);
         progressWheel.setVisibility(View.GONE);
         svDonationInfo.setVisibility(View.VISIBLE);
     }

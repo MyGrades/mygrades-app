@@ -26,19 +26,52 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="16dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Unterstütze uns!" />
+                android:text="@string/donation_intro" />
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/donation_reason1" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/donation_reason2" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/donation_reason3" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/donation_reason4" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/donation_reason5" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/donation_reason6" />
+
+            </LinearLayout>
 
 
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:stretchColumns="4" >
+                android:stretchColumns="4"
+                android:layout_marginTop="30dp">
 
                 <!-- 2€ donation -->
                 <TableRow android:layout_marginBottom="15dp">
@@ -173,21 +206,13 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
+
+    <TextView
         android:id="@+id/donation_thanks"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="24sp"
-            android:text="@string/donation_thankyou" />
-
-    </LinearLayout>
-
-
+        android:layout_gravity="center"
+        android:textSize="24sp"
+        android:text="@string/donation_thankyou" />
 </FrameLayout>

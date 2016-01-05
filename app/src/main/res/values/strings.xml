@@ -110,5 +110,13 @@
     <string name="donation_jonas">Jonas</string>
     <string name="donation_tilman">Tilman</string>
     <string name="donation_beer">Bier</string>
-    <string name="donation_thankyou">Vielen Dank für deine Unterstützung</string>
+    <string name="donation_thankyou">Vielen Dank für deine Unterstützung!</string>
+    <string name="donation_intro">Hier kannst du uns \'was gutes tun! Spende uns eine Kleinigkeit via In-App-Kauf.\n\n<b>Warum ist das eine gute Idee?</b></string>
+    <string name="donation_reason1">&#8226; wir - Jonas und Tilman - sind auch nur zwei arme Studenten</string>
+    <string name="donation_reason2">&#8226; keine Werbung und kostenlos</string>
+    <string name="donation_reason3">&#8226; laufende Serverkosten</string>
+    <string name="donation_reason4">&#8226; kein Sammeln und kein Verkauf von Daten</string>
+    <string name="donation_reason5">&#8226; Open-Source</string>
+    <string name="donation_reason6">&#8226; Support und Weiterentwicklung</string>
+
 </resources>
