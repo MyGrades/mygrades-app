@@ -196,6 +196,7 @@ public class FragmentStatistics extends Fragment {
         xValues.add("2,7 - 3,3");
         xValues.add("3,7 - 4,0");
         xValues.add("4,3 - 5,0");
+        xValues.add("Andere");
 
         BarDataSet dataSet = new BarDataSet(yValues, "");
         dataSet.setValueTextSize(12);

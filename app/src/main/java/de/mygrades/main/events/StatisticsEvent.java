@@ -16,12 +16,12 @@ public class StatisticsEvent {
     private int gradeCount;
     private List<SemesterItem> semesterItems;
 
-    // sections for grade distribution [1.0 -1.3, 1.7-2.3, 2.7-3.3, 3.7 - 4.0, 4.3 - 5.0]
+    // sections for grade distribution [1.0 -1.3, 1.7-2.3, 2.7-3.3, 3.7 - 4.0, 4.3 - 5.0, others]
     private int[] gradeDistribution;
 
     public StatisticsEvent() {
         semesterItems = new ArrayList<>();
-        gradeDistribution = new int[5];
+        gradeDistribution = new int[6];
     }
 
     public float getAverage() {
