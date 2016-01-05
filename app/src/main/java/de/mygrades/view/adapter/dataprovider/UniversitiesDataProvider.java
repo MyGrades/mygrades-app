@@ -78,11 +78,12 @@ public class UniversitiesDataProvider {
                         return true;
                     }
                 }
+
+                return true;
             }
         }
         return false;
     }
-
 
     /**
      * Updates an university if it exists already.
@@ -106,7 +107,7 @@ public class UniversitiesDataProvider {
      * @param newUniversity UniversityItem to add
      */
     private void addUniversity(RecyclerViewExpandableItemManager expandableItemManager, UniversityItem newUniversity) {
-        int newUniversityIndex = items.size() - 1; // add to end, if no proper index was found
+        int newUniversityIndex = items.size() - 2; // add to end, if no proper index was found
 
         for(int i = 1; i < items.size() - 1; i++) {
             UniversityItem universityItem = (UniversityItem) items.get(i);
