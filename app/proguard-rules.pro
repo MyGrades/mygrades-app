@@ -34,6 +34,8 @@
 -keepattributes Signature
 -keepattributes Exceptions
 -keep class de.mygrades.database.dao.** { *; }
+-keep class de.mygrades.main.processor.ErrorProcessor$Error { *; }
+-keep class de.mygrades.main.processor.WishProcessor$Wish { *; }
 -keepclasseswithmembers class * {
     @retrofit.http.* <methods>;
 }
@@ -55,11 +57,11 @@
 -dontwarn freemarker.**
 
 # remove logging
--assumenosideeffects class android.util.Log {
-    public static boolean isLoggable(java.lang.String, int);
-    public static int v(...);
-    public static int i(...);
-    public static int w(...);
-    public static int d(...);
-    public static int e(...);
-}
+#-assumenosideeffects class android.util.Log {
+#    public static boolean isLoggable(java.lang.String, int);
+#    public static int v(...);
+#    public static int i(...);
+#    public static int w(...);
+#    public static int d(...);
+#    public static int e(...);
+#}
