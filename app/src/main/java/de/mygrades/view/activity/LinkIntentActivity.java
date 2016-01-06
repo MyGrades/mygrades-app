@@ -1,5 +1,6 @@
 package de.mygrades.view.activity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -124,6 +125,17 @@ public class LinkIntentActivity extends AppCompatActivity implements ReplacableF
             getSupportActionBar().setTitle(getString(R.string.toolbar_post_wish));
         } else if (newFragment instanceof  FragmentDonation) {
             getSupportActionBar().setTitle(getString(R.string.toolbar_donation));
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // check if FragmentDonation is the currently active fragment and call method
+        FragmentDonation fragmentDonation = (FragmentDonation) getSupportFragmentManager().findFragmentByTag(FragmentDonation.class.getSimpleName());
+        if (fragmentDonation != null && fragmentDonation.isVisible()) {
+            fragmentDonation.onActivityResult(requestCode, resultCode, data);
         }
     }
 }
