@@ -3,13 +3,13 @@ apply plugin: 'aar-link-sources'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.0"
+    buildToolsVersion "23.0.2"
     defaultConfig {
         applicationId 'de.mygrades'
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 4
-        versionName "0.4b"
+        versionCode 5
+        versionName "1.0"
     }
     buildTypes {
         release {
