@@ -266,11 +266,14 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             return new SemesterViewHolder(v);
         } else if (viewType == VIEW_TYPE_GRADE) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grade, parent, false);
-            return new GradeViewHolder(v);
+            GradeViewHolder gradeViewHolder = new GradeViewHolder(v);
+            gradeViewHolder.setGoToDetailsClickListener(new GoToDetailsClickListener());
+            return gradeViewHolder;
         } else if (viewType == VIEW_TYPE_SUMMARY) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grades_summary, parent, false);
             GradesSummaryViewHolder gradesSummaryViewHolder = new GradesSummaryViewHolder(v);
             gradesSummaryViewHolder.infoBoxMessage.setMovementMethod(LinkMovementMethod.getInstance());
+            gradesSummaryViewHolder.dismissInfoBox.setOnClickListener(hideInfoBoxClickListener);
             return gradesSummaryViewHolder;
         }
         return null;
@@ -289,7 +292,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         } else if (holder instanceof GradeViewHolder) {
             GradeViewHolder viewHolder = (GradeViewHolder) holder;
             GradeItem gradeItem = (GradeItem) items.get(position);
-
+            viewHolder.setGradeHash(gradeItem.getHash());
             viewHolder.tvName.setText(gradeItem.getName());
 
             Float grade = gradeItem.getGrade();
@@ -378,13 +381,33 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     /**
+     * Custom click listener to go to GradeDetailActivity.
+     */
+    private static class GoToDetailsClickListener implements View.OnClickListener {
+        private String gradeHash = "";
+
+        @Override
+        public void onClick(View v) {
+            final Intent intent = new Intent(v.getContext(), GradeDetailedActivity.class);
+            intent.putExtra(GradeDetailedActivity.EXTRA_GRADE_HASH, gradeHash);
+            v.getContext().startActivity(intent);
+        }
+
+        private void setGradeHash(String gradeHash) {
+            this.gradeHash = gradeHash;
+        }
+    }
+
+    /**
      * View holder for a grade entry.
      */
-    public class GradeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener  {
+    public static class GradeViewHolder extends RecyclerView.ViewHolder {
+        public LinearLayout llGradeContainer;
         public TextView tvName;
         public TextView tvGrade;
         public TextView tvCreditPoints;
         public TextView tvGradeSeen;
+        public GoToDetailsClickListener goToDetailsClickListener;
 
         public GradeViewHolder(View itemView) {
             super(itemView);
@@ -393,24 +416,23 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             tvGrade = (TextView) itemView.findViewById(R.id.tv_grade);
             tvCreditPoints = (TextView) itemView.findViewById(R.id.tv_credit_points);
             tvGradeSeen = (TextView) itemView.findViewById(R.id.tv_grade_seen);
-
-            itemView.setOnClickListener(this);
+            llGradeContainer = (LinearLayout) itemView.findViewById(R.id.grade_container);
         }
 
-        @Override
-        public void onClick(View v) {
-            final Intent intent = new Intent(v.getContext(), GradeDetailedActivity.class);
-            GradeItem gradeItem = (GradeItem) items.get(getAdapterPosition());
+        public void setGoToDetailsClickListener(GoToDetailsClickListener clickListener) {
+            this.goToDetailsClickListener = clickListener;
+            llGradeContainer.setOnClickListener(goToDetailsClickListener);
+        }
 
-            intent.putExtra(GradeDetailedActivity.EXTRA_GRADE_HASH, gradeItem.getHash());
-            v.getContext().startActivity(intent);
+        public void setGradeHash(String gradeHash) {
+            goToDetailsClickListener.setGradeHash(gradeHash);
         }
     }
 
     /**
      * View holder for an semester section header.
      */
-    public class SemesterViewHolder extends RecyclerView.ViewHolder {
+    public static class SemesterViewHolder extends RecyclerView.ViewHolder {
         public TextView tvSemesterNumber;
         public TextView tvSemester;
         public TextView tvAverage;
@@ -427,9 +449,19 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     /**
+     * Click listener to hide the info box.
+     */
+    private View.OnClickListener hideInfoBoxClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            hideInfoBox();
+        }
+    };
+
+    /**
      * View holder for the overall summary (header).
      */
-    public class GradesSummaryViewHolder extends RecyclerView.ViewHolder {
+    public static class GradesSummaryViewHolder extends RecyclerView.ViewHolder {
         public TextView tvAverage;
         public TextView tvCreditPoints;
         public TextView tvLastUpdatedAt;
@@ -450,12 +482,6 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             infoBoxMessage = (TextView) itemView.findViewById(R.id.info_box_message);
             infoBoxTitle = (TextView) itemView.findViewById(R.id.info_box_title);
             dismissInfoBox = (ImageView) itemView.findViewById(R.id.iv_dismiss_info);
-            dismissInfoBox.setOnClickListener(new ImageView.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    hideInfoBox();
-                }
-            });
         }
     }
 }
