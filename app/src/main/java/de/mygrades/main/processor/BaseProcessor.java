@@ -5,11 +5,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import java.net.ConnectException;
+
 import de.greenrobot.event.EventBus;
 import de.mygrades.MyGradesApplication;
 import de.mygrades.database.dao.DaoSession;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.rest.RestClient;
+import retrofit.RetrofitError;
 
 /**
  * Base class for all processors to hold relevant objects.
@@ -37,6 +40,20 @@ public abstract class BaseProcessor {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    /**
+     * Post an ErrorEvent for retrofit errors.
+     * @param TAG - TAG for logging
+     * @param e RetrofitError
+     */
+    protected void postRetrofitError(String TAG, RetrofitError e) {
+        if (e.getCause() instanceof ConnectException) {
+            postErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout", e);
+        } else {
+            postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
+        }
+        Log.e(TAG, "RetrofitError: " + e.getMessage());
     }
 
     /**

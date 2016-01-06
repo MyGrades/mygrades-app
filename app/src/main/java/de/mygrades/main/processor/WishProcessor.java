@@ -1,9 +1,6 @@
 package de.mygrades.main.processor;
 
 import android.content.Context;
-import android.util.Log;
-
-import java.net.ConnectException;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.BuildConfig;
@@ -51,12 +48,7 @@ public class WishProcessor extends BaseProcessor {
             // post event
             EventBus.getDefault().post(new PostWishDoneEvent());
         } catch (RetrofitError e) {
-            if (e.getCause() instanceof ConnectException) {
-                postErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout", e);
-            } else {
-                postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
-            }
-            Log.e(TAG, "RetrofitError: " + e.getMessage());
+            postRetrofitError(TAG, e);
         }
     }
 

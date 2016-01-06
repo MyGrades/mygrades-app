@@ -3,9 +3,6 @@ package de.mygrades.main.processor;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
-
-import java.net.ConnectException;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.BuildConfig;
@@ -57,12 +54,7 @@ public class ErrorProcessor extends BaseProcessor {
             // post event
             EventBus.getDefault().post(new ErrorReportDoneEvent());
         } catch (RetrofitError e) {
-            if (e.getCause() instanceof ConnectException) {
-                postErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout", e);
-            } else {
-                postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
-            }
-            Log.e(TAG, "RetrofitError: " + e.getMessage());
+            postRetrofitError(TAG, e);
         }
     }
 

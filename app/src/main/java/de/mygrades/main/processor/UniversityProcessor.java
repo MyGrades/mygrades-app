@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,12 +84,7 @@ public class UniversityProcessor extends BaseProcessor {
             universityEvent.setUniversities(universities);
             EventBus.getDefault().post(universityEvent);
         } catch (RetrofitError e) {
-            if (e.getCause() instanceof ConnectException) {
-                postErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout", e);
-            } else {
-                postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
-            }
-            Log.e(TAG, "RetrofitError: " + e.getMessage());
+            postRetrofitError(TAG, e);
         }
     }
 
@@ -130,6 +124,7 @@ public class UniversityProcessor extends BaseProcessor {
             String updatedAtServer = getUpdatedAtServerForUniversity(universityId);
             university = restClient.getRestApi().getUniversity(universityId, updatedAtServer);
         } catch (RetrofitError e) {
+            // ignore retrofit error
             Log.e(TAG, "RetrofitError: " + e.getMessage());
         }
 
