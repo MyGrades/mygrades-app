@@ -106,7 +106,7 @@
     <string name="info_donation_title">Unterstütze uns!</string>
     <string name="info_donation_message"><![CDATA[Wir freuen uns, dass du die App regelmäßig nutzt. Nimm dir kurz Zeit und denke über eine <a href="de.mygrades.view.activity://goto.fragment/donation">Unterstützung</a> nach!]]></string>
     <string name="info_rating_title">Bewerte die App</string>
-    <string name="info_rating_message">Wir würden uns über dein Feedback im PlayStore freuen.</string>
+    <string name="info_rating_message"><![CDATA[Wir würden uns über dein Feedback im <a href="market://details?id=de.mygrades">PlayStore</a> freuen.]]></string>
 
     <string name="donation2">2€</string>
     <string name="donation5">5€</string>
