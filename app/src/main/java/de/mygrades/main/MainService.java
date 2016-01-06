@@ -36,18 +36,17 @@ public class MainService extends MultiThreadedIntentService {
     // intent extra, methods: key and values
     public static final String METHOD_KEY = "method_key";
     public static final int METHOD_GET_UNIVERSITIES = 111;
-    public static final int METHOD_GET_DETAILED_UNIVERSITY = 112;
-    public static final int METHOD_SCRAPE_FOR_GRADES = 113;
-    public static final int METHOD_LOGIN_AND_SCRAPE_FOR_GRADES = 114;
-    public static final int METHOD_GET_GRADES_FROM_DATABASE = 115;
-    public static final int METHOD_GET_UNIVERSITIES_FROM_DATABASE = 116;
-    public static final int METHOD_LOGOUT = 117;
-    public static final int METHOD_GET_GRADE_DETAILS = 118;
-    public static final int METHOD_SCRAPE_FOR_OVERVIEW = 119;
-    public static final int METHOD_GET_LOGIN_DATA_FROM_DATABASE = 120;
-    public static final int METHOD_POST_ERROR = 121;
-    public static final int METHOD_GET_STATISTICS = 122;
-    public static final int METHOD_POST_WISH = 123;
+    public static final int METHOD_SCRAPE_FOR_GRADES = 112;
+    public static final int METHOD_LOGIN_AND_SCRAPE_FOR_GRADES = 113;
+    public static final int METHOD_GET_GRADES_FROM_DATABASE = 114;
+    public static final int METHOD_GET_UNIVERSITIES_FROM_DATABASE = 115;
+    public static final int METHOD_LOGOUT = 116;
+    public static final int METHOD_GET_GRADE_DETAILS = 117;
+    public static final int METHOD_SCRAPE_FOR_OVERVIEW = 118;
+    public static final int METHOD_GET_LOGIN_DATA_FROM_DATABASE = 119;
+    public static final int METHOD_POST_ERROR = 120;
+    public static final int METHOD_GET_STATISTICS = 121;
+    public static final int METHOD_POST_WISH = 122;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
@@ -137,10 +136,6 @@ public class MainService extends MultiThreadedIntentService {
             case METHOD_GET_UNIVERSITIES:
                 boolean publishedOnly = intent.getBooleanExtra(PUBLISHED_ONLY, false);
                 universityProcessor.getUniversities(publishedOnly);
-                break;
-            case METHOD_GET_DETAILED_UNIVERSITY:
-                long universityId = intent.getLongExtra(UNIVERSITY_ID, 0);
-                universityProcessor.getDetailedUniversity(universityId);
                 break;
             case METHOD_GET_UNIVERSITIES_FROM_DATABASE:
                 publishedOnly = intent.getBooleanExtra(PUBLISHED_ONLY, false);

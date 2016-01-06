@@ -34,23 +34,6 @@ public class MainServiceHelper {
     }
 
     /**
-     * Starts a worker thread to get a detailed university from the server.
-     *
-     * @param universityId - university id
-     */
-    public void getDetailedUniversity(long universityId) {
-        int method = MainService.METHOD_GET_DETAILED_UNIVERSITY;
-
-        // set request id
-        long requestId = concatenateLong(method, universityId);
-
-        // start worker thread in background
-        Intent intent = getBasicIntent(MainService.PROCESSOR_UNIVERSITY, method, requestId);
-        intent.putExtra(MainService.UNIVERSITY_ID, universityId);
-        context.startService(intent);
-    }
-
-    /**
      * Load all grades from the database.
      */
     public void getGradesFromDatabase() {
