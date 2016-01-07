@@ -29,7 +29,9 @@ public class GradeItem implements GradesAdapterItem {
         Double grade = gradeEntry.getGrade();
         setGrade(grade == null ? null : grade.floatValue());
 
-        setSeen(gradeEntry.getSeen());
+        if (gradeEntry.getSeen() != null) {
+            setSeen(gradeEntry.getSeen());
+        }
     }
 
     public String getName() {
