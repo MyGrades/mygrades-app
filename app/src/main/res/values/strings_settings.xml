@@ -4,7 +4,10 @@
     <string name="nav_settings">Einstellungen</string>
     <string name="toolbar_settings">Einstellungen</string>
     <string name="pref_key_max_credit_points">pref_key_max_credit_points</string>
+    <string name="pref_max_credit_points_title">Erreichbare Credit-Points</string>
     <string name="pref_key_logout">pref_key_logout</string>
+    <string name="pref_logout_title">Abmelden</string>
+    <string name="pref_logout_summary">Alle deine Daten werden gelöscht</string>
     <string name="dialog_logout_title">Abmelden</string>
     <string name="dialog_logout_message">Möchtest du dich wirklich abmelden und alle lokalen Daten löschen?</string>
     <string name="tv_max_credit_points">von %1$s</string>

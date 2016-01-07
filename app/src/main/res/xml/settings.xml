@@ -12,12 +12,12 @@
             android:maxLines="1"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="Erreichbare Credit-Points"/>
+            android:title="@string/pref_max_credit_points_title" />
 
         <Preference
             android:key="@string/pref_key_logout"
-            android:title="Abmelden"
-            android:summary="Alle deine Daten werden gelöscht" />
+            android:title="@string/pref_logout_title"
+            android:summary="@string/pref_logout_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory
