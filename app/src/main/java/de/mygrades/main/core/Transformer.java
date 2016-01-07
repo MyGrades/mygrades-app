@@ -163,7 +163,6 @@ public class Transformer {
             gradeEntry.setExamDate(getStringProperty(xmlDocument, EXAM_DATE));
             gradeEntry.setTester(getStringProperty(xmlDocument, TESTER));
             gradeEntry.setOverviewPossible(getBooleanProperty(xmlDocument, OVERVIEW_POSSIBLE));
-            gradeEntry.setSeen(Constants.GRADE_ENTRY_SEEN);
 
             // update hash, used as primary key
             gradeEntry.updateHash();

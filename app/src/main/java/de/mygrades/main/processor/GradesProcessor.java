@@ -258,7 +258,7 @@ public class GradesProcessor extends BaseProcessor {
             // save last_updated_at timestamp
             saveLastUpdatedAt(prefs);
 
-            // post event with new grades to activity
+            // post event with all grades to activity
             daoSession.clear();
             GradesEvent gradesEvent = new GradesEvent(daoSession.getGradeEntryDao().loadAll(), true);
             EventBus.getDefault().post(gradesEvent);
@@ -299,7 +299,6 @@ public class GradesProcessor extends BaseProcessor {
         if (newGradeEntries != null && newGradeEntries.size() > 0) {
             Map<String, GradeEntry> newGradeEntriesMap = createMapForGradeEntries(newGradeEntries);
             Map<String, GradeEntry> dbGradeEntriesMap = createMapForGradeEntries(daoSession.getGradeEntryDao().loadAll());
-            //Log.d(TAG, dbGradeEntriesMap.values().toString());
 
             final List<GradeEntry> toInsert = new ArrayList<>();
             final List<GradeEntry> toUpdate = new ArrayList<>();
@@ -312,21 +311,14 @@ public class GradesProcessor extends BaseProcessor {
                 // if not present -> new entry
                 if (gradeEntry == null) {
                     GradeEntry newGradeEntry = newGradeEntriesMap.get(key);
-                    if (!initialScraping) {
-                        newGradeEntry.setSeen(Constants.GRADE_ENTRY_NEW);
-                    }
-
+                    newGradeEntry.setSeen(initialScraping ? Constants.GRADE_ENTRY_SEEN : Constants.GRADE_ENTRY_NEW);
                     toInsert.add(newGradeEntry);
                 } else {
                     // if there -> compare and only add to update list if values changed
                     GradeEntry newGradeEntry = newGradeEntriesMap.get(key);
                     if (!gradeEntry.equals(newGradeEntry)) {
                         gradeEntry.updateGradeEntryFromOther(newGradeEntry);
-
-                        if(!initialScraping) {
-                            gradeEntry.setSeen(Constants.GRADE_ENTRY_UPDATED);
-                        }
-
+                        gradeEntry.setSeen(Constants.GRADE_ENTRY_UPDATED);
                         toUpdate.add(gradeEntry);
                     }
                 }
@@ -472,8 +464,10 @@ public class GradesProcessor extends BaseProcessor {
             // save last_updated_at timestamp
             saveLastUpdatedAt(prefs);
 
-            // post event with new grades to activity
-            EventBus.getDefault().post(new GradesEvent(gradeEntries));
+            // post event with all grades to activity
+            daoSession.clear();
+            GradesEvent gradesEvent = new GradesEvent(daoSession.getGradeEntryDao().loadAll());
+            EventBus.getDefault().postSticky(gradesEvent);
         } catch (Exception e) {
             // ignore exceptions
             Log.e(TAG, "exception while Parsing table in separate thread", e);
