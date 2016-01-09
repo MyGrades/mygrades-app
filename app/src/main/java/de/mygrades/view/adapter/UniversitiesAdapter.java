@@ -398,6 +398,7 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
 
     public void showFooter() {
         dataProvider.getFooter().setVisible(true);
+        notifyItemChanged(dataProvider.getGroupCount() - 1);
     }
 
     /**
