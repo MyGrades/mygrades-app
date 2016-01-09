@@ -40,7 +40,7 @@ public class Transformer {
     private static final String STATE = "state";
     private static final String CREDIT_POINTS = "credit_points";
     private static final String ANNOTATION = "annotation";
-    private static final String ATTEMPT = "attempt";
+    public static final String ATTEMPT = "attempt";
     private static final String EXAM_DATE = "exam_date";
     private static final String TESTER = "tester";
     private static final String OVERVIEW_POSSIBLE = "overview_possible";

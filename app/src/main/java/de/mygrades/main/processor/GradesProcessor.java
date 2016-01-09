@@ -420,10 +420,18 @@ public class GradesProcessor extends BaseProcessor {
                 String parseExpression = action.getParseExpression();
                 Pattern patternExamId = Pattern.compile("###" + Transformer.EXAM_ID + "###");
                 Pattern patternName = Pattern.compile("###"+Transformer.NAME+"###");
+                Pattern patternAttempt = Pattern.compile("###"+Transformer.ATTEMPT+"###");
 
                 // replace placeholders
-                parseExpression = patternExamId.matcher(parseExpression).replaceAll(gradeEntry.getExamId());
-                parseExpression = patternName.matcher(parseExpression).replaceAll(gradeEntry.getName());
+                if (gradeEntry.getExamId() != null) {
+                    parseExpression = patternExamId.matcher(parseExpression).replaceAll(gradeEntry.getExamId());
+                }
+                if (gradeEntry.getName() != null) {
+                    parseExpression = patternName.matcher(parseExpression).replaceAll(gradeEntry.getName());
+                }
+                if (gradeEntry.getAttempt() != null) {
+                    parseExpression = patternAttempt.matcher(parseExpression).replaceAll(gradeEntry.getAttempt());
+                }
                 action.setParseExpression(parseExpression);
             }
         }
