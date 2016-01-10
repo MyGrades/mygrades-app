@@ -65,3 +65,6 @@
     public static int d(...);
     public static int e(...);
 }
+
+# StrongHttpsClient and its support classes are totally unused, so ignore warnings
+-dontwarn info.guardianproject.netcipher.**
