@@ -26,6 +26,7 @@ MyGrades is an Android App developed by [Tilman Ginzel](https://github.com/tilma
 * [android-Ultra-Pull-To-Refresh](https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh)
 * [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)
 * [android-support-preference](https://github.com/consp1racy/android-support-preference)
+* [NetCipher: Secured Networking for Android](https://github.com/guardianproject/NetCipher)
 
 ## License
 

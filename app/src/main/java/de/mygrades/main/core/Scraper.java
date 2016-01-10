@@ -13,9 +13,9 @@ import org.jsoup.nodes.Entities;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URI;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -27,10 +27,9 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
-import javax.net.ssl.X509TrustManager;
 import javax.net.ssl.SSLSocketFactory;
-
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.database.dao.Action;
@@ -40,8 +39,8 @@ import de.mygrades.main.events.ScrapeProgressEvent;
 import de.mygrades.main.processor.GradesProcessor;
 import de.mygrades.util.Config;
 import de.mygrades.util.Constants;
-import de.mygrades.util.NoSSLv3SocketFactory;
 import de.mygrades.util.exceptions.ParseException;
+import info.guardianproject.netcipher.client.TlsOnlySocketFactory;
 
 
 /**
@@ -83,15 +82,13 @@ public class Scraper {
         };
 
         try {
-            System.setProperty("jsse.enableSNIExtension", "false");
             SSLContext sc = SSLContext.getInstance("TLSv1");
             sc.init(null, trustAllCertificates, new SecureRandom());
-            SSLSocketFactory NoSSLv3Factory = new NoSSLv3SocketFactory(sc.getSocketFactory());
-            HttpsURLConnection.setDefaultSSLSocketFactory(NoSSLv3Factory);
+            SSLSocketFactory noSSLv3Factory = new TlsOnlySocketFactory(sc.getSocketFactory());
+            HttpsURLConnection.setDefaultSSLSocketFactory(noSSLv3Factory);
             HttpsURLConnection.setDefaultHostnameVerifier(trustAllHostnames);
         }
         catch (GeneralSecurityException e) {
-
         }
     }
 

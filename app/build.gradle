@@ -46,4 +46,5 @@ dependencies {
     compile 'in.srain.cube:ultra-ptr:1.0.11'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.5'
     compile 'net.xpece.android:support-preference:0.5.1'
+    compile 'info.guardianproject.netcipher:netcipher:1.2'
 }
