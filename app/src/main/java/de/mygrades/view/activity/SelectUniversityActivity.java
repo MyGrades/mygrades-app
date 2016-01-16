@@ -70,6 +70,11 @@ public class SelectUniversityActivity extends AppCompatActivity {
 
         // get all published universities from the database
         mainServiceHelper.getUniversitiesFromDatabase(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         // get all published universities from server
         mainServiceHelper.getUniversities(true);
@@ -137,7 +142,6 @@ public class SelectUniversityActivity extends AppCompatActivity {
             universitiesAdapter.showError(null);
             universitiesAdapter.showFooter();
         }
-
 
         List<UniversityItem> universityItems = new ArrayList<>();
         for(University university : universities) {
