@@ -54,7 +54,7 @@
     <string name="error_server_timeout">Zeitüberschreitung bei der Anfrage.\n\nEs hat zu lange gedauert mit unserem Server zu kommunizieren. Bitte versuche es erneut.</string>
     <string name="error_unknown">Unbekannter Fehler beim Abrufen. Bitte versuche es erneut.</string>
     <string name="nav_header_logged_in_as">Angemeldet als:</string>
-    <string name="tv_mygrades_version">MyGrades\n%1$s</string>
+    <string name="tv_mygrades_version">MyGrades\nv%1$s</string>
     <string name="toolbar_faq_title">FAQs</string>
     <string name="tv_grade_detail_tester">Prüfer</string>
     <string name="ptr_header_refresh_error">Fehler.</string>
