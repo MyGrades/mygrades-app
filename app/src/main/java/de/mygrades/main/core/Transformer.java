@@ -17,12 +17,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.database.dao.Overview;
 import de.mygrades.database.dao.Rule;
 import de.mygrades.database.dao.TransformerMapping;
-import de.mygrades.util.Constants;
 import de.mygrades.util.exceptions.ParseException;
 
 /**
@@ -342,7 +340,9 @@ public class Transformer {
         if (transformerMappingVal == null) {
             return null;
         }
-        String parseResult = parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument).trim();
+
+        String parseResult = parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument);
+        parseResult = trimAdvanced(parseResult);
         return parseResult.equals("") ? null : parseResult;
     }
 
@@ -525,5 +525,43 @@ public class Transformer {
                 transformerMapping.put(tsMapping.getName(), tsMapping);
             }
         }
+    }
+
+    /**
+     * Removes whitespace from the start and end of a string
+     * including special html characters like &nbsp;.
+     * Method taken from: http://stackoverflow.com/a/31624585/5115653
+     *
+     * @param value string to trim
+     * @return trimmed string
+     */
+    private String trimAdvanced(String value) {
+        if (value == null) {
+            return null;
+        }
+
+        int strLength = value.length();
+        int len = value.length();
+        int st = 0;
+        char[] val = value.toCharArray();
+
+        if (strLength == 0) {
+            return "";
+        }
+
+        while ((st < len) && (val[st] <= ' ') || (val[st] == '\u00A0')) {
+            st++;
+            if (st == strLength) {
+                break;
+            }
+        }
+        while ((st < len) && (val[len - 1] <= ' ') || (val[len - 1] == '\u00A0')) {
+            len--;
+            if (len == 0) {
+                break;
+            }
+        }
+
+        return (st > len) ? "" : ((st > 0) || (len < strLength)) ? value.substring(st, len) : value;
     }
 }
