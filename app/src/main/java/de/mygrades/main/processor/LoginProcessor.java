@@ -71,13 +71,18 @@ public class LoginProcessor extends BaseProcessor {
     }
 
     /**
-     * Remove all userdata and grade entries from the database.
+     * Remove all userdata from preferences and clear database tables.
      */
     public void logout() {
         deletePreferences();
 
         // delete all grades
         daoSession.getGradeEntryDao().deleteAll();
+
+        // delete all actions and transformer mappings
+        daoSession.getTransformerMappingDao().deleteAll();
+        daoSession.getActionParamDao().deleteAll();
+        daoSession.getActionDao().deleteAll();
     }
 
     /**
