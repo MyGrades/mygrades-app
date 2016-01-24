@@ -380,7 +380,8 @@ public class Transformer {
         }
 
         Double property;
-        String result = parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument).trim();
+        String result = parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument);
+        result = trimAdvanced(result);
         result = result.replace(',', '.');
 
         // if cannot parse to Double -> return null
@@ -478,7 +479,8 @@ public class Transformer {
         }
 
         Integer property;
-        String result = parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument).trim();
+        String result = parser.parseToString(transformerMappingVal.getParseExpression(), xmlDocument);
+        result = trimAdvanced(result);
 
         if (pattern != null) {
             Matcher matcher = pattern.matcher(result);
@@ -537,7 +539,7 @@ public class Transformer {
      */
     private String trimAdvanced(String value) {
         if (value == null) {
-            return null;
+            return "";
         }
 
         int strLength = value.length();
