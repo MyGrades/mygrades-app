@@ -29,7 +29,8 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.i("greenDAO", "Upgrading schema from version " + oldVersion + " to " + newVersion);
 
-        if (oldVersion < 6) {
+        // important: old/new version refers to database schema version, not the app version
+        if (oldVersion < 2) {
             reset(db);
         }
     }
