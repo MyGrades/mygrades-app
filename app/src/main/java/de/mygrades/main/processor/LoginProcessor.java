@@ -83,6 +83,9 @@ public class LoginProcessor extends BaseProcessor {
         daoSession.getTransformerMappingDao().deleteAll();
         daoSession.getActionParamDao().deleteAll();
         daoSession.getActionDao().deleteAll();
+
+        // assure that the session is cleared
+        daoSession.clear();
     }
 
     /**
