@@ -116,6 +116,12 @@ public class Scraper {
 
     private String gradeHash;
 
+    /**
+     * Used as referrer.
+     * Use google as first referrer due to issues with some websites without referrer.
+     */
+    private String previousUrl = "https://www.google.com";
+
     public Scraper(List<Action> actions, Parser parser, String gradeHash) {
         this.actions = actions;
         this.cookies = new HashMap<>();
@@ -164,6 +170,7 @@ public class Scraper {
             // make request with data, cookies, current method
             getRequestData(requestData, action.getActionParams());
             makeJsoupRequest(requestData, getHttpMethodEnum(action.getMethod()), url);
+            previousUrl = url;
 
             // reset request data -> now there can be added data for next result
             requestData = new HashMap<>();
@@ -218,7 +225,7 @@ public class Scraper {
         Connection.Response response = Jsoup.connect(url)
                 .data(requestData)
                 .cookies(cookies)
-                .referrer("http://www.google.com") // some websites block without referrer
+                .referrer(previousUrl) // some websites block without referrer
                 .userAgent(Config.BROWSER_USER_AGENT) // set explicit user agent
                 .method(method)
                 .timeout(Config.SCRAPER_TIMEOUT)
