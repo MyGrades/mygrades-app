@@ -225,7 +225,23 @@
                         <View style="@style/Divider"/>
                     </RelativeLayout>
 
+                    <!-- Overview: Passed Participants -->
+                    <RelativeLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent">
 
+                        <TextView
+                            style="@style/GradeDetailTextViewLeft"
+                            android:id="@+id/tv_overview_label_passed"
+                            android:text="@string/tv_overview_passed"
+                            />
+
+                        <TextView
+                            style="@style/GradeDetailTextViewRight"
+                            android:id="@+id/tv_overview_passed"
+                            />
+                        <View style="@style/Divider"/>
+                    </RelativeLayout>
 
                     <!-- Overview: Average -->
                     <RelativeLayout

@@ -73,6 +73,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
     private LinearLayout llOverviewWrapper;
     private TextView tvOverviewParticipants;
+    private TextView tvOverviewPassed;
     private TextView tvOverviewAverage;
 
     private TextView tvOverviewNotPossible;
@@ -164,6 +165,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         // get views for overview
         llOverviewWrapper = (LinearLayout) findViewById(R.id.overview_wrapper);
         tvOverviewParticipants = (TextView) findViewById(R.id.tv_overview_participants);
+        tvOverviewPassed = (TextView) findViewById(R.id.tv_overview_passed);
         tvOverviewAverage = (TextView) findViewById(R.id.tv_overview_average);
         barChart = (BarChart) findViewById(R.id.bar_chart);
         tvOverviewNotPossible = (TextView) findViewById(R.id.tv_overview_not_possible);
@@ -314,6 +316,10 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
             llOverviewWrapper.setVisibility(View.VISIBLE);
             tvOverviewParticipants.setText(String.valueOf(overview.getParticipants()));
+            // calculated passed participants
+            int passedParticipants = overview.getParticipants() - overview.getSection5();
+            int passedParticipantsPercent = (int) Math.round(passedParticipants / (double)overview.getParticipants() * 100);
+            tvOverviewPassed.setText(String.format("%d (%d%%)", passedParticipants, passedParticipantsPercent));
             writeDoubleToTextView(tvOverviewAverage, overview.getAverage());
 
             showBarChart(overviewEvent);
