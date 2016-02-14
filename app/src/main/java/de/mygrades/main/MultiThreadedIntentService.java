@@ -34,15 +34,14 @@ import java.util.concurrent.TimeUnit;
  * worker thread, and stop the service as appropriate.
  * <p>
  * All requests are handled on multiple worker threads -- they may take as long as necessary (and
- * will not block the application's main loop). By default only one concurrent worker thread is
- * used. You can modify the number of current worker threads by overriding
- * {@link #getMaximumNumberOfThreads()}.
+ * will not block the application's main loop). A cached thread pool is used to dynamically adjust
+ * the number of concurrent used worker threads.
  * <p>
  * For obvious efficiency reasons, MultiThreadedIntentService won't stop itself as soon as all tasks
  * has been processed. It will only stop itself after a certain delay (about 30s). This optimization
  * prevents the system from creating new instances over and over again when tasks are sent.
  *
- * @author Foxykeep
+ * @author Foxykeep, modified by Tilman Ginzel
  */
 public abstract class MultiThreadedIntentService extends Service {
 
@@ -104,12 +103,7 @@ public abstract class MultiThreadedIntentService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        int maximumNumberOfThreads = getMaximumNumberOfThreads();
-        if (maximumNumberOfThreads <= 0) {
-            throw new IllegalArgumentException("Maximum number of threads must be " +
-                    "strictly positive");
-        }
-        mThreadPool = Executors.newFixedThreadPool(maximumNumberOfThreads);
+        mThreadPool = Executors.newCachedThreadPool();
         mHandler = new Handler();
         mFutureList = new ArrayList<Future<?>>();
     }
@@ -142,21 +136,6 @@ public abstract class MultiThreadedIntentService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-
-    /**
-     * Define the maximum number of concurrent worker threads used to execute the incoming Intents.
-     * <p>
-     * By default only one concurrent worker thread is used at the same time. Overrides this method
-     * in subclasses to change this number.
-     * <p>
-     * This method is called once in the {@link #onCreate()}. Modifying the value returned after the
-     * {@link #onCreate()} is called will have no effect.
-     *
-     * @return The maximum number of concurrent worker threads
-     */
-    protected int getMaximumNumberOfThreads() {
-        return 10;
     }
 
     private class IntentRunnable implements Runnable {
