@@ -41,5 +41,10 @@
             android:id="@+id/nav_privacy_policy"
             android:icon="@drawable/ic_security_white_24dp"
             android:title="@string/nav_privacy_policy" />
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_exit_to_app_white_24dp"
+            android:title="@string/nav_logout" />
     </group>
 </menu>

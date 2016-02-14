@@ -13,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -28,6 +27,7 @@ import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.events.InitialScrapingDoneEvent;
 import de.mygrades.main.events.LoginDataEvent;
 import de.mygrades.util.Constants;
+import de.mygrades.util.LogoutHelper;
 
 /**
  * MainActivity uses a NavigationDrawer to switch its content between multiple fragments.
@@ -348,6 +348,10 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             case R.id.nav_privacy_policy:
                 fragment = new FragmentPrivacyPolicy();
                 break;
+            case R.id.nav_logout:
+                LogoutHelper logoutHelper = new LogoutHelper(this);
+                logoutHelper.showDialog();
+                return;
             default:
                 fragment = new FragmentOverview();
         }

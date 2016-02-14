@@ -22,6 +22,7 @@ import de.mygrades.R;
 import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.alarm.ScrapeAlarmManager;
 import de.mygrades.util.Config;
+import de.mygrades.util.LogoutHelper;
 
 /**
  * Created by tilman on 12.12.15.
@@ -154,44 +155,12 @@ public class SettingsFragment extends XpPreferenceFragment {
         logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage(R.string.dialog_logout_message);
-                builder.setTitle(getString(R.string.dialog_logout_title));
-                builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        logout();
-                    }
-                });
+                LogoutHelper logoutHelper = new LogoutHelper(getActivity());
+                logoutHelper.showDialog();
 
-                builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
                 return true;
             }
         });
-    }
-
-    /**
-     * Logout user and goes to SelectUniversityActivity.
-     * The user cannot return to the MainActivity by pressing the back-button.
-     */
-    private void logout() {
-        MainServiceHelper mainServiceHelper = new MainServiceHelper(getContext());
-        mainServiceHelper.logout();
-
-        Intent intent = new Intent(getContext(), SelectUniversityActivity.class);
-        // set flags, so the user won't be able to go back to the main activity
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 
     /**
