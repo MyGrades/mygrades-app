@@ -9,10 +9,16 @@ import de.mygrades.view.adapter.model.GradesAdapterItem;
 
 /**
  * Calculates the average grade and credit points sum for a list of GradeItems.
+ * If simpleWeighting is set to true, credit points have no effect on the calculated average grade.
  */
 public class AverageCalculator {
     private float average;
     private float creditPointsSum;
+    private boolean simpleWeighting;
+
+    public AverageCalculator(boolean simpleWeighting) {
+        this.simpleWeighting = simpleWeighting;
+    }
 
     /**
      * Calculates the average grade and credit points sum for a list of GradeItems.
@@ -23,21 +29,37 @@ public class AverageCalculator {
         average = 0f;
         creditPointsSum = 0f;
         float creditPointsSumForAverage = 0f; // some grade_entries may have credit points, but no grade
+        int passedGradesCounter = 0; // used, if simpleWeighting is true
 
         // iterate over items, count credit points and calculate average
         for(GradesAdapterItem item : items) {
             if (!(item instanceof GradeItem))
                 continue;
 
-            GradeItem grade = (GradeItem) item;
-            float actCreditPoints = (grade.getCreditPoints() == null ? 0f : grade.getCreditPoints());
+            GradeItem gradeItem = (GradeItem) item;
+            float actCreditPoints = (gradeItem.getCreditPoints() == null ? 0f : gradeItem.getCreditPoints());
             creditPointsSum += actCreditPoints;
-            if (grade.getGrade() != null && grade.getGrade() > 0) {
+            if (gradeItem.getGrade() != null && gradeItem.getGrade() > 0) {
                 creditPointsSumForAverage += actCreditPoints;
             }
-            average += (grade.getGrade() == null ? 0f : grade.getGrade() * actCreditPoints);
+
+            float grade = (gradeItem.getGrade() == null ? 0f : gradeItem.getGrade());
+
+            if (simpleWeighting) {
+                if (grade > 0 && grade < 5) {
+                    passedGradesCounter += 1;
+                    average += grade;
+                }
+            } else {
+                average += grade * actCreditPoints;
+            }
         }
-        average = creditPointsSumForAverage > 0 ? average/creditPointsSumForAverage : 0f;
+
+        if (simpleWeighting) {
+            average = passedGradesCounter > 0 ? average / passedGradesCounter : 0f;
+        } else {
+            average = creditPointsSumForAverage > 0 ? average / creditPointsSumForAverage : 0f;
+        }
     }
 
     /**

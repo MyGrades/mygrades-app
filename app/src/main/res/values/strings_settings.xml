@@ -54,4 +54,8 @@
 
     <string name="pref_key_legal_notice">pref_key_legal_notice</string>
     <string name="pref_legal_notice_title">Impressum</string>
+
+    <string name="pref_key_simple_weighting">pref_key_simple_weighting</string>
+    <string name="pref_simple_weighting_title">Einfache Gewichtung</string>
+    <string name="pref_simple_weighting_summary">Bestandene Leistungen werden bei Berechnung des Durchschnitts einfach gewichtet und CPs dabei ignoriert</string>
 </resources>

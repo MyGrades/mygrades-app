@@ -1,6 +1,5 @@
 package de.mygrades.view.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -11,7 +10,6 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.XpPreferenceFragment;
 import android.support.v7.widget.PreferenceDividerDecoration;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.webkit.WebView;
 
@@ -19,7 +17,6 @@ import net.xpece.android.support.preference.ListPreference;
 
 import de.mygrades.BuildConfig;
 import de.mygrades.R;
-import de.mygrades.main.MainServiceHelper;
 import de.mygrades.main.alarm.ScrapeAlarmManager;
 import de.mygrades.util.Config;
 import de.mygrades.util.LogoutHelper;

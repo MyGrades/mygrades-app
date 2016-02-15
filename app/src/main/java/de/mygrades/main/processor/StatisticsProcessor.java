@@ -37,7 +37,8 @@ public class StatisticsProcessor extends BaseProcessor {
         StatisticsEvent statisticsEvent = new StatisticsEvent();
 
         // set average and credit points sum
-        AverageCalculator averageCalculator = new AverageCalculator();
+        boolean simpleWeighting = prefs.getBoolean(context.getString(R.string.pref_key_simple_weighting), false);
+        AverageCalculator averageCalculator = new AverageCalculator(simpleWeighting);
         averageCalculator.calculateFromGradeEntries(gradeEntries);
         statisticsEvent.setAverage(averageCalculator.getAverage());
         statisticsEvent.setCreditPoints(averageCalculator.getCreditPointsSum());
@@ -71,6 +72,8 @@ public class StatisticsProcessor extends BaseProcessor {
      * @return list of SemesterItems
      */
     private List<SemesterItem> getSemesterItems(List<GradeEntry> gradeEntries) {
+        boolean simpleWeighting = prefs.getBoolean(context.getString(R.string.pref_key_simple_weighting), false);
+
         Map<Integer, SemesterItem> semesterItemMap = new HashMap<>();
 
         // build map
@@ -79,7 +82,7 @@ public class StatisticsProcessor extends BaseProcessor {
             GradeItem gradeItem = new GradeItem(gradeEntry);
 
             if (!semesterItemMap.containsKey(semesterNumber)) {
-                semesterItemMap.put(semesterNumber, new SemesterItem());
+                semesterItemMap.put(semesterNumber, new SemesterItem(simpleWeighting));
             }
 
             SemesterItem item = semesterItemMap.get(semesterNumber);

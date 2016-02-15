@@ -40,6 +40,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private Context context;
     private SharedPreferences prefs;
     private SharedPreferences.OnSharedPreferenceChangeListener prefsListener;
+    private boolean simpleWeighting;
 
     private List<GradesAdapterItem> items;
 
@@ -60,11 +61,18 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 if (key.equals(GradesRecyclerViewAdapter.this.context.getString(R.string.pref_key_max_credit_points))) {
                     notifyItemChanged(0);
+                } else if (key.equals(GradesRecyclerViewAdapter.this.context.getString(R.string.pref_key_simple_weighting))) {
+                    updateSimpleWeighting();
+                    updateSummary();
+                    updateSemesterSummaries();
                 }
             }
         };
 
         prefs.registerOnSharedPreferenceChangeListener(prefsListener);
+
+        // set simple weighting
+        updateSimpleWeighting();
     }
 
     /**
@@ -204,7 +212,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         // add new semester
-        SemesterItem newSemester = new SemesterItem();
+        SemesterItem newSemester = new SemesterItem(simpleWeighting);
         newSemester.setSemesterNumber(semesterNumber);
         newSemester.setSemester(semester);
         items.add(semesterIndex, newSemester);
@@ -217,7 +225,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * Update the summary and set average, creditPoints and lastUpdatedAt.
      */
     public void updateSummary() {
-        AverageCalculator calculator = new AverageCalculator();
+        AverageCalculator calculator = new AverageCalculator(simpleWeighting);
         calculator.calculate(items);
 
         // get last updated at
@@ -233,6 +241,26 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             summaryItem.setLastUpdatedAt(lastUpdatedAt + " Uhr"); // TODO: better time format + string resource
             notifyItemChanged(0);
         }
+    }
+
+    /**
+     * Updates the summary for each SemesterItem.
+     */
+    private void updateSemesterSummaries() {
+        for (int i = 0; i < items.size(); i++) {
+            GradesAdapterItem item = items.get(i);
+
+            if (item instanceof SemesterItem) {
+                SemesterItem semesterItem = (SemesterItem) item;
+                semesterItem.setSimpleWeighting(simpleWeighting);
+                semesterItem.update();
+                notifyItemChanged(i);
+            }
+        }
+    }
+
+    private void updateSimpleWeighting() {
+        simpleWeighting = prefs.getBoolean(context.getString(R.string.pref_key_simple_weighting), false);
     }
 
     /**

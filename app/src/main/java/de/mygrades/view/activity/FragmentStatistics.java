@@ -1,9 +1,11 @@
 package de.mygrades.view.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +39,7 @@ import de.mygrades.view.adapter.model.SemesterItem;
 /**
  * Fragment to show statistics.
  */
-public class FragmentStatistics extends Fragment {
+public class FragmentStatistics extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener{
 
     private TextView tvAverage;
     private TextView tvCreditPoints;
@@ -49,6 +51,8 @@ public class FragmentStatistics extends Fragment {
     private LineChart chartCreditPointsPerSemester;
     private LineChart chartAverageGradePerSemester;
     private BarChart chartGradeDistribution;
+
+    private MainServiceHelper mainServiceHelper;
 
     @Nullable
     @Override
@@ -71,8 +75,10 @@ public class FragmentStatistics extends Fragment {
 
         EventBus.getDefault().register(this);
 
-        MainServiceHelper mainServiceHelper = new MainServiceHelper(getContext());
+        mainServiceHelper = new MainServiceHelper(getContext());
         mainServiceHelper.getStatistics();
+
+        PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(this);
     }
 
     /**
@@ -286,6 +292,13 @@ public class FragmentStatistics extends Fragment {
         leftAxis.setDrawLimitLinesBehindData(true);
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getContext().getString(R.string.pref_key_simple_weighting))) {
+            mainServiceHelper.getStatistics();
+        }
+    }
+
     /**
      * Custom DecimalValueFormatter.
      */
@@ -305,6 +318,7 @@ public class FragmentStatistics extends Fragment {
     @Override
     public void onDestroyView() {
         EventBus.getDefault().unregister(this);
+        PreferenceManager.getDefaultSharedPreferences(getContext()).unregisterOnSharedPreferenceChangeListener(this);
         super.onDestroyView();
     }
 }

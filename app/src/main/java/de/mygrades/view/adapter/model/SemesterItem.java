@@ -14,9 +14,11 @@ public class SemesterItem implements GradesAdapterItem, Comparable<SemesterItem>
     private float average;
     private float creditPoints;
     private List<GradeItem> grades;
+    private boolean simpleWeighting;
 
-    public SemesterItem() {
+    public SemesterItem(boolean simpleWeighting) {
         grades = new ArrayList<>();
+        this.simpleWeighting = simpleWeighting;
     }
 
     public void addGrade(GradeItem gradeItem, boolean updateImmediately) {
@@ -31,7 +33,7 @@ public class SemesterItem implements GradesAdapterItem, Comparable<SemesterItem>
      * Updates the average grade and the sum of credit points.
      */
     public void update() {
-        AverageCalculator calculator = new AverageCalculator();
+        AverageCalculator calculator = new AverageCalculator(simpleWeighting);
         calculator.calculate(grades);
 
         this.average = calculator.getAverage();
@@ -72,6 +74,11 @@ public class SemesterItem implements GradesAdapterItem, Comparable<SemesterItem>
 
     public List<GradeItem> getGrades() {
         return grades;
+    }
+
+    public void setSimpleWeighting(boolean simpleWeighting) {
+        this.simpleWeighting = simpleWeighting;
+        update();
     }
 
     @Override
