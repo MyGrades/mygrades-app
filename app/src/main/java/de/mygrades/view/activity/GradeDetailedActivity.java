@@ -316,10 +316,16 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
             llOverviewWrapper.setVisibility(View.VISIBLE);
             tvOverviewParticipants.setText(String.valueOf(overview.getParticipants()));
+
             // calculated passed participants
-            int passedParticipants = overview.getParticipants() - overview.getSection5();
-            int passedParticipantsPercent = (int) Math.round(passedParticipants / (double)overview.getParticipants() * 100);
-            tvOverviewPassed.setText(String.format("%d (%d%%)", passedParticipants, passedParticipantsPercent));
+            int participants = overview.getParticipants();
+            int section5 = overview.getSection5();
+            if (participants > 0) {
+                int passedParticipants = participants - section5;
+                int passedParticipantsPercent = (int) Math.round(passedParticipants / (double) participants * 100);
+                tvOverviewPassed.setText(String.format("%d (%d%%)", passedParticipants, passedParticipantsPercent));
+            }
+
             writeDoubleToTextView(tvOverviewAverage, overview.getAverage());
 
             showBarChart(overviewEvent);
