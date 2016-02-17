@@ -36,6 +36,16 @@
             android:layout_height="wrap_content"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/tv_select_rule_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_select_rule_hint"
+            android:textSize="14sp"
+            android:paddingTop="8dp"
+            android:visibility="gone"
+            android:textColor="@color/colorAccent"/>
+
     </LinearLayout>
 
     <View style="@style/Divider"/>

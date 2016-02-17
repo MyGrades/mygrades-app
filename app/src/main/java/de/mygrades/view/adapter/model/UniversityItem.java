@@ -12,12 +12,14 @@ public class UniversityItem extends UniversityGroupItem {
     private long universityId;
     private boolean isSectionHeader;
     private String sectionTitle;
+    private boolean showRuleHint;
 
     private List<RuleItem> rules;
 
     public UniversityItem(long groupId) {
         this.groupId = groupId;
         rules = new ArrayList<>();
+        showRuleHint = false;
     }
 
     public String getName() {
@@ -60,5 +62,13 @@ public class UniversityItem extends UniversityGroupItem {
     @Override
     public long getGroupId() {
         return groupId;
+    }
+
+    public boolean showRuleHint() {
+        return showRuleHint;
+    }
+
+    public void setShowRuleHint(boolean showRuleHint) {
+        this.showRuleHint = showRuleHint;
     }
 }

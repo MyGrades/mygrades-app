@@ -148,6 +148,8 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
                 } else {
                     uvh.llSectionWrapper.setVisibility(View.GONE);
                 }
+
+                uvh.tvSelectRuleHint.setVisibility(universityData.showRuleHint() ? View.VISIBLE : View.GONE);
                 break;
             case GROUP_VIEW_TYPE_HEADER:
                 HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
@@ -244,8 +246,11 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
             if (universityData.getRules().size() > 1) {
                 if (expandableItemManager.isGroupExpanded(groupPosition)) {
                     expandableItemManager.collapseGroup(groupPosition);
+                    universityData.setShowRuleHint(false);
                 } else {
                     expandableItemManager.expandGroup(groupPosition);
+                    universityData.setShowRuleHint(true);
+
                 }
             } else if (universityData.getRules().size() == 1) {
                 universityData.getRules().get(0).goToLogin(v.getContext(), universityData);
@@ -275,12 +280,14 @@ public class UniversitiesAdapter extends AbstractExpandableItemAdapter<Universit
         public final TextView tvUniversityName;
         public final TextView tvSection;
         public final LinearLayout llSectionWrapper;
+        public final TextView tvSelectRuleHint;
 
         public UniversityViewHolder(View itemView, View.OnClickListener clickListener) {
             super(itemView);
             tvUniversityName = (TextView) itemView.findViewById(R.id.tv_university_name);
             tvSection = (TextView) itemView.findViewById(R.id.tv_university_section);
             llSectionWrapper = (LinearLayout) itemView.findViewById(R.id.ll_university_section_wrapper);
+            tvSelectRuleHint = (TextView) itemView.findViewById(R.id.tv_select_rule_hint);
             itemView.setOnClickListener(clickListener);
         }
     }
