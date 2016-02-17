@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
@@ -293,6 +296,9 @@ public class FragmentInitialScraping extends Fragment {
                 break;
             case GENERAL:
                 inflatedErrorGeneral = inflateViewStub(inflatedErrorGeneral, R.id.stub_general_error);
+                TextView tvReportError = (TextView) inflatedErrorGeneral.findViewById(R.id.tv_general_error_sub_report_error);
+                tvReportError.setText(Html.fromHtml(getString(R.string.general_error_stub_report_error)));
+                tvReportError.setMovementMethod(LinkMovementMethod.getInstance());
                 btnBackToLogin.setVisibility(View.VISIBLE);
                 break;
         }

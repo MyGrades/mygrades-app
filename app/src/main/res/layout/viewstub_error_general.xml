@@ -37,9 +37,10 @@
         android:layout_marginTop="8dp"/>
 
     <TextView
+        android:id="@+id/tv_general_error_sub_report_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sag uns Bescheid, falls dieses Problem länger besteht!"
+        android:text="@string/general_error_stub_report_error"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:layout_marginTop="8dp"/>
