@@ -27,8 +27,6 @@ import de.mygrades.util.exceptions.ParseException;
  * Creates GradeEntry Objects from given HTML with given TransformerMappings.
  */
 public class Transformer {
-    private static final String TAG = Transformer.class.getSimpleName();
-
     // mapping from TransformerMapping Name -> GradeEntry Property
     private static final String ITERATOR = "iterator";
     public static final String EXAM_ID = "exam_id";
@@ -51,12 +49,6 @@ public class Transformer {
     private static final String OVERVIEW_SECTION_5 = "overview_section5";
     private static final String OVERVIEW_PARTICIPANTS = "overview_participants";
     private static final String OVERVIEW_AVERAGE = "overview_average";
-
-    private static final String SEMESTER_FORMAT_SEMESTER = "semester";
-    private static final String SEMESTER_FORMAT_DATE = "date";
-
-    private static final String SEMESTER_WS = "Wintersemester ";
-    private static final String SEMESTER_SS = "Sommersemester ";
 
     /**
      * Parser to extract values into Models.
@@ -83,15 +75,15 @@ public class Transformer {
     private Rule rule;
 
     /**
-     * Compile Pattern to extract the Semester and Year of field extracted from html.
+     * SemesterTransformer to transform the specific semester pattern.
      */
-    private Pattern semesterPattern;
+    private SemesterTransformer semesterTransformer;
 
     public Transformer(Rule rule, String html, Parser parser) {
         this.rule = rule;
         this.parser = parser;
         this.html = html;
-        this.semesterPattern = Pattern.compile(rule.getSemesterPattern());
+        this.semesterTransformer = new SemesterTransformer(rule);
         // initialize transformerMapping and transformerMappingOverviewSection
         createTransformerMappingMap(rule.getTransformerMappings());
     }
@@ -148,7 +140,7 @@ public class Transformer {
             gradeEntry.setExamId(getStringProperty(xmlDocument, EXAM_ID));
             gradeEntry.setName(getStringProperty(xmlDocument, NAME));
             // ignore entry if there could no semester determined
-            String semester = calculateGradeEntrySemester(getStringProperty(xmlDocument, SEMESTER));
+            String semester = semesterTransformer.calculateGradeEntrySemester(getStringProperty(xmlDocument, SEMESTER));
             if (semester == null) {
                 continue;
             }
@@ -175,89 +167,6 @@ public class Transformer {
         calculateGradeEntrySemesterNumber(gradeEntries, semestersSet);
 
         return gradeEntries;
-    }
-
-    /**
-     * Calculates the GradeEntry semester property to "Wintersemester" or "Sommersemester".
-     * Different types are possible which is determined through the rule.
-     *
-     * @param origSemester Original String extracted out of html
-     * @return formatted semester string
-     */
-    private String calculateGradeEntrySemester(String origSemester) {
-        // if origSemester is null -> return null so this entry will get ignored
-        if (origSemester == null) {
-            return null;
-        }
-
-        String resultSemester = "";
-
-        if (rule.getSemesterFormat().equals(SEMESTER_FORMAT_SEMESTER)) {
-            String extractedSemester = "";
-            Integer extractedYear = 0;
-
-            // match pattern to origSemester and get Year and Semester String
-            Matcher matcher = semesterPattern.matcher(origSemester);
-            if (matcher.find()) { // Find first match
-                extractedSemester = matcher.group(1);
-
-                try {
-                    extractedYear = Integer.parseInt(matcher.group(2));
-                } catch (NumberFormatException e) {
-                    extractedYear = 0;
-                }
-            }
-
-            // get year in correct format
-            if (extractedYear.toString().length() < 4) {
-                extractedYear = extractedYear + 2000;
-            }
-
-            // if extractedSemester starts with w -> Wintersemester
-            if (extractedSemester.toLowerCase().startsWith("w")) {
-                resultSemester += SEMESTER_WS + extractedYear + "/" + (extractedYear+1);
-            } else {
-                resultSemester += SEMESTER_SS + extractedYear;
-            }
-        } else if (rule.getSemesterFormat().equals(SEMESTER_FORMAT_DATE)) {
-            Integer extractedYear = 0;
-            Integer extractedMonth = 0;
-
-            // match pattern to origSemester and get Year and Month
-            Matcher matcher = semesterPattern.matcher(origSemester);
-            if (matcher.find()) { // Find first match
-                try {
-                    extractedMonth = Integer.parseInt(matcher.group(1));
-                } catch (NumberFormatException e) {
-                    extractedMonth = 0;
-                }
-                try {
-                    extractedYear = Integer.parseInt(matcher.group(2));
-                } catch (NumberFormatException e) {
-                    extractedYear = 0;
-                }
-            }
-
-            // get year in correct format
-            if (extractedYear.toString().length() < 4) {
-                extractedYear = extractedYear + 2000;
-            }
-
-            // calculate Semester string depending on month and year
-            if (extractedMonth >= rule.getSemesterStartSummer() && extractedMonth < rule.getSemesterStartWinter()) { // Sommersemester (04-09)
-                resultSemester += SEMESTER_SS + extractedYear;
-            } else { // Wintersemester
-                if (extractedMonth >= rule.getSemesterStartWinter()) { // first part of Wintersemester (10-12)
-                    resultSemester += SEMESTER_WS + extractedYear + "/" + (extractedYear+1);
-                } else { // second part of Wintersemester (01-03)
-                    resultSemester += SEMESTER_WS + (extractedYear-1) + "/" + extractedYear;
-                }
-            }
-
-            Log.d(TAG, "Month: " + extractedMonth + " - Year: " + extractedYear + " - " + resultSemester);
-        }
-
-        return resultSemester;
     }
 
     /**
