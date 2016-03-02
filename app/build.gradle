@@ -23,6 +23,9 @@ android {
     }
     productFlavors {
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+    }
 }
 
 dependencies {
@@ -37,8 +40,8 @@ dependencies {
     compile 'de.greenrobot:greendao-generator:2.0.0'
     compile 'com.scottyab:secure-preferences-lib:0.1.4'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile ('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.8.5@aar'){
-        transitive=true
+    compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.8.5@aar') {
+        transitive = true
     }
     aarLinkSources 'com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.8.5:sources@jar'
     compile 'com.wnafee:vector-compat:1.0.5'
@@ -47,4 +50,5 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.5'
     compile 'net.xpece.android:support-preference:0.5.1'
     compile 'info.guardianproject.netcipher:netcipher:1.2'
+    compile 'net.sf.jtidy:jtidy:r938'
 }

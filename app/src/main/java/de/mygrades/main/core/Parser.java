@@ -6,7 +6,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import org.w3c.tidy.Tidy;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -14,11 +14,11 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
@@ -36,9 +36,9 @@ public class Parser {
     private Context context;
 
     /**
-     * DocumentBuilder is needed for creating documents out of strings.
+     * Tidy builder is needed for creating documents out of strings.
      */
-    private DocumentBuilder builder;
+    private Tidy tidyBuilder;
 
     /**
      * XPath evaluates xPath expressions on documents.
@@ -54,12 +54,7 @@ public class Parser {
         this.context = context;
         xPath = XPathFactory.newInstance().newXPath();
 
-        // initialize Builder to build document from string
-        try {
-            builder =  DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw new ParseException("Could not create DocumentBuilderFactory for XPATH!");
-        }
+        initializeTidyBuilder();
 
         // initialize Transformer (needed for converting node to string)
         try {
@@ -68,6 +63,18 @@ public class Parser {
         } catch (TransformerConfigurationException e) {
             throw new ParseException("Could not create Transformer!");
         }
+    }
+
+    /**
+     * Initializes the tidy document builder.
+     */
+    private void initializeTidyBuilder() {
+        tidyBuilder = new Tidy();
+        tidyBuilder.setInputEncoding("UTF-8");
+        tidyBuilder.setOutputEncoding("UTF-8");
+        tidyBuilder.setXmlOut(true);
+        tidyBuilder.setShowWarnings(false);
+        tidyBuilder.setQuiet(true);
     }
 
     /**
@@ -209,8 +216,14 @@ public class Parser {
      */
     private Document createXmlDocument(String html) throws ParseException {
         try {
-            return builder.parse(new ByteArrayInputStream(html.getBytes("UTF-8")));
-        } catch (SAXException | IOException e) {
+            Document document = tidyBuilder.parseDOM(new ByteArrayInputStream(html.getBytes("UTF-8")), null);
+
+            if (document == null) {
+                throw new ParseException("Could not parse Document for XPATH!");
+            }
+
+            return document;
+        } catch (IOException e) {
             throw new ParseException("Could not parse Document for XPATH!");
         }
     }
