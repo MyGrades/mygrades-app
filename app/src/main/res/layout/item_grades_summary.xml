@@ -150,4 +150,26 @@
     <!-- divider must be set here rather than as ItemDecoration,
     because of the negative margin (see outer LinearLayout) -->
     <View style="@style/Divider"/>
+
+    <LinearLayout
+        android:id="@+id/ll_no_grades_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/background">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_no_grades_found" />
+
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_logout"
+            android:layout_marginTop="16dp"
+            android:theme="@style/RobotoButtonStyle" />
+    </LinearLayout>
 </LinearLayout>

@@ -11,6 +11,7 @@ public class GradesSummaryItem implements GradesAdapterItem {
     private String infoBoxMessage;
     private boolean infoBoxVisible;
     private String dismissPrefKey;
+    private boolean noGradesInfoVisible;
 
     public GradesSummaryItem() {
     }
@@ -69,5 +70,13 @@ public class GradesSummaryItem implements GradesAdapterItem {
 
     public void setDismissPrefKey(String dismissPrefKey) {
         this.dismissPrefKey = dismissPrefKey;
+    }
+
+    public boolean isNoGradesInfoVisible() {
+        return noGradesInfoVisible;
+    }
+
+    public void setNoGradesInfoVisible(boolean noGradesInfoVisible) {
+        this.noGradesInfoVisible = noGradesInfoVisible;
     }
 }

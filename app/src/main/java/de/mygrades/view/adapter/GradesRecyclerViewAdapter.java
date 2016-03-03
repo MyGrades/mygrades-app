@@ -10,6 +10,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import java.util.List;
 import de.mygrades.R;
 import de.mygrades.util.AverageCalculator;
 import de.mygrades.util.Constants;
+import de.mygrades.util.LogoutHelper;
 import de.mygrades.view.activity.GradeDetailedActivity;
 import de.mygrades.view.adapter.model.GradeItem;
 import de.mygrades.view.adapter.model.GradesAdapterItem;
@@ -234,13 +236,15 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         String lastUpdatedAt = timestampToString(timestamp);
 
         // if list is not empty, set summary header
-        if (items.size() > 0) {
-            GradesSummaryItem summaryItem = (GradesSummaryItem) items.get(0);
-            summaryItem.setAverage(calculator.getAverage());
-            summaryItem.setCreditPoints(calculator.getCreditPointsSum());
-            summaryItem.setLastUpdatedAt(lastUpdatedAt + " Uhr"); // TODO: better time format + string resource
-            notifyItemChanged(0);
-        }
+        GradesSummaryItem summaryItem = (GradesSummaryItem) items.get(0);
+        summaryItem.setAverage(calculator.getAverage());
+        summaryItem.setCreditPoints(calculator.getCreditPointsSum());
+        summaryItem.setLastUpdatedAt(lastUpdatedAt + " Uhr"); // TODO: better time format + string resource
+
+        // show no grades info, if no grades are present
+        summaryItem.setNoGradesInfoVisible(items.size() == 1);
+
+        notifyItemChanged(0);
     }
 
     /**
@@ -302,6 +306,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             GradesSummaryViewHolder gradesSummaryViewHolder = new GradesSummaryViewHolder(v);
             gradesSummaryViewHolder.infoBoxMessage.setMovementMethod(LinkMovementMethod.getInstance());
             gradesSummaryViewHolder.dismissInfoBox.setOnClickListener(hideInfoBoxClickListener);
+            gradesSummaryViewHolder.btnLogout.setOnClickListener(logoutClickListener);
             return gradesSummaryViewHolder;
         }
         return null;
@@ -356,6 +361,13 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 viewHolder.infoBoxMessage.setText(Html.fromHtml(summaryItem.getInfoBoxMessage()));
             } else {
                 viewHolder.infoBox.setVisibility(View.GONE);
+            }
+
+            // no grades info
+            if (summaryItem.isNoGradesInfoVisible()) {
+                viewHolder.llNoGradesInfo.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.llNoGradesInfo.setVisibility(View.GONE);
             }
         }
     }
@@ -487,6 +499,24 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     };
 
     /**
+     * Click listener to logout.
+     */
+    private Button.OnClickListener logoutClickListener = new Button.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            logout();
+        }
+    };
+
+    /**
+     * Show the logout dialog.
+     */
+    private void logout() {
+        LogoutHelper logoutHelper = new LogoutHelper(context);
+        logoutHelper.showDialog();
+    }
+
+    /**
      * View holder for the overall summary (header).
      */
     public static class GradesSummaryViewHolder extends RecyclerView.ViewHolder {
@@ -498,6 +528,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         public TextView infoBoxTitle;
         public TextView infoBoxMessage;
         public ImageView dismissInfoBox;
+        public LinearLayout llNoGradesInfo;
+        public Button btnLogout;
 
         public GradesSummaryViewHolder(final View itemView) {
             super(itemView);
@@ -510,6 +542,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             infoBoxMessage = (TextView) itemView.findViewById(R.id.info_box_message);
             infoBoxTitle = (TextView) itemView.findViewById(R.id.info_box_title);
             dismissInfoBox = (ImageView) itemView.findViewById(R.id.iv_dismiss_info);
+            llNoGradesInfo = (LinearLayout) itemView.findViewById(R.id.ll_no_grades_wrapper);
+            btnLogout = (Button) itemView.findViewById(R.id.btn_logout);
         }
     }
 }

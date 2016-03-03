@@ -36,7 +36,7 @@
     <string name="error_no_network">Keine Internetverbindung.\n\nBitte überprüfe deine Internetverbindung und versuche es erneut.</string>
     <string name="error_timeout">Zeitüberschreitung bei der Anfrage.\n\nEs hat zu lange gedauert, mit dem Server deiner Hochschule zu kommunizieren. Das kann verschiedene Gründe haben:\n1. Deine Internetverbindung ist zu langsam.\n2. Das Notensystem deiner Hochschule ist überlastet.</string>
     <string name="error_general">Deine Noten konnten nicht abgerufen werden. Das kann verschiedene Gründe haben:\n\n1. Deine Zugangsdaten sind falsch.\n2. Probleme mit der Internetverbindung oder dem Server deiner Hochschule.\n3. Die Linkstruktur innerhalb deines Notensystems könnte sich geändert haben und so ist es zur Zeit nicht möglich, deine Noten abzurufen.</string>
-    <string name="tv_no_grades_found">Keine Noten gefunden.</string>
+    <string name="tv_no_grades_found">Es wurden leider keine Noten gefunden.\n\nDeine Notentabelle ist entweder leer, oder deine Zugangsdaten sind inkorrekt. Melde dich im Zweifel einfach erneut an.</string>
     <string name="get_overview">Notenverteilung abrufen</string>
     <string name="overview_not_possible"><![CDATA[Notenverteilung für dieses Modul nicht verfügbar. <a href="de.mygrades.view.activity://goto.fragment/faq/%1$d">Warum?</a>]]></string>
 
@@ -126,4 +126,5 @@
 
     <string name="general_error_stub_report_error"><![CDATA[<a href="de.mygrades.view.activity://goto.fragment/reporterror">Sag uns Bescheid</a>, falls dieses Problem länger besteht!]]></string>
     <string name="tv_select_rule_hint">Für deine Hochschule gibt es mehrere Möglichkeiten. Wenn du dir nicht sicher bist, welche zutrifft, probiere einfach alle aus.</string>
+    <string name="btn_logout">Erneut anmelden</string>
 </resources>
