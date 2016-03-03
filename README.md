@@ -30,6 +30,7 @@ Get it on [Google Play.](https://play.google.com/store/apps/details?id=de.mygrad
 * [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)
 * [android-support-preference](https://github.com/consp1racy/android-support-preference)
 * [NetCipher: Secured Networking for Android](https://github.com/guardianproject/NetCipher)
+* [JTidy](http://jtidy.sourceforge.net/)
 
 ## License
 
