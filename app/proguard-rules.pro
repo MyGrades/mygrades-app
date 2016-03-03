@@ -68,3 +68,6 @@
 
 # StrongHttpsClient and its support classes are totally unused, so ignore warnings
 -dontwarn info.guardianproject.netcipher.**
+
+# ignore tidy warnings
+-dontwarn org.w3c.tidy.**
