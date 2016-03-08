@@ -104,6 +104,11 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
             ContentValues values = new ContentValues();
             values.put("HASH", hash);
             db.update("GRADE_ENTRY", values, "HASH = ?", new String[]{oldHash});
+
+            // update grade entry hash values for overview
+            values = new ContentValues();
+            values.put("GRADE_ENTRY_HASH", hash);
+            db.update("OVERVIEW", values, "GRADE_ENTRY_HASH = ?", new String[]{oldHash});
         }
         c.close();
     }
