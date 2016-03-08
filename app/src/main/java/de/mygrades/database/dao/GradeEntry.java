@@ -254,13 +254,24 @@ public class GradeEntry {
     public void updateHash() {
         hash = (examId == null ? "" : examId) +
                (semester == null ? "" : semester) +
-               name;
+               (name == null ? "" : name) +
+               (attempt == null ? "" : attempt);
 
+        hash = toBase64(hash);
+    }
+
+    /**
+     * Encode a given string to base64 string.
+     *
+     * @param s - string to encode
+     * @return base64 string
+     */
+    public static String toBase64(String s) {
         try {
-            byte[] data = hash.getBytes("UTF-8");
-            hash = Base64.encodeToString(data, Base64.DEFAULT);
+            byte[] data = s.getBytes("UTF-8");
+            return Base64.encodeToString(data, Base64.DEFAULT);
         } catch (UnsupportedEncodingException e) {
-            // ignore, normal hash is used
+            return s;
         }
     }
 

@@ -3,7 +3,6 @@ package de.mygrades;
 import android.app.Application;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import de.mygrades.database.DatabaseHelper;
 import de.mygrades.database.dao.DaoMaster;

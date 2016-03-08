@@ -1,12 +1,15 @@
 package de.mygrades.database;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import de.mygrades.database.dao.ActionDao;
 import de.mygrades.database.dao.ActionParamDao;
 import de.mygrades.database.dao.DaoMaster;
+import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.database.dao.GradeEntryDao;
 import de.mygrades.database.dao.OverviewDao;
 import de.mygrades.database.dao.RuleDao;
@@ -32,7 +35,14 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
         // important: old/new version refers to database schema version, not the app version
         if (oldVersion < 2) {
             reset(db);
+        } else if (oldVersion == 2 && newVersion == 3) {
+            upgrade2to3(db);
         }
+    }
+
+    private void upgrade2to3(SQLiteDatabase db) {
+        // update GradeEntry hash
+        updateGradeEntryHash(db);
     }
 
     /**
@@ -63,5 +73,38 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
         TransformerMappingDao.dropTable(db, ifExists);
         GradeEntryDao.dropTable(db, ifExists);
         OverviewDao.dropTable(db, ifExists);
+    }
+
+    /**
+     * Updates all GradeEntry hashes (primary keys).
+     * 'Attempt' is appended to the existing hash to provide better distinguishable hash values.
+     *
+     * @param db SQLiteDatabase
+     */
+    private void updateGradeEntryHash(SQLiteDatabase db) {
+        // select all grade entries
+        String sql = "SELECT exam_id, name, semester, attempt, hash from GRADE_ENTRY;";
+        Cursor c = db.rawQuery(sql, new String[] {});
+
+        while (c.moveToNext()) {
+            String examId = c.getString(c.getColumnIndex("EXAM_ID"));
+            String semester = c.getString(c.getColumnIndex("SEMESTER"));
+            String name = c.getString(c.getColumnIndex("NAME"));
+            String attempt = c.getString(c.getColumnIndex("ATTEMPT"));
+            String oldHash = c.getString(c.getColumnIndex("HASH"));
+
+            // create new hash
+            String hash = (examId == null ? "" : examId) +
+                    (semester == null ? "" : semester) +
+                    (name == null ? "" : name) +
+                    (attempt == null ? "" : attempt);
+            hash = GradeEntry.toBase64(hash);
+
+            // update hash in database
+            ContentValues values = new ContentValues();
+            values.put("HASH", hash);
+            db.update("GRADE_ENTRY", values, "HASH = ?", new String[]{oldHash});
+        }
+        c.close();
     }
 }
