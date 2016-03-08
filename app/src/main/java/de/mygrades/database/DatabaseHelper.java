@@ -43,6 +43,10 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
     private void upgrade2to3(SQLiteDatabase db) {
         // update GradeEntry hash
         updateGradeEntryHash(db);
+
+        // add column 'OVERVIEW_FAILED_ON_FIRST_TRY' to table 'GRADE_ENTRY'
+        // TODO: test if the column order does matter or not
+        db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN OVERVIEW_FAILED_ON_FIRST_TRY INTEGER");
     }
 
     /**

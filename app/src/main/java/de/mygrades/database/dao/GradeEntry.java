@@ -29,6 +29,7 @@ public class GradeEntry {
     private String hash;
     private Boolean overviewPossible;
     private Integer seen;
+    private Boolean overviewFailedOnFirstTry;
     private Long overviewId;
 
     /** Used to resolve relations */
@@ -51,7 +52,7 @@ public class GradeEntry {
         this.hash = hash;
     }
 
-    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String tester, String hash, Boolean overviewPossible, Integer seen, Long overviewId) {
+    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String tester, String hash, Boolean overviewPossible, Integer seen, Boolean overviewFailedOnFirstTry, Long overviewId) {
         this.name = name;
         this.grade = grade;
         this.examId = examId;
@@ -66,6 +67,7 @@ public class GradeEntry {
         this.hash = hash;
         this.overviewPossible = overviewPossible;
         this.seen = seen;
+        this.overviewFailedOnFirstTry = overviewFailedOnFirstTry;
         this.overviewId = overviewId;
     }
 
@@ -187,6 +189,14 @@ public class GradeEntry {
 
     public void setSeen(Integer seen) {
         this.seen = seen;
+    }
+
+    public Boolean getOverviewFailedOnFirstTry() {
+        return overviewFailedOnFirstTry;
+    }
+
+    public void setOverviewFailedOnFirstTry(Boolean overviewFailedOnFirstTry) {
+        this.overviewFailedOnFirstTry = overviewFailedOnFirstTry;
     }
 
     public Long getOverviewId() {

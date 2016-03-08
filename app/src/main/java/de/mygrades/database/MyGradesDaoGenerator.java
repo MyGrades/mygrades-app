@@ -154,6 +154,7 @@ public class MyGradesDaoGenerator {
         gradeEntry.addStringProperty("hash").primaryKey();
         gradeEntry.addBooleanProperty("overviewPossible");
         gradeEntry.addIntProperty("seen");
+        gradeEntry.addBooleanProperty("overviewFailedOnFirstTry");
 
         gradeEntry.setHasKeepSections(true);
     }

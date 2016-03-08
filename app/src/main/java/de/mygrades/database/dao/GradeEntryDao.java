@@ -40,7 +40,8 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         public final static Property Hash = new Property(11, String.class, "hash", true, "HASH");
         public final static Property OverviewPossible = new Property(12, Boolean.class, "overviewPossible", false, "OVERVIEW_POSSIBLE");
         public final static Property Seen = new Property(13, Integer.class, "seen", false, "SEEN");
-        public final static Property OverviewId = new Property(14, Long.class, "overviewId", false, "OVERVIEW_ID");
+        public final static Property OverviewFailedOnFirstTry = new Property(14, Boolean.class, "overviewFailedOnFirstTry", false, "OVERVIEW_FAILED_ON_FIRST_TRY");
+        public final static Property OverviewId = new Property(15, Long.class, "overviewId", false, "OVERVIEW_ID");
     };
 
     private DaoSession daoSession;
@@ -73,7 +74,8 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
                 "\"HASH\" TEXT PRIMARY KEY NOT NULL ," + // 11: hash
                 "\"OVERVIEW_POSSIBLE\" INTEGER," + // 12: overviewPossible
                 "\"SEEN\" INTEGER," + // 13: seen
-                "\"OVERVIEW_ID\" INTEGER);"); // 14: overviewId
+                "\"OVERVIEW_FAILED_ON_FIRST_TRY\" INTEGER," + // 14: overviewFailedOnFirstTry
+                "\"OVERVIEW_ID\" INTEGER);"); // 15: overviewId
     }
 
     /** Drops the underlying database table. */
@@ -153,9 +155,14 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             stmt.bindLong(14, seen);
         }
  
+        Boolean overviewFailedOnFirstTry = entity.getOverviewFailedOnFirstTry();
+        if (overviewFailedOnFirstTry != null) {
+            stmt.bindLong(15, overviewFailedOnFirstTry ? 1L: 0L);
+        }
+ 
         Long overviewId = entity.getOverviewId();
         if (overviewId != null) {
-            stmt.bindLong(15, overviewId);
+            stmt.bindLong(16, overviewId);
         }
     }
 
@@ -189,7 +196,8 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // hash
             cursor.isNull(offset + 12) ? null : cursor.getShort(offset + 12) != 0, // overviewPossible
             cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13), // seen
-            cursor.isNull(offset + 14) ? null : cursor.getLong(offset + 14) // overviewId
+            cursor.isNull(offset + 14) ? null : cursor.getShort(offset + 14) != 0, // overviewFailedOnFirstTry
+            cursor.isNull(offset + 15) ? null : cursor.getLong(offset + 15) // overviewId
         );
         return entity;
     }
@@ -211,7 +219,8 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         entity.setHash(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
         entity.setOverviewPossible(cursor.isNull(offset + 12) ? null : cursor.getShort(offset + 12) != 0);
         entity.setSeen(cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13));
-        entity.setOverviewId(cursor.isNull(offset + 14) ? null : cursor.getLong(offset + 14));
+        entity.setOverviewFailedOnFirstTry(cursor.isNull(offset + 14) ? null : cursor.getShort(offset + 14) != 0);
+        entity.setOverviewId(cursor.isNull(offset + 15) ? null : cursor.getLong(offset + 15));
      }
     
     /** @inheritdoc */

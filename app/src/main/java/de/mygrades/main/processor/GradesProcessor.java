@@ -88,8 +88,12 @@ public class GradesProcessor extends BaseProcessor {
             // get rule for user
             Rule rule = getUserRule(prefs);
 
-            // send event to GUI whether overview is possible
-            EventBus.getDefault().post(new OverviewPossibleEvent(gradeEntry.getOverviewPossible(), rule.getOverview()));
+            // send event to GUI whether overview is possible and it has not failed before
+            Boolean overviewFailedOnFirstTry = gradeEntry.getOverviewFailedOnFirstTry();
+            overviewFailedOnFirstTry = overviewFailedOnFirstTry == null ? false : overviewFailedOnFirstTry;
+            if (!overviewFailedOnFirstTry) {
+                EventBus.getDefault().post(new OverviewPossibleEvent(gradeEntry.getOverviewPossible(), rule.getOverview()));
+            }
         }
     }
 
@@ -177,19 +181,32 @@ public class GradesProcessor extends BaseProcessor {
                 EventBus.getDefault().post(new OverviewEvent(newOverview, true));
             }
         } catch (ParseException e) {
+            setOverviewFailedOnFirstTry(gradeEntry);
             postErrorEvent(ErrorEvent.ErrorType.GENERAL, "Parse Error", e);
         } catch (IOException e) {
+            setOverviewFailedOnFirstTry(gradeEntry);
             if (e instanceof SocketTimeoutException) {
                 postErrorEvent(ErrorEvent.ErrorType.TIMEOUT, "Timeout", e);
             } else {
                 postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
             }
         } catch (Exception e) {
+            setOverviewFailedOnFirstTry(gradeEntry);
             postErrorEvent(ErrorEvent.ErrorType.GENERAL, "General Error", e);
         } finally {
             // unregister EventBus
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    /**
+     * Set overviewFailedOnFirstTry to true, so the scraping does not start again automatically.
+     *
+     * @param gradeEntry - GradeEntry
+     */
+    private void setOverviewFailedOnFirstTry(GradeEntry gradeEntry) {
+        gradeEntry.setOverviewFailedOnFirstTry(true);
+        gradeEntry.update();
     }
 
     /**

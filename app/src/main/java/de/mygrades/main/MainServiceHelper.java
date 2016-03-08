@@ -112,7 +112,7 @@ public class MainServiceHelper {
         int method = MainService.METHOD_GET_GRADE_DETAILS;
 
         // set request id
-        long requestId = concatenateLong(method, 0);
+        long requestId = concatenateLong(method, gradeHash.hashCode());
 
         // start worker thread in background
         Intent intent = getBasicIntent(MainService.PROCESSOR_GRADES, method, requestId);
