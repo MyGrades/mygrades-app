@@ -287,15 +287,15 @@ public class GradeDetailedActivity extends AppCompatActivity {
         gradeEntry = gradeEntryEvent.getGradeEntry();
 
         tvGradeDetailName.setText(gradeEntry.getName());
-        setTextView(tvGradeDetailExamId, gradeEntry.getExamId());
-        setTextView(tvGradeDetailSemester, gradeEntry.getSemester());
-        setTextView(tvGradeDetailState, gradeEntry.getState());
-        setTextView(tvGradeDetailCreditPoints, gradeEntry.getCreditPoints(), true);
-        setTextView(tvGradeDetailGrade, gradeEntry.getGrade(), true);
-        setTextView(tvGradeDetailAnnotation, gradeEntry.getAnnotation());
-        setTextView(tvGradeDetailAttempt, gradeEntry.getAttempt());
-        setTextView(tvGradeDetailExamDate, gradeEntry.getExamDate());
-        setTextView(tvGradeDetailTester, gradeEntry.getTester());
+        setTextView(tvGradeDetailExamId, gradeEntry.getExamId(), gradeEntry.getModifiedExamId());
+        setTextView(tvGradeDetailSemester, gradeEntry.getSemester(), null);
+        setTextView(tvGradeDetailState, gradeEntry.getState(), gradeEntry.getModifiedState());
+        setTextView(tvGradeDetailCreditPoints, gradeEntry.getCreditPoints(), gradeEntry.getModifiedCreditPoints(), true);
+        setTextView(tvGradeDetailGrade, gradeEntry.getGrade(), gradeEntry.getModifiedGrade(), true);
+        setTextView(tvGradeDetailAnnotation, gradeEntry.getAnnotation(), gradeEntry.getModifiedAnnotation());
+        setTextView(tvGradeDetailAttempt, gradeEntry.getAttempt(), gradeEntry.getModifiedAttempt());
+        setTextView(tvGradeDetailExamDate, gradeEntry.getExamDate(), gradeEntry.getModifiedExamDate());
+        setTextView(tvGradeDetailTester, gradeEntry.getTester(), gradeEntry.getModifiedTester());
     }
 
     /**
@@ -390,22 +390,24 @@ public class GradeDetailedActivity extends AppCompatActivity {
         UIHelper.displayErrorMessage(llRootView, errorEvent, tryAgainListener, goToFaqListener);
     }
 
-    private void setTextView(TextView textView, String value) {
-        if (value != null) {
-            textView.setText(value);
+    private void setTextView(TextView textView, String value, String modifiedValue) {
+        String v = value;
+        v = modifiedValue == null ? v : modifiedValue;
+
+        if (v != null) {
+            textView.setText(v);
             ((View)textView.getParent()).setVisibility(View.VISIBLE);
         }
     }
 
-    private void setTextView(TextView textView, Double value, boolean forcedVisible) {
-        if (value != null || forcedVisible) {
-            writeDoubleToTextView(textView, value);
+    private void setTextView(TextView textView, Double value, Double modifiedValue, boolean forcedVisible) {
+        Double v = value;
+        v = modifiedValue == null ? v : modifiedValue;
+
+        if (v != null || forcedVisible) {
+            writeDoubleToTextView(textView, v);
             ((View)textView.getParent()).setVisibility(View.VISIBLE);
         }
-    }
-
-    private void setTextView(TextView textView, Double value) {
-        setTextView(textView, value, false);
     }
 
     private void writeDoubleToTextView(TextView textView, Double value) {
