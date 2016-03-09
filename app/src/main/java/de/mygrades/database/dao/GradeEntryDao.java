@@ -41,7 +41,15 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         public final static Property OverviewPossible = new Property(12, Boolean.class, "overviewPossible", false, "OVERVIEW_POSSIBLE");
         public final static Property Seen = new Property(13, Integer.class, "seen", false, "SEEN");
         public final static Property OverviewFailedOnFirstTry = new Property(14, Boolean.class, "overviewFailedOnFirstTry", false, "OVERVIEW_FAILED_ON_FIRST_TRY");
-        public final static Property OverviewId = new Property(15, Long.class, "overviewId", false, "OVERVIEW_ID");
+        public final static Property ModifiedName = new Property(15, String.class, "modifiedName", false, "MODIFIED_NAME");
+        public final static Property ModifiedGrade = new Property(16, Double.class, "modifiedGrade", false, "MODIFIED_GRADE");
+        public final static Property ModifiedExamId = new Property(17, String.class, "modifiedExamId", false, "MODIFIED_EXAM_ID");
+        public final static Property ModifiedState = new Property(18, String.class, "modifiedState", false, "MODIFIED_STATE");
+        public final static Property ModifiedCreditPoints = new Property(19, Double.class, "modifiedCreditPoints", false, "MODIFIED_CREDIT_POINTS");
+        public final static Property ModifiedAnnotation = new Property(20, String.class, "modifiedAnnotation", false, "MODIFIED_ANNOTATION");
+        public final static Property ModifiedAttempt = new Property(21, String.class, "modifiedAttempt", false, "MODIFIED_ATTEMPT");
+        public final static Property ModifiedTester = new Property(22, String.class, "modifiedTester", false, "MODIFIED_TESTER");
+        public final static Property OverviewId = new Property(23, Long.class, "overviewId", false, "OVERVIEW_ID");
     };
 
     private DaoSession daoSession;
@@ -75,7 +83,15 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
                 "\"OVERVIEW_POSSIBLE\" INTEGER," + // 12: overviewPossible
                 "\"SEEN\" INTEGER," + // 13: seen
                 "\"OVERVIEW_FAILED_ON_FIRST_TRY\" INTEGER," + // 14: overviewFailedOnFirstTry
-                "\"OVERVIEW_ID\" INTEGER);"); // 15: overviewId
+                "\"MODIFIED_NAME\" TEXT," + // 15: modifiedName
+                "\"MODIFIED_GRADE\" REAL," + // 16: modifiedGrade
+                "\"MODIFIED_EXAM_ID\" TEXT," + // 17: modifiedExamId
+                "\"MODIFIED_STATE\" TEXT," + // 18: modifiedState
+                "\"MODIFIED_CREDIT_POINTS\" REAL," + // 19: modifiedCreditPoints
+                "\"MODIFIED_ANNOTATION\" TEXT," + // 20: modifiedAnnotation
+                "\"MODIFIED_ATTEMPT\" TEXT," + // 21: modifiedAttempt
+                "\"MODIFIED_TESTER\" TEXT," + // 22: modifiedTester
+                "\"OVERVIEW_ID\" INTEGER);"); // 23: overviewId
     }
 
     /** Drops the underlying database table. */
@@ -160,9 +176,49 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             stmt.bindLong(15, overviewFailedOnFirstTry ? 1L: 0L);
         }
  
+        String modifiedName = entity.getModifiedName();
+        if (modifiedName != null) {
+            stmt.bindString(16, modifiedName);
+        }
+ 
+        Double modifiedGrade = entity.getModifiedGrade();
+        if (modifiedGrade != null) {
+            stmt.bindDouble(17, modifiedGrade);
+        }
+ 
+        String modifiedExamId = entity.getModifiedExamId();
+        if (modifiedExamId != null) {
+            stmt.bindString(18, modifiedExamId);
+        }
+ 
+        String modifiedState = entity.getModifiedState();
+        if (modifiedState != null) {
+            stmt.bindString(19, modifiedState);
+        }
+ 
+        Double modifiedCreditPoints = entity.getModifiedCreditPoints();
+        if (modifiedCreditPoints != null) {
+            stmt.bindDouble(20, modifiedCreditPoints);
+        }
+ 
+        String modifiedAnnotation = entity.getModifiedAnnotation();
+        if (modifiedAnnotation != null) {
+            stmt.bindString(21, modifiedAnnotation);
+        }
+ 
+        String modifiedAttempt = entity.getModifiedAttempt();
+        if (modifiedAttempt != null) {
+            stmt.bindString(22, modifiedAttempt);
+        }
+ 
+        String modifiedTester = entity.getModifiedTester();
+        if (modifiedTester != null) {
+            stmt.bindString(23, modifiedTester);
+        }
+ 
         Long overviewId = entity.getOverviewId();
         if (overviewId != null) {
-            stmt.bindLong(16, overviewId);
+            stmt.bindLong(24, overviewId);
         }
     }
 
@@ -197,7 +253,15 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             cursor.isNull(offset + 12) ? null : cursor.getShort(offset + 12) != 0, // overviewPossible
             cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13), // seen
             cursor.isNull(offset + 14) ? null : cursor.getShort(offset + 14) != 0, // overviewFailedOnFirstTry
-            cursor.isNull(offset + 15) ? null : cursor.getLong(offset + 15) // overviewId
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // modifiedName
+            cursor.isNull(offset + 16) ? null : cursor.getDouble(offset + 16), // modifiedGrade
+            cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17), // modifiedExamId
+            cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18), // modifiedState
+            cursor.isNull(offset + 19) ? null : cursor.getDouble(offset + 19), // modifiedCreditPoints
+            cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20), // modifiedAnnotation
+            cursor.isNull(offset + 21) ? null : cursor.getString(offset + 21), // modifiedAttempt
+            cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22), // modifiedTester
+            cursor.isNull(offset + 23) ? null : cursor.getLong(offset + 23) // overviewId
         );
         return entity;
     }
@@ -220,7 +284,15 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         entity.setOverviewPossible(cursor.isNull(offset + 12) ? null : cursor.getShort(offset + 12) != 0);
         entity.setSeen(cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13));
         entity.setOverviewFailedOnFirstTry(cursor.isNull(offset + 14) ? null : cursor.getShort(offset + 14) != 0);
-        entity.setOverviewId(cursor.isNull(offset + 15) ? null : cursor.getLong(offset + 15));
+        entity.setModifiedName(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setModifiedGrade(cursor.isNull(offset + 16) ? null : cursor.getDouble(offset + 16));
+        entity.setModifiedExamId(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
+        entity.setModifiedState(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));
+        entity.setModifiedCreditPoints(cursor.isNull(offset + 19) ? null : cursor.getDouble(offset + 19));
+        entity.setModifiedAnnotation(cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20));
+        entity.setModifiedAttempt(cursor.isNull(offset + 21) ? null : cursor.getString(offset + 21));
+        entity.setModifiedTester(cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22));
+        entity.setOverviewId(cursor.isNull(offset + 23) ? null : cursor.getLong(offset + 23));
      }
     
     /** @inheritdoc */

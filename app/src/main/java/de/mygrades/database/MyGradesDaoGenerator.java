@@ -156,6 +156,17 @@ public class MyGradesDaoGenerator {
         gradeEntry.addIntProperty("seen");
         gradeEntry.addBooleanProperty("overviewFailedOnFirstTry");
 
+        // properties for the edit mode
+        gradeEntry.addStringProperty("modifiedName");
+        gradeEntry.addDoubleProperty("modifiedGrade");
+        gradeEntry.addStringProperty("modifiedExamId");
+        gradeEntry.addStringProperty("modifiedState");
+        gradeEntry.addDoubleProperty("modifiedCreditPoints");
+        gradeEntry.addStringProperty("modifiedAnnotation");
+        gradeEntry.addStringProperty("modifiedAttempt");
+        gradeEntry.addStringProperty("modifiedTester");
+        // TODO: add modified property for semesterNumber or semester
+
         gradeEntry.setHasKeepSections(true);
     }
 

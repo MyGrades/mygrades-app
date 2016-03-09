@@ -30,6 +30,14 @@ public class GradeEntry {
     private Boolean overviewPossible;
     private Integer seen;
     private Boolean overviewFailedOnFirstTry;
+    private String modifiedName;
+    private Double modifiedGrade;
+    private String modifiedExamId;
+    private String modifiedState;
+    private Double modifiedCreditPoints;
+    private String modifiedAnnotation;
+    private String modifiedAttempt;
+    private String modifiedTester;
     private Long overviewId;
 
     /** Used to resolve relations */
@@ -52,7 +60,7 @@ public class GradeEntry {
         this.hash = hash;
     }
 
-    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String tester, String hash, Boolean overviewPossible, Integer seen, Boolean overviewFailedOnFirstTry, Long overviewId) {
+    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String tester, String hash, Boolean overviewPossible, Integer seen, Boolean overviewFailedOnFirstTry, String modifiedName, Double modifiedGrade, String modifiedExamId, String modifiedState, Double modifiedCreditPoints, String modifiedAnnotation, String modifiedAttempt, String modifiedTester, Long overviewId) {
         this.name = name;
         this.grade = grade;
         this.examId = examId;
@@ -68,6 +76,14 @@ public class GradeEntry {
         this.overviewPossible = overviewPossible;
         this.seen = seen;
         this.overviewFailedOnFirstTry = overviewFailedOnFirstTry;
+        this.modifiedName = modifiedName;
+        this.modifiedGrade = modifiedGrade;
+        this.modifiedExamId = modifiedExamId;
+        this.modifiedState = modifiedState;
+        this.modifiedCreditPoints = modifiedCreditPoints;
+        this.modifiedAnnotation = modifiedAnnotation;
+        this.modifiedAttempt = modifiedAttempt;
+        this.modifiedTester = modifiedTester;
         this.overviewId = overviewId;
     }
 
@@ -197,6 +213,70 @@ public class GradeEntry {
 
     public void setOverviewFailedOnFirstTry(Boolean overviewFailedOnFirstTry) {
         this.overviewFailedOnFirstTry = overviewFailedOnFirstTry;
+    }
+
+    public String getModifiedName() {
+        return modifiedName;
+    }
+
+    public void setModifiedName(String modifiedName) {
+        this.modifiedName = modifiedName;
+    }
+
+    public Double getModifiedGrade() {
+        return modifiedGrade;
+    }
+
+    public void setModifiedGrade(Double modifiedGrade) {
+        this.modifiedGrade = modifiedGrade;
+    }
+
+    public String getModifiedExamId() {
+        return modifiedExamId;
+    }
+
+    public void setModifiedExamId(String modifiedExamId) {
+        this.modifiedExamId = modifiedExamId;
+    }
+
+    public String getModifiedState() {
+        return modifiedState;
+    }
+
+    public void setModifiedState(String modifiedState) {
+        this.modifiedState = modifiedState;
+    }
+
+    public Double getModifiedCreditPoints() {
+        return modifiedCreditPoints;
+    }
+
+    public void setModifiedCreditPoints(Double modifiedCreditPoints) {
+        this.modifiedCreditPoints = modifiedCreditPoints;
+    }
+
+    public String getModifiedAnnotation() {
+        return modifiedAnnotation;
+    }
+
+    public void setModifiedAnnotation(String modifiedAnnotation) {
+        this.modifiedAnnotation = modifiedAnnotation;
+    }
+
+    public String getModifiedAttempt() {
+        return modifiedAttempt;
+    }
+
+    public void setModifiedAttempt(String modifiedAttempt) {
+        this.modifiedAttempt = modifiedAttempt;
+    }
+
+    public String getModifiedTester() {
+        return modifiedTester;
+    }
+
+    public void setModifiedTester(String modifiedTester) {
+        this.modifiedTester = modifiedTester;
     }
 
     public Long getOverviewId() {
