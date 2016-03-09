@@ -164,6 +164,7 @@ public class MyGradesDaoGenerator {
         gradeEntry.addDoubleProperty("modifiedCreditPoints");
         gradeEntry.addStringProperty("modifiedAnnotation");
         gradeEntry.addStringProperty("modifiedAttempt");
+        gradeEntry.addStringProperty("modifiedExamDate");
         gradeEntry.addStringProperty("modifiedTester");
         // TODO: add modified property for semesterNumber or semester
 

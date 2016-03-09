@@ -37,6 +37,7 @@ public class GradeEntry {
     private Double modifiedCreditPoints;
     private String modifiedAnnotation;
     private String modifiedAttempt;
+    private String modifiedExamDate;
     private String modifiedTester;
     private Long overviewId;
 
@@ -60,7 +61,7 @@ public class GradeEntry {
         this.hash = hash;
     }
 
-    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String tester, String hash, Boolean overviewPossible, Integer seen, Boolean overviewFailedOnFirstTry, String modifiedName, Double modifiedGrade, String modifiedExamId, String modifiedState, Double modifiedCreditPoints, String modifiedAnnotation, String modifiedAttempt, String modifiedTester, Long overviewId) {
+    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String tester, String hash, Boolean overviewPossible, Integer seen, Boolean overviewFailedOnFirstTry, String modifiedName, Double modifiedGrade, String modifiedExamId, String modifiedState, Double modifiedCreditPoints, String modifiedAnnotation, String modifiedAttempt, String modifiedExamDate, String modifiedTester, Long overviewId) {
         this.name = name;
         this.grade = grade;
         this.examId = examId;
@@ -83,6 +84,7 @@ public class GradeEntry {
         this.modifiedCreditPoints = modifiedCreditPoints;
         this.modifiedAnnotation = modifiedAnnotation;
         this.modifiedAttempt = modifiedAttempt;
+        this.modifiedExamDate = modifiedExamDate;
         this.modifiedTester = modifiedTester;
         this.overviewId = overviewId;
     }
@@ -269,6 +271,14 @@ public class GradeEntry {
 
     public void setModifiedAttempt(String modifiedAttempt) {
         this.modifiedAttempt = modifiedAttempt;
+    }
+
+    public String getModifiedExamDate() {
+        return modifiedExamDate;
+    }
+
+    public void setModifiedExamDate(String modifiedExamDate) {
+        this.modifiedExamDate = modifiedExamDate;
     }
 
     public String getModifiedTester() {
