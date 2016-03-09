@@ -75,6 +75,12 @@ public class Parser {
         tidyBuilder.setXmlOut(true);
         tidyBuilder.setShowWarnings(false);
         tidyBuilder.setQuiet(true);
+        tidyBuilder.setDropEmptyParas(false);
+        tidyBuilder.setTidyMark(false);
+        tidyBuilder.setFixComments(false);
+        tidyBuilder.setTrimEmptyElements(false);
+        tidyBuilder.setJoinStyles(false);
+        tidyBuilder.setXmlTags(true); // important, otherwise jtidy manipulates the markup
     }
 
     /**
