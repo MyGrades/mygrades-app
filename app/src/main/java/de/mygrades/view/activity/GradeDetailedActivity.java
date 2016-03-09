@@ -70,6 +70,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private TextView tvGradeDetailAttempt;
     private TextView tvGradeDetailExamDate;
     private TextView tvGradeDetailTester;
+    private TextView tvGradeDetailWeight;
 
     private LinearLayout llOverviewWrapper;
     private TextView tvOverviewParticipants;
@@ -161,6 +162,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         tvGradeDetailAttempt = (TextView) findViewById(R.id.tv_grade_detail_attempt);
         tvGradeDetailExamDate = (TextView) findViewById(R.id.tv_grade_detail_exam_date);
         tvGradeDetailTester = (TextView) findViewById(R.id.tv_grade_detail_tester);
+        tvGradeDetailWeight = (TextView) findViewById(R.id.tv_grade_detail_weight);
 
         // get views for overview
         llOverviewWrapper = (LinearLayout) findViewById(R.id.overview_wrapper);
@@ -296,6 +298,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         setTextView(tvGradeDetailAttempt, gradeEntry.getAttempt(), gradeEntry.getModifiedAttempt());
         setTextView(tvGradeDetailExamDate, gradeEntry.getExamDate(), gradeEntry.getModifiedExamDate());
         setTextView(tvGradeDetailTester, gradeEntry.getTester(), gradeEntry.getModifiedTester());
+        setWeightTextView(gradeEntry.getWeight());
     }
 
     /**
@@ -408,6 +411,13 @@ public class GradeDetailedActivity extends AppCompatActivity {
             writeDoubleToTextView(textView, v);
             ((View)textView.getParent()).setVisibility(View.VISIBLE);
         }
+    }
+
+    private void setWeightTextView(Integer weight) {
+        weight = weight == null ? 1 : weight;
+        String weightAsString = getResources().getString(R.string.tv_grade_detail_weight_value, weight);
+        ((View)tvGradeDetailWeight.getParent()).setVisibility(View.VISIBLE);
+        tvGradeDetailWeight.setText(weightAsString);
     }
 
     private void writeDoubleToTextView(TextView textView, Double value) {

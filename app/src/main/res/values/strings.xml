@@ -127,4 +127,6 @@
     <string name="general_error_stub_report_error"><![CDATA[<a href="de.mygrades.view.activity://goto.fragment/reporterror">Sag uns Bescheid</a>, falls dieses Problem länger besteht!]]></string>
     <string name="tv_select_rule_hint">Für deine Hochschule gibt es mehrere Möglichkeiten. Wenn du dir nicht sicher bist, welche zutrifft, probiere einfach alle aus.</string>
     <string name="btn_logout">Erneut anmelden</string>
+    <string name="tv_grade_detail_weight">Gewichtung</string>
+    <string name="tv_grade_detail_weight_value">%1$dx</string>
 </resources>

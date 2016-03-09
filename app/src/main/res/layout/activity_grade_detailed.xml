@@ -148,6 +148,23 @@
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 
+                <!-- Weight -->
+                <RelativeLayout
+                    style="@style/GradeDetailRow">
+
+                    <TextView
+                        style="@style/GradeDetailTextViewLeft"
+                        android:id="@+id/tv_grade_detail_label_weight"
+                        android:text="@string/tv_grade_detail_weight"
+                        />
+
+                    <TextView
+                        style="@style/GradeDetailTextViewRight"
+                        android:id="@+id/tv_grade_detail_weight"
+                        />
+                    <View style="@style/Divider"/>
+                </RelativeLayout>
+
                 <!-- State -->
                 <RelativeLayout
                     style="@style/GradeDetailRow">
