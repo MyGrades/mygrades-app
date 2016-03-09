@@ -30,6 +30,7 @@ public class GradeEntry {
     private Boolean overviewPossible;
     private Integer seen;
     private Boolean overviewFailedOnFirstTry;
+    private Integer weight;
     private String modifiedName;
     private Double modifiedGrade;
     private String modifiedExamId;
@@ -61,7 +62,7 @@ public class GradeEntry {
         this.hash = hash;
     }
 
-    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String tester, String hash, Boolean overviewPossible, Integer seen, Boolean overviewFailedOnFirstTry, String modifiedName, Double modifiedGrade, String modifiedExamId, String modifiedState, Double modifiedCreditPoints, String modifiedAnnotation, String modifiedAttempt, String modifiedExamDate, String modifiedTester, Long overviewId) {
+    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String tester, String hash, Boolean overviewPossible, Integer seen, Boolean overviewFailedOnFirstTry, Integer weight, String modifiedName, Double modifiedGrade, String modifiedExamId, String modifiedState, Double modifiedCreditPoints, String modifiedAnnotation, String modifiedAttempt, String modifiedExamDate, String modifiedTester, Long overviewId) {
         this.name = name;
         this.grade = grade;
         this.examId = examId;
@@ -77,6 +78,7 @@ public class GradeEntry {
         this.overviewPossible = overviewPossible;
         this.seen = seen;
         this.overviewFailedOnFirstTry = overviewFailedOnFirstTry;
+        this.weight = weight;
         this.modifiedName = modifiedName;
         this.modifiedGrade = modifiedGrade;
         this.modifiedExamId = modifiedExamId;
@@ -215,6 +217,14 @@ public class GradeEntry {
 
     public void setOverviewFailedOnFirstTry(Boolean overviewFailedOnFirstTry) {
         this.overviewFailedOnFirstTry = overviewFailedOnFirstTry;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
     }
 
     public String getModifiedName() {

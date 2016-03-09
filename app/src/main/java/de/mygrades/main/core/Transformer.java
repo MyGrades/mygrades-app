@@ -154,6 +154,9 @@ public class Transformer {
             gradeEntry.setTester(getStringProperty(xmlDocument, TESTER));
             gradeEntry.setOverviewPossible(getBooleanProperty(xmlDocument, OVERVIEW_POSSIBLE));
 
+            // set default weight
+            gradeEntry.setWeight(1);
+
             // update hash, used as primary key
             gradeEntry.updateHash();
 

@@ -44,7 +44,7 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
         // update GradeEntry hash
         updateGradeEntryHash(db);
 
-        // add column 'OVERVIEW_FAILED_ON_FIRST_TRY' to table 'GRADE_ENTRY'
+        // add new columns 'OVERVIEW_FAILED_ON_FIRST_TRY' to table 'GRADE_ENTRY'
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN OVERVIEW_FAILED_ON_FIRST_TRY INTEGER;");
 
         // add columns for edit mode to table 'GRADE_ENTRY';
@@ -57,6 +57,10 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_ATTEMPT TEXT;");
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_EXAM_DATE;");
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_TESTER TEXT;");
+
+        // add 'weight' to table 'GRADE_ENTRY' and set default value
+        db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN WEIGHT INTEGER;");
+        db.execSQL("UPDATE GRADE_ENTRY SET weight = 1;");
     }
 
     /**
