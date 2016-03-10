@@ -224,7 +224,7 @@ public class Parser {
         try {
             Document document = tidyBuilder.parseDOM(new ByteArrayInputStream(html.getBytes("UTF-8")), null);
 
-            if (document == null) {
+            if (document == null || document.getFirstChild() == null) {
                 throw new ParseException("Could not parse Document for XPATH!");
             }
 
