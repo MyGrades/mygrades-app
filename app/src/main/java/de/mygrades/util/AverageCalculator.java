@@ -37,21 +37,22 @@ public class AverageCalculator {
                 continue;
 
             GradeItem gradeItem = (GradeItem) item;
+            int weight = gradeItem.getWeight() == null ? 1 : gradeItem.getWeight();
             float actCreditPoints = (gradeItem.getCreditPoints() == null ? 0f : gradeItem.getCreditPoints());
             creditPointsSum += actCreditPoints;
             if (gradeItem.getGrade() != null && gradeItem.getGrade() > 0) {
-                creditPointsSumForAverage += actCreditPoints;
+                creditPointsSumForAverage += (actCreditPoints * weight);
             }
 
             float grade = (gradeItem.getGrade() == null ? 0f : gradeItem.getGrade());
 
             if (simpleWeighting) {
                 if (grade > 0 && grade < 5) {
-                    passedGradesCounter += 1;
-                    average += grade;
+                    passedGradesCounter += weight;
+                    average += (grade * weight);
                 }
             } else {
-                average += grade * actCreditPoints;
+                average += grade * actCreditPoints * weight;
             }
         }
 

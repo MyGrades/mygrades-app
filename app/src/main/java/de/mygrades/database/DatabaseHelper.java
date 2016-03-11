@@ -60,7 +60,7 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
 
         // add 'weight' to table 'GRADE_ENTRY' and set default value
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN WEIGHT INTEGER;");
-        db.execSQL("UPDATE GRADE_ENTRY SET weight = 1;");
+        db.execSQL("UPDATE GRADE_ENTRY SET WEIGHT = 1;");
     }
 
     /**

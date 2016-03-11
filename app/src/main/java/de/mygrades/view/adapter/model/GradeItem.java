@@ -9,6 +9,7 @@ public class GradeItem implements GradesAdapterItem {
     private String name;
     private Float grade;
     private Float creditPoints;
+    private Integer weight;
     private String hash;
     private int seen;
 
@@ -28,6 +29,9 @@ public class GradeItem implements GradesAdapterItem {
 
         Double grade = gradeEntry.getGrade();
         setGrade(grade == null ? null : grade.floatValue());
+
+        Integer weight = gradeEntry.getWeight();
+        setWeight(weight == null ? null : weight);
 
         if (gradeEntry.getSeen() != null) {
             setSeen(gradeEntry.getSeen());
@@ -104,5 +108,13 @@ public class GradeItem implements GradesAdapterItem {
 
     public int getSeen() {
         return seen;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
     }
 }
