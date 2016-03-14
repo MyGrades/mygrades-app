@@ -9,9 +9,14 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -56,21 +61,23 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private GradeEntry gradeEntry;
     private MainServiceHelper mainServiceHelper;
 
+    private boolean editModeEnabled;
+
     private PtrFrameLayout ptrFrame;
     private PtrHeader ptrHeader;
 
     // Views
     private TextView tvGradeDetailName;
-    private TextView tvGradeDetailExamId;
+    private EditText etGradeDetailExamId;
     private TextView tvGradeDetailSemester;
-    private TextView tvGradeDetailState;
+    private EditText etGradeDetailState;
     private TextView tvGradeDetailCreditPoints;
     private TextView tvGradeDetailGrade;
-    private TextView tvGradeDetailAnnotation;
+    private EditText etGradeDetailAnnotation;
     private TextView tvGradeDetailAttempt;
     private TextView tvGradeDetailExamDate;
-    private TextView tvGradeDetailTester;
-    private TextView tvGradeDetailWeight;
+    private EditText etGradeDetailTester;
+    private EditText etGradeDetailWeight;
 
     private LinearLayout llOverviewWrapper;
     private TextView tvOverviewParticipants;
@@ -107,6 +114,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mainServiceHelper = new MainServiceHelper(this);
+        editModeEnabled = false;
 
         // get extra data
         Bundle extras = getIntent().getExtras();
@@ -132,6 +140,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         };
 
         initViews();
+        enableEditMode(false);
 
         // restore instance state if necessary
         if (savedInstanceState != null) {
@@ -153,16 +162,20 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private void initViews() {
         // get views for grade
         tvGradeDetailName = (TextView) findViewById(R.id.tv_grade_detail_name);
-        tvGradeDetailExamId = (TextView) findViewById(R.id.tv_grade_detail_exam_id);
         tvGradeDetailSemester = (TextView) findViewById(R.id.tv_grade_detail_semester);
-        tvGradeDetailState = (TextView) findViewById(R.id.tv_grade_detail_state);
         tvGradeDetailCreditPoints = (TextView) findViewById(R.id.tv_grade_detail_credit_points);
         tvGradeDetailGrade = (TextView) findViewById(R.id.tv_grade_detail_grade);
-        tvGradeDetailAnnotation = (TextView) findViewById(R.id.tv_grade_detail_annotation);
+        etGradeDetailAnnotation = (EditText) findViewById(R.id.et_grade_detail_annotation);
         tvGradeDetailAttempt = (TextView) findViewById(R.id.tv_grade_detail_attempt);
         tvGradeDetailExamDate = (TextView) findViewById(R.id.tv_grade_detail_exam_date);
-        tvGradeDetailTester = (TextView) findViewById(R.id.tv_grade_detail_tester);
-        tvGradeDetailWeight = (TextView) findViewById(R.id.tv_grade_detail_weight);
+
+        // editable views
+        etGradeDetailExamId = (EditText) findViewById(R.id.et_grade_detail_exam_id);
+        etGradeDetailTester = (EditText) findViewById(R.id.et_grade_detail_tester);
+        etGradeDetailState = (EditText) findViewById(R.id.et_grade_detail_state);
+
+        // init weight spinner
+        etGradeDetailWeight = (EditText) findViewById(R.id.et_grade_detail_weight);
 
         // get views for overview
         llOverviewWrapper = (LinearLayout) findViewById(R.id.overview_wrapper);
@@ -287,18 +300,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
      */
     public void onEventMainThread(GradeEntryEvent gradeEntryEvent) {
         gradeEntry = gradeEntryEvent.getGradeEntry();
-
-        tvGradeDetailName.setText(gradeEntry.getName());
-        setTextView(tvGradeDetailExamId, gradeEntry.getExamId(), gradeEntry.getModifiedExamId());
-        setTextView(tvGradeDetailSemester, gradeEntry.getSemester(), null);
-        setTextView(tvGradeDetailState, gradeEntry.getState(), gradeEntry.getModifiedState());
-        setTextView(tvGradeDetailCreditPoints, gradeEntry.getCreditPoints(), gradeEntry.getModifiedCreditPoints(), true);
-        setTextView(tvGradeDetailGrade, gradeEntry.getGrade(), gradeEntry.getModifiedGrade(), true);
-        setTextView(tvGradeDetailAnnotation, gradeEntry.getAnnotation(), gradeEntry.getModifiedAnnotation());
-        setTextView(tvGradeDetailAttempt, gradeEntry.getAttempt(), gradeEntry.getModifiedAttempt());
-        setTextView(tvGradeDetailExamDate, gradeEntry.getExamDate(), gradeEntry.getModifiedExamDate());
-        setTextView(tvGradeDetailTester, gradeEntry.getTester(), gradeEntry.getModifiedTester());
-        setWeightTextView(gradeEntry.getWeight());
+        updateValues();
     }
 
     /**
@@ -402,6 +404,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
         if (v != null) {
             textView.setText(v);
             ((View)textView.getParent()).setVisibility(View.VISIBLE);
+        } else {
+            ((View)textView.getParent()).setVisibility(View.GONE);
         }
     }
 
@@ -415,27 +419,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
         }
     }
 
-    private void setWeightTextView(Integer weight) {
-        weight = weight == null ? 1 : weight;
-        String weightAsString = getResources().getString(R.string.tv_grade_detail_weight_value, weight);
-        ((View)tvGradeDetailWeight.getParent()).setVisibility(View.VISIBLE);
-        tvGradeDetailWeight.setText(weightAsString);
-    }
-
     private void writeDoubleToTextView(TextView textView, Double value) {
         String valueAsString = value == null ? "-" : String.format("%.1f", value);
         textView.setText(valueAsString);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-
-        return false;
     }
 
     @Override
@@ -467,5 +453,146 @@ public class GradeDetailedActivity extends AppCompatActivity {
             // write your logic here
             return mFormat.format(value);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.grade_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.grade_detail_edit:
+                enableEditMode(true);
+                return true;
+            case R.id.grade_detail_save:
+                saveEdits();
+                return true;
+        }
+
+        return false;
+    }
+
+    private void enableEditMode(boolean enable) {
+        editModeEnabled = enable;
+
+        // enable all edit texts
+        etGradeDetailExamId.setEnabled(editModeEnabled);
+        etGradeDetailWeight.setEnabled(editModeEnabled);
+        etGradeDetailTester.setEnabled(editModeEnabled);
+        etGradeDetailState.setEnabled(editModeEnabled);
+        etGradeDetailAnnotation.setEnabled(editModeEnabled);
+
+        // show all edit texts
+        if (enable) {
+            ((View) tvGradeDetailName.getParent()).setVisibility(View.VISIBLE);
+            ((View) etGradeDetailExamId.getParent()).setVisibility(View.VISIBLE);
+            ((View) tvGradeDetailSemester.getParent()).setVisibility(View.VISIBLE);
+            ((View) etGradeDetailState.getParent()).setVisibility(View.VISIBLE);
+            ((View) tvGradeDetailCreditPoints.getParent()).setVisibility(View.VISIBLE);
+            ((View) tvGradeDetailGrade.getParent()).setVisibility(View.VISIBLE);
+            ((View) etGradeDetailAnnotation.getParent()).setVisibility(View.VISIBLE);
+            ((View) tvGradeDetailAttempt.getParent()).setVisibility(View.VISIBLE);
+            ((View) tvGradeDetailExamDate.getParent()).setVisibility(View.VISIBLE);
+            ((View) etGradeDetailTester.getParent()).setVisibility(View.VISIBLE);
+            ((View) etGradeDetailWeight.getParent()).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void saveEdits() {
+        // disable edit mode
+        enableEditMode(false);
+
+        boolean modified = false;
+
+        // TODO: also check if gradeEntry.modified* differs from new input
+        // to avoid unnecessary update?
+
+        // check exam id
+        String examId = gradeEntry.getExamId();
+        String modifiedExamId = etGradeDetailExamId.getText().toString();
+        modifiedExamId = modifiedExamId.length() == 0 ? null : modifiedExamId;
+        if (examId == null || !examId.equals(modifiedExamId)) {
+            gradeEntry.setModifiedExamId(modifiedExamId);
+            modified = true;
+        } else if (examId.equals(modifiedExamId)) {
+            // remove modified exam id if the input equals the original value
+            gradeEntry.setModifiedExamId(null);
+            modified = true;
+        }
+
+        // check weight // TODO: replace with spinner
+        Integer weight = gradeEntry.getWeight();
+        String weightInput = etGradeDetailWeight.getText().toString();
+        Integer modifiedWeight = weightInput.length() == 0 ? 1 : Integer.parseInt(weightInput);
+        if (weight == null || !weight.equals(modifiedWeight)) {
+            gradeEntry.setWeight(modifiedWeight);
+            modified = true;
+        }
+
+        // check tester
+        String tester = gradeEntry.getTester();
+        String modifiedTester = etGradeDetailTester.getText().toString();
+        modifiedTester = modifiedTester.length() == 0 ? null : modifiedTester;
+        if (tester == null || !tester.equals(modifiedTester)) {
+            gradeEntry.setModifiedTester(modifiedTester);
+            modified = true;
+        } else if (tester.equals(modifiedTester)) {
+            gradeEntry.setModifiedTester(null);
+            modified = true;
+        }
+
+        // check state
+        String state = gradeEntry.getState();
+        String modifiedState = etGradeDetailState.getText().toString();
+        modifiedState = modifiedState.length() == 0 ? null : modifiedState;
+        if (state == null || !state.equals(modifiedState)) {
+            gradeEntry.setModifiedState(modifiedState);
+            modified = true;
+        } else if (state.equals(modifiedState)) {
+            gradeEntry.setModifiedState(null);
+            modified = true;
+        }
+
+        // check annotation
+        String annotation = gradeEntry.getAnnotation();
+        String modifiedAnnotation = etGradeDetailAnnotation.getText().toString();
+        modifiedAnnotation = modifiedAnnotation.length() == 0 ? null : modifiedAnnotation;
+        if (annotation == null || !annotation.equals(modifiedAnnotation)) {
+            gradeEntry.setModifiedAnnotation(modifiedAnnotation);
+            modified = true;
+        } else if (annotation.equals(modifiedAnnotation)) {
+            gradeEntry.setModifiedAnnotation(null);
+            modified = true;
+        }
+
+        if (modified) {
+            gradeEntry.update();
+            // TODO: request/send sticky overview event
+        }
+
+        // update ui anyway to hide empty properties
+        updateValues();
+    }
+
+    private void updateValues() {
+        tvGradeDetailName.setText(gradeEntry.getName());
+        setTextView(etGradeDetailExamId, gradeEntry.getExamId(), gradeEntry.getModifiedExamId());
+        setTextView(tvGradeDetailSemester, gradeEntry.getSemester(), null);
+        setTextView(etGradeDetailState, gradeEntry.getState(), gradeEntry.getModifiedState());
+        setTextView(tvGradeDetailCreditPoints, gradeEntry.getCreditPoints(), gradeEntry.getModifiedCreditPoints(), true);
+        setTextView(tvGradeDetailGrade, gradeEntry.getGrade(), gradeEntry.getModifiedGrade(), true);
+        setTextView(etGradeDetailAnnotation, gradeEntry.getAnnotation(), gradeEntry.getModifiedAnnotation());
+        setTextView(tvGradeDetailAttempt, gradeEntry.getAttempt(), gradeEntry.getModifiedAttempt());
+        setTextView(tvGradeDetailExamDate, gradeEntry.getExamDate(), gradeEntry.getModifiedExamDate());
+        setTextView(etGradeDetailTester, gradeEntry.getTester(), gradeEntry.getModifiedTester());
+
+        etGradeDetailWeight.setText(""+gradeEntry.getWeight());
+        ((View)etGradeDetailWeight.getParent()).setVisibility(View.VISIBLE);
     }
 }

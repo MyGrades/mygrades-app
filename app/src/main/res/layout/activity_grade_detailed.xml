@@ -47,19 +47,16 @@
                     style="@style/h1"/>
 
                 <!-- ExamId -->
-                <RelativeLayout
-                    style="@style/GradeDetailRow">
-
+                <RelativeLayout style="@style/GradeDetailRow">
                     <TextView
                         style="@style/GradeDetailTextViewLeft"
                         android:id="@+id/tv_grade_detail_label_exam_id"
-                        android:text="@string/tv_grade_detail_exam_id"
-                        />
+                        android:text="@string/tv_grade_detail_exam_id" />
 
-                    <TextView
-                        style="@style/GradeDetailTextViewRight"
-                        android:id="@+id/tv_grade_detail_exam_id"
-                        />
+                    <EditText
+                        style="@style/GradeDetailEditText"
+                        android:id="@+id/et_grade_detail_exam_id" />
+
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 
@@ -107,10 +104,9 @@
                         android:text="@string/tv_grade_detail_tester"
                         />
 
-                    <TextView
-                        style="@style/GradeDetailTextViewRight"
-                        android:id="@+id/tv_grade_detail_tester"
-                        />
+                    <EditText
+                        style="@style/GradeDetailEditText"
+                        android:id="@+id/et_grade_detail_tester" />
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 
@@ -154,15 +150,13 @@
 
                     <TextView
                         style="@style/GradeDetailTextViewLeft"
-                        android:id="@+id/tv_grade_detail_label_weight"
-                        android:text="@string/tv_grade_detail_weight"
-                        />
+                        android:text="@string/tv_grade_detail_weight" />
 
-                    <TextView
-                        style="@style/GradeDetailTextViewRight"
-                        android:id="@+id/tv_grade_detail_weight"
-                        />
-                    <View style="@style/Divider"/>
+                    <EditText
+                        style="@style/GradeDetailEditText"
+                        android:digits="0123456789"
+                        android:inputType="numberDecimal"
+                        android:id="@+id/et_grade_detail_weight" />
                 </RelativeLayout>
 
                 <!-- State -->
@@ -172,13 +166,11 @@
                     <TextView
                         style="@style/GradeDetailTextViewLeft"
                         android:id="@+id/tv_grade_detail_label_state"
-                        android:text="@string/tv_grade_detail_state"
-                        />
+                        android:text="@string/tv_grade_detail_state" />
 
-                    <TextView
-                        style="@style/GradeDetailTextViewRight"
-                        android:id="@+id/tv_grade_detail_state"
-                        />
+                    <EditText
+                        style="@style/GradeDetailEditText"
+                        android:id="@+id/et_grade_detail_state" />
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 
@@ -206,13 +198,11 @@
                     <TextView
                         style="@style/GradeDetailTextViewLeft"
                         android:id="@+id/tv_grade_detail_label_annotation"
-                        android:text="@string/tv_grade_detail_annotation"
-                        />
+                        android:text="@string/tv_grade_detail_annotation" />
 
-                    <TextView
-                        style="@style/GradeDetailTextViewRight"
-                        android:id="@+id/tv_grade_detail_annotation"
-                        />
+                    <EditText
+                        style="@style/GradeDetailEditText"
+                        android:id="@+id/et_grade_detail_annotation" />
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 
