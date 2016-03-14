@@ -140,6 +140,7 @@ public class MyGradesDaoGenerator {
      */
     private static void addGradeEntry(Schema schema) {
         gradeEntry = schema.addEntity("GradeEntry");
+        gradeEntry.implementsInterface("android.os.Parcelable");
         gradeEntry.addStringProperty("name").notNull();
         gradeEntry.addDoubleProperty("grade");
         gradeEntry.addStringProperty("examId");

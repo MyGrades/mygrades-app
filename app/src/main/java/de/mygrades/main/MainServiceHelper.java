@@ -3,6 +3,8 @@ package de.mygrades.main;
 import android.content.Context;
 import android.content.Intent;
 
+import de.mygrades.database.dao.GradeEntry;
+
 /**
  * Helper class with convenience methods to start background
  * threads by sending intents to the MainService.
@@ -168,6 +170,23 @@ public class MainServiceHelper {
 
         // start worker thread in background
         Intent intent = getBasicIntent(MainService.PROCESSOR_LOGIN, method, requestId);
+        context.startService(intent);
+    }
+
+    /**
+     * Starts a worker thread to update a grade entry.
+     *
+     * @param gradeEntry grade entry to update.
+     */
+    public void updateGradeEntry(GradeEntry gradeEntry) {
+        int method = MainService.METHOD_UPDATE_GRADE_ENTRY;
+
+        // set request id
+        long requestId = concatenateLong(method, gradeEntry.getHash().hashCode());
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_GRADES, method, requestId);
+        intent.putExtra(MainService.GRADE_ENTRY, gradeEntry);
         context.startService(intent);
     }
 

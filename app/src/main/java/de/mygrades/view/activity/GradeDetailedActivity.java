@@ -9,14 +9,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -572,8 +569,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
         }
 
         if (modified) {
-            gradeEntry.update();
-            // TODO: request/send sticky overview event
+            // update grade in database
+            mainServiceHelper.updateGradeEntry(gradeEntry);
         }
 
         // update ui anyway to hide empty properties

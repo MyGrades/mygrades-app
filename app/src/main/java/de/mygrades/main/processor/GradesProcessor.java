@@ -305,6 +305,21 @@ public class GradesProcessor extends BaseProcessor {
     }
 
     /**
+     * Updates a grade entry in the database. The session must be re-attached, because
+     * the gradeEntry was un-parcelled before (without the session).
+     *
+     * @param gradeEntry - grade entry to update.
+     */
+    public void updateGradeEntry(GradeEntry gradeEntry) {
+        // re-attach grade entry to dao session
+        gradeEntry.__setDaoSession(daoSession);
+        gradeEntry.update();
+
+        // post sticky grades event
+        getGradesFromDatabase(true);
+    }
+
+    /**
      * Saves given list of GradeEntries to database.
      * Only new and updated values are written to database.
      * 1. Create Map: GradeHash -> GradeEntry Object for new and old list (not that hard -> only copy of references not deep copy)
@@ -380,13 +395,17 @@ public class GradesProcessor extends BaseProcessor {
     /**
      * Load a grades from the database and post an event with all grades.
      */
-    public void getGradesFromDatabase() {
+    public void getGradesFromDatabase(boolean sticky) {
         List<GradeEntry> gradeEntries = daoSession.getGradeEntryDao().loadAll();
 
         // post event with new grades to subscribers
         GradesEvent gradesEvent = new GradesEvent();
         gradesEvent.setGrades(gradeEntries);
-        EventBus.getDefault().post(gradesEvent);
+        if (sticky) {
+            EventBus.getDefault().postSticky(gradesEvent);
+        } else {
+            EventBus.getDefault().post(gradesEvent);
+        }
     }
 
     /**

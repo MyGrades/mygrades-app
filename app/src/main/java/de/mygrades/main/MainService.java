@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.main.alarm.AlarmReceiver;
 import de.mygrades.main.processor.ErrorProcessor;
 import de.mygrades.main.processor.GradesProcessor;
@@ -47,6 +48,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final int METHOD_POST_ERROR = 120;
     public static final int METHOD_GET_STATISTICS = 121;
     public static final int METHOD_POST_WISH = 122;
+    public static final int METHOD_UPDATE_GRADE_ENTRY = 123;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
@@ -63,6 +65,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final String ERROR_MESSAGE = "error_message";
     public static final String UNIVERSITY_NAME = "university_name";
     public static final String WISH_MESSAGE = "wish_message";
+    public static final String GRADE_ENTRY = "grade_entry";
 
     // save request ids for pending request in this set, and remove them when its done.
     private Set<Long> pendingRequest;
@@ -167,7 +170,7 @@ public class MainService extends MultiThreadedIntentService {
                 }
                 break;
             case METHOD_GET_GRADES_FROM_DATABASE:
-                gradesProcessor.getGradesFromDatabase();
+                gradesProcessor.getGradesFromDatabase(false);
                 break;
             case METHOD_GET_GRADE_DETAILS:
                 gradeHash = intent.getStringExtra(GRADE_HASH);
@@ -176,6 +179,10 @@ public class MainService extends MultiThreadedIntentService {
             case METHOD_SCRAPE_FOR_OVERVIEW:
                 gradeHash = intent.getStringExtra(GRADE_HASH);
                 gradesProcessor.scrapeForOverview(gradeHash);
+                break;
+            case METHOD_UPDATE_GRADE_ENTRY:
+                GradeEntry gradeEntry = intent.getParcelableExtra(GRADE_ENTRY);
+                gradesProcessor.updateGradeEntry(gradeEntry);
                 break;
             default:
                 Log.e(TAG, "Invalid method call to MainService: "+ method);
