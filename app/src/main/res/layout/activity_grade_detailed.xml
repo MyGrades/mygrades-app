@@ -100,8 +100,7 @@
                     <TextView
                         style="@style/GradeDetailTextViewLeft"
                         android:id="@+id/tv_grade_detail_label_tester"
-                        android:text="@string/tv_grade_detail_tester"
-                        />
+                        android:text="@string/tv_grade_detail_tester" />
 
                     <EditText
                         style="@style/GradeDetailEditText"
@@ -116,13 +115,12 @@
                     <TextView
                         style="@style/GradeDetailTextViewLeft"
                         android:id="@+id/tv_grade_detail_label_grade"
-                        android:text="@string/tv_grade_detail_grade"
-                        />
+                        android:text="@string/tv_grade_detail_grade" />
 
-                    <TextView
-                        style="@style/GradeDetailTextViewRight"
-                        android:id="@+id/tv_grade_detail_grade"
-                        />
+                    <EditText
+                        style="@style/GradeDetailEditText"
+                        android:inputType="numberDecimal"
+                        android:id="@+id/et_grade_detail_grade" />
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 

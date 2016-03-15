@@ -69,7 +69,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private TextView tvGradeDetailSemester;
     private EditText etGradeDetailState;
     private TextView tvGradeDetailCreditPoints;
-    private TextView tvGradeDetailGrade;
+    private EditText etGradeDetailGrade;
     private EditText etGradeDetailAnnotation;
     private TextView tvGradeDetailAttempt;
     private EditText etGradeDetailExamDate;
@@ -161,7 +161,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         tvGradeDetailName = (TextView) findViewById(R.id.tv_grade_detail_name);
         tvGradeDetailSemester = (TextView) findViewById(R.id.tv_grade_detail_semester);
         tvGradeDetailCreditPoints = (TextView) findViewById(R.id.tv_grade_detail_credit_points);
-        tvGradeDetailGrade = (TextView) findViewById(R.id.tv_grade_detail_grade);
+        etGradeDetailGrade = (EditText) findViewById(R.id.et_grade_detail_grade);
         etGradeDetailAnnotation = (EditText) findViewById(R.id.et_grade_detail_annotation);
         tvGradeDetailAttempt = (TextView) findViewById(R.id.tv_grade_detail_attempt);
         etGradeDetailExamDate = (EditText) findViewById(R.id.et_grade_detail_exam_date);
@@ -485,6 +485,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         etGradeDetailState.setEnabled(editModeEnabled);
         etGradeDetailAnnotation.setEnabled(editModeEnabled);
         etGradeDetailExamDate.setEnabled(editModeEnabled);
+        etGradeDetailGrade.setEnabled(editModeEnabled);
 
         // show all edit texts
         if (enable) {
@@ -493,7 +494,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
             ((View) tvGradeDetailSemester.getParent()).setVisibility(View.VISIBLE);
             ((View) etGradeDetailState.getParent()).setVisibility(View.VISIBLE);
             ((View) tvGradeDetailCreditPoints.getParent()).setVisibility(View.VISIBLE);
-            ((View) tvGradeDetailGrade.getParent()).setVisibility(View.VISIBLE);
+            ((View) etGradeDetailGrade.getParent()).setVisibility(View.VISIBLE);
             ((View) etGradeDetailAnnotation.getParent()).setVisibility(View.VISIBLE);
             ((View) tvGradeDetailAttempt.getParent()).setVisibility(View.VISIBLE);
             ((View) etGradeDetailExamDate.getParent()).setVisibility(View.VISIBLE);
@@ -581,6 +582,27 @@ public class GradeDetailedActivity extends AppCompatActivity {
             modified = true;
         }
 
+        // check grade
+        Double grade = gradeEntry.getGrade();
+        String modifiedGradeAsString = etGradeDetailGrade.getText().toString();
+        modifiedGradeAsString = modifiedGradeAsString.length() == 0 ? null : modifiedGradeAsString;
+        if (modifiedGradeAsString == null) {
+            gradeEntry.setModifiedGrade(null);
+            modified = true;
+        } else {
+            Double modifiedGrade = Double.parseDouble(modifiedGradeAsString);
+            if (modifiedGrade < 0 || modifiedGrade > 5) {
+                etGradeDetailGrade.setError("Note muss zwischen 0 und 5 liegen."); // TODO: string resource
+            } else if (grade == null || !grade.equals(modifiedGrade)) {
+                gradeEntry.setModifiedGrade(modifiedGrade);
+                modified = true;
+            } else if (grade.equals(modifiedGrade)) {
+                gradeEntry.setModifiedGrade(null);
+                modified = true;
+            }
+        }
+
+
         if (modified) {
             // update grade in database
             mainServiceHelper.updateGradeEntry(gradeEntry);
@@ -596,7 +618,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         setTextView(tvGradeDetailSemester, gradeEntry.getSemester(), null);
         setTextView(etGradeDetailState, gradeEntry.getState(), gradeEntry.getModifiedState());
         setTextView(tvGradeDetailCreditPoints, gradeEntry.getCreditPoints(), gradeEntry.getModifiedCreditPoints(), true);
-        setTextView(tvGradeDetailGrade, gradeEntry.getGrade(), gradeEntry.getModifiedGrade(), true);
+        setTextView(etGradeDetailGrade, gradeEntry.getGrade(), gradeEntry.getModifiedGrade(), true);
         setTextView(etGradeDetailAnnotation, gradeEntry.getAnnotation(), gradeEntry.getModifiedAnnotation());
         setTextView(tvGradeDetailAttempt, gradeEntry.getAttempt(), gradeEntry.getModifiedAttempt());
         setTextView(etGradeDetailExamDate, gradeEntry.getExamDate(), gradeEntry.getModifiedExamDate());
