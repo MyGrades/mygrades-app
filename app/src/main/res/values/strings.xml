@@ -129,4 +129,5 @@
     <string name="btn_logout">Erneut anmelden</string>
     <string name="tv_grade_detail_weight">Gewichtung</string>
     <string name="tv_grade_detail_weight_value">%1$dx</string>
+    <string name="tv_modified_hint">von dir geändert</string>
 </resources>

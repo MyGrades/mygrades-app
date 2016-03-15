@@ -46,6 +46,28 @@
                     android:layout_height="wrap_content"
                     style="@style/h1"/>
 
+                <LinearLayout
+                    android:id="@+id/ll_modified_hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="4dp">
+
+                    <de.mygrades.view.widget.TriangleShapeView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="4dp" />
+
+                    <TextView
+                        android:paddingLeft="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tv_modified_hint"
+                        android:alpha="0.7"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
                 <!-- ExamId -->
                 <RelativeLayout style="@style/GradeDetailRow">
                     <TextView

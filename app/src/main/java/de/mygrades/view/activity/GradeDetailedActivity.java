@@ -77,6 +77,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private EditText etGradeDetailTester;
     private EditText etGradeDetailWeight;
 
+    private LinearLayout llModifiedHint;
+
     private LinearLayout llOverviewWrapper;
     private TextView tvOverviewParticipants;
     private TextView tvOverviewPassed;
@@ -171,9 +173,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
         etGradeDetailExamId = (EditText) findViewById(R.id.et_grade_detail_exam_id);
         etGradeDetailTester = (EditText) findViewById(R.id.et_grade_detail_tester);
         etGradeDetailState = (EditText) findViewById(R.id.et_grade_detail_state);
-
-        // init weight spinner
         etGradeDetailWeight = (EditText) findViewById(R.id.et_grade_detail_weight);
+
+        llModifiedHint = (LinearLayout) findViewById(R.id.ll_modified_hint);
 
         // get views for overview
         llOverviewWrapper = (LinearLayout) findViewById(R.id.overview_wrapper);
@@ -395,7 +397,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         UIHelper.displayErrorMessage(llRootView, errorEvent, tryAgainListener, goToFaqListener);
     }
 
-    private void setTextView(TextView textView, String value, String modifiedValue, int resIdModifiedBadge) {
+    private boolean setTextView(TextView textView, String value, String modifiedValue, int resIdModifiedBadge) {
         String v = value;
         boolean modified = false;
         if (modifiedValue != null) {
@@ -415,9 +417,11 @@ public class GradeDetailedActivity extends AppCompatActivity {
         if (badge != null) {
             badge.setVisibility(modified ? View.VISIBLE : View.GONE);
         }
+
+        return modified;
     }
 
-    private void setTextView(TextView textView, Double value, Double modifiedValue, boolean forcedVisible, int resIdModifiedBadge) {
+    private boolean setTextView(TextView textView, Double value, Double modifiedValue, boolean forcedVisible, int resIdModifiedBadge) {
         Double v = value;
         boolean modified = false;
         if (modifiedValue != null) {
@@ -435,9 +439,11 @@ public class GradeDetailedActivity extends AppCompatActivity {
         if (badge != null) {
             badge.setVisibility(modified ? View.VISIBLE : View.GONE);
         }
+
+        return modified;
     }
 
-    private void setWeightValue(EditText editText, Integer weight, int resIdModifiedBadge) {
+    private boolean setWeightValue(EditText editText, Integer weight, int resIdModifiedBadge) {
         int value = weight == null ? 1 : weight;
         boolean modified = value != 1;
 
@@ -449,6 +455,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
         if (badge != null) {
             badge.setVisibility(modified ? View.VISIBLE : View.GONE);
         }
+
+        return modified;
     }
 
     private void writeDoubleToTextView(TextView textView, Double value) {
@@ -668,17 +676,22 @@ public class GradeDetailedActivity extends AppCompatActivity {
     }
 
     private void updateValues() {
+        int modifiedCounter = 0;
+
         tvGradeDetailName.setText(gradeEntry.getName());
-        setTextView(etGradeDetailExamId, gradeEntry.getExamId(), gradeEntry.getModifiedExamId(), R.id.modified_badge_exam_id);
-        setTextView(tvGradeDetailSemester, gradeEntry.getSemester(), null, -1);
-        setTextView(etGradeDetailState, gradeEntry.getState(), gradeEntry.getModifiedState(), R.id.modified_badge_state);
-        setTextView(etGradeDetailCreditPoints, gradeEntry.getCreditPoints(), gradeEntry.getModifiedCreditPoints(), true, R.id.modified_badge_credit_points);
-        setTextView(etGradeDetailGrade, gradeEntry.getGrade(), gradeEntry.getModifiedGrade(), true, R.id.modified_badge_grade);
-        setTextView(etGradeDetailAnnotation, gradeEntry.getAnnotation(), gradeEntry.getModifiedAnnotation(), R.id.modified_badge_annotation);
-        setTextView(tvGradeDetailAttempt, gradeEntry.getAttempt(), gradeEntry.getModifiedAttempt(), R.id.modified_badge_attempt);
-        setTextView(etGradeDetailExamDate, gradeEntry.getExamDate(), gradeEntry.getModifiedExamDate(), R.id.modified_badge_exam_date);
-        setTextView(etGradeDetailTester, gradeEntry.getTester(), gradeEntry.getModifiedTester(), R.id.modified_badge_tester);
-        setWeightValue(etGradeDetailWeight, gradeEntry.getWeight(), R.id.modified_badge_weight);
+        modifiedCounter += setTextView(etGradeDetailExamId, gradeEntry.getExamId(), gradeEntry.getModifiedExamId(), R.id.modified_badge_exam_id) ? 1 : 0;
+        modifiedCounter += setTextView(tvGradeDetailSemester, gradeEntry.getSemester(), null, -1) ? 1 : 0;
+        modifiedCounter += setTextView(etGradeDetailState, gradeEntry.getState(), gradeEntry.getModifiedState(), R.id.modified_badge_state) ? 1 : 0;
+        modifiedCounter += setTextView(etGradeDetailCreditPoints, gradeEntry.getCreditPoints(), gradeEntry.getModifiedCreditPoints(), true, R.id.modified_badge_credit_points) ? 1 : 0;
+        modifiedCounter += setTextView(etGradeDetailGrade, gradeEntry.getGrade(), gradeEntry.getModifiedGrade(), true, R.id.modified_badge_grade) ? 1 : 0;
+        modifiedCounter += setTextView(etGradeDetailAnnotation, gradeEntry.getAnnotation(), gradeEntry.getModifiedAnnotation(), R.id.modified_badge_annotation) ? 1 : 0;
+        modifiedCounter += setTextView(tvGradeDetailAttempt, gradeEntry.getAttempt(), gradeEntry.getModifiedAttempt(), R.id.modified_badge_attempt) ? 1 : 0;
+        modifiedCounter += setTextView(etGradeDetailExamDate, gradeEntry.getExamDate(), gradeEntry.getModifiedExamDate(), R.id.modified_badge_exam_date) ? 1 : 0;
+        modifiedCounter += setTextView(etGradeDetailTester, gradeEntry.getTester(), gradeEntry.getModifiedTester(), R.id.modified_badge_tester) ? 1 : 0;
+        modifiedCounter += setWeightValue(etGradeDetailWeight, gradeEntry.getWeight(), R.id.modified_badge_weight) ? 1 : 0;
+
+        // show or hide hint
+        llModifiedHint.setVisibility(modifiedCounter > 0 ? View.VISIBLE : View.GONE);
     }
 
     /**
