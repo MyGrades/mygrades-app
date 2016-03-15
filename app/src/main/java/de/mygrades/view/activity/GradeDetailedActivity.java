@@ -613,7 +613,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         } else {
             Double modifiedCreditPoints = Double.parseDouble(modifiedCreditPointsAsString);
             if (modifiedCreditPoints < 0) {
-                etGradeDetailCreditPoints.setError("Credit Points dürfen nicht negativ sein.");
+                etGradeDetailCreditPoints.setError("Credit Points dürfen nicht negativ sein."); // TODO: string resource
             } else if (creditPoints == null || !creditPoints.equals(modifiedCreditPoints)) {
                 gradeEntry.setModifiedCreditPoints(modifiedCreditPoints);
                 modified = true;

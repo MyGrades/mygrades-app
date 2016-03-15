@@ -8,7 +8,9 @@ import de.mygrades.database.dao.GradeEntry;
 public class GradeItem implements GradesAdapterItem {
     private String name;
     private Float grade;
+    private Float modifiedGrade;
     private Float creditPoints;
+    private Float modifiedCreditPoints;
     private Integer weight;
     private String hash;
     private int seen;
@@ -27,8 +29,14 @@ public class GradeItem implements GradesAdapterItem {
         Double creditPoints = gradeEntry.getCreditPoints();
         setCreditPoints(creditPoints == null ? null : creditPoints.floatValue());
 
+        Double modifiedCreditPoints = gradeEntry.getModifiedCreditPoints();
+        setModifiedCreditPoints(modifiedCreditPoints == null ? null : modifiedCreditPoints.floatValue());
+
         Double grade = gradeEntry.getGrade();
         setGrade(grade == null ? null : grade.floatValue());
+
+        Double modifiedGrade = gradeEntry.getModifiedGrade();
+        setModifiedGrade(modifiedGrade == null ? null : modifiedGrade.floatValue());
 
         Integer weight = gradeEntry.getWeight();
         setWeight(weight == null ? null : weight);
@@ -88,6 +96,17 @@ public class GradeItem implements GradesAdapterItem {
             return false;
         }
 
+        // check if modified credit points has changed
+        if ((gradeItem.getModifiedCreditPoints() != null && modifiedCreditPoints != null) &&
+            (!gradeItem.getModifiedCreditPoints().equals(modifiedCreditPoints))) {
+            return false;
+        }
+
+        if ((gradeItem.getModifiedCreditPoints() == null && modifiedCreditPoints != null) ||
+            (gradeItem.getModifiedCreditPoints() != null && modifiedCreditPoints == null)) {
+            return false;
+        }
+
         // check if grade has changed
         if ((gradeItem.getGrade() != null && grade != null) &&
             (!gradeItem.getGrade().equals(grade))) {
@@ -96,6 +115,28 @@ public class GradeItem implements GradesAdapterItem {
 
         if ((gradeItem.getGrade() == null && grade != null) ||
             (gradeItem.getGrade() != null && grade == null)) {
+            return false;
+        }
+
+        // check if modified grade has changed
+        if ((gradeItem.getModifiedGrade() != null && modifiedGrade != null) &&
+            (!gradeItem.getModifiedGrade().equals(modifiedGrade))) {
+            return false;
+        }
+
+        if ((gradeItem.getModifiedGrade() == null && modifiedGrade != null) ||
+            (gradeItem.getModifiedGrade() != null && modifiedGrade == null)) {
+            return false;
+        }
+
+        // check if weight differs
+        if ((gradeItem.getWeight() != null && weight != null) &&
+            (!gradeItem.getWeight().equals(weight))) {
+            return false;
+        }
+
+        if ((gradeItem.getWeight() == null && weight != null) ||
+            (gradeItem.getWeight() != null && weight == null)) {
             return false;
         }
 
@@ -116,5 +157,21 @@ public class GradeItem implements GradesAdapterItem {
 
     public void setWeight(Integer weight) {
         this.weight = weight;
+    }
+
+    public Float getModifiedGrade() {
+        return modifiedGrade;
+    }
+
+    public void setModifiedGrade(Float modifiedGrade) {
+        this.modifiedGrade = modifiedGrade;
+    }
+
+    public Float getModifiedCreditPoints() {
+        return modifiedCreditPoints;
+    }
+
+    public void setModifiedCreditPoints(Float modifiedCreditPoints) {
+        this.modifiedCreditPoints = modifiedCreditPoints;
     }
 }

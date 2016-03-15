@@ -38,13 +38,19 @@ public class AverageCalculator {
 
             GradeItem gradeItem = (GradeItem) item;
             int weight = gradeItem.getWeight() == null ? 1 : gradeItem.getWeight();
+
             float actCreditPoints = (gradeItem.getCreditPoints() == null ? 0f : gradeItem.getCreditPoints());
+            Float modifiedCreditPoints = gradeItem.getModifiedCreditPoints();
+            actCreditPoints = modifiedCreditPoints == null ? actCreditPoints : modifiedCreditPoints;
+
             creditPointsSum += actCreditPoints;
             if (gradeItem.getGrade() != null && gradeItem.getGrade() > 0) {
                 creditPointsSumForAverage += (actCreditPoints * weight);
             }
 
             float grade = (gradeItem.getGrade() == null ? 0f : gradeItem.getGrade());
+            Float modifiedGrade = gradeItem.getModifiedGrade();
+            grade = modifiedGrade == null ? grade : modifiedGrade;
 
             if (simpleWeighting) {
                 if (grade > 0 && grade < 5) {

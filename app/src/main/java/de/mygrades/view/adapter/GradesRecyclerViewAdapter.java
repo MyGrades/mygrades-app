@@ -114,7 +114,10 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                     if (!gradeItem.equals(newGrade)) {
                         // update old grade item and notify ui
                         gradeItem.setGrade(newGrade.getGrade());
+                        gradeItem.setModifiedGrade(newGrade.getModifiedGrade());
                         gradeItem.setCreditPoints(newGrade.getCreditPoints());
+                        gradeItem.setModifiedCreditPoints(newGrade.getModifiedCreditPoints());
+                        gradeItem.setWeight(newGrade.getWeight());
                         notifyItemChanged(i);
 
                         // update semester item and notify ui
