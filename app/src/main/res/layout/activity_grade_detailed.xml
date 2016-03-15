@@ -120,6 +120,7 @@
                     <EditText
                         style="@style/GradeDetailEditText"
                         android:inputType="numberDecimal"
+                        android:digits="0123456789.,"
                         android:id="@+id/et_grade_detail_grade" />
                     <View style="@style/Divider"/>
                 </RelativeLayout>
@@ -136,6 +137,7 @@
                     <EditText
                         style="@style/GradeDetailEditText"
                         android:inputType="numberDecimal"
+                        android:digits="0123456789.,"
                         android:id="@+id/et_grade_detail_credit_points" />
                     <View style="@style/Divider"/>
                 </RelativeLayout>

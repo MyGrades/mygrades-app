@@ -591,8 +591,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
             gradeEntry.setModifiedGrade(null);
             modified = true;
         } else {
-            Double modifiedGrade = Double.parseDouble(modifiedGradeAsString);
-            if (modifiedGrade < 0 || modifiedGrade > 5) {
+            Double modifiedGrade = stringToDouble(modifiedGradeAsString);
+            if (modifiedGrade == null || modifiedGrade < 0 || modifiedGrade > 5) {
                 etGradeDetailGrade.setError("Note muss zwischen 0 und 5 liegen."); // TODO: string resource
             } else if (grade == null || !grade.equals(modifiedGrade)) {
                 gradeEntry.setModifiedGrade(modifiedGrade);
@@ -611,8 +611,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
             gradeEntry.setModifiedCreditPoints(null);
             modified = true;
         } else {
-            Double modifiedCreditPoints = Double.parseDouble(modifiedCreditPointsAsString);
-            if (modifiedCreditPoints < 0) {
+            Double modifiedCreditPoints = stringToDouble(modifiedCreditPointsAsString);
+            if (modifiedCreditPoints == null || modifiedCreditPoints < 0) {
                 etGradeDetailCreditPoints.setError("Credit Points dürfen nicht negativ sein."); // TODO: string resource
             } else if (creditPoints == null || !creditPoints.equals(modifiedCreditPoints)) {
                 gradeEntry.setModifiedCreditPoints(modifiedCreditPoints);
@@ -646,5 +646,28 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
         etGradeDetailWeight.setText(""+gradeEntry.getWeight());
         ((View)etGradeDetailWeight.getParent()).setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Converts a string to double.
+     * If the string is empty or the parsing fails, null will be returned.
+     *
+     * @param s - string to convert
+     * @return Double or null
+     */
+    private Double stringToDouble(String s) {
+        if (s.length() == 0) {
+            return null;
+        }
+
+        s = s.replace(',', '.');
+
+        try {
+            return Double.valueOf(s);
+        } catch (NumberFormatException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+        return null;
     }
 }
