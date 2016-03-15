@@ -112,6 +112,13 @@
         <item name="android:paddingTop">12dp</item>
         <item name="android:textSize">16sp</item>
     </style>
+
+    <style name="TriangleShapeViewModifiedBadge">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+
     <!-- RelativeLayout Row of GradeDetailed Activity -->
     <style name="GradeDetailRow">
         <item name="android:visibility">gone</item>
