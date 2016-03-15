@@ -52,7 +52,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginTop="12dp"
-                    android:layout_marginLeft="4dp">
+                    android:layout_marginLeft="4dp"
+                    android:visibility="gone">
 
                     <de.mygrades.view.widget.TriangleShapeView
                         android:layout_width="24dp"

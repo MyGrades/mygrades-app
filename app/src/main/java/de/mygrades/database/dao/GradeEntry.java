@@ -31,7 +31,7 @@ public class GradeEntry implements android.os.Parcelable {
     private Boolean overviewPossible;
     private Integer seen;
     private Boolean overviewFailedOnFirstTry;
-    private Integer weight;
+    private Double weight;
     private String modifiedName;
     private Double modifiedGrade;
     private String modifiedExamId;
@@ -75,7 +75,7 @@ public class GradeEntry implements android.os.Parcelable {
         this.hash = hash;
     }
 
-    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String tester, String hash, Boolean overviewPossible, Integer seen, Boolean overviewFailedOnFirstTry, Integer weight, String modifiedName, Double modifiedGrade, String modifiedExamId, String modifiedState, Double modifiedCreditPoints, String modifiedAnnotation, String modifiedAttempt, String modifiedExamDate, String modifiedTester, Long overviewId) {
+    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String tester, String hash, Boolean overviewPossible, Integer seen, Boolean overviewFailedOnFirstTry, Double weight, String modifiedName, Double modifiedGrade, String modifiedExamId, String modifiedState, Double modifiedCreditPoints, String modifiedAnnotation, String modifiedAttempt, String modifiedExamDate, String modifiedTester, Long overviewId) {
         this.name = name;
         this.grade = grade;
         this.examId = examId;
@@ -232,11 +232,11 @@ public class GradeEntry implements android.os.Parcelable {
         this.overviewFailedOnFirstTry = overviewFailedOnFirstTry;
     }
 
-    public Integer getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
-    public void setWeight(Integer weight) {
+    public void setWeight(Double weight) {
         this.weight = weight;
     }
 
@@ -538,7 +538,7 @@ public class GradeEntry implements android.os.Parcelable {
         this.overviewPossible = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.seen = (Integer) in.readValue(Integer.class.getClassLoader());
         this.overviewFailedOnFirstTry = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.weight = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.weight = (Double) in.readValue(Double.class.getClassLoader());
         this.modifiedName = in.readString();
         this.modifiedGrade = (Double) in.readValue(Double.class.getClassLoader());
         this.modifiedExamId = in.readString();

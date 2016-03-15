@@ -41,7 +41,7 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         public final static Property OverviewPossible = new Property(12, Boolean.class, "overviewPossible", false, "OVERVIEW_POSSIBLE");
         public final static Property Seen = new Property(13, Integer.class, "seen", false, "SEEN");
         public final static Property OverviewFailedOnFirstTry = new Property(14, Boolean.class, "overviewFailedOnFirstTry", false, "OVERVIEW_FAILED_ON_FIRST_TRY");
-        public final static Property Weight = new Property(15, Integer.class, "weight", false, "WEIGHT");
+        public final static Property Weight = new Property(15, Double.class, "weight", false, "WEIGHT");
         public final static Property ModifiedName = new Property(16, String.class, "modifiedName", false, "MODIFIED_NAME");
         public final static Property ModifiedGrade = new Property(17, Double.class, "modifiedGrade", false, "MODIFIED_GRADE");
         public final static Property ModifiedExamId = new Property(18, String.class, "modifiedExamId", false, "MODIFIED_EXAM_ID");
@@ -85,7 +85,7 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
                 "\"OVERVIEW_POSSIBLE\" INTEGER," + // 12: overviewPossible
                 "\"SEEN\" INTEGER," + // 13: seen
                 "\"OVERVIEW_FAILED_ON_FIRST_TRY\" INTEGER," + // 14: overviewFailedOnFirstTry
-                "\"WEIGHT\" INTEGER," + // 15: weight
+                "\"WEIGHT\" REAL," + // 15: weight
                 "\"MODIFIED_NAME\" TEXT," + // 16: modifiedName
                 "\"MODIFIED_GRADE\" REAL," + // 17: modifiedGrade
                 "\"MODIFIED_EXAM_ID\" TEXT," + // 18: modifiedExamId
@@ -180,9 +180,9 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             stmt.bindLong(15, overviewFailedOnFirstTry ? 1L: 0L);
         }
  
-        Integer weight = entity.getWeight();
+        Double weight = entity.getWeight();
         if (weight != null) {
-            stmt.bindLong(16, weight);
+            stmt.bindDouble(16, weight);
         }
  
         String modifiedName = entity.getModifiedName();
@@ -267,7 +267,7 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             cursor.isNull(offset + 12) ? null : cursor.getShort(offset + 12) != 0, // overviewPossible
             cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13), // seen
             cursor.isNull(offset + 14) ? null : cursor.getShort(offset + 14) != 0, // overviewFailedOnFirstTry
-            cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15), // weight
+            cursor.isNull(offset + 15) ? null : cursor.getDouble(offset + 15), // weight
             cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // modifiedName
             cursor.isNull(offset + 17) ? null : cursor.getDouble(offset + 17), // modifiedGrade
             cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18), // modifiedExamId
@@ -300,7 +300,7 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         entity.setOverviewPossible(cursor.isNull(offset + 12) ? null : cursor.getShort(offset + 12) != 0);
         entity.setSeen(cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13));
         entity.setOverviewFailedOnFirstTry(cursor.isNull(offset + 14) ? null : cursor.getShort(offset + 14) != 0);
-        entity.setWeight(cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15));
+        entity.setWeight(cursor.isNull(offset + 15) ? null : cursor.getDouble(offset + 15));
         entity.setModifiedName(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
         entity.setModifiedGrade(cursor.isNull(offset + 17) ? null : cursor.getDouble(offset + 17));
         entity.setModifiedExamId(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));

@@ -443,8 +443,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
         return modified;
     }
 
-    private boolean setWeightValue(EditText editText, Integer weight, int resIdModifiedBadge) {
-        int value = weight == null ? 1 : weight;
+    private boolean setWeightValue(EditText editText, Double weight, int resIdModifiedBadge) {
+        double value = weight == null ? 1 : weight;
         boolean modified = value != 1;
 
         ViewGroup parent = (ViewGroup)editText.getParent();
@@ -570,9 +570,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
         }
 
         // check weight // TODO: replace with spinner
-        Integer weight = gradeEntry.getWeight();
+        Double weight = gradeEntry.getWeight();
         String weightInput = etGradeDetailWeight.getText().toString();
-        Integer modifiedWeight = weightInput.length() == 0 ? 1 : Integer.parseInt(weightInput);
+        Double modifiedWeight = weightInput.length() == 0 ? 1 : Double.parseDouble(weightInput);
         if (weight == null || !weight.equals(modifiedWeight)) {
             gradeEntry.setWeight(modifiedWeight);
             modified = true;

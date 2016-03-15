@@ -156,7 +156,7 @@ public class MyGradesDaoGenerator {
         gradeEntry.addBooleanProperty("overviewPossible");
         gradeEntry.addIntProperty("seen");
         gradeEntry.addBooleanProperty("overviewFailedOnFirstTry");
-        gradeEntry.addIntProperty("weight");
+        gradeEntry.addDoubleProperty("weight");
 
         // properties for the edit mode
         gradeEntry.addStringProperty("modifiedName");

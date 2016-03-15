@@ -29,7 +29,7 @@ public class AverageCalculator {
         average = 0f;
         creditPointsSum = 0f;
         float creditPointsSumForAverage = 0f; // some grade_entries may have credit points, but no grade
-        int passedGradesCounter = 0; // used, if simpleWeighting is true
+        float passedGradesCounter = 0; // used, if simpleWeighting is true
 
         // iterate over items, count credit points and calculate average
         for(GradesAdapterItem item : items) {
@@ -37,7 +37,7 @@ public class AverageCalculator {
                 continue;
 
             GradeItem gradeItem = (GradeItem) item;
-            int weight = gradeItem.getWeight() == null ? 1 : gradeItem.getWeight();
+            double weight = gradeItem.getWeight() == null ? 1 : gradeItem.getWeight();
 
             float actCreditPoints = (gradeItem.getCreditPoints() == null ? 0f : gradeItem.getCreditPoints());
             Float modifiedCreditPoints = gradeItem.getModifiedCreditPoints();
