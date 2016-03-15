@@ -131,13 +131,12 @@
                     <TextView
                         style="@style/GradeDetailTextViewLeft"
                         android:id="@+id/tv_grade_detail_label_credit_points"
-                        android:text="@string/tv_grade_detail_credit_points"
-                        />
+                        android:text="@string/tv_grade_detail_credit_points" />
 
-                    <TextView
-                        style="@style/GradeDetailTextViewRight"
-                        android:id="@+id/tv_grade_detail_credit_points"
-                        />
+                    <EditText
+                        style="@style/GradeDetailEditText"
+                        android:inputType="numberDecimal"
+                        android:id="@+id/et_grade_detail_credit_points" />
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 

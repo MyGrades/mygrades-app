@@ -68,7 +68,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private EditText etGradeDetailExamId;
     private TextView tvGradeDetailSemester;
     private EditText etGradeDetailState;
-    private TextView tvGradeDetailCreditPoints;
+    private EditText etGradeDetailCreditPoints;
     private EditText etGradeDetailGrade;
     private EditText etGradeDetailAnnotation;
     private TextView tvGradeDetailAttempt;
@@ -160,7 +160,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         // get views for grade
         tvGradeDetailName = (TextView) findViewById(R.id.tv_grade_detail_name);
         tvGradeDetailSemester = (TextView) findViewById(R.id.tv_grade_detail_semester);
-        tvGradeDetailCreditPoints = (TextView) findViewById(R.id.tv_grade_detail_credit_points);
+        etGradeDetailCreditPoints = (EditText) findViewById(R.id.et_grade_detail_credit_points);
         etGradeDetailGrade = (EditText) findViewById(R.id.et_grade_detail_grade);
         etGradeDetailAnnotation = (EditText) findViewById(R.id.et_grade_detail_annotation);
         tvGradeDetailAttempt = (TextView) findViewById(R.id.tv_grade_detail_attempt);
@@ -486,14 +486,15 @@ public class GradeDetailedActivity extends AppCompatActivity {
         etGradeDetailAnnotation.setEnabled(editModeEnabled);
         etGradeDetailExamDate.setEnabled(editModeEnabled);
         etGradeDetailGrade.setEnabled(editModeEnabled);
+        etGradeDetailCreditPoints.setEnabled(editModeEnabled);
 
         // show all edit texts
-        if (enable) {
+        if (editModeEnabled) {
             ((View) tvGradeDetailName.getParent()).setVisibility(View.VISIBLE);
             ((View) etGradeDetailExamId.getParent()).setVisibility(View.VISIBLE);
             ((View) tvGradeDetailSemester.getParent()).setVisibility(View.VISIBLE);
             ((View) etGradeDetailState.getParent()).setVisibility(View.VISIBLE);
-            ((View) tvGradeDetailCreditPoints.getParent()).setVisibility(View.VISIBLE);
+            ((View) etGradeDetailCreditPoints.getParent()).setVisibility(View.VISIBLE);
             ((View) etGradeDetailGrade.getParent()).setVisibility(View.VISIBLE);
             ((View) etGradeDetailAnnotation.getParent()).setVisibility(View.VISIBLE);
             ((View) tvGradeDetailAttempt.getParent()).setVisibility(View.VISIBLE);
@@ -602,6 +603,25 @@ public class GradeDetailedActivity extends AppCompatActivity {
             }
         }
 
+        // check credit points
+        Double creditPoints = gradeEntry.getCreditPoints();
+        String modifiedCreditPointsAsString = etGradeDetailCreditPoints.getText().toString();
+        modifiedCreditPointsAsString = modifiedCreditPointsAsString.length() == 0 ? null : modifiedCreditPointsAsString;
+        if (modifiedCreditPointsAsString == null) {
+            gradeEntry.setModifiedCreditPoints(null);
+            modified = true;
+        } else {
+            Double modifiedCreditPoints = Double.parseDouble(modifiedCreditPointsAsString);
+            if (modifiedCreditPoints < 0) {
+                etGradeDetailCreditPoints.setError("Credit Points dürfen nicht negativ sein.");
+            } else if (creditPoints == null || !creditPoints.equals(modifiedCreditPoints)) {
+                gradeEntry.setModifiedCreditPoints(modifiedCreditPoints);
+                modified = true;
+            } else if (creditPoints.equals(modifiedCreditPoints)) {
+                gradeEntry.setModifiedCreditPoints(null);
+                modified = true;
+            }
+        }
 
         if (modified) {
             // update grade in database
@@ -617,7 +637,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         setTextView(etGradeDetailExamId, gradeEntry.getExamId(), gradeEntry.getModifiedExamId());
         setTextView(tvGradeDetailSemester, gradeEntry.getSemester(), null);
         setTextView(etGradeDetailState, gradeEntry.getState(), gradeEntry.getModifiedState());
-        setTextView(tvGradeDetailCreditPoints, gradeEntry.getCreditPoints(), gradeEntry.getModifiedCreditPoints(), true);
+        setTextView(etGradeDetailCreditPoints, gradeEntry.getCreditPoints(), gradeEntry.getModifiedCreditPoints(), true);
         setTextView(etGradeDetailGrade, gradeEntry.getGrade(), gradeEntry.getModifiedGrade(), true);
         setTextView(etGradeDetailAnnotation, gradeEntry.getAnnotation(), gradeEntry.getModifiedAnnotation());
         setTextView(tvGradeDetailAttempt, gradeEntry.getAttempt(), gradeEntry.getModifiedAttempt());
