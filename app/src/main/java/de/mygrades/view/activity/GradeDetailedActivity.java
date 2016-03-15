@@ -626,7 +626,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
             modified = true;
         }
 
-        // check grade
+        // check grade // TODO: do not show error if input is "-"
         Double grade = gradeEntry.getGrade();
         String modifiedGradeAsString = etGradeDetailGrade.getText().toString();
         modifiedGradeAsString = modifiedGradeAsString.length() == 0 ? null : modifiedGradeAsString;
