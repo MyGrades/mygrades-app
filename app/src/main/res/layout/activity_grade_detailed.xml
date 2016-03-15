@@ -84,13 +84,12 @@
                     <TextView
                         style="@style/GradeDetailTextViewLeft"
                         android:id="@+id/tv_grade_detail_label_exam_date"
-                        android:text="@string/tv_grade_detail_exam_date"
-                        />
+                        android:text="@string/tv_grade_detail_exam_date" />
 
-                    <TextView
-                        style="@style/GradeDetailTextViewRight"
-                        android:id="@+id/tv_grade_detail_exam_date"
-                        />
+                    <EditText
+                        style="@style/GradeDetailEditText"
+                        android:id="@+id/et_grade_detail_exam_date" />
+
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 

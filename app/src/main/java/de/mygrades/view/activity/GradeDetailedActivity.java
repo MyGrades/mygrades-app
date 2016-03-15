@@ -72,7 +72,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private TextView tvGradeDetailGrade;
     private EditText etGradeDetailAnnotation;
     private TextView tvGradeDetailAttempt;
-    private TextView tvGradeDetailExamDate;
+    private EditText etGradeDetailExamDate;
     private EditText etGradeDetailTester;
     private EditText etGradeDetailWeight;
 
@@ -164,7 +164,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         tvGradeDetailGrade = (TextView) findViewById(R.id.tv_grade_detail_grade);
         etGradeDetailAnnotation = (EditText) findViewById(R.id.et_grade_detail_annotation);
         tvGradeDetailAttempt = (TextView) findViewById(R.id.tv_grade_detail_attempt);
-        tvGradeDetailExamDate = (TextView) findViewById(R.id.tv_grade_detail_exam_date);
+        etGradeDetailExamDate = (EditText) findViewById(R.id.et_grade_detail_exam_date);
 
         // editable views
         etGradeDetailExamId = (EditText) findViewById(R.id.et_grade_detail_exam_id);
@@ -484,6 +484,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         etGradeDetailTester.setEnabled(editModeEnabled);
         etGradeDetailState.setEnabled(editModeEnabled);
         etGradeDetailAnnotation.setEnabled(editModeEnabled);
+        etGradeDetailExamDate.setEnabled(editModeEnabled);
 
         // show all edit texts
         if (enable) {
@@ -495,7 +496,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
             ((View) tvGradeDetailGrade.getParent()).setVisibility(View.VISIBLE);
             ((View) etGradeDetailAnnotation.getParent()).setVisibility(View.VISIBLE);
             ((View) tvGradeDetailAttempt.getParent()).setVisibility(View.VISIBLE);
-            ((View) tvGradeDetailExamDate.getParent()).setVisibility(View.VISIBLE);
+            ((View) etGradeDetailExamDate.getParent()).setVisibility(View.VISIBLE);
             ((View) etGradeDetailTester.getParent()).setVisibility(View.VISIBLE);
             ((View) etGradeDetailWeight.getParent()).setVisibility(View.VISIBLE);
         }
@@ -568,6 +569,18 @@ public class GradeDetailedActivity extends AppCompatActivity {
             modified = true;
         }
 
+        // check exam date
+        String examDate = gradeEntry.getExamDate();
+        String modifiedExamDate = etGradeDetailExamDate.getText().toString();
+        modifiedExamDate = modifiedExamDate.length() == 0 ? null : modifiedExamDate;
+        if (examDate == null || !examDate.equals(modifiedExamDate)) {
+            gradeEntry.setModifiedExamDate(modifiedExamDate);
+            modified = true;
+        } else if (examDate.equals(modifiedExamDate)) {
+            gradeEntry.setModifiedExamDate(null);
+            modified = true;
+        }
+
         if (modified) {
             // update grade in database
             mainServiceHelper.updateGradeEntry(gradeEntry);
@@ -586,7 +599,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         setTextView(tvGradeDetailGrade, gradeEntry.getGrade(), gradeEntry.getModifiedGrade(), true);
         setTextView(etGradeDetailAnnotation, gradeEntry.getAnnotation(), gradeEntry.getModifiedAnnotation());
         setTextView(tvGradeDetailAttempt, gradeEntry.getAttempt(), gradeEntry.getModifiedAttempt());
-        setTextView(tvGradeDetailExamDate, gradeEntry.getExamDate(), gradeEntry.getModifiedExamDate());
+        setTextView(etGradeDetailExamDate, gradeEntry.getExamDate(), gradeEntry.getModifiedExamDate());
         setTextView(etGradeDetailTester, gradeEntry.getTester(), gradeEntry.getModifiedTester());
 
         etGradeDetailWeight.setText(""+gradeEntry.getWeight());
