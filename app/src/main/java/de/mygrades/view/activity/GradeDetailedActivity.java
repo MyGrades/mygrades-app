@@ -12,8 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -58,26 +56,14 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private String gradeHash;
     private GradeEntry gradeEntry;
     private MainServiceHelper mainServiceHelper;
-
-    private boolean editModeEnabled;
+    private GradeDetailedActivityEditHelper editHelper;
 
     private PtrFrameLayout ptrFrame;
     private PtrHeader ptrHeader;
 
     // Views
     private TextView tvGradeDetailName;
-    private EditText etGradeDetailExamId;
     private TextView tvGradeDetailSemester;
-    private EditText etGradeDetailState;
-    private EditText etGradeDetailCreditPoints;
-    private EditText etGradeDetailGrade;
-    private EditText etGradeDetailAnnotation;
-    private TextView tvGradeDetailAttempt;
-    private EditText etGradeDetailExamDate;
-    private EditText etGradeDetailTester;
-    private EditText etGradeDetailWeight;
-
-    private LinearLayout llModifiedHint;
 
     private LinearLayout llOverviewWrapper;
     private TextView tvOverviewParticipants;
@@ -101,24 +87,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private View.OnClickListener tryAgainListener;
     private View.OnClickListener goToFaqListener;
 
-    // focus change listener to move cursor to end of edit text on click
-    private View.OnFocusChangeListener etOnFocusChangeListener = new View.OnFocusChangeListener() {
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus) {
-                if (v instanceof EditText) {
-                    final EditText editText = (EditText) v;
-                    v.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            editText.setSelection(editText.getText().length());
-                        }
-                    }, 10);
-                }
-            }
-        }
-    };
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +99,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mainServiceHelper = new MainServiceHelper(this);
-        editModeEnabled = false;
 
         // get extra data
         Bundle extras = getIntent().getExtras();
@@ -157,7 +124,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
         };
 
         initViews();
-        enableEditMode(false);
+
+        editHelper = new GradeDetailedActivityEditHelper(this);
+        editHelper.enableEditMode(false);
 
         // restore instance state if necessary
         if (savedInstanceState != null) {
@@ -180,29 +149,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
         // get views for grade
         tvGradeDetailName = (TextView) findViewById(R.id.tv_grade_detail_name);
         tvGradeDetailSemester = (TextView) findViewById(R.id.tv_grade_detail_semester);
-        tvGradeDetailAttempt = (TextView) findViewById(R.id.tv_grade_detail_attempt);
-
-        // editable views
-        etGradeDetailExamId = (EditText) findViewById(R.id.et_grade_detail_exam_id);
-        etGradeDetailTester = (EditText) findViewById(R.id.et_grade_detail_tester);
-        etGradeDetailState = (EditText) findViewById(R.id.et_grade_detail_state);
-        etGradeDetailWeight = (EditText) findViewById(R.id.et_grade_detail_weight);
-        etGradeDetailCreditPoints = (EditText) findViewById(R.id.et_grade_detail_credit_points);
-        etGradeDetailGrade = (EditText) findViewById(R.id.et_grade_detail_grade);
-        etGradeDetailAnnotation = (EditText) findViewById(R.id.et_grade_detail_annotation);
-        etGradeDetailExamDate = (EditText) findViewById(R.id.et_grade_detail_exam_date);
-
-        // set on focus change listener to move cursor to end on click
-        etGradeDetailExamId.setOnFocusChangeListener(etOnFocusChangeListener);
-        etGradeDetailTester.setOnFocusChangeListener(etOnFocusChangeListener);
-        etGradeDetailState.setOnFocusChangeListener(etOnFocusChangeListener);
-        etGradeDetailWeight.setOnFocusChangeListener(etOnFocusChangeListener);
-        etGradeDetailCreditPoints.setOnFocusChangeListener(etOnFocusChangeListener);
-        etGradeDetailGrade.setOnFocusChangeListener(etOnFocusChangeListener);
-        etGradeDetailAnnotation.setOnFocusChangeListener(etOnFocusChangeListener);
-        etGradeDetailExamDate.setOnFocusChangeListener(etOnFocusChangeListener);
-
-        llModifiedHint = (LinearLayout) findViewById(R.id.ll_modified_hint);
 
         // get views for overview
         llOverviewWrapper = (LinearLayout) findViewById(R.id.overview_wrapper);
@@ -327,7 +273,11 @@ public class GradeDetailedActivity extends AppCompatActivity {
      */
     public void onEventMainThread(GradeEntryEvent gradeEntryEvent) {
         gradeEntry = gradeEntryEvent.getGradeEntry();
-        updateValues();
+        tvGradeDetailName.setText(gradeEntry.getName());
+        tvGradeDetailSemester.setText(gradeEntry.getSemester());
+
+        editHelper.setGradeEntry(gradeEntry);
+        editHelper.updateValues();
     }
 
     /**
@@ -424,68 +374,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
         UIHelper.displayErrorMessage(llRootView, errorEvent, tryAgainListener, goToFaqListener);
     }
 
-    private boolean setTextView(TextView textView, String value, String modifiedValue, int resIdModifiedBadge) {
-        String v = value;
-        boolean modified = false;
-        if (modifiedValue != null) {
-            v = modifiedValue;
-            modified = true;
-        }
-
-        ViewGroup parent = (ViewGroup)textView.getParent();
-        if (v != null) {
-            textView.setText(v);
-            parent.setVisibility(View.VISIBLE);
-        } else {
-            parent.setVisibility(View.GONE);
-        }
-
-        View badge = parent.findViewById(resIdModifiedBadge);
-        if (badge != null) {
-            badge.setVisibility(modified ? View.VISIBLE : View.GONE);
-        }
-
-        return modified;
-    }
-
-    private boolean setTextView(TextView textView, Double value, Double modifiedValue, boolean forcedVisible, int resIdModifiedBadge) {
-        Double v = value;
-        boolean modified = false;
-        if (modifiedValue != null) {
-            v = modifiedValue;
-            modified = true;
-        }
-
-        ViewGroup parent = (ViewGroup)textView.getParent();
-        if (v != null || forcedVisible) {
-            writeDoubleToTextView(textView, v);
-            parent.setVisibility(View.VISIBLE);
-        }
-
-        View badge = parent.findViewById(resIdModifiedBadge);
-        if (badge != null) {
-            badge.setVisibility(modified ? View.VISIBLE : View.GONE);
-        }
-
-        return modified;
-    }
-
-    private boolean setWeightValue(EditText editText, Double weight, int resIdModifiedBadge) {
-        double value = weight == null ? 1 : weight;
-        boolean modified = value != 1;
-
-        ViewGroup parent = (ViewGroup)editText.getParent();
-        editText.setText("" + value);
-        parent.setVisibility(View.VISIBLE);
-
-        View badge = parent.findViewById(resIdModifiedBadge);
-        if (badge != null) {
-            badge.setVisibility(modified ? View.VISIBLE : View.GONE);
-        }
-
-        return modified;
-    }
-
     private void writeDoubleToTextView(TextView textView, Double value) {
         String valueAsString = value == null ? "-" : String.format("%.1f", value);
         textView.setText(valueAsString);
@@ -528,8 +416,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
         MenuItem editItem = menu.findItem(R.id.grade_detail_edit);
         MenuItem saveItem = menu.findItem(R.id.grade_detail_save);
-        editItem.setVisible(!editModeEnabled);
-        saveItem.setVisible(editModeEnabled);
+        editItem.setVisible(!editHelper.isEditModeEnabled());
+        saveItem.setVisible(editHelper.isEditModeEnabled());
 
         return true;
     }
@@ -541,213 +429,16 @@ public class GradeDetailedActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.grade_detail_edit:
-                enableEditMode(true);
+                editHelper.enableEditMode(true);
+                invalidateOptionsMenu();
                 return true;
             case R.id.grade_detail_save:
-                enableEditMode(false);
-                saveEdits();
+                editHelper.enableEditMode(false);
+                editHelper.saveEdits();
+                invalidateOptionsMenu();
                 return true;
         }
 
         return false;
-    }
-
-    private void enableEditMode(boolean enable) {
-        editModeEnabled = enable;
-
-        // toggle toolbar buttons
-        invalidateOptionsMenu();
-
-        // enable all edit texts
-        etGradeDetailExamId.setEnabled(editModeEnabled);
-        etGradeDetailWeight.setEnabled(editModeEnabled);
-        etGradeDetailTester.setEnabled(editModeEnabled);
-        etGradeDetailState.setEnabled(editModeEnabled);
-        etGradeDetailAnnotation.setEnabled(editModeEnabled);
-        etGradeDetailExamDate.setEnabled(editModeEnabled);
-        etGradeDetailGrade.setEnabled(editModeEnabled);
-        etGradeDetailCreditPoints.setEnabled(editModeEnabled);
-
-        // show all edit texts
-        if (editModeEnabled) {
-            ((View) tvGradeDetailName.getParent()).setVisibility(View.VISIBLE);
-            ((View) etGradeDetailExamId.getParent()).setVisibility(View.VISIBLE);
-            ((View) tvGradeDetailSemester.getParent()).setVisibility(View.VISIBLE);
-            ((View) etGradeDetailState.getParent()).setVisibility(View.VISIBLE);
-            ((View) etGradeDetailCreditPoints.getParent()).setVisibility(View.VISIBLE);
-            ((View) etGradeDetailGrade.getParent()).setVisibility(View.VISIBLE);
-            ((View) etGradeDetailAnnotation.getParent()).setVisibility(View.VISIBLE);
-            ((View) tvGradeDetailAttempt.getParent()).setVisibility(View.VISIBLE);
-            ((View) etGradeDetailExamDate.getParent()).setVisibility(View.VISIBLE);
-            ((View) etGradeDetailTester.getParent()).setVisibility(View.VISIBLE);
-            ((View) etGradeDetailWeight.getParent()).setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void saveEdits() {
-        boolean modified = false;
-
-        // TODO: also check if gradeEntry.modified* differs from new input
-        // to avoid unnecessary update?
-
-        // check exam id
-        String examId = gradeEntry.getExamId();
-        String modifiedExamId = etGradeDetailExamId.getText().toString();
-        modifiedExamId = modifiedExamId.length() == 0 ? null : modifiedExamId;
-        if (examId == null || !examId.equals(modifiedExamId)) {
-            gradeEntry.setModifiedExamId(modifiedExamId);
-            modified = true;
-        } else if (examId.equals(modifiedExamId)) {
-            // remove modified exam id if the input equals the original value
-            gradeEntry.setModifiedExamId(null);
-            modified = true;
-        }
-
-        // check weight // TODO: replace with spinner
-        Double weight = gradeEntry.getWeight();
-        String weightInput = etGradeDetailWeight.getText().toString();
-        Double modifiedWeight = weightInput.length() == 0 ? 1 : Double.parseDouble(weightInput);
-        if (weight == null || !weight.equals(modifiedWeight)) {
-            gradeEntry.setWeight(modifiedWeight);
-            modified = true;
-        }
-
-        // check tester
-        String tester = gradeEntry.getTester();
-        String modifiedTester = etGradeDetailTester.getText().toString();
-        modifiedTester = modifiedTester.length() == 0 ? null : modifiedTester;
-        if (tester == null || !tester.equals(modifiedTester)) {
-            gradeEntry.setModifiedTester(modifiedTester);
-            modified = true;
-        } else if (tester.equals(modifiedTester)) {
-            gradeEntry.setModifiedTester(null);
-            modified = true;
-        }
-
-        // check state
-        String state = gradeEntry.getState();
-        String modifiedState = etGradeDetailState.getText().toString();
-        modifiedState = modifiedState.length() == 0 ? null : modifiedState;
-        if (state == null || !state.equals(modifiedState)) {
-            gradeEntry.setModifiedState(modifiedState);
-            modified = true;
-        } else if (state.equals(modifiedState)) {
-            gradeEntry.setModifiedState(null);
-            modified = true;
-        }
-
-        // check annotation
-        String annotation = gradeEntry.getAnnotation();
-        String modifiedAnnotation = etGradeDetailAnnotation.getText().toString();
-        modifiedAnnotation = modifiedAnnotation.length() == 0 ? null : modifiedAnnotation;
-        if (annotation == null || !annotation.equals(modifiedAnnotation)) {
-            gradeEntry.setModifiedAnnotation(modifiedAnnotation);
-            modified = true;
-        } else if (annotation.equals(modifiedAnnotation)) {
-            gradeEntry.setModifiedAnnotation(null);
-            modified = true;
-        }
-
-        // check exam date
-        String examDate = gradeEntry.getExamDate();
-        String modifiedExamDate = etGradeDetailExamDate.getText().toString();
-        modifiedExamDate = modifiedExamDate.length() == 0 ? null : modifiedExamDate;
-        if (examDate == null || !examDate.equals(modifiedExamDate)) {
-            gradeEntry.setModifiedExamDate(modifiedExamDate);
-            modified = true;
-        } else if (examDate.equals(modifiedExamDate)) {
-            gradeEntry.setModifiedExamDate(null);
-            modified = true;
-        }
-
-        // check grade // TODO: do not show error if input is "-"
-        Double grade = gradeEntry.getGrade();
-        String modifiedGradeAsString = etGradeDetailGrade.getText().toString();
-        modifiedGradeAsString = modifiedGradeAsString.length() == 0 ? null : modifiedGradeAsString;
-        if (modifiedGradeAsString == null) {
-            gradeEntry.setModifiedGrade(null);
-            modified = true;
-        } else {
-            Double modifiedGrade = stringToDouble(modifiedGradeAsString);
-            if (modifiedGrade == null || modifiedGrade < 0 || modifiedGrade > 5) {
-                etGradeDetailGrade.setError("Note muss zwischen 0 und 5 liegen."); // TODO: string resource
-            } else if (grade == null || !grade.equals(modifiedGrade)) {
-                gradeEntry.setModifiedGrade(modifiedGrade);
-                modified = true;
-            } else if (grade.equals(modifiedGrade)) {
-                gradeEntry.setModifiedGrade(null);
-                modified = true;
-            }
-        }
-
-        // check credit points
-        Double creditPoints = gradeEntry.getCreditPoints();
-        String modifiedCreditPointsAsString = etGradeDetailCreditPoints.getText().toString();
-        modifiedCreditPointsAsString = modifiedCreditPointsAsString.length() == 0 ? null : modifiedCreditPointsAsString;
-        if (modifiedCreditPointsAsString == null) {
-            gradeEntry.setModifiedCreditPoints(null);
-            modified = true;
-        } else {
-            Double modifiedCreditPoints = stringToDouble(modifiedCreditPointsAsString);
-            if (modifiedCreditPoints == null || modifiedCreditPoints < 0) {
-                etGradeDetailCreditPoints.setError("Credit Points dürfen nicht negativ sein."); // TODO: string resource
-            } else if (creditPoints == null || !creditPoints.equals(modifiedCreditPoints)) {
-                gradeEntry.setModifiedCreditPoints(modifiedCreditPoints);
-                modified = true;
-            } else if (creditPoints.equals(modifiedCreditPoints)) {
-                gradeEntry.setModifiedCreditPoints(null);
-                modified = true;
-            }
-        }
-
-        if (modified) {
-            // update grade in database
-            mainServiceHelper.updateGradeEntry(gradeEntry);
-        }
-
-        // update ui anyway to hide empty properties
-        updateValues();
-    }
-
-    private void updateValues() {
-        int modifiedCounter = 0;
-
-        tvGradeDetailName.setText(gradeEntry.getName());
-        modifiedCounter += setTextView(etGradeDetailExamId, gradeEntry.getExamId(), gradeEntry.getModifiedExamId(), R.id.modified_badge_exam_id) ? 1 : 0;
-        modifiedCounter += setTextView(tvGradeDetailSemester, gradeEntry.getSemester(), null, -1) ? 1 : 0;
-        modifiedCounter += setTextView(etGradeDetailState, gradeEntry.getState(), gradeEntry.getModifiedState(), R.id.modified_badge_state) ? 1 : 0;
-        modifiedCounter += setTextView(etGradeDetailCreditPoints, gradeEntry.getCreditPoints(), gradeEntry.getModifiedCreditPoints(), true, R.id.modified_badge_credit_points) ? 1 : 0;
-        modifiedCounter += setTextView(etGradeDetailGrade, gradeEntry.getGrade(), gradeEntry.getModifiedGrade(), true, R.id.modified_badge_grade) ? 1 : 0;
-        modifiedCounter += setTextView(etGradeDetailAnnotation, gradeEntry.getAnnotation(), gradeEntry.getModifiedAnnotation(), R.id.modified_badge_annotation) ? 1 : 0;
-        modifiedCounter += setTextView(tvGradeDetailAttempt, gradeEntry.getAttempt(), gradeEntry.getModifiedAttempt(), R.id.modified_badge_attempt) ? 1 : 0;
-        modifiedCounter += setTextView(etGradeDetailExamDate, gradeEntry.getExamDate(), gradeEntry.getModifiedExamDate(), R.id.modified_badge_exam_date) ? 1 : 0;
-        modifiedCounter += setTextView(etGradeDetailTester, gradeEntry.getTester(), gradeEntry.getModifiedTester(), R.id.modified_badge_tester) ? 1 : 0;
-        modifiedCounter += setWeightValue(etGradeDetailWeight, gradeEntry.getWeight(), R.id.modified_badge_weight) ? 1 : 0;
-
-        // show or hide hint
-        llModifiedHint.setVisibility(modifiedCounter > 0 ? View.VISIBLE : View.GONE);
-    }
-
-    /**
-     * Converts a string to double.
-     * If the string is empty or the parsing fails, null will be returned.
-     *
-     * @param s - string to convert
-     * @return Double or null
-     */
-    private Double stringToDouble(String s) {
-        if (s.length() == 0) {
-            return null;
-        }
-
-        s = s.replace(',', '.');
-
-        try {
-            return Double.valueOf(s);
-        } catch (NumberFormatException e) {
-            Log.e(TAG, e.getMessage());
-        }
-
-        return null;
     }
 }

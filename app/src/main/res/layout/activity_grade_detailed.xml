@@ -219,6 +219,11 @@
                         style="@style/GradeDetailTextViewRight"
                         android:id="@+id/tv_grade_detail_attempt" />
 
+                    <Spinner
+                        style="@style/GradeDetailSpinnerRight"
+                        android:background="@drawable/grade_detail_edit_text_background_selector"
+                        android:id="@+id/sp_grade_detail_attempt"/>
+
                     <de.mygrades.view.widget.TriangleShapeView
                         android:id="@+id/modified_badge_attempt"
                         style="@style/TriangleShapeViewModifiedBadge" />
