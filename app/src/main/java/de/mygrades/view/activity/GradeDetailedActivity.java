@@ -51,39 +51,40 @@ import in.srain.cube.views.ptr.PtrHandler;
 public class GradeDetailedActivity extends AppCompatActivity {
     private static final String TAG = GradeDetailedActivity.class.getSimpleName();
 
+    // intent extra data
     public static final String EXTRA_GRADE_HASH = "grade_hash";
+
+    // instance state
+    private static final String IS_OVERVIEW_POSSIBLE_STATE = "is_overview_possible_state";
+    private static final String GRADE_HASH_STATE = "grade_hash";
+
+    // views
+    private LinearLayout llRootView; // used to show snackbar
+    private PtrFrameLayout ptrFrame;
+    private PtrHeader ptrHeader;
+
+    private TextView tvGradeDetailName;
+    private TextView tvGradeDetailSemester;
+
+    // views for overview
+    private LinearLayout llOverviewWrapper;
+    private TextView tvOverviewParticipants;
+    private TextView tvOverviewPassed;
+    private TextView tvOverviewAverage;
+    private TextView tvOverviewNotPossible;
+
+    // bar chart
+    private BarChart barChart;
+    private static final int COLOR_GRAY = Color.rgb(233, 233, 233); // light gray
+    private static final int COLOR_HIGHLIGHT = Color.rgb(139, 195, 74); // primary color green
 
     private String gradeHash;
     private GradeEntry gradeEntry;
     private MainServiceHelper mainServiceHelper;
     private GradeDetailedActivityEditHelper editHelper;
-
-    private PtrFrameLayout ptrFrame;
-    private PtrHeader ptrHeader;
-
-    // Views
-    private TextView tvGradeDetailName;
-    private TextView tvGradeDetailSemester;
-
-    private LinearLayout llOverviewWrapper;
-    private TextView tvOverviewParticipants;
-    private TextView tvOverviewPassed;
-    private TextView tvOverviewAverage;
-
-    private TextView tvOverviewNotPossible;
-
-    private LinearLayout llRootView; // used to show snackbar
-
-    private BarChart barChart;
-    private static final int COLOR_GRAY = Color.rgb(233, 233, 233); // light gray
-    private static final int COLOR_HIGHLIGHT = Color.rgb(139, 195, 74); // primary color green
-
-    private static final String IS_OVERVIEW_POSSIBLE_STATE = "is_overview_possible_state";
-    private static final String GRADE_HASH_STATE = "grade_hash";
-
     private boolean isOverviewPossible;
 
-    // snackbar buttons
+    // snackbar listener
     private View.OnClickListener tryAgainListener;
     private View.OnClickListener goToFaqListener;
 
@@ -95,8 +96,10 @@ public class GradeDetailedActivity extends AppCompatActivity {
         // set toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.toolbar_details);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.toolbar_details);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         mainServiceHelper = new MainServiceHelper(this);
 
@@ -104,25 +107,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         gradeHash = extras.getString(EXTRA_GRADE_HASH, "");
 
-        // click listener to go to the FAQs and show the general-error question immediately
-        goToFaqListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(GradeDetailedActivity.this, MainActivity.class);
-                intent.putExtra(FragmentFaq.ARGUMENT_GO_TO_QUESTION, FaqDataProvider.GO_TO_GENERAL_ERROR);
-                GradeDetailedActivity.this.startActivity(intent);
-            }
-        };
-
-        // click listener to restart the scraping process
-        tryAgainListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ptrFrame.autoRefresh();
-                mainServiceHelper.scrapeForOverview(gradeHash);
-            }
-        };
-
+        initListener();
         initViews();
 
         editHelper = new GradeDetailedActivityEditHelper(this);
@@ -162,6 +147,27 @@ public class GradeDetailedActivity extends AppCompatActivity {
         llRootView = (LinearLayout) findViewById(R.id.ll_root_view);
 
         initPullToRefresh();
+    }
+
+    private void initListener() {
+        // click listener to go to the FAQs and show the general-error question immediately
+        goToFaqListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GradeDetailedActivity.this, MainActivity.class);
+                intent.putExtra(FragmentFaq.ARGUMENT_GO_TO_QUESTION, FaqDataProvider.GO_TO_GENERAL_ERROR);
+                GradeDetailedActivity.this.startActivity(intent);
+            }
+        };
+
+        // click listener to restart the scraping process
+        tryAgainListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ptrFrame.autoRefresh();
+                mainServiceHelper.scrapeForOverview(gradeHash);
+            }
+        };
     }
 
     /**
@@ -269,8 +275,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
     /**
      * Receive an event when the GradeEntry is retrieved from the DB.
      * Set TextViews to values from Grade and evaluate which one is shown.
-     * @param gradeEntryEvent
+     * @param gradeEntryEvent GradeEntryEvent
      */
+    @SuppressWarnings("unused")
     public void onEventMainThread(GradeEntryEvent gradeEntryEvent) {
         gradeEntry = gradeEntryEvent.getGradeEntry();
         tvGradeDetailName.setText(gradeEntry.getName());
@@ -283,8 +290,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
     /**
      * Receive an event when the Overview is retrieved.
      * Set TextViews to values from Overview.
-     * @param overviewEvent
+     * @param overviewEvent OverviewEvent
      */
+    @SuppressWarnings("unused")
     public void onEventMainThread(OverviewEvent overviewEvent) {
         Log.d(TAG, overviewEvent.getOverview().toString());
         Overview overview = overviewEvent.getOverview();
@@ -319,8 +327,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
     /**
      * Receive an event when its determined whether it is possible to receive an overview.
      * Event is only sent if there is no overview for this grade entry in DB.
-     * @param overviewPossibleEvent
+     * @param overviewPossibleEvent OverviewPossibleEvent
      */
+    @SuppressWarnings("unused")
     public void onEventMainThread(OverviewPossibleEvent overviewPossibleEvent) {
         if (ptrHeader != null && !ptrHeader.isScraping()) {
             isOverviewPossible = overviewPossibleEvent.isOverviewPossible();
@@ -353,6 +362,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
      *
      * @param scrapeProgressEvent ScrapeProgressEvent
      */
+    @SuppressWarnings("unused")
     public void onEventMainThread(ScrapeProgressEvent scrapeProgressEvent) {
         if (ptrHeader != null && scrapeProgressEvent.isScrapeForOverview()
                 && gradeHash != null && gradeHash.equals(scrapeProgressEvent.getGradeHash())) {
@@ -365,6 +375,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
      *
      * @param errorEvent ErrorEvent
      */
+    @SuppressWarnings("unused")
     public void onEventMainThread(ErrorEvent errorEvent) {
         if (ptrFrame != null && ptrHeader != null) {
             ptrHeader.setIsError(true);

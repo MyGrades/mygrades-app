@@ -38,7 +38,7 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/tv_grade_detail_name"
@@ -71,13 +71,11 @@
                     <TextView
                         style="@style/GradeDetailTextViewLeft"
                         android:id="@+id/tv_grade_detail_label_semester"
-                        android:text="@string/tv_grade_detail_semester"
-                        />
+                        android:text="@string/tv_grade_detail_semester" />
 
                     <TextView
                         style="@style/GradeDetailTextViewRight"
-                        android:id="@+id/tv_grade_detail_semester"
-                        />
+                        android:id="@+id/tv_grade_detail_semester" />
                     <View style="@style/Divider"/>
                 </RelativeLayout>
 
@@ -267,13 +265,12 @@
                         <TextView
                             style="@style/GradeDetailTextViewLeft"
                             android:id="@+id/tv_overview_label_participants"
-                            android:text="@string/tv_overview_participants"
-                            />
+                            android:text="@string/tv_overview_participants" />
 
                         <TextView
                             style="@style/GradeDetailTextViewRight"
-                            android:id="@+id/tv_overview_participants"
-                            />
+                            android:id="@+id/tv_overview_participants" />
+
                         <View style="@style/Divider"/>
                     </RelativeLayout>
 
@@ -285,13 +282,12 @@
                         <TextView
                             style="@style/GradeDetailTextViewLeft"
                             android:id="@+id/tv_overview_label_passed"
-                            android:text="@string/tv_overview_passed"
-                            />
+                            android:text="@string/tv_overview_passed" />
 
                         <TextView
                             style="@style/GradeDetailTextViewRight"
-                            android:id="@+id/tv_overview_passed"
-                            />
+                            android:id="@+id/tv_overview_passed" />
+
                         <View style="@style/Divider"/>
                     </RelativeLayout>
 
@@ -303,13 +299,12 @@
                         <TextView
                             style="@style/GradeDetailTextViewLeft"
                             android:id="@+id/tv_overview_label_average"
-                            android:text="@string/tv_overview_average"
-                            />
+                            android:text="@string/tv_overview_average" />
 
                         <TextView
                             style="@style/GradeDetailTextViewRight"
-                            android:id="@+id/tv_overview_average"
-                            />
+                            android:id="@+id/tv_overview_average" />
+
                         <View style="@style/Divider"/>
                     </RelativeLayout>
 

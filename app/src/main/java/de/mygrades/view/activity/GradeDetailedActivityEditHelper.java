@@ -115,7 +115,9 @@ public class GradeDetailedActivityEditHelper {
         etState.setEnabled(editModeEnabled);
         etWeight.setEnabled(editModeEnabled);
         etCreditPoints.setEnabled(editModeEnabled);
+        etCreditPoints.setError(null);
         etGrade.setEnabled(editModeEnabled);
+        etGrade.setError(null);
         etAnnotation.setEnabled(editModeEnabled);
         etExamDate.setEnabled(editModeEnabled);
         spAttempt.setEnabled(editModeEnabled);
@@ -321,7 +323,7 @@ public class GradeDetailedActivityEditHelper {
      */
     private boolean updateExamId() {
         String examId = gradeEntry.getExamId();
-        String modifiedExamId = etExamId.getText().toString();
+        String modifiedExamId = etExamId.getText().toString().trim();
         modifiedExamId = modifiedExamId.length() == 0 ? null : modifiedExamId;
         if (examId == null || !examId.equals(modifiedExamId)) {
             gradeEntry.setModifiedExamId(modifiedExamId);
@@ -341,8 +343,8 @@ public class GradeDetailedActivityEditHelper {
      */
     private boolean updateWeight() {
         Double weight = gradeEntry.getWeight();
-        String weightInput = etWeight.getText().toString();
-        Double modifiedWeight = weightInput.length() == 0 ? 1 : Double.parseDouble(weightInput);
+        String weightInput = etWeight.getText().toString().trim();
+        Double modifiedWeight = weightInput.length() == 0 ? 1 : stringToDouble(weightInput);
         if (weight == null || !weight.equals(modifiedWeight)) {
             gradeEntry.setWeight(modifiedWeight);
             return true;
@@ -357,7 +359,7 @@ public class GradeDetailedActivityEditHelper {
      */
     private boolean updateTester() {
         String tester = gradeEntry.getTester();
-        String modifiedTester = etTester.getText().toString();
+        String modifiedTester = etTester.getText().toString().trim();
         modifiedTester = modifiedTester.length() == 0 ? null : modifiedTester;
         if (tester == null || !tester.equals(modifiedTester)) {
             gradeEntry.setModifiedTester(modifiedTester);
@@ -376,7 +378,7 @@ public class GradeDetailedActivityEditHelper {
      */
     private boolean updateState() {
         String state = gradeEntry.getState();
-        String modifiedState = etState.getText().toString();
+        String modifiedState = etState.getText().toString().trim();
         modifiedState = modifiedState.length() == 0 ? null : modifiedState;
         if (state == null || !state.equals(modifiedState)) {
             gradeEntry.setModifiedState(modifiedState);
@@ -395,7 +397,7 @@ public class GradeDetailedActivityEditHelper {
      */
     private boolean updateAnnotation() {
         String annotation = gradeEntry.getAnnotation();
-        String modifiedAnnotation = etAnnotation.getText().toString();
+        String modifiedAnnotation = etAnnotation.getText().toString().trim();
         modifiedAnnotation = modifiedAnnotation.length() == 0 ? null : modifiedAnnotation;
         if (annotation == null || !annotation.equals(modifiedAnnotation)) {
             gradeEntry.setModifiedAnnotation(modifiedAnnotation);
@@ -414,7 +416,7 @@ public class GradeDetailedActivityEditHelper {
      */
     private boolean updateExamDate() {
         String examDate = gradeEntry.getExamDate();
-        String modifiedExamDate = etExamDate.getText().toString();
+        String modifiedExamDate = etExamDate.getText().toString().trim();
         modifiedExamDate = modifiedExamDate.length() == 0 ? null : modifiedExamDate;
         if (examDate == null || !examDate.equals(modifiedExamDate)) {
             gradeEntry.setModifiedExamDate(modifiedExamDate);
@@ -433,7 +435,7 @@ public class GradeDetailedActivityEditHelper {
      */
     private boolean updateGrade() {
         Double grade = gradeEntry.getGrade();
-        String modifiedGradeAsString = etGrade.getText().toString();
+        String modifiedGradeAsString = etGrade.getText().toString().trim();
         modifiedGradeAsString = modifiedGradeAsString.equals("-") ? null : modifiedGradeAsString;
         if (modifiedGradeAsString != null) {
             modifiedGradeAsString = modifiedGradeAsString.length() == 0 ? null : modifiedGradeAsString;
@@ -445,7 +447,7 @@ public class GradeDetailedActivityEditHelper {
         } else {
             Double modifiedGrade = stringToDouble(modifiedGradeAsString);
             if (modifiedGrade == null || modifiedGrade < 0 || modifiedGrade > 5) {
-                etGrade.setError("Note muss zwischen 0 und 5 liegen."); // TODO: string resource
+                etGrade.setError(activity.getString(R.string.et_grade_invalid));
             } else if (grade == null || !grade.equals(modifiedGrade)) {
                 gradeEntry.setModifiedGrade(modifiedGrade);
                 return true;
@@ -464,7 +466,7 @@ public class GradeDetailedActivityEditHelper {
      */
     private boolean updateCreditPoints() {
         Double creditPoints = gradeEntry.getCreditPoints();
-        String modifiedCreditPointsAsString = etCreditPoints.getText().toString();
+        String modifiedCreditPointsAsString = etCreditPoints.getText().toString().trim();
         modifiedCreditPointsAsString = modifiedCreditPointsAsString.equals("-") ? null : modifiedCreditPointsAsString;
         if (modifiedCreditPointsAsString != null) {
             modifiedCreditPointsAsString = modifiedCreditPointsAsString.length() == 0 ? null : modifiedCreditPointsAsString;
@@ -476,7 +478,7 @@ public class GradeDetailedActivityEditHelper {
         } else {
             Double modifiedCreditPoints = stringToDouble(modifiedCreditPointsAsString);
             if (modifiedCreditPoints == null || modifiedCreditPoints < 0) {
-                etCreditPoints.setError("Credit Points dürfen nicht negativ sein."); // TODO: string resource
+                etCreditPoints.setError(activity.getString(R.string.et_credit_points_invalid));
             } else if (creditPoints == null || !creditPoints.equals(modifiedCreditPoints)) {
                 gradeEntry.setModifiedCreditPoints(modifiedCreditPoints);
                 return true;
@@ -520,7 +522,7 @@ public class GradeDetailedActivityEditHelper {
      * @return Double or null
      */
     private Double stringToDouble(String s) {
-        if (s.length() == 0) {
+        if (s == null || s.length() == 0) {
             return null;
         }
 
