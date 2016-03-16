@@ -525,6 +525,12 @@ public class GradeDetailedActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.grade_detail, menu);
+
+        MenuItem editItem = menu.findItem(R.id.grade_detail_edit);
+        MenuItem saveItem = menu.findItem(R.id.grade_detail_save);
+        editItem.setVisible(!editModeEnabled);
+        saveItem.setVisible(editModeEnabled);
+
         return true;
     }
 
@@ -538,6 +544,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
                 enableEditMode(true);
                 return true;
             case R.id.grade_detail_save:
+                enableEditMode(false);
                 saveEdits();
                 return true;
         }
@@ -547,6 +554,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
     private void enableEditMode(boolean enable) {
         editModeEnabled = enable;
+
+        // toggle toolbar buttons
+        invalidateOptionsMenu();
 
         // enable all edit texts
         etGradeDetailExamId.setEnabled(editModeEnabled);
@@ -575,9 +585,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
     }
 
     private void saveEdits() {
-        // disable edit mode
-        enableEditMode(false);
-
         boolean modified = false;
 
         // TODO: also check if gradeEntry.modified* differs from new input
