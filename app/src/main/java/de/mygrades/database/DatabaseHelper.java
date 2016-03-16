@@ -3,6 +3,7 @@ package de.mygrades.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -41,6 +42,9 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
     }
 
     private void upgrade2to3(SQLiteDatabase db) {
+        // remove empty overviews
+        removeEmptyOverviews(db);
+
         // update GradeEntry hash
         updateGradeEntryHash(db);
 
@@ -101,7 +105,7 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
      */
     private void updateGradeEntryHash(SQLiteDatabase db) {
         // select all grade entries
-        String sql = "SELECT exam_id, name, semester, attempt, hash from GRADE_ENTRY;";
+        String sql = "SELECT exam_id, name, semester, attempt, hash FROM grade_entry;";
         Cursor c = db.rawQuery(sql, new String[] {});
 
         while (c.moveToNext()) {
@@ -127,6 +131,33 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
             values = new ContentValues();
             values.put("GRADE_ENTRY_HASH", hash);
             db.update("OVERVIEW", values, "GRADE_ENTRY_HASH = ?", new String[]{oldHash});
+        }
+        c.close();
+    }
+
+    /**
+     * Removes empty overviews which failed due to incorrect parser configuration.
+     *
+     * @param db SQLiteDatabase
+     */
+    private void removeEmptyOverviews(SQLiteDatabase db) {
+        // select all overviews
+        String sql = "SELECT overview_id, average, participants, section1, section2, section3, section4, section5 FROM overview;";
+        Cursor c = db.rawQuery(sql, new String[] {});
+
+        while (c.moveToNext()) {
+            if (c.isNull(c.getColumnIndex("AVERAGE")) &&
+                c.isNull(c.getColumnIndex("PARTICIPANTS")) &&
+                c.getInt(c.getColumnIndex("SECTION1")) == 0 &&
+                c.getInt(c.getColumnIndex("SECTION2")) == 0 &&
+                c.getInt(c.getColumnIndex("SECTION3")) == 0 &&
+                c.getInt(c.getColumnIndex("SECTION4")) == 0 &&
+                c.getInt(c.getColumnIndex("SECTION5")) == 0) {
+
+                // delete current overview
+                long overviewId = c.getInt(c.getColumnIndex("OVERVIEW_ID"));
+                db.delete("OVERVIEW", "OVERVIEW_ID = ?", new String[] {""+overviewId});
+            }
         }
         c.close();
     }
