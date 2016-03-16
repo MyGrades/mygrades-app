@@ -101,6 +101,23 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private View.OnClickListener tryAgainListener;
     private View.OnClickListener goToFaqListener;
 
+    // focus change listener to move cursor to end of edit text on click
+    private View.OnFocusChangeListener etOnFocusChangeListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                if (v instanceof EditText) {
+                    final EditText editText = (EditText) v;
+                    v.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            editText.setSelection(editText.getText().length());
+                        }
+                    }, 10);
+                }
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -163,17 +180,27 @@ public class GradeDetailedActivity extends AppCompatActivity {
         // get views for grade
         tvGradeDetailName = (TextView) findViewById(R.id.tv_grade_detail_name);
         tvGradeDetailSemester = (TextView) findViewById(R.id.tv_grade_detail_semester);
-        etGradeDetailCreditPoints = (EditText) findViewById(R.id.et_grade_detail_credit_points);
-        etGradeDetailGrade = (EditText) findViewById(R.id.et_grade_detail_grade);
-        etGradeDetailAnnotation = (EditText) findViewById(R.id.et_grade_detail_annotation);
         tvGradeDetailAttempt = (TextView) findViewById(R.id.tv_grade_detail_attempt);
-        etGradeDetailExamDate = (EditText) findViewById(R.id.et_grade_detail_exam_date);
 
         // editable views
         etGradeDetailExamId = (EditText) findViewById(R.id.et_grade_detail_exam_id);
         etGradeDetailTester = (EditText) findViewById(R.id.et_grade_detail_tester);
         etGradeDetailState = (EditText) findViewById(R.id.et_grade_detail_state);
         etGradeDetailWeight = (EditText) findViewById(R.id.et_grade_detail_weight);
+        etGradeDetailCreditPoints = (EditText) findViewById(R.id.et_grade_detail_credit_points);
+        etGradeDetailGrade = (EditText) findViewById(R.id.et_grade_detail_grade);
+        etGradeDetailAnnotation = (EditText) findViewById(R.id.et_grade_detail_annotation);
+        etGradeDetailExamDate = (EditText) findViewById(R.id.et_grade_detail_exam_date);
+
+        // set on focus change listener to move cursor to end on click
+        etGradeDetailExamId.setOnFocusChangeListener(etOnFocusChangeListener);
+        etGradeDetailTester.setOnFocusChangeListener(etOnFocusChangeListener);
+        etGradeDetailState.setOnFocusChangeListener(etOnFocusChangeListener);
+        etGradeDetailWeight.setOnFocusChangeListener(etOnFocusChangeListener);
+        etGradeDetailCreditPoints.setOnFocusChangeListener(etOnFocusChangeListener);
+        etGradeDetailGrade.setOnFocusChangeListener(etOnFocusChangeListener);
+        etGradeDetailAnnotation.setOnFocusChangeListener(etOnFocusChangeListener);
+        etGradeDetailExamDate.setOnFocusChangeListener(etOnFocusChangeListener);
 
         llModifiedHint = (LinearLayout) findViewById(R.id.ll_modified_hint);
 
