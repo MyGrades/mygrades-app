@@ -51,4 +51,5 @@ dependencies {
     compile 'net.xpece.android:support-preference:0.5.1'
     compile 'info.guardianproject.netcipher:netcipher:1.2'
     compile 'net.sf.jtidy:jtidy:r938'
+    testCompile 'junit:junit:4.12'
 }
