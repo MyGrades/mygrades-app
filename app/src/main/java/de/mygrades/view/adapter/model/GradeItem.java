@@ -13,6 +13,8 @@ public class GradeItem implements GradesAdapterItem {
     private Float modifiedCreditPoints;
     private Double weight;
     private String hash;
+    private Integer semesterNumber;
+    private Integer modifiedSemesterNumber;
     private int seen;
 
     public GradeItem() {}
@@ -39,7 +41,13 @@ public class GradeItem implements GradesAdapterItem {
         setModifiedGrade(modifiedGrade == null ? null : modifiedGrade.floatValue());
 
         Double weight = gradeEntry.getWeight();
-        setWeight(weight == null ? null : weight);
+        setWeight(weight);
+
+        Integer semesterNumber = gradeEntry.getSemesterNumber();
+        setSemesterNumber(semesterNumber);
+
+        Integer modifiedSemesterNumber = gradeEntry.getModifiedSemesterNumber();
+        setModifiedSemesterNumber(modifiedSemesterNumber);
 
         if (gradeEntry.getSeen() != null) {
             setSeen(gradeEntry.getSeen());
@@ -80,6 +88,7 @@ public class GradeItem implements GradesAdapterItem {
 
     /**
      * Checks if two GradeItems are equal, according to their credit points and grade.
+     * TODO: refactor, use one-liner for each property
      *
      * @param gradeItem - other grade item
      * @return true, if credit points and grade are equal
@@ -140,6 +149,28 @@ public class GradeItem implements GradesAdapterItem {
             return false;
         }
 
+        // check if semesterNumber differs
+        if ((gradeItem.getSemesterNumber() != null && semesterNumber != null) &&
+            (!gradeItem.getSemesterNumber().equals(semesterNumber))) {
+            return false;
+        }
+
+        if ((gradeItem.getSemesterNumber() == null && semesterNumber != null) ||
+            (gradeItem.getSemesterNumber() != null && semesterNumber == null)) {
+            return false;
+        }
+
+        // check if modifiedSemesterNumber differs
+        if ((gradeItem.getModifiedSemesterNumber() != null && modifiedSemesterNumber != null) &&
+            (!gradeItem.getModifiedSemesterNumber().equals(modifiedSemesterNumber))) {
+            return false;
+        }
+
+        if ((gradeItem.getModifiedSemesterNumber() == null && modifiedSemesterNumber != null) ||
+            (gradeItem.getModifiedSemesterNumber() != null && modifiedSemesterNumber == null)) {
+            return false;
+        }
+
         return true;
     }
 
@@ -173,5 +204,21 @@ public class GradeItem implements GradesAdapterItem {
 
     public void setModifiedCreditPoints(Float modifiedCreditPoints) {
         this.modifiedCreditPoints = modifiedCreditPoints;
+    }
+
+    public Integer getSemesterNumber() {
+        return semesterNumber;
+    }
+
+    public void setSemesterNumber(Integer semesterNumber) {
+        this.semesterNumber = semesterNumber;
+    }
+
+    public Integer getModifiedSemesterNumber() {
+        return modifiedSemesterNumber;
+    }
+
+    public void setModifiedSemesterNumber(Integer modifiedSemesterNumber) {
+        this.modifiedSemesterNumber = modifiedSemesterNumber;
     }
 }

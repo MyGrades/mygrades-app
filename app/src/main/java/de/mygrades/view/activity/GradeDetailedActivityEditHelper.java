@@ -9,9 +9,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import de.mygrades.R;
 import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.main.MainServiceHelper;
+import de.mygrades.util.SemesterMapper;
 
 /**
  * Helper class for the grade detail edit mode. It is directly tied to the GradeDetailedActivity.
@@ -23,6 +28,8 @@ public class GradeDetailedActivityEditHelper {
     private MainServiceHelper mainServiceHelper;
     private boolean editModeEnabled;
     private GradeEntry gradeEntry;
+    private Map<String, Integer> semesterToNumberMap;
+    private SemesterMapper semesterMapper;
 
     // editable views
     private EditText etExamId;
@@ -37,12 +44,19 @@ public class GradeDetailedActivityEditHelper {
     private Spinner spAttempt;
     private ArrayAdapter<CharSequence> spAttemptAdapter;
 
+    private Spinner spSemester;
+    private ArrayAdapter<String> spSemesterAdapter;
+
     // other views
     private LinearLayout llModifiedHint;
 
     public GradeDetailedActivityEditHelper(Activity activity) {
         this.activity = activity;
         mainServiceHelper = new MainServiceHelper(activity);
+        semesterMapper = new SemesterMapper();
+    }
+
+    public void init() {
         initViews();
         initListener();
     }
@@ -63,11 +77,19 @@ public class GradeDetailedActivityEditHelper {
         etAnnotation = (EditText) activity.findViewById(R.id.et_grade_detail_annotation);
         etExamDate = (EditText) activity.findViewById(R.id.et_grade_detail_exam_date);
 
-        // init spinner
+        // init attempt spinner
         spAttempt = (Spinner) activity.findViewById(R.id.sp_grade_detail_attempt);
         spAttemptAdapter = ArrayAdapter.createFromResource(activity, R.array.grade_attempt_spinner, R.layout.grade_detail_spinner_item);
         spAttemptAdapter.setDropDownViewResource(R.layout.grade_detail_spinner_dropdown_item);
         spAttempt.setAdapter(spAttemptAdapter);
+
+        // init semester spinner
+        spSemester = (Spinner) activity.findViewById(R.id.sp_grade_detail_semester);
+        List<String> semesterList = new ArrayList<>(semesterToNumberMap.keySet());
+        semesterMapper.sortSemesterList(semesterList, false);
+        spSemesterAdapter = new ArrayAdapter<>(activity, R.layout.grade_detail_spinner_item, semesterList);
+        spSemesterAdapter.setDropDownViewResource(R.layout.grade_detail_spinner_dropdown_item);
+        spSemester.setAdapter(spSemesterAdapter);
     }
 
     /**
@@ -121,6 +143,7 @@ public class GradeDetailedActivityEditHelper {
         etAnnotation.setEnabled(editModeEnabled);
         etExamDate.setEnabled(editModeEnabled);
         spAttempt.setEnabled(editModeEnabled);
+        spSemester.setEnabled(editModeEnabled);
 
         // show all views if edit mode is enabled
         if (editModeEnabled) {
@@ -133,6 +156,7 @@ public class GradeDetailedActivityEditHelper {
             ((View) etAnnotation.getParent()).setVisibility(View.VISIBLE);
             ((View) etExamDate.getParent()).setVisibility(View.VISIBLE);
             ((View) spAttempt.getParent()).setVisibility(View.VISIBLE);
+            ((View) spSemester.getParent()).setVisibility(View.VISIBLE);
         }
     }
 
@@ -152,6 +176,7 @@ public class GradeDetailedActivityEditHelper {
         modified = updateEditText(etExamDate, gradeEntry.getExamDate(), gradeEntry.getModifiedExamDate(), R.id.modified_badge_exam_date) || modified;
         modified = updateWeightEditText() || modified;
         modified = updateAttemptSpinner() || modified;
+        modified = updateSemesterSpinner() || modified;
 
         // show or hide modified hint
         llModifiedHint.setVisibility(modified ? View.VISIBLE : View.GONE);
@@ -266,6 +291,34 @@ public class GradeDetailedActivityEditHelper {
     }
 
     /**
+     * Updates the selected value of the semester spinner.
+     *
+     * @return true, if the semester was modified
+     */
+    private boolean updateSemesterSpinner() {
+        boolean modified = false;
+        String semester = gradeEntry.getSemester();
+        String modifiedSemester = gradeEntry.getModifiedSemester();
+        if (modifiedSemester != null) {
+            semester = modifiedSemester;
+            modified = true;
+        }
+
+        ViewGroup parent = (ViewGroup) spSemester.getParent();
+        if (semester == null) {
+            parent.setVisibility(View.GONE);
+        } else {
+            int position = spSemesterAdapter.getPosition(semester);
+            spSemester.setSelection(position);
+            parent.setVisibility(View.VISIBLE);
+        }
+
+        showBadge(parent, modified, R.id.modified_badge_semester);
+
+        return modified;
+    }
+
+    /**
      * Writes a double to an edit text. If the value is null, "-" will be shown.
      * (only necessary for views with forced visibility)
      *
@@ -307,6 +360,7 @@ public class GradeDetailedActivityEditHelper {
         modified = updateGrade() || modified;
         modified = updateCreditPoints() || modified;
         modified = updateAttempt() || modified;
+        modified = updateSemester() || modified;
 
         if (modified) {
             mainServiceHelper.updateGradeEntry(gradeEntry);
@@ -515,6 +569,28 @@ public class GradeDetailedActivityEditHelper {
     }
 
     /**
+     * Checks if the selected semester differs from the original one and updates the gradeEntry.
+     *
+     * @return true, if gradeEntry must be updated in the database
+     */
+    private boolean updateSemester() {
+        String semester = gradeEntry.getSemester();
+        String modifiedSemester = (String) spSemester.getSelectedItem();
+
+        if (semester.equals(modifiedSemester)) {
+            gradeEntry.setModifiedSemester(null);
+            gradeEntry.setModifiedSemesterNumber(null);
+            return true;
+        } else if (!semester.equals(modifiedSemester)) {
+            gradeEntry.setModifiedSemester(modifiedSemester);
+            gradeEntry.setModifiedSemesterNumber(semesterToNumberMap.get(modifiedSemester));
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Converts a string to double.
      * If the string is empty or the parsing fails, null will be returned.
      *
@@ -543,5 +619,9 @@ public class GradeDetailedActivityEditHelper {
 
     public boolean isEditModeEnabled() {
         return editModeEnabled;
+    }
+
+    public void setSemesterToNumberMap(Map<String, Integer> semesterToNumberMap) {
+        this.semesterToNumberMap = semesterToNumberMap;
     }
 }

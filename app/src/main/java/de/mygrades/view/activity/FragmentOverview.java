@@ -225,7 +225,14 @@ public class FragmentOverview extends Fragment {
         if (adapter != null) {
             for(GradeEntry gradeEntry : gradesEvent.getGrades()) {
                 GradeItem item = new GradeItem(gradeEntry);
-                adapter.addGradeForSemester(item, gradeEntry.getSemesterNumber(), gradeEntry.getSemester());
+                String semester = gradeEntry.getSemester();
+                String modifiedSemester = gradeEntry.getModifiedSemester();
+                semester = modifiedSemester == null ? semester : modifiedSemester;
+
+                Integer semesterNumber = gradeEntry.getSemesterNumber();
+                Integer modifiedSemesterNumber = gradeEntry.getModifiedSemesterNumber();
+                semesterNumber = modifiedSemesterNumber == null ? semesterNumber : modifiedSemesterNumber;
+                adapter.addGradeForSemester(item, semesterNumber, semester);
             }
 
             // update the summary header

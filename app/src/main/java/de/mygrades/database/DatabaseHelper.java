@@ -3,7 +3,6 @@ package de.mygrades.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -61,6 +60,8 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_ATTEMPT TEXT;");
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_EXAM_DATE;");
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_TESTER TEXT;");
+        db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_SEMESTER TEXT;");
+        db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_SEMESTER_NUMBER INTEGER;");
 
         // add 'weight' to table 'GRADE_ENTRY' and set default value
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN WEIGHT REAL;");

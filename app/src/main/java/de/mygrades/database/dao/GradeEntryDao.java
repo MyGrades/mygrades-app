@@ -51,7 +51,9 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         public final static Property ModifiedAttempt = new Property(22, String.class, "modifiedAttempt", false, "MODIFIED_ATTEMPT");
         public final static Property ModifiedExamDate = new Property(23, String.class, "modifiedExamDate", false, "MODIFIED_EXAM_DATE");
         public final static Property ModifiedTester = new Property(24, String.class, "modifiedTester", false, "MODIFIED_TESTER");
-        public final static Property OverviewId = new Property(25, Long.class, "overviewId", false, "OVERVIEW_ID");
+        public final static Property ModifiedSemester = new Property(25, String.class, "modifiedSemester", false, "MODIFIED_SEMESTER");
+        public final static Property ModifiedSemesterNumber = new Property(26, Integer.class, "modifiedSemesterNumber", false, "MODIFIED_SEMESTER_NUMBER");
+        public final static Property OverviewId = new Property(27, Long.class, "overviewId", false, "OVERVIEW_ID");
     };
 
     private DaoSession daoSession;
@@ -95,7 +97,9 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
                 "\"MODIFIED_ATTEMPT\" TEXT," + // 22: modifiedAttempt
                 "\"MODIFIED_EXAM_DATE\" TEXT," + // 23: modifiedExamDate
                 "\"MODIFIED_TESTER\" TEXT," + // 24: modifiedTester
-                "\"OVERVIEW_ID\" INTEGER);"); // 25: overviewId
+                "\"MODIFIED_SEMESTER\" TEXT," + // 25: modifiedSemester
+                "\"MODIFIED_SEMESTER_NUMBER\" INTEGER," + // 26: modifiedSemesterNumber
+                "\"OVERVIEW_ID\" INTEGER);"); // 27: overviewId
     }
 
     /** Drops the underlying database table. */
@@ -230,9 +234,19 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             stmt.bindString(25, modifiedTester);
         }
  
+        String modifiedSemester = entity.getModifiedSemester();
+        if (modifiedSemester != null) {
+            stmt.bindString(26, modifiedSemester);
+        }
+ 
+        Integer modifiedSemesterNumber = entity.getModifiedSemesterNumber();
+        if (modifiedSemesterNumber != null) {
+            stmt.bindLong(27, modifiedSemesterNumber);
+        }
+ 
         Long overviewId = entity.getOverviewId();
         if (overviewId != null) {
-            stmt.bindLong(26, overviewId);
+            stmt.bindLong(28, overviewId);
         }
     }
 
@@ -277,7 +291,9 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22), // modifiedAttempt
             cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23), // modifiedExamDate
             cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24), // modifiedTester
-            cursor.isNull(offset + 25) ? null : cursor.getLong(offset + 25) // overviewId
+            cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25), // modifiedSemester
+            cursor.isNull(offset + 26) ? null : cursor.getInt(offset + 26), // modifiedSemesterNumber
+            cursor.isNull(offset + 27) ? null : cursor.getLong(offset + 27) // overviewId
         );
         return entity;
     }
@@ -310,7 +326,9 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         entity.setModifiedAttempt(cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22));
         entity.setModifiedExamDate(cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23));
         entity.setModifiedTester(cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24));
-        entity.setOverviewId(cursor.isNull(offset + 25) ? null : cursor.getLong(offset + 25));
+        entity.setModifiedSemester(cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25));
+        entity.setModifiedSemesterNumber(cursor.isNull(offset + 26) ? null : cursor.getInt(offset + 26));
+        entity.setOverviewId(cursor.isNull(offset + 27) ? null : cursor.getLong(offset + 27));
      }
     
     /** @inheritdoc */

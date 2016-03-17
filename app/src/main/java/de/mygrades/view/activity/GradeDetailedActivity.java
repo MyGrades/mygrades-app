@@ -64,7 +64,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private PtrHeader ptrHeader;
 
     private TextView tvGradeDetailName;
-    private TextView tvGradeDetailSemester;
 
     // views for overview
     private LinearLayout llOverviewWrapper;
@@ -102,6 +101,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         }
 
         mainServiceHelper = new MainServiceHelper(this);
+        editHelper = new GradeDetailedActivityEditHelper(this);
 
         // get extra data
         Bundle extras = getIntent().getExtras();
@@ -109,9 +109,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
         initListener();
         initViews();
-
-        editHelper = new GradeDetailedActivityEditHelper(this);
-        editHelper.enableEditMode(false);
 
         // restore instance state if necessary
         if (savedInstanceState != null) {
@@ -133,7 +130,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private void initViews() {
         // get views for grade
         tvGradeDetailName = (TextView) findViewById(R.id.tv_grade_detail_name);
-        tvGradeDetailSemester = (TextView) findViewById(R.id.tv_grade_detail_semester);
 
         // get views for overview
         llOverviewWrapper = (LinearLayout) findViewById(R.id.overview_wrapper);
@@ -281,9 +277,12 @@ public class GradeDetailedActivity extends AppCompatActivity {
     public void onEventMainThread(GradeEntryEvent gradeEntryEvent) {
         gradeEntry = gradeEntryEvent.getGradeEntry();
         tvGradeDetailName.setText(gradeEntry.getName());
-        tvGradeDetailSemester.setText(gradeEntry.getSemester());
 
         editHelper.setGradeEntry(gradeEntry);
+        editHelper.setSemesterToNumberMap(gradeEntryEvent.getSemesterToSemesterNumberMap());
+
+        editHelper.init();
+        editHelper.enableEditMode(false);
         editHelper.updateValues();
     }
 

@@ -168,7 +168,8 @@ public class MyGradesDaoGenerator {
         gradeEntry.addStringProperty("modifiedAttempt");
         gradeEntry.addStringProperty("modifiedExamDate");
         gradeEntry.addStringProperty("modifiedTester");
-        // TODO: add modified property for semesterNumber or semester
+        gradeEntry.addStringProperty("modifiedSemester");
+        gradeEntry.addIntProperty("modifiedSemesterNumber");
 
         gradeEntry.setHasKeepSections(true);
     }

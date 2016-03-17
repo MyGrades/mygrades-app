@@ -24,6 +24,7 @@ import de.mygrades.database.dao.RuleDao;
 import de.mygrades.main.alarm.ScrapeAlarmManager;
 import de.mygrades.main.core.Parser;
 import de.mygrades.main.core.Scraper;
+import de.mygrades.util.SemesterMapper;
 import de.mygrades.main.core.Transformer;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.GradeEntryEvent;
@@ -73,8 +74,16 @@ public class GradesProcessor extends BaseProcessor {
         }
 
         Log.d(TAG, gradeEntry.toString());
+
+        // get semester mapping (used in edit mode)
+        List<GradeEntry> gradeEntries = daoSession.getGradeEntryDao().loadAll();
+        SemesterMapper semesterMapper = new SemesterMapper();
+        Map<String, Integer> semesterToNumberMap = semesterMapper.getGradeEntrySemesterMapForEditMode(gradeEntries);
+
         // post Event with GradeEntry to GUI
-        EventBus.getDefault().post(new GradeEntryEvent(gradeEntry));
+        GradeEntryEvent gradeEntryEvent = new GradeEntryEvent(gradeEntry);
+        gradeEntryEvent.setSemesterToSemesterNumberMap(semesterToNumberMap);
+        EventBus.getDefault().post(gradeEntryEvent);
 
         // if there is an overview for this grade -> post event to gui
         if (gradeEntry.getOverview() != null) {
@@ -479,6 +488,7 @@ public class GradesProcessor extends BaseProcessor {
      *
      * @param event IntermediateTableScrapingResultEvent containing a string of table with grades
      */
+    @SuppressWarnings("unused")
     public void onEventAsync(IntermediateTableScrapingResultEvent event){
         Log.d("Async", "GradeHash: " + gradeHash + " - GradeHash Event: " + event.getGradeHash());
         if (this.gradeHash == null || !gradeHash.equals(event.getGradeHash())) {
