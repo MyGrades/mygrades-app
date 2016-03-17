@@ -54,6 +54,44 @@ public class GradeItem implements GradesAdapterItem {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GradeItem gradeItem = (GradeItem) o;
+
+        if (name != null ? !name.equals(gradeItem.name) : gradeItem.name != null) return false;
+        if (grade != null ? !grade.equals(gradeItem.grade) : gradeItem.grade != null) return false;
+        if (modifiedGrade != null ? !modifiedGrade.equals(gradeItem.modifiedGrade) : gradeItem.modifiedGrade != null)
+            return false;
+        if (creditPoints != null ? !creditPoints.equals(gradeItem.creditPoints) : gradeItem.creditPoints != null)
+            return false;
+        if (modifiedCreditPoints != null ? !modifiedCreditPoints.equals(gradeItem.modifiedCreditPoints) : gradeItem.modifiedCreditPoints != null)
+            return false;
+        if (weight != null ? !weight.equals(gradeItem.weight) : gradeItem.weight != null)
+            return false;
+        if (hash != null ? !hash.equals(gradeItem.hash) : gradeItem.hash != null) return false;
+        if (semesterNumber != null ? !semesterNumber.equals(gradeItem.semesterNumber) : gradeItem.semesterNumber != null)
+            return false;
+        return !(modifiedSemesterNumber != null ? !modifiedSemesterNumber.equals(gradeItem.modifiedSemesterNumber) : gradeItem.modifiedSemesterNumber != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (grade != null ? grade.hashCode() : 0);
+        result = 31 * result + (modifiedGrade != null ? modifiedGrade.hashCode() : 0);
+        result = 31 * result + (creditPoints != null ? creditPoints.hashCode() : 0);
+        result = 31 * result + (modifiedCreditPoints != null ? modifiedCreditPoints.hashCode() : 0);
+        result = 31 * result + (weight != null ? weight.hashCode() : 0);
+        result = 31 * result + (hash != null ? hash.hashCode() : 0);
+        result = 31 * result + (semesterNumber != null ? semesterNumber.hashCode() : 0);
+        result = 31 * result + (modifiedSemesterNumber != null ? modifiedSemesterNumber.hashCode() : 0);
+        return result;
+    }
+
     public String getName() {
         return name;
     }
@@ -84,94 +122,6 @@ public class GradeItem implements GradesAdapterItem {
 
     public void setHash(String hash) {
         this.hash = hash;
-    }
-
-    /**
-     * Checks if two GradeItems are equal, according to their credit points and grade.
-     * TODO: refactor, use one-liner for each property
-     *
-     * @param gradeItem - other grade item
-     * @return true, if credit points and grade are equal
-     */
-    public boolean equals(GradeItem gradeItem) {
-        // check if credit points has changed
-        if ((gradeItem.getCreditPoints() != null && creditPoints != null) &&
-            (!gradeItem.getCreditPoints().equals(creditPoints))) {
-            return false;
-        }
-
-        if ((gradeItem.getCreditPoints() == null && creditPoints != null) ||
-            (gradeItem.getCreditPoints() != null && creditPoints == null)) {
-            return false;
-        }
-
-        // check if modified credit points has changed
-        if ((gradeItem.getModifiedCreditPoints() != null && modifiedCreditPoints != null) &&
-            (!gradeItem.getModifiedCreditPoints().equals(modifiedCreditPoints))) {
-            return false;
-        }
-
-        if ((gradeItem.getModifiedCreditPoints() == null && modifiedCreditPoints != null) ||
-            (gradeItem.getModifiedCreditPoints() != null && modifiedCreditPoints == null)) {
-            return false;
-        }
-
-        // check if grade has changed
-        if ((gradeItem.getGrade() != null && grade != null) &&
-            (!gradeItem.getGrade().equals(grade))) {
-            return false;
-        }
-
-        if ((gradeItem.getGrade() == null && grade != null) ||
-            (gradeItem.getGrade() != null && grade == null)) {
-            return false;
-        }
-
-        // check if modified grade has changed
-        if ((gradeItem.getModifiedGrade() != null && modifiedGrade != null) &&
-            (!gradeItem.getModifiedGrade().equals(modifiedGrade))) {
-            return false;
-        }
-
-        if ((gradeItem.getModifiedGrade() == null && modifiedGrade != null) ||
-            (gradeItem.getModifiedGrade() != null && modifiedGrade == null)) {
-            return false;
-        }
-
-        // check if weight differs
-        if ((gradeItem.getWeight() != null && weight != null) &&
-            (!gradeItem.getWeight().equals(weight))) {
-            return false;
-        }
-
-        if ((gradeItem.getWeight() == null && weight != null) ||
-            (gradeItem.getWeight() != null && weight == null)) {
-            return false;
-        }
-
-        // check if semesterNumber differs
-        if ((gradeItem.getSemesterNumber() != null && semesterNumber != null) &&
-            (!gradeItem.getSemesterNumber().equals(semesterNumber))) {
-            return false;
-        }
-
-        if ((gradeItem.getSemesterNumber() == null && semesterNumber != null) ||
-            (gradeItem.getSemesterNumber() != null && semesterNumber == null)) {
-            return false;
-        }
-
-        // check if modifiedSemesterNumber differs
-        if ((gradeItem.getModifiedSemesterNumber() != null && modifiedSemesterNumber != null) &&
-            (!gradeItem.getModifiedSemesterNumber().equals(modifiedSemesterNumber))) {
-            return false;
-        }
-
-        if ((gradeItem.getModifiedSemesterNumber() == null && modifiedSemesterNumber != null) ||
-            (gradeItem.getModifiedSemesterNumber() != null && modifiedSemesterNumber == null)) {
-            return false;
-        }
-
-        return true;
     }
 
     public void setSeen(int seen) {

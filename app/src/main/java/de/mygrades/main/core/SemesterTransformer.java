@@ -14,8 +14,8 @@ public class SemesterTransformer {
     public static final String SEMESTER_FORMAT_SEMESTER_REVERSED = "semester_reversed";
     public static final String SEMESTER_FORMAT_DATE = "date";
 
-    private static final String SEMESTER_WS = "Wintersemester ";
-    private static final String SEMESTER_SS = "Sommersemester ";
+    public static final String SEMESTER_WS = "Wintersemester ";
+    public static final String SEMESTER_SS = "Sommersemester ";
 
     /**
      * Compile Pattern to extract the Semester and Year of field extracted from html.

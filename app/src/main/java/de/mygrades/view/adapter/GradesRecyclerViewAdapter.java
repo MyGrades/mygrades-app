@@ -84,8 +84,11 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * @param semesterNumber - semester term count
      */
     public void addGradeForSemester(GradeItem newGrade, int semesterNumber, String semester) {
-        // check if grade already exists in different semester and remove it
+        // check if grade already exists in different semester and delete it
         deleteGradeIfSemesterChanged(newGrade);
+
+        // check if any semester is now empty and delete it if necessary
+        deleteEmptySemester();
 
         // find semester index, where the grade should be added
         int semesterIndex = getIndexForSemester(semesterNumber, semester);
@@ -102,7 +105,15 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * @param newGrade new grade item
      */
     private void deleteGradeIfSemesterChanged(GradeItem newGrade) {
+        int currentSemesterIndex = -1;
+        SemesterItem currentSemesterItem = null;
+
         for (int i = 0; i < items.size(); i++) {
+            if (items.get(i) instanceof SemesterItem) {
+                currentSemesterIndex = i;
+                currentSemesterItem = (SemesterItem) items.get(i);
+            }
+
             if (items.get(i) instanceof GradeItem) {
                 GradeItem gradeItem = (GradeItem) items.get(i);
                 if (gradeItem.getHash().equals(newGrade.getHash())) {
@@ -114,11 +125,35 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                     Integer newSemesterNumber = newGrade.getSemesterNumber();
                     newSemesterNumber = newGrade.getModifiedSemesterNumber() == null ? newSemesterNumber : newGrade.getModifiedSemesterNumber();
                     if (!oldSemesterNumber.equals(newSemesterNumber)) {
-                        // remove old grade
+                        // remove old grade and update ui
+                        if (currentSemesterItem != null) {
+                            currentSemesterItem.getGrades().remove(gradeItem);
+                            currentSemesterItem.update();
+                            if (currentSemesterIndex > 0) {
+                                notifyItemChanged(currentSemesterIndex);
+                            }
+                        }
+
                         items.remove(i);
                         notifyItemRemoved(i);
                         return;
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if any semester is empty and deletes it.
+     */
+    private void deleteEmptySemester() {
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i) instanceof SemesterItem) {
+                SemesterItem semesterItem = (SemesterItem) items.get(i);
+                if (semesterItem.getGrades().size() == 0) {
+                    items.remove(i);
+                    notifyItemRemoved(i);
+                    return;
                 }
             }
         }
@@ -132,7 +167,6 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * @return true, if grade was updated or if it exists already. false otherwise
      */
     private boolean updateGrade(GradeItem newGrade, int semesterIndex) {
-
         for(int i = semesterIndex + 1; i < items.size(); i++) {
             if (items.get(i) instanceof GradeItem) {
                 GradeItem gradeItem = (GradeItem) items.get(i);
@@ -144,6 +178,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
                     if (!gradeItem.equals(newGrade)) {
                         // update old grade item and notify ui
+                        gradeItem.setName(newGrade.getName());
                         gradeItem.setGrade(newGrade.getGrade());
                         gradeItem.setModifiedGrade(newGrade.getModifiedGrade());
                         gradeItem.setCreditPoints(newGrade.getCreditPoints());

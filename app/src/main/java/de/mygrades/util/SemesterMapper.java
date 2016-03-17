@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.mygrades.database.dao.GradeEntry;
+import de.mygrades.main.core.SemesterTransformer;
 
 /**
  * Helper class to create a map for semester->semesterNumber.
@@ -30,7 +31,7 @@ public class SemesterMapper {
 
     /**
      * Creates a map semester->semesterNumber based on a list of grade entries.
-     * TODO: also adds an additional semester for the edit mode.
+     * It also adds an additional semester to the map.
      *
      * @param gradeEntries list of grade entries
      * @return map semester->semesterNumber
@@ -43,7 +44,47 @@ public class SemesterMapper {
             semesterSet.add(gradeEntry.getSemester());
         }
 
+        addAdditionalSemester(semesterSet);
+
         return getGradeEntrySemesterMap(semesterSet);
+    }
+
+    /**
+     * Adds an additional semester to the given semester set, to provide the possibility to
+     * move a grade entry to a yet unknown semester.
+     *
+     * @param semesterSet set of semester strings
+     */
+    private void addAdditionalSemester(Set<String> semesterSet) {
+        List<String> semesterList = new ArrayList<>(semesterSet);
+        sortSemesterList(semesterList, true);
+
+        // append additional semester
+        String lastSemester = semesterList.get(semesterList.size() - 1);
+        String newSemester;
+
+        // get semester and year from last semester
+        Matcher matcher = semesterPattern.matcher(lastSemester);
+
+        String semester = "";
+        Integer year = 0;
+        if (matcher.find()) { // Find first match
+            semester = matcher.group(1);
+            try {
+                year = Integer.parseInt(matcher.group(2));
+            } catch (NumberFormatException e) {
+                year = 0;
+            }
+        }
+
+        // if extractedSemester starts with w -> Wintersemester, next is Sommersemester
+        if (semester.toLowerCase().startsWith("w")) {
+            newSemester = SemesterTransformer.SEMESTER_SS + (year + 1);
+        } else {
+            newSemester = SemesterTransformer.SEMESTER_WS + year + "/" + (year+1);
+        }
+
+        semesterSet.add(newSemester);
     }
 
     /**
