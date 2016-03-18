@@ -1,7 +1,5 @@
 package de.mygrades.util;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,12 +39,12 @@ public class AverageCalculator {
             GradeItem gradeItem = (GradeItem) item;
             double weight = gradeItem.getWeight() == null ? 1 : gradeItem.getWeight();
 
-            float actCreditPoints = (gradeItem.getCreditPoints() == null ? 0f : gradeItem.getCreditPoints());
-            Float modifiedCreditPoints = gradeItem.getModifiedCreditPoints();
+            double actCreditPoints = (gradeItem.getCreditPoints() == null ? 0f : gradeItem.getCreditPoints());
+            Double modifiedCreditPoints = gradeItem.getModifiedCreditPoints();
             actCreditPoints = modifiedCreditPoints == null ? actCreditPoints : modifiedCreditPoints;
 
-            float grade = (gradeItem.getGrade() == null ? 0f : gradeItem.getGrade());
-            Float modifiedGrade = gradeItem.getModifiedGrade();
+            double grade = (gradeItem.getGrade() == null ? 0f : gradeItem.getGrade());
+            Double modifiedGrade = gradeItem.getModifiedGrade();
             grade = modifiedGrade == null ? grade : modifiedGrade;
 
             creditPointsSum += actCreditPoints;

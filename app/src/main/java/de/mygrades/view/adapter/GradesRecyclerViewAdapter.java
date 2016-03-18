@@ -397,11 +397,11 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             viewHolder.setGradeHash(gradeItem.getHash());
             viewHolder.tvName.setText(gradeItem.getName());
 
-            Float grade = gradeItem.getGrade();
+            Double grade = gradeItem.getGrade();
             String gradeAsString = grade == null ? "-" : String.format("%.1f", grade);
             viewHolder.tvGrade.setText(gradeAsString);
 
-            Float creditPoints = gradeItem.getCreditPoints();
+            Double creditPoints = gradeItem.getCreditPoints();
             String creditPointsAsString = creditPoints == null ? "-" : String.format("%.1f", creditPoints);
             viewHolder.tvCreditPoints.setText(creditPointsAsString + " CP");
 

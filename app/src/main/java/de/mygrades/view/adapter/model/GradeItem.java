@@ -7,10 +7,10 @@ import de.mygrades.database.dao.GradeEntry;
  */
 public class GradeItem implements GradesAdapterItem {
     private String name;
-    private Float grade;
-    private Float modifiedGrade;
-    private Float creditPoints;
-    private Float modifiedCreditPoints;
+    private Double grade;
+    private Double modifiedGrade;
+    private Double creditPoints;
+    private Double modifiedCreditPoints;
     private Double weight;
     private String hash;
     private Integer semesterNumber;
@@ -28,26 +28,16 @@ public class GradeItem implements GradesAdapterItem {
         setName(gradeEntry.getName());
         setHash(gradeEntry.getHash());
 
-        Double creditPoints = gradeEntry.getCreditPoints();
-        setCreditPoints(creditPoints == null ? null : creditPoints.floatValue());
+        setCreditPoints(gradeEntry.getCreditPoints());
+        setModifiedCreditPoints(gradeEntry.getModifiedCreditPoints());
 
-        Double modifiedCreditPoints = gradeEntry.getModifiedCreditPoints();
-        setModifiedCreditPoints(modifiedCreditPoints == null ? null : modifiedCreditPoints.floatValue());
+        setGrade(gradeEntry.getGrade());
+        setModifiedGrade(gradeEntry.getModifiedGrade());
 
-        Double grade = gradeEntry.getGrade();
-        setGrade(grade == null ? null : grade.floatValue());
+        setWeight(gradeEntry.getWeight());
 
-        Double modifiedGrade = gradeEntry.getModifiedGrade();
-        setModifiedGrade(modifiedGrade == null ? null : modifiedGrade.floatValue());
-
-        Double weight = gradeEntry.getWeight();
-        setWeight(weight);
-
-        Integer semesterNumber = gradeEntry.getSemesterNumber();
-        setSemesterNumber(semesterNumber);
-
-        Integer modifiedSemesterNumber = gradeEntry.getModifiedSemesterNumber();
-        setModifiedSemesterNumber(modifiedSemesterNumber);
+        setSemesterNumber(gradeEntry.getSemesterNumber());
+        setModifiedSemesterNumber(gradeEntry.getModifiedSemesterNumber());
 
         if (gradeEntry.getSeen() != null) {
             setSeen(gradeEntry.getSeen());
@@ -100,19 +90,19 @@ public class GradeItem implements GradesAdapterItem {
         this.name = name;
     }
 
-    public Float getGrade() {
+    public Double getGrade() {
         return grade;
     }
 
-    public void setGrade(Float grade) {
+    public void setGrade(Double grade) {
         this.grade = grade;
     }
 
-    public Float getCreditPoints() {
+    public Double getCreditPoints() {
         return creditPoints;
     }
 
-    public void setCreditPoints(Float creditPoints) {
+    public void setCreditPoints(Double creditPoints) {
         this.creditPoints = creditPoints;
     }
 
@@ -140,19 +130,19 @@ public class GradeItem implements GradesAdapterItem {
         this.weight = weight;
     }
 
-    public Float getModifiedGrade() {
+    public Double getModifiedGrade() {
         return modifiedGrade;
     }
 
-    public void setModifiedGrade(Float modifiedGrade) {
+    public void setModifiedGrade(Double modifiedGrade) {
         this.modifiedGrade = modifiedGrade;
     }
 
-    public Float getModifiedCreditPoints() {
+    public Double getModifiedCreditPoints() {
         return modifiedCreditPoints;
     }
 
-    public void setModifiedCreditPoints(Float modifiedCreditPoints) {
+    public void setModifiedCreditPoints(Double modifiedCreditPoints) {
         this.modifiedCreditPoints = modifiedCreditPoints;
     }
 

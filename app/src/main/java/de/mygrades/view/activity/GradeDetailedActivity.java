@@ -82,6 +82,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private MainServiceHelper mainServiceHelper;
     private GradeDetailedActivityEditHelper editHelper;
     private boolean isOverviewPossible;
+    private boolean receivedGradeEntryEvent;
 
     // snackbar listener
     private View.OnClickListener tryAgainListener;
@@ -284,6 +285,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
         editHelper.init();
         editHelper.enableEditMode(false);
         editHelper.updateValues();
+
+        receivedGradeEntryEvent = true;
+        invalidateOptionsMenu();
     }
 
     /**
@@ -426,8 +430,8 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
         MenuItem editItem = menu.findItem(R.id.grade_detail_edit);
         MenuItem saveItem = menu.findItem(R.id.grade_detail_save);
-        editItem.setVisible(!editHelper.isEditModeEnabled());
-        saveItem.setVisible(editHelper.isEditModeEnabled());
+        editItem.setVisible(receivedGradeEntryEvent && !editHelper.isEditModeEnabled());
+        saveItem.setVisible(receivedGradeEntryEvent && editHelper.isEditModeEnabled());
 
         return true;
     }
