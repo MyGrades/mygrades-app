@@ -132,10 +132,13 @@ public class StatisticsProcessor extends BaseProcessor {
         int[] gradeDistribution = new int[6];
 
         for (GradeEntry gradeEntry : gradeEntries) {
-            if (gradeEntry.getGrade() != null && gradeEntry.getGrade() > 0) {
-                int grade = (int) Math.round(gradeEntry.getGrade());
-                if (grade > 0) {
-                    gradeDistribution[grade - 1] += 1;
+            Double grade = gradeEntry.getGrade();
+            grade = gradeEntry.getModifiedGrade() == null ? grade : gradeEntry.getModifiedGrade();
+
+            if (grade != null && grade > 0) {
+                int gradeAsInt = (int) Math.round(grade);
+                if (gradeAsInt > 0) {
+                    gradeDistribution[gradeAsInt - 1] += 1;
                 }
             } else {
                 gradeDistribution[5] += 1;
