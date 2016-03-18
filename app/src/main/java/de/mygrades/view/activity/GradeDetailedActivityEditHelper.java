@@ -40,6 +40,7 @@ public class GradeDetailedActivityEditHelper {
     private EditText etExamDate;
     private EditText etTester;
     private EditText etWeight;
+    private EditText etName;
 
     private Spinner spAttempt;
     private ArrayAdapter<CharSequence> spAttemptAdapter;
@@ -76,6 +77,7 @@ public class GradeDetailedActivityEditHelper {
         etGrade = (EditText) activity.findViewById(R.id.et_grade_detail_grade);
         etAnnotation = (EditText) activity.findViewById(R.id.et_grade_detail_annotation);
         etExamDate = (EditText) activity.findViewById(R.id.et_grade_detail_exam_date);
+        etName = (EditText) activity.findViewById(R.id.et_grade_detail_name);
 
         // init attempt spinner
         spAttempt = (Spinner) activity.findViewById(R.id.sp_grade_detail_attempt);
@@ -141,6 +143,7 @@ public class GradeDetailedActivityEditHelper {
         etGrade.setEnabled(editModeEnabled);
         etGrade.setError(null);
         etAnnotation.setEnabled(editModeEnabled);
+        etName.setEnabled(editModeEnabled);
         etExamDate.setEnabled(editModeEnabled);
         spAttempt.setEnabled(editModeEnabled);
         spSemester.setEnabled(editModeEnabled);
@@ -167,13 +170,14 @@ public class GradeDetailedActivityEditHelper {
     public void updateValues() {
         boolean modified;
 
-        modified = updateEditText(etExamId, gradeEntry.getExamId(), gradeEntry.getModifiedExamId(), R.id.modified_badge_exam_id);
-        modified = updateEditText(etTester, gradeEntry.getTester(), gradeEntry.getModifiedTester(), R.id.modified_badge_tester) || modified;
-        modified = updateEditText(etState, gradeEntry.getState(), gradeEntry.getModifiedState(), R.id.modified_badge_state) || modified;
+        modified = updateEditText(etExamId, gradeEntry.getExamId(), gradeEntry.getModifiedExamId(), R.id.modified_badge_exam_id, false);
+        modified = updateEditText(etTester, gradeEntry.getTester(), gradeEntry.getModifiedTester(), R.id.modified_badge_tester, false) || modified;
+        modified = updateEditText(etState, gradeEntry.getState(), gradeEntry.getModifiedState(), R.id.modified_badge_state, false) || modified;
         modified = updateEditText(etCreditPoints, gradeEntry.getCreditPoints(), gradeEntry.getModifiedCreditPoints(), R.id.modified_badge_credit_points, true) || modified;
         modified = updateEditText(etGrade, gradeEntry.getGrade(), gradeEntry.getModifiedGrade(), R.id.modified_badge_grade, true) || modified;
-        modified = updateEditText(etAnnotation, gradeEntry.getAnnotation(), gradeEntry.getModifiedAnnotation(), R.id.modified_badge_annotation) || modified;
-        modified = updateEditText(etExamDate, gradeEntry.getExamDate(), gradeEntry.getModifiedExamDate(), R.id.modified_badge_exam_date) || modified;
+        modified = updateEditText(etAnnotation, gradeEntry.getAnnotation(), gradeEntry.getModifiedAnnotation(), R.id.modified_badge_annotation, false) || modified;
+        modified = updateEditText(etExamDate, gradeEntry.getExamDate(), gradeEntry.getModifiedExamDate(), R.id.modified_badge_exam_date, false) || modified;
+        modified = updateEditText(etName, gradeEntry.getName(), gradeEntry.getModifiedName(), -1, true) || modified;
         modified = updateWeightEditText() || modified;
         modified = updateAttemptSpinner() || modified;
         modified = updateSemesterSpinner() || modified;
@@ -192,7 +196,7 @@ public class GradeDetailedActivityEditHelper {
      * @param resIdModifiedBadge resource id for 'modified badge'
      * @return true, if the modified value is used
      */
-    private boolean updateEditText(EditText et, String value, String modifiedValue, int resIdModifiedBadge) {
+    private boolean updateEditText(EditText et, String value, String modifiedValue, int resIdModifiedBadge, boolean forcedVisible) {
         boolean modified = false;
         if (modifiedValue != null) {
             value = modifiedValue;
@@ -200,7 +204,7 @@ public class GradeDetailedActivityEditHelper {
         }
 
         ViewGroup parent = (ViewGroup)et.getParent();
-        if (value != null) {
+        if (value != null || forcedVisible) {
             et.setText(value);
             parent.setVisibility(View.VISIBLE);
         } else {
@@ -338,6 +342,8 @@ public class GradeDetailedActivityEditHelper {
      * @param resIdModifiedBadge resource id for badge view inside parent view
      */
     private void showBadge(ViewGroup parent, boolean modified, int resIdModifiedBadge) {
+        if (resIdModifiedBadge < 0) return;
+
         View badge = parent.findViewById(resIdModifiedBadge);
         if (badge != null) {
             badge.setVisibility(modified ? View.VISIBLE : View.GONE);
@@ -361,6 +367,7 @@ public class GradeDetailedActivityEditHelper {
         modified = updateCreditPoints() || modified;
         modified = updateAttempt() || modified;
         modified = updateSemester() || modified;
+        modified = updateName() || modified;
 
         if (modified) {
             mainServiceHelper.updateGradeEntry(gradeEntry);
@@ -584,6 +591,26 @@ public class GradeDetailedActivityEditHelper {
         } else if (!semester.equals(modifiedSemester)) {
             gradeEntry.setModifiedSemester(modifiedSemester);
             gradeEntry.setModifiedSemesterNumber(semesterToNumberMap.get(modifiedSemester));
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the entered name differs from the original one and updates the gradeEntry.
+     *
+     * @return true, if gradeEntry must be updated in the database
+     */
+    private boolean updateName() {
+        String name = gradeEntry.getName();
+        String modifiedName = etName.getText().toString().trim();
+        modifiedName = modifiedName.length() == 0 ? null : modifiedName;
+        if (name == null || !name.equals(modifiedName)) {
+            gradeEntry.setModifiedName(modifiedName);
+            return true;
+        } else if (name.equals(modifiedName)) {
+            gradeEntry.setModifiedName(null);
             return true;
         }
 

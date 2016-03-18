@@ -7,6 +7,7 @@ import de.mygrades.database.dao.GradeEntry;
  */
 public class GradeItem implements GradesAdapterItem {
     private String name;
+    private String modifiedName;
     private Double grade;
     private Double modifiedGrade;
     private Double creditPoints;
@@ -26,6 +27,7 @@ public class GradeItem implements GradesAdapterItem {
      */
     public GradeItem(GradeEntry gradeEntry) {
         setName(gradeEntry.getName());
+        setModifiedName(gradeEntry.getModifiedName());
         setHash(gradeEntry.getHash());
 
         setCreditPoints(gradeEntry.getCreditPoints());
@@ -63,9 +65,20 @@ public class GradeItem implements GradesAdapterItem {
             return true;
         } else if (modifiedCreditPoints != null) {
             return true;
+        } else if (modifiedName != null) {
+            return true;
         }
 
         return false;
+    }
+
+    /**
+     * Get the name which should be shown to the user.
+     *
+     * @return name to show
+     */
+    public String getShownName() {
+        return modifiedName == null ? name : modifiedName;
     }
 
     @Override
@@ -76,6 +89,8 @@ public class GradeItem implements GradesAdapterItem {
         GradeItem gradeItem = (GradeItem) o;
 
         if (name != null ? !name.equals(gradeItem.name) : gradeItem.name != null) return false;
+        if (modifiedName != null ? !modifiedName.equals(gradeItem.modifiedName) : gradeItem.modifiedName != null)
+            return false;
         if (grade != null ? !grade.equals(gradeItem.grade) : gradeItem.grade != null) return false;
         if (modifiedGrade != null ? !modifiedGrade.equals(gradeItem.modifiedGrade) : gradeItem.modifiedGrade != null)
             return false;
@@ -85,7 +100,6 @@ public class GradeItem implements GradesAdapterItem {
             return false;
         if (weight != null ? !weight.equals(gradeItem.weight) : gradeItem.weight != null)
             return false;
-        if (hash != null ? !hash.equals(gradeItem.hash) : gradeItem.hash != null) return false;
         if (semesterNumber != null ? !semesterNumber.equals(gradeItem.semesterNumber) : gradeItem.semesterNumber != null)
             return false;
         return !(modifiedSemesterNumber != null ? !modifiedSemesterNumber.equals(gradeItem.modifiedSemesterNumber) : gradeItem.modifiedSemesterNumber != null);
@@ -95,12 +109,12 @@ public class GradeItem implements GradesAdapterItem {
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (modifiedName != null ? modifiedName.hashCode() : 0);
         result = 31 * result + (grade != null ? grade.hashCode() : 0);
         result = 31 * result + (modifiedGrade != null ? modifiedGrade.hashCode() : 0);
         result = 31 * result + (creditPoints != null ? creditPoints.hashCode() : 0);
         result = 31 * result + (modifiedCreditPoints != null ? modifiedCreditPoints.hashCode() : 0);
         result = 31 * result + (weight != null ? weight.hashCode() : 0);
-        result = 31 * result + (hash != null ? hash.hashCode() : 0);
         result = 31 * result + (semesterNumber != null ? semesterNumber.hashCode() : 0);
         result = 31 * result + (modifiedSemesterNumber != null ? modifiedSemesterNumber.hashCode() : 0);
         return result;
@@ -184,5 +198,13 @@ public class GradeItem implements GradesAdapterItem {
 
     public void setModifiedSemesterNumber(Integer modifiedSemesterNumber) {
         this.modifiedSemesterNumber = modifiedSemesterNumber;
+    }
+
+    public String getModifiedName() {
+        return modifiedName;
+    }
+
+    public void setModifiedName(String modifiedName) {
+        this.modifiedName = modifiedName;
     }
 }

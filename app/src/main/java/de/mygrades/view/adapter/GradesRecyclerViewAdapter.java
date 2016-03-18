@@ -43,7 +43,6 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     private Context context;
     private SharedPreferences prefs;
-    private SharedPreferences.OnSharedPreferenceChangeListener prefsListener;
     private boolean simpleWeighting;
 
     private List<GradesAdapterItem> items;
@@ -60,7 +59,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
 
         // register for preference changes
-        prefsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        SharedPreferences.OnSharedPreferenceChangeListener prefsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 if (key.equals(GradesRecyclerViewAdapter.this.context.getString(R.string.pref_key_max_credit_points))) {
@@ -87,7 +86,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      */
     public void addGradeForSemester(GradeItem newGrade, int semesterNumber, String semester) {
         // check if grade already exists in different semester and delete it
-        deleteGradeIfSemesterChanged(newGrade);
+        checkForDeletion(newGrade);
 
         // check if any semester is now empty and delete it if necessary
         deleteEmptySemester();
@@ -102,11 +101,12 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     /**
-     * Checks if the grade item exists in another semester and removes it.
+     * Checks if the grade item exists in another semester or under another name and removes it,
+     * so it can be added again at the correct position.
      *
      * @param newGrade new grade item
      */
-    private void deleteGradeIfSemesterChanged(GradeItem newGrade) {
+    private void checkForDeletion(GradeItem newGrade) {
         int currentSemesterIndex = -1;
         SemesterItem currentSemesterItem = null;
 
@@ -127,22 +127,40 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                     Integer newSemesterNumber = newGrade.getSemesterNumber();
                     newSemesterNumber = newGrade.getModifiedSemesterNumber() == null ? newSemesterNumber : newGrade.getModifiedSemesterNumber();
                     if (!oldSemesterNumber.equals(newSemesterNumber)) {
-                        // remove old grade and update ui
-                        if (currentSemesterItem != null) {
-                            currentSemesterItem.getGrades().remove(gradeItem);
-                            currentSemesterItem.update();
-                            if (currentSemesterIndex > 0) {
-                                notifyItemChanged(currentSemesterIndex);
-                            }
-                        }
+                        removeGrade(gradeItem, i, currentSemesterItem, currentSemesterIndex);
+                        return;
+                    }
 
-                        items.remove(i);
-                        notifyItemRemoved(i);
+                    // check if shown name has changed
+                    if (!newGrade.getShownName().equals(gradeItem.getShownName())) {
+                        removeGrade(gradeItem, i, currentSemesterItem, currentSemesterIndex);
                         return;
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Removes a GradeItem at the given index and semester and notifies the item changes.
+     *
+     * @param gradeItem grade item to remove
+     * @param gradeIndex grade item index
+     * @param semesterItem semester item, to which the grade item belongs
+     * @param semesterIndex semester item index
+     */
+    private void removeGrade(GradeItem gradeItem, int gradeIndex, SemesterItem semesterItem, int semesterIndex) {
+        // remove old grade and update ui
+        if (semesterItem != null) {
+            semesterItem.getGrades().remove(gradeItem);
+            semesterItem.update();
+            if (semesterIndex > 0) {
+                notifyItemChanged(semesterIndex);
+            }
+        }
+
+        items.remove(gradeIndex);
+        notifyItemRemoved(gradeIndex);
     }
 
     /**
@@ -181,6 +199,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                     if (!gradeItem.equals(newGrade)) {
                         // update old grade item and notify ui
                         gradeItem.setName(newGrade.getName());
+                        gradeItem.setModifiedName(newGrade.getModifiedName());
                         gradeItem.setGrade(newGrade.getGrade());
                         gradeItem.setModifiedGrade(newGrade.getModifiedGrade());
                         gradeItem.setCreditPoints(newGrade.getCreditPoints());
@@ -216,7 +235,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         for(int i = semesterIndex + 1; i < items.size(); i++) {
             if (items.get(i) instanceof GradeItem) {
                 GradeItem gradeItem = (GradeItem) items.get(i);
-                if (newGrade.getName().compareToIgnoreCase(gradeItem.getName()) <= 0) {
+                if (newGrade.getShownName().compareToIgnoreCase(gradeItem.getShownName()) <= 0) {
                     newGradeIndex = i;
                     break;
                 }
@@ -397,7 +416,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             GradeViewHolder viewHolder = (GradeViewHolder) holder;
             GradeItem gradeItem = (GradeItem) items.get(position);
             viewHolder.setGradeHash(gradeItem.getHash());
-            viewHolder.tvName.setText(gradeItem.getName());
+            viewHolder.tvName.setText(gradeItem.getShownName());
 
             Double grade = gradeItem.getGrade();
             grade = gradeItem.getModifiedGrade() == null ? grade : gradeItem.getModifiedGrade();

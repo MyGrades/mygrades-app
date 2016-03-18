@@ -40,11 +40,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/tv_grade_detail_name"
+                <EditText
+                    android:id="@+id/et_grade_detail_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/h1"/>
+                    style="@style/h1"
+                    android:background="@drawable/grade_detail_edit_text_background_selector"
+                    android:textColor="@color/text87"
+                    android:fontFamily="sans-serif-light"
+                    android:inputType="textFilter|textMultiLine|textNoSuggestions"/>
 
                 <!-- ExamId -->
                 <RelativeLayout style="@style/GradeDetailRow">

@@ -65,8 +65,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private PtrFrameLayout ptrFrame;
     private PtrHeader ptrHeader;
 
-    private TextView tvGradeDetailName;
-
     // views for overview
     private LinearLayout llOverviewWrapper;
     private TextView tvOverviewParticipants;
@@ -131,9 +129,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
      * Initialize all needed views.
      */
     private void initViews() {
-        // get views for grade
-        tvGradeDetailName = (TextView) findViewById(R.id.tv_grade_detail_name);
-
         // get views for overview
         llOverviewWrapper = (LinearLayout) findViewById(R.id.overview_wrapper);
         tvOverviewParticipants = (TextView) findViewById(R.id.tv_overview_participants);
@@ -279,7 +274,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     public void onEventMainThread(GradeEntryEvent gradeEntryEvent) {
         gradeEntry = gradeEntryEvent.getGradeEntry();
-        tvGradeDetailName.setText(gradeEntry.getName());
 
         editHelper.setGradeEntry(gradeEntry);
         editHelper.setSemesterToNumberMap(gradeEntryEvent.getSemesterToSemesterNumberMap());

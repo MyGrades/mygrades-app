@@ -100,6 +100,7 @@
         <item name="android:imeOptions">actionDone</item>
         <item name="android:singleLine">true</item>
         <item name="android:gravity">end</item>
+        <item name="android:inputType">textFilter|textNoSuggestions</item>
     </style>
 
     <!-- Spinner on the right of GradeDetailedActivity -->
