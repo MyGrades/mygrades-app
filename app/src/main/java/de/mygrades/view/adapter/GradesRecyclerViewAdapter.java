@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -30,6 +31,7 @@ import de.mygrades.view.adapter.model.GradeItem;
 import de.mygrades.view.adapter.model.GradesAdapterItem;
 import de.mygrades.view.adapter.model.GradesSummaryItem;
 import de.mygrades.view.adapter.model.SemesterItem;
+import de.mygrades.view.widget.TriangleShapeView;
 
 /**
  * Custom RecyclerView adapter for the overview of grades with semester headers.
@@ -398,10 +400,12 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             viewHolder.tvName.setText(gradeItem.getName());
 
             Double grade = gradeItem.getGrade();
+            grade = gradeItem.getModifiedGrade() == null ? grade : gradeItem.getModifiedGrade();
             String gradeAsString = grade == null ? "-" : String.format("%.1f", grade);
             viewHolder.tvGrade.setText(gradeAsString);
 
             Double creditPoints = gradeItem.getCreditPoints();
+            creditPoints = gradeItem.getModifiedCreditPoints() == null ? creditPoints : gradeItem.getModifiedCreditPoints();
             String creditPointsAsString = creditPoints == null ? "-" : String.format("%.1f", creditPoints);
             viewHolder.tvCreditPoints.setText(creditPointsAsString + " CP");
 
@@ -422,6 +426,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 viewHolder.tvWeight.setText("");
                 viewHolder.tvWeight.setVisibility(View.GONE);
             }
+
+            viewHolder.modifiedBadge.setVisibility(gradeItem.showModifiedBadge() ? View.VISIBLE : View.GONE);
         } else if (holder instanceof GradesSummaryViewHolder) {
             GradesSummaryViewHolder viewHolder = (GradesSummaryViewHolder) holder;
             GradesSummaryItem summaryItem = (GradesSummaryItem) items.get(position);
@@ -520,12 +526,13 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * View holder for a grade entry.
      */
     public static class GradeViewHolder extends RecyclerView.ViewHolder {
-        public LinearLayout llGradeContainer;
+        public RelativeLayout llGradeContainer;
         public TextView tvName;
         public TextView tvGrade;
         public TextView tvCreditPoints;
         public TextView tvGradeSeen;
         public TextView tvWeight;
+        public TriangleShapeView modifiedBadge;
         public GoToDetailsClickListener goToDetailsClickListener;
 
         public GradeViewHolder(View itemView) {
@@ -535,8 +542,9 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             tvGrade = (TextView) itemView.findViewById(R.id.tv_grade);
             tvCreditPoints = (TextView) itemView.findViewById(R.id.tv_credit_points);
             tvGradeSeen = (TextView) itemView.findViewById(R.id.tv_grade_seen);
-            llGradeContainer = (LinearLayout) itemView.findViewById(R.id.grade_container);
+            llGradeContainer = (RelativeLayout) itemView.findViewById(R.id.grade_container);
             tvWeight = (TextView) itemView.findViewById(R.id.tv_weight);
+            modifiedBadge = (TriangleShapeView) itemView.findViewById(R.id.modified_badge);
         }
 
         public void setGoToDetailsClickListener(GoToDetailsClickListener clickListener) {

@@ -53,6 +53,21 @@ public class GradeItem implements GradesAdapterItem {
         return weight != null && weight != 1.0;
     }
 
+    /**
+     * Determines whether the modified badge should be shown in the overview.
+     *
+     * @return true, if modified badge should be shown
+     */
+    public boolean showModifiedBadge() {
+        if (modifiedGrade != null) {
+            return true;
+        } else if (modifiedCreditPoints != null) {
+            return true;
+        }
+
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
