@@ -132,6 +132,8 @@
     <string name="tv_modified_hint">von dir geänderte Werte</string>
     <string name="et_credit_points_invalid">Credit Points müssen >= 0 sein</string>
     <string name="et_grade_invalid">Note muss zwischen 0.0 und 5.0 liegen</string>
+    <string name="dialog_restore_grade_entry_title">Zurücksetzen</string>
+    <string name="dialog_restore_grade_entry">Möchtest du wirklich alle Bearbeitungen zurücksetzen?</string>
 
     <string-array name="grade_attempt_spinner">
         <item>0</item>

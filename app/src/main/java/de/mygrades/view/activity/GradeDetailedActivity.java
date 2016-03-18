@@ -1,9 +1,11 @@
 package de.mygrades.view.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -430,8 +432,10 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
         MenuItem editItem = menu.findItem(R.id.grade_detail_edit);
         MenuItem saveItem = menu.findItem(R.id.grade_detail_save);
+        MenuItem restoreItem = menu.findItem(R.id.grade_detail_restore);
         editItem.setVisible(receivedGradeEntryEvent && !editHelper.isEditModeEnabled());
         saveItem.setVisible(receivedGradeEntryEvent && editHelper.isEditModeEnabled());
+        restoreItem.setVisible(receivedGradeEntryEvent && editHelper.isEditModeEnabled());
 
         return true;
     }
@@ -451,8 +455,37 @@ public class GradeDetailedActivity extends AppCompatActivity {
                 editHelper.saveEdits();
                 invalidateOptionsMenu();
                 return true;
+            case R.id.grade_detail_restore:
+                showRestoreDialog();
+                return true;
         }
 
         return false;
+    }
+
+    /**
+     * Show dialog to ask the user whether he wants to restore the original GradeEntry.
+     */
+    private void showRestoreDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialog_restore_grade_entry);
+        builder.setTitle(getString(R.string.dialog_restore_grade_entry_title));
+        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                editHelper.restore();
+                invalidateOptionsMenu();
+            }
+        });
+
+        builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

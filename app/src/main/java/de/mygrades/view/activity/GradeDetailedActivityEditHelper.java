@@ -591,6 +591,28 @@ public class GradeDetailedActivityEditHelper {
     }
 
     /**
+     * Resets all modified properties to restores the original one.
+     */
+    public void restore() {
+        gradeEntry.setModifiedCreditPoints(null);
+        gradeEntry.setModifiedAttempt(null);
+        gradeEntry.setModifiedGrade(null);
+        gradeEntry.setModifiedSemesterNumber(null);
+        gradeEntry.setModifiedSemester(null);
+        gradeEntry.setModifiedTester(null);
+        gradeEntry.setModifiedAnnotation(null);
+        gradeEntry.setModifiedExamDate(null);
+        gradeEntry.setModifiedExamId(null);
+        gradeEntry.setModifiedName(null);
+        gradeEntry.setModifiedState(null);
+
+        mainServiceHelper.updateGradeEntry(gradeEntry);
+        updateValues();
+
+        enableEditMode(false);
+    }
+
+    /**
      * Converts a string to double.
      * If the string is empty or the parsing fails, null will be returned.
      *

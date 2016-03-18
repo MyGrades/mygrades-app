@@ -8,7 +8,7 @@
                 </shape>
             </item>
 
-            <item android:state_focused="true">
+            <item android:state_focused="true" android:state_enabled="true">
                 <layer-list>
                     <item android:bottom="8dp">
                         <shape android:shape="rectangle">
