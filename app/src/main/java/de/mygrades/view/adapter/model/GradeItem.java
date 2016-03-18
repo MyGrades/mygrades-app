@@ -44,6 +44,15 @@ public class GradeItem implements GradesAdapterItem {
         }
     }
 
+    /**
+     * Determines whether the weight should be shown in the overview.
+     *
+     * @return true, if weight should be shown
+     */
+    public boolean showWeight() {
+        return weight != null && weight != 1.0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

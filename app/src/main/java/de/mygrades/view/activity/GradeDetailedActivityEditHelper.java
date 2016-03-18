@@ -605,6 +605,7 @@ public class GradeDetailedActivityEditHelper {
         gradeEntry.setModifiedExamId(null);
         gradeEntry.setModifiedName(null);
         gradeEntry.setModifiedState(null);
+        gradeEntry.setWeight(1.0);
 
         mainServiceHelper.updateGradeEntry(gradeEntry);
         updateValues();

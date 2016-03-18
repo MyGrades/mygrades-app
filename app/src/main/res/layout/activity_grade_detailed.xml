@@ -179,7 +179,7 @@
 
                     <EditText
                         style="@style/GradeDetailEditText"
-                        android:digits="0123456789"
+                        android:digits="0123456789.,"
                         android:inputType="numberDecimal"
                         android:id="@+id/et_grade_detail_weight" />
 

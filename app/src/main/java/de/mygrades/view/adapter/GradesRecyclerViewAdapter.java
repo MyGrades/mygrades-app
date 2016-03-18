@@ -413,6 +413,15 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 gradeSeen = context.getString(R.string.tv_grade_seen_updated);
             }
             viewHolder.tvGradeSeen.setText(gradeSeen);
+
+            if (gradeItem.showWeight()) {
+                double weight = gradeItem.getWeight() == null ? 1.0 : gradeItem.getWeight();
+                viewHolder.tvWeight.setText(String.format("%.1fx", weight));
+                viewHolder.tvWeight.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.tvWeight.setText("");
+                viewHolder.tvWeight.setVisibility(View.GONE);
+            }
         } else if (holder instanceof GradesSummaryViewHolder) {
             GradesSummaryViewHolder viewHolder = (GradesSummaryViewHolder) holder;
             GradesSummaryItem summaryItem = (GradesSummaryItem) items.get(position);
@@ -516,6 +525,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         public TextView tvGrade;
         public TextView tvCreditPoints;
         public TextView tvGradeSeen;
+        public TextView tvWeight;
         public GoToDetailsClickListener goToDetailsClickListener;
 
         public GradeViewHolder(View itemView) {
@@ -526,6 +536,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             tvCreditPoints = (TextView) itemView.findViewById(R.id.tv_credit_points);
             tvGradeSeen = (TextView) itemView.findViewById(R.id.tv_grade_seen);
             llGradeContainer = (LinearLayout) itemView.findViewById(R.id.grade_container);
+            tvWeight = (TextView) itemView.findViewById(R.id.tv_weight);
         }
 
         public void setGoToDetailsClickListener(GoToDetailsClickListener clickListener) {

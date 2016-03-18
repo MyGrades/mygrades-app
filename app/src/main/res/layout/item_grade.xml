@@ -44,11 +44,27 @@
             android:gravity="right"
             android:fontFamily="sans-serif-medium"/>
 
-        <TextView
-            android:id="@+id/tv_credit_points"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:gravity="right"/>
+            android:orientation="horizontal"
+            android:gravity="right">
+
+            <TextView
+                android:id="@+id/tv_weight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:alpha="0.6"
+                android:paddingRight="4dp"/>
+
+            <TextView
+                android:id="@+id/tv_credit_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:gravity="right"/>
+
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
