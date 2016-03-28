@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -41,6 +42,8 @@ public class GradeDetailedActivityEditHelper {
     private EditText etTester;
     private EditText etWeight;
     private EditText etName;
+    private ImageView ivIncreaseWeight;
+    private ImageView ivDecreaseWeight;
 
     private Spinner spAttempt;
     private ArrayAdapter<CharSequence> spAttemptAdapter;
@@ -72,12 +75,14 @@ public class GradeDetailedActivityEditHelper {
         etExamId = (EditText) activity.findViewById(R.id.et_grade_detail_exam_id);
         etTester = (EditText) activity.findViewById(R.id.et_grade_detail_tester);
         etState = (EditText) activity.findViewById(R.id.et_grade_detail_state);
-        etWeight = (EditText) activity.findViewById(R.id.et_grade_detail_weight);
         etCreditPoints = (EditText) activity.findViewById(R.id.et_grade_detail_credit_points);
         etGrade = (EditText) activity.findViewById(R.id.et_grade_detail_grade);
         etAnnotation = (EditText) activity.findViewById(R.id.et_grade_detail_annotation);
         etExamDate = (EditText) activity.findViewById(R.id.et_grade_detail_exam_date);
         etName = (EditText) activity.findViewById(R.id.et_grade_detail_name);
+        etWeight = (EditText) activity.findViewById(R.id.et_grade_detail_weight);
+        ivIncreaseWeight = (ImageView) activity.findViewById(R.id.iv_increase_weight);
+        ivDecreaseWeight = (ImageView) activity.findViewById(R.id.iv_decrease_weight);
 
         // init attempt spinner
         spAttempt = (Spinner) activity.findViewById(R.id.sp_grade_detail_attempt);
@@ -123,6 +128,20 @@ public class GradeDetailedActivityEditHelper {
         etGrade.setOnFocusChangeListener(etOnFocusChangeListener);
         etAnnotation.setOnFocusChangeListener(etOnFocusChangeListener);
         etExamDate.setOnFocusChangeListener(etOnFocusChangeListener);
+
+        ivIncreaseWeight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                increaseWeight();
+            }
+        });
+
+        ivDecreaseWeight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                decreaseWeight();
+            }
+        });
     }
 
     /**
@@ -147,6 +166,8 @@ public class GradeDetailedActivityEditHelper {
         etExamDate.setEnabled(editModeEnabled);
         spAttempt.setEnabled(editModeEnabled);
         spSemester.setEnabled(editModeEnabled);
+        ivIncreaseWeight.setVisibility(editModeEnabled ? View.VISIBLE : View.GONE);
+        ivDecreaseWeight.setVisibility(editModeEnabled ? View.VISIBLE : View.GONE);
 
         // show all views if edit mode is enabled
         if (editModeEnabled) {
@@ -258,7 +279,7 @@ public class GradeDetailedActivityEditHelper {
         boolean modified = weight != 1;
 
         etWeight.setText(String.format("%.1f", weight));
-        ViewGroup parent = (ViewGroup)etWeight.getParent();
+        ViewGroup parent = (ViewGroup)etWeight.getParent().getParent();
         parent.setVisibility(View.VISIBLE);
 
         showBadge(parent, modified, R.id.modified_badge_weight);
@@ -638,6 +659,32 @@ public class GradeDetailedActivityEditHelper {
         updateValues();
 
         enableEditMode(false);
+    }
+
+    /**
+     * Increases the current weight by 1.
+     */
+    private void increaseWeight() {
+        Double actWeight = gradeEntry.getWeight();
+
+        if (actWeight != null) {
+            actWeight += 1.0;
+            gradeEntry.setWeight(actWeight);
+            updateWeightEditText();
+        }
+    }
+
+    /**
+     * Decreases the current weight by 1.
+     */
+    private void decreaseWeight() {
+        Double actWeight = gradeEntry.getWeight();
+
+        if (actWeight != null && actWeight >= 1.0) {
+            actWeight -= 1.0;
+            gradeEntry.setWeight(actWeight);
+            updateWeightEditText();
+        }
     }
 
     /**

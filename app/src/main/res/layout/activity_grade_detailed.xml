@@ -182,11 +182,44 @@
                         style="@style/GradeDetailTextViewLeft"
                         android:text="@string/tv_grade_detail_weight" />
 
-                    <EditText
-                        style="@style/GradeDetailEditText"
-                        android:digits="0123456789.,"
-                        android:inputType="numberDecimal"
-                        android:id="@+id/et_grade_detail_weight" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_alignParentRight="true">
+
+                        <ImageView
+                            android:id="@+id/iv_increase_weight"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="13dp"
+                            android:layout_marginLeft="6dp"
+                            android:layout_marginRight="6dp"
+                            android:padding="16dp"
+                            android:background="@drawable/ic_add_black_24dp"
+                            android:alpha="0.87"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/iv_decrease_weight"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="13dp"
+                            android:layout_marginLeft="6dp"
+                            android:layout_marginRight="8dp"
+                            android:padding="16dp"
+                            android:background="@drawable/ic_remove_black_24dp"
+                            android:alpha="0.87"
+                            android:visibility="gone"/>
+
+                        <EditText
+                            style="@style/GradeDetailEditText"
+                            android:digits="0123456789.,"
+                            android:inputType="numberDecimal"
+                            android:id="@+id/et_grade_detail_weight" />
+                    </LinearLayout>
 
                     <de.mygrades.view.widget.TriangleShapeView
                         android:id="@+id/modified_badge_weight"
