@@ -67,6 +67,8 @@ public class GradeItem implements GradesAdapterItem {
             return true;
         } else if (modifiedName != null) {
             return true;
+        } else if (modifiedSemesterNumber != null) {
+            return true;
         }
 
         return false;
