@@ -59,6 +59,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     // instance state
     private static final String IS_OVERVIEW_POSSIBLE_STATE = "is_overview_possible_state";
     private static final String GRADE_HASH_STATE = "grade_hash";
+    private static final String EDIT_MODE_ENABLED_STATE = "edit_mode_enabled";
 
     // views
     private LinearLayout llRootView; // used to show snackbar
@@ -83,6 +84,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private GradeDetailedActivityEditHelper editHelper;
     private boolean isOverviewPossible;
     private boolean receivedGradeEntryEvent;
+    private boolean editModeEnabled;
 
     // snackbar listener
     private View.OnClickListener tryAgainListener;
@@ -110,13 +112,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
         initListener();
         initViews();
-
-        // restore instance state if necessary
-        if (savedInstanceState != null) {
-            isOverviewPossible = savedInstanceState.getBoolean(IS_OVERVIEW_POSSIBLE_STATE);
-            gradeHash = savedInstanceState.getString(GRADE_HASH_STATE, "");
-            ptrHeader.restoreInstanceState(savedInstanceState, ptrFrame);
-        }
 
         // register event bus
         EventBus.getDefault().register(this);
@@ -279,7 +274,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         editHelper.setSemesterToNumberMap(gradeEntryEvent.getSemesterToSemesterNumberMap());
 
         editHelper.init();
-        editHelper.enableEditMode(false);
+        editHelper.enableEditMode(editModeEnabled);
         editHelper.updateValues();
 
         receivedGradeEntryEvent = true;
@@ -403,6 +398,17 @@ public class GradeDetailedActivity extends AppCompatActivity {
         ptrHeader.saveInstanceState(outState);
         outState.putBoolean(IS_OVERVIEW_POSSIBLE_STATE, isOverviewPossible);
         outState.putString(GRADE_HASH_STATE, gradeHash);
+        outState.putBoolean(EDIT_MODE_ENABLED_STATE, editModeEnabled);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        isOverviewPossible = savedInstanceState.getBoolean(IS_OVERVIEW_POSSIBLE_STATE);
+        gradeHash = savedInstanceState.getString(GRADE_HASH_STATE, "");
+        ptrHeader.restoreInstanceState(savedInstanceState, ptrFrame);
+        editModeEnabled = savedInstanceState.getBoolean(EDIT_MODE_ENABLED_STATE);
     }
 
     private class MyValueFormatter implements ValueFormatter {
@@ -442,15 +448,18 @@ public class GradeDetailedActivity extends AppCompatActivity {
                 return true;
             case R.id.grade_detail_edit:
                 editHelper.enableEditMode(true);
+                editModeEnabled = true;
                 invalidateOptionsMenu();
                 return true;
             case R.id.grade_detail_save:
                 editHelper.enableEditMode(false);
                 editHelper.saveEdits();
+                editModeEnabled = false;
                 invalidateOptionsMenu();
                 return true;
             case R.id.grade_detail_restore:
                 showRestoreDialog();
+                editModeEnabled = false;
                 return true;
         }
 
