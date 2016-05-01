@@ -38,8 +38,8 @@ public class AverageCalculator {
 
             GradeItem gradeItem = (GradeItem) item;
             float actCreditPoints = (gradeItem.getCreditPoints() == null ? 0f : gradeItem.getCreditPoints());
-            creditPointsSum += actCreditPoints;
             if (gradeItem.getGrade() != null && gradeItem.getGrade() > 0 && gradeItem.getGrade() < 5) {
+                creditPointsSum += actCreditPoints;
                 creditPointsSumForAverage += actCreditPoints;
             }
 
