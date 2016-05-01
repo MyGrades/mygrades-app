@@ -47,17 +47,15 @@ public class AverageCalculator {
             Double modifiedGrade = gradeItem.getModifiedGrade();
             grade = modifiedGrade == null ? grade : modifiedGrade;
 
-            creditPointsSum += actCreditPoints;
-            if (grade > 0) {
+            if (isGradeRelevant(grade)) {
+                creditPointsSum += actCreditPoints;
                 creditPointsSumForAverage += (actCreditPoints * weight);
             }
 
-            if (simpleWeighting) {
-                if (grade > 0 && grade < 5) {
-                    passedGradesCounter += weight;
-                    average += (grade * weight);
-                }
-            } else {
+            if (simpleWeighting && isGradeRelevant(grade)) {
+                passedGradesCounter += weight;
+                average += (grade * weight);
+            } else if (isGradeRelevant(grade)){
                 average += grade * actCreditPoints * weight;
             }
         }
@@ -80,6 +78,16 @@ public class AverageCalculator {
             gradeItems.add(new GradeItem(entry));
         }
         calculate(gradeItems);
+    }
+
+    /**
+     * Checks if a grade is relevant for average calculation and credit point sum.
+     *
+     * @param grade grade to check
+     * @return true, if grade is relevant
+     */
+    private boolean isGradeRelevant(double grade) {
+        return grade > 0 && grade < 5;
     }
 
     public float getAverage() {
