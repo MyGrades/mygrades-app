@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'aar-link-sources'
+apply plugin: 'groovyx.grooid.groovy-android'
 
 android {
     compileSdkVersion 23
@@ -25,6 +26,9 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
+    }
+    sourceSets {
+        test.java.srcDirs += "src/test/groovy"
     }
 }
 
@@ -52,4 +56,7 @@ dependencies {
     compile 'info.guardianproject.netcipher:netcipher:1.2'
     compile 'net.sf.jtidy:jtidy:r938'
     testCompile 'junit:junit:4.12'
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.3'
+    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    testCompile 'org.hamcrest:hamcrest-core:1.3'
 }
