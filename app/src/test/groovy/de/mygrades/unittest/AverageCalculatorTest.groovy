@@ -26,27 +26,27 @@ class AverageCalculatorTest extends Specification {
         creditPoints closeTo(expected_cp_sum, 0.0001)
 
         where:
-        grade_1          << [1.0    , 1.0  , 1.0    , 1.0    , 1.0]
-        modified_grade_1 << [null   , null , 1.3    , 1.3    , null]
-        cp_1             << [5.0    , 5.0  , 5.0    , 5.0    , 5.0]
-        modified_cp_1    << [null   , null , 13.0   , 13.0   , null]
-        weight_1         << [null   , null , null   , null   , 3.0]
+        grade_1          << [1.0   , 1.0 , 1.0   , 1.0   , 1.0   , 0.0]
+        modified_grade_1 << [null  , null, 1.3   , 1.3   , null  , null]
+        cp_1             << [5.0   , 5.0 , 5.0   , 5.0   , 5.0   , 15.0]
+        modified_cp_1    << [null  , null, 13.0  , 13.0  , null  , null]
+        weight_1         << [null  , null, null  , null  , 3.0   , null]
 
-        grade_2          << [2.3    , 2.3  , 2.3    , 2.3    , 2.3]
-        modified_grade_2 << [null   , null , null   , null   , null]
-        cp_2             << [7.0    , 7.0  , 7.0    , 7.0    , 7.0]
-        modified_cp_2    << [null   , null , null   , null   , null]
-        weight_2         << [null   , null , 3.7    , 3.7    , 2.5]
+        grade_2          << [2.3   , 2.3 , 2.3   , 2.3   , 2.3   , 5.0]
+        modified_grade_2 << [null  , null, null  , null  , null  , null]
+        cp_2             << [7.0   , 7.0 , 7.0   , 7.0   , 7.0   , 3.5]
+        modified_cp_2    << [null  , null, null  , null  , null  , null]
+        weight_2         << [null  , null, 3.7   , 3.7   , 2.5   , null]
 
-        grade_3          << [null   , null , null   , null   , null]
-        modified_grade_3 << [null   , null , null   , 1.7    , null]
-        cp_3             << [null   , null , null   , 3.5    , null]
-        modified_cp_3    << [null   , null , null   , 5.0    , null]
-        weight_3         << [null   , null , null   , 2.0    , null]
+        grade_3          << [null  , null, null  , null  , null  , null]
+        modified_grade_3 << [null  , null, null  , 1.7   , null  , 1.7]
+        cp_3             << [null  , null, null  , 3.5   , null  , null]
+        modified_cp_3    << [null  , null, null  , 5.0   , null  , 5.0]
+        weight_3         << [null  , null, null  , 2.0   , null  , 2.0]
 
-        simple_weighting << [false  , true , false  , false  , true]
-        expected_average << [1.7583 , 1.65 , 1.9658 , 1.9114 , 1.5909]
-        expected_cp_sum  << [12.0   , 12.0 , 20.0   , 25.0   , 12.0]
+        simple_weighting << [false , true, false , false , true  , false]
+        expected_average << [1.7583, 1.65, 1.9658, 1.9114, 1.5909, 1.7]
+        expected_cp_sum  << [12.0  , 12.0, 20.0  , 25.0  , 12.0  , 20.0]
     }
 
     def createGradeItem(grade, modifiedGrade, cp, modifiedCp, weight) {

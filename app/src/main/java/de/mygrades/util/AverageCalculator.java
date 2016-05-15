@@ -47,9 +47,12 @@ public class AverageCalculator {
             Double modifiedGrade = gradeItem.getModifiedGrade();
             grade = modifiedGrade == null ? grade : modifiedGrade;
 
-            if (isGradeRelevant(grade)) {
+            if (grade >= 0 && grade < 5) {
                 creditPointsSum += actCreditPoints;
-                creditPointsSumForAverage += (actCreditPoints * weight);
+                // only add cps with actual grade to the sum of credit points for average calculation
+                if (grade > 0) {
+                    creditPointsSumForAverage += (actCreditPoints * weight);
+                }
             }
 
             if (simpleWeighting && isGradeRelevant(grade)) {
