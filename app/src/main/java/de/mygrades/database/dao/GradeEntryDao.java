@@ -35,25 +35,23 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         public final static Property Annotation = new Property(6, String.class, "annotation", false, "ANNOTATION");
         public final static Property Attempt = new Property(7, String.class, "attempt", false, "ATTEMPT");
         public final static Property ExamDate = new Property(8, String.class, "examDate", false, "EXAM_DATE");
-        public final static Property SemesterNumber = new Property(9, Integer.class, "semesterNumber", false, "SEMESTER_NUMBER");
-        public final static Property Tester = new Property(10, String.class, "tester", false, "TESTER");
-        public final static Property Hash = new Property(11, String.class, "hash", true, "HASH");
-        public final static Property OverviewPossible = new Property(12, Boolean.class, "overviewPossible", false, "OVERVIEW_POSSIBLE");
-        public final static Property Seen = new Property(13, Integer.class, "seen", false, "SEEN");
-        public final static Property OverviewFailedOnFirstTry = new Property(14, Boolean.class, "overviewFailedOnFirstTry", false, "OVERVIEW_FAILED_ON_FIRST_TRY");
-        public final static Property Weight = new Property(15, Double.class, "weight", false, "WEIGHT");
-        public final static Property ModifiedName = new Property(16, String.class, "modifiedName", false, "MODIFIED_NAME");
-        public final static Property ModifiedGrade = new Property(17, Double.class, "modifiedGrade", false, "MODIFIED_GRADE");
-        public final static Property ModifiedExamId = new Property(18, String.class, "modifiedExamId", false, "MODIFIED_EXAM_ID");
-        public final static Property ModifiedState = new Property(19, String.class, "modifiedState", false, "MODIFIED_STATE");
-        public final static Property ModifiedCreditPoints = new Property(20, Double.class, "modifiedCreditPoints", false, "MODIFIED_CREDIT_POINTS");
-        public final static Property ModifiedAnnotation = new Property(21, String.class, "modifiedAnnotation", false, "MODIFIED_ANNOTATION");
-        public final static Property ModifiedAttempt = new Property(22, String.class, "modifiedAttempt", false, "MODIFIED_ATTEMPT");
-        public final static Property ModifiedExamDate = new Property(23, String.class, "modifiedExamDate", false, "MODIFIED_EXAM_DATE");
-        public final static Property ModifiedTester = new Property(24, String.class, "modifiedTester", false, "MODIFIED_TESTER");
-        public final static Property ModifiedSemester = new Property(25, String.class, "modifiedSemester", false, "MODIFIED_SEMESTER");
-        public final static Property ModifiedSemesterNumber = new Property(26, Integer.class, "modifiedSemesterNumber", false, "MODIFIED_SEMESTER_NUMBER");
-        public final static Property OverviewId = new Property(27, Long.class, "overviewId", false, "OVERVIEW_ID");
+        public final static Property Tester = new Property(9, String.class, "tester", false, "TESTER");
+        public final static Property Hash = new Property(10, String.class, "hash", true, "HASH");
+        public final static Property OverviewPossible = new Property(11, Boolean.class, "overviewPossible", false, "OVERVIEW_POSSIBLE");
+        public final static Property Seen = new Property(12, Integer.class, "seen", false, "SEEN");
+        public final static Property OverviewFailedOnFirstTry = new Property(13, Boolean.class, "overviewFailedOnFirstTry", false, "OVERVIEW_FAILED_ON_FIRST_TRY");
+        public final static Property Weight = new Property(14, Double.class, "weight", false, "WEIGHT");
+        public final static Property ModifiedName = new Property(15, String.class, "modifiedName", false, "MODIFIED_NAME");
+        public final static Property ModifiedGrade = new Property(16, Double.class, "modifiedGrade", false, "MODIFIED_GRADE");
+        public final static Property ModifiedExamId = new Property(17, String.class, "modifiedExamId", false, "MODIFIED_EXAM_ID");
+        public final static Property ModifiedState = new Property(18, String.class, "modifiedState", false, "MODIFIED_STATE");
+        public final static Property ModifiedCreditPoints = new Property(19, Double.class, "modifiedCreditPoints", false, "MODIFIED_CREDIT_POINTS");
+        public final static Property ModifiedAnnotation = new Property(20, String.class, "modifiedAnnotation", false, "MODIFIED_ANNOTATION");
+        public final static Property ModifiedAttempt = new Property(21, String.class, "modifiedAttempt", false, "MODIFIED_ATTEMPT");
+        public final static Property ModifiedExamDate = new Property(22, String.class, "modifiedExamDate", false, "MODIFIED_EXAM_DATE");
+        public final static Property ModifiedTester = new Property(23, String.class, "modifiedTester", false, "MODIFIED_TESTER");
+        public final static Property ModifiedSemester = new Property(24, String.class, "modifiedSemester", false, "MODIFIED_SEMESTER");
+        public final static Property OverviewId = new Property(25, Long.class, "overviewId", false, "OVERVIEW_ID");
     };
 
     private DaoSession daoSession;
@@ -81,25 +79,23 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
                 "\"ANNOTATION\" TEXT," + // 6: annotation
                 "\"ATTEMPT\" TEXT," + // 7: attempt
                 "\"EXAM_DATE\" TEXT," + // 8: examDate
-                "\"SEMESTER_NUMBER\" INTEGER," + // 9: semesterNumber
-                "\"TESTER\" TEXT," + // 10: tester
-                "\"HASH\" TEXT PRIMARY KEY NOT NULL ," + // 11: hash
-                "\"OVERVIEW_POSSIBLE\" INTEGER," + // 12: overviewPossible
-                "\"SEEN\" INTEGER," + // 13: seen
-                "\"OVERVIEW_FAILED_ON_FIRST_TRY\" INTEGER," + // 14: overviewFailedOnFirstTry
-                "\"WEIGHT\" REAL," + // 15: weight
-                "\"MODIFIED_NAME\" TEXT," + // 16: modifiedName
-                "\"MODIFIED_GRADE\" REAL," + // 17: modifiedGrade
-                "\"MODIFIED_EXAM_ID\" TEXT," + // 18: modifiedExamId
-                "\"MODIFIED_STATE\" TEXT," + // 19: modifiedState
-                "\"MODIFIED_CREDIT_POINTS\" REAL," + // 20: modifiedCreditPoints
-                "\"MODIFIED_ANNOTATION\" TEXT," + // 21: modifiedAnnotation
-                "\"MODIFIED_ATTEMPT\" TEXT," + // 22: modifiedAttempt
-                "\"MODIFIED_EXAM_DATE\" TEXT," + // 23: modifiedExamDate
-                "\"MODIFIED_TESTER\" TEXT," + // 24: modifiedTester
-                "\"MODIFIED_SEMESTER\" TEXT," + // 25: modifiedSemester
-                "\"MODIFIED_SEMESTER_NUMBER\" INTEGER," + // 26: modifiedSemesterNumber
-                "\"OVERVIEW_ID\" INTEGER);"); // 27: overviewId
+                "\"TESTER\" TEXT," + // 9: tester
+                "\"HASH\" TEXT PRIMARY KEY NOT NULL ," + // 10: hash
+                "\"OVERVIEW_POSSIBLE\" INTEGER," + // 11: overviewPossible
+                "\"SEEN\" INTEGER," + // 12: seen
+                "\"OVERVIEW_FAILED_ON_FIRST_TRY\" INTEGER," + // 13: overviewFailedOnFirstTry
+                "\"WEIGHT\" REAL," + // 14: weight
+                "\"MODIFIED_NAME\" TEXT," + // 15: modifiedName
+                "\"MODIFIED_GRADE\" REAL," + // 16: modifiedGrade
+                "\"MODIFIED_EXAM_ID\" TEXT," + // 17: modifiedExamId
+                "\"MODIFIED_STATE\" TEXT," + // 18: modifiedState
+                "\"MODIFIED_CREDIT_POINTS\" REAL," + // 19: modifiedCreditPoints
+                "\"MODIFIED_ANNOTATION\" TEXT," + // 20: modifiedAnnotation
+                "\"MODIFIED_ATTEMPT\" TEXT," + // 21: modifiedAttempt
+                "\"MODIFIED_EXAM_DATE\" TEXT," + // 22: modifiedExamDate
+                "\"MODIFIED_TESTER\" TEXT," + // 23: modifiedTester
+                "\"MODIFIED_SEMESTER\" TEXT," + // 24: modifiedSemester
+                "\"OVERVIEW_ID\" INTEGER);"); // 25: overviewId
     }
 
     /** Drops the underlying database table. */
@@ -154,99 +150,89 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             stmt.bindString(9, examDate);
         }
  
-        Integer semesterNumber = entity.getSemesterNumber();
-        if (semesterNumber != null) {
-            stmt.bindLong(10, semesterNumber);
-        }
- 
         String tester = entity.getTester();
         if (tester != null) {
-            stmt.bindString(11, tester);
+            stmt.bindString(10, tester);
         }
  
         String hash = entity.getHash();
         if (hash != null) {
-            stmt.bindString(12, hash);
+            stmt.bindString(11, hash);
         }
  
         Boolean overviewPossible = entity.getOverviewPossible();
         if (overviewPossible != null) {
-            stmt.bindLong(13, overviewPossible ? 1L: 0L);
+            stmt.bindLong(12, overviewPossible ? 1L: 0L);
         }
  
         Integer seen = entity.getSeen();
         if (seen != null) {
-            stmt.bindLong(14, seen);
+            stmt.bindLong(13, seen);
         }
  
         Boolean overviewFailedOnFirstTry = entity.getOverviewFailedOnFirstTry();
         if (overviewFailedOnFirstTry != null) {
-            stmt.bindLong(15, overviewFailedOnFirstTry ? 1L: 0L);
+            stmt.bindLong(14, overviewFailedOnFirstTry ? 1L: 0L);
         }
  
         Double weight = entity.getWeight();
         if (weight != null) {
-            stmt.bindDouble(16, weight);
+            stmt.bindDouble(15, weight);
         }
  
         String modifiedName = entity.getModifiedName();
         if (modifiedName != null) {
-            stmt.bindString(17, modifiedName);
+            stmt.bindString(16, modifiedName);
         }
  
         Double modifiedGrade = entity.getModifiedGrade();
         if (modifiedGrade != null) {
-            stmt.bindDouble(18, modifiedGrade);
+            stmt.bindDouble(17, modifiedGrade);
         }
  
         String modifiedExamId = entity.getModifiedExamId();
         if (modifiedExamId != null) {
-            stmt.bindString(19, modifiedExamId);
+            stmt.bindString(18, modifiedExamId);
         }
  
         String modifiedState = entity.getModifiedState();
         if (modifiedState != null) {
-            stmt.bindString(20, modifiedState);
+            stmt.bindString(19, modifiedState);
         }
  
         Double modifiedCreditPoints = entity.getModifiedCreditPoints();
         if (modifiedCreditPoints != null) {
-            stmt.bindDouble(21, modifiedCreditPoints);
+            stmt.bindDouble(20, modifiedCreditPoints);
         }
  
         String modifiedAnnotation = entity.getModifiedAnnotation();
         if (modifiedAnnotation != null) {
-            stmt.bindString(22, modifiedAnnotation);
+            stmt.bindString(21, modifiedAnnotation);
         }
  
         String modifiedAttempt = entity.getModifiedAttempt();
         if (modifiedAttempt != null) {
-            stmt.bindString(23, modifiedAttempt);
+            stmt.bindString(22, modifiedAttempt);
         }
  
         String modifiedExamDate = entity.getModifiedExamDate();
         if (modifiedExamDate != null) {
-            stmt.bindString(24, modifiedExamDate);
+            stmt.bindString(23, modifiedExamDate);
         }
  
         String modifiedTester = entity.getModifiedTester();
         if (modifiedTester != null) {
-            stmt.bindString(25, modifiedTester);
+            stmt.bindString(24, modifiedTester);
         }
  
         String modifiedSemester = entity.getModifiedSemester();
         if (modifiedSemester != null) {
-            stmt.bindString(26, modifiedSemester);
-        }
- 
-        Integer modifiedSemesterNumber = entity.getModifiedSemesterNumber();
-        if (modifiedSemesterNumber != null) {
-            stmt.bindLong(27, modifiedSemesterNumber);
+            stmt.bindString(25, modifiedSemester);
         }
  
         Long overviewId = entity.getOverviewId();
         if (overviewId != null) {
-            stmt.bindLong(28, overviewId);
+            stmt.bindLong(26, overviewId);
         }
     }
 
@@ -259,7 +245,7 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
     /** @inheritdoc */
     @Override
     public String readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11);
+        return cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10);
     }    
 
     /** @inheritdoc */
@@ -275,25 +261,23 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // annotation
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // attempt
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // examDate
-            cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9), // semesterNumber
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // tester
-            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // hash
-            cursor.isNull(offset + 12) ? null : cursor.getShort(offset + 12) != 0, // overviewPossible
-            cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13), // seen
-            cursor.isNull(offset + 14) ? null : cursor.getShort(offset + 14) != 0, // overviewFailedOnFirstTry
-            cursor.isNull(offset + 15) ? null : cursor.getDouble(offset + 15), // weight
-            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // modifiedName
-            cursor.isNull(offset + 17) ? null : cursor.getDouble(offset + 17), // modifiedGrade
-            cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18), // modifiedExamId
-            cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19), // modifiedState
-            cursor.isNull(offset + 20) ? null : cursor.getDouble(offset + 20), // modifiedCreditPoints
-            cursor.isNull(offset + 21) ? null : cursor.getString(offset + 21), // modifiedAnnotation
-            cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22), // modifiedAttempt
-            cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23), // modifiedExamDate
-            cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24), // modifiedTester
-            cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25), // modifiedSemester
-            cursor.isNull(offset + 26) ? null : cursor.getInt(offset + 26), // modifiedSemesterNumber
-            cursor.isNull(offset + 27) ? null : cursor.getLong(offset + 27) // overviewId
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // tester
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // hash
+            cursor.isNull(offset + 11) ? null : cursor.getShort(offset + 11) != 0, // overviewPossible
+            cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12), // seen
+            cursor.isNull(offset + 13) ? null : cursor.getShort(offset + 13) != 0, // overviewFailedOnFirstTry
+            cursor.isNull(offset + 14) ? null : cursor.getDouble(offset + 14), // weight
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // modifiedName
+            cursor.isNull(offset + 16) ? null : cursor.getDouble(offset + 16), // modifiedGrade
+            cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17), // modifiedExamId
+            cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18), // modifiedState
+            cursor.isNull(offset + 19) ? null : cursor.getDouble(offset + 19), // modifiedCreditPoints
+            cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20), // modifiedAnnotation
+            cursor.isNull(offset + 21) ? null : cursor.getString(offset + 21), // modifiedAttempt
+            cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22), // modifiedExamDate
+            cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23), // modifiedTester
+            cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24), // modifiedSemester
+            cursor.isNull(offset + 25) ? null : cursor.getLong(offset + 25) // overviewId
         );
         return entity;
     }
@@ -310,25 +294,23 @@ public class GradeEntryDao extends AbstractDao<GradeEntry, String> {
         entity.setAnnotation(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setAttempt(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setExamDate(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setSemesterNumber(cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9));
-        entity.setTester(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
-        entity.setHash(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
-        entity.setOverviewPossible(cursor.isNull(offset + 12) ? null : cursor.getShort(offset + 12) != 0);
-        entity.setSeen(cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13));
-        entity.setOverviewFailedOnFirstTry(cursor.isNull(offset + 14) ? null : cursor.getShort(offset + 14) != 0);
-        entity.setWeight(cursor.isNull(offset + 15) ? null : cursor.getDouble(offset + 15));
-        entity.setModifiedName(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
-        entity.setModifiedGrade(cursor.isNull(offset + 17) ? null : cursor.getDouble(offset + 17));
-        entity.setModifiedExamId(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));
-        entity.setModifiedState(cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19));
-        entity.setModifiedCreditPoints(cursor.isNull(offset + 20) ? null : cursor.getDouble(offset + 20));
-        entity.setModifiedAnnotation(cursor.isNull(offset + 21) ? null : cursor.getString(offset + 21));
-        entity.setModifiedAttempt(cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22));
-        entity.setModifiedExamDate(cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23));
-        entity.setModifiedTester(cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24));
-        entity.setModifiedSemester(cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25));
-        entity.setModifiedSemesterNumber(cursor.isNull(offset + 26) ? null : cursor.getInt(offset + 26));
-        entity.setOverviewId(cursor.isNull(offset + 27) ? null : cursor.getLong(offset + 27));
+        entity.setTester(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setHash(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setOverviewPossible(cursor.isNull(offset + 11) ? null : cursor.getShort(offset + 11) != 0);
+        entity.setSeen(cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12));
+        entity.setOverviewFailedOnFirstTry(cursor.isNull(offset + 13) ? null : cursor.getShort(offset + 13) != 0);
+        entity.setWeight(cursor.isNull(offset + 14) ? null : cursor.getDouble(offset + 14));
+        entity.setModifiedName(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setModifiedGrade(cursor.isNull(offset + 16) ? null : cursor.getDouble(offset + 16));
+        entity.setModifiedExamId(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
+        entity.setModifiedState(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));
+        entity.setModifiedCreditPoints(cursor.isNull(offset + 19) ? null : cursor.getDouble(offset + 19));
+        entity.setModifiedAnnotation(cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20));
+        entity.setModifiedAttempt(cursor.isNull(offset + 21) ? null : cursor.getString(offset + 21));
+        entity.setModifiedExamDate(cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22));
+        entity.setModifiedTester(cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23));
+        entity.setModifiedSemester(cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24));
+        entity.setOverviewId(cursor.isNull(offset + 25) ? null : cursor.getLong(offset + 25));
      }
     
     /** @inheritdoc */

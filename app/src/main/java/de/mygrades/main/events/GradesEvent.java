@@ -1,7 +1,7 @@
 package de.mygrades.main.events;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import de.mygrades.database.dao.GradeEntry;
 
@@ -11,20 +11,21 @@ import de.mygrades.database.dao.GradeEntry;
 public class GradesEvent {
     private List<GradeEntry> grades;
     private boolean isScrapingResult;
+    private Map<String, Integer> semesterToSemesterNumberMap;
+    private String actualFirstSemester;
 
-    public GradesEvent() {
-        grades = new ArrayList<>();
-        isScrapingResult = false;
-    }
-
-    public GradesEvent(List<GradeEntry> grades) {
+    public GradesEvent(List<GradeEntry> grades, Map<String, Integer> semesterToSemesterNumberMap, String actualFirstSemester) {
         this.grades = grades;
+        this.semesterToSemesterNumberMap = semesterToSemesterNumberMap;
+        this.actualFirstSemester = actualFirstSemester;
         isScrapingResult = false;
     }
 
-    public GradesEvent(List<GradeEntry> grades, boolean isScrapingResult) {
+    public GradesEvent(List<GradeEntry> grades, boolean isScrapingResult, Map<String, Integer> semesterToSemesterNumberMap, String actualFirstSemester) {
         this.grades = grades;
         this.isScrapingResult = isScrapingResult;
+        this.semesterToSemesterNumberMap = semesterToSemesterNumberMap;
+        this.actualFirstSemester = actualFirstSemester;
     }
 
     public void setGrades(List<GradeEntry> grades) {
@@ -39,7 +40,11 @@ public class GradesEvent {
         return isScrapingResult;
     }
 
-    public void setIsScrapingResult(boolean isScrapingResult) {
-        this.isScrapingResult = isScrapingResult;
+    public Map<String, Integer> getSemesterToSemesterNumberMap() {
+        return semesterToSemesterNumberMap;
+    }
+
+    public String getActualFirstSemester() {
+        return actualFirstSemester;
     }
 }

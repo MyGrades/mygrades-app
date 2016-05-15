@@ -6,10 +6,8 @@ import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -128,8 +126,6 @@ public class Transformer {
      */
     public List<GradeEntry> transform() throws ParseException {
         List<GradeEntry> gradeEntries = new ArrayList<>();
-        // remember strings of semester to calculate semester number
-        Set<String> semestersSet = new HashSet<>();
 
         // get List to iterate through and respectively extract GradeEntry values
         NodeList nodeList = parser.parseToNodeList(transformerMapping.get(ITERATOR).getParseExpression(), html);
@@ -165,12 +161,7 @@ public class Transformer {
 
             // add GradeEntry to list
             gradeEntries.add(gradeEntry);
-            // add semester to set
-            semestersSet.add(gradeEntry.getSemester());
         }
-
-        // calculate semester numbers
-        semesterMapper.setGradeEntrySemesterNumber(gradeEntries, semestersSet);
 
         return gradeEntries;
     }

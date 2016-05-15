@@ -2,6 +2,7 @@ package de.mygrades.main.events;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import de.mygrades.view.adapter.model.SemesterItem;
 
@@ -15,11 +16,15 @@ public class StatisticsEvent {
     private float studyProgress;
     private int gradeCount;
     private List<SemesterItem> semesterItems;
+    private Map<String, Integer> semesterToSemesterNumberMap;
+    private String actualFirstSemester;
 
     // sections for grade distribution [1.0 -1.3, 1.7-2.3, 2.7-3.3, 3.7 - 4.0, 4.3 - 5.0, others]
     private int[] gradeDistribution;
 
-    public StatisticsEvent() {
+    public StatisticsEvent(Map<String, Integer> semesterToSemesterNumberMap, String actualFirstSemester) {
+        this.semesterToSemesterNumberMap = semesterToSemesterNumberMap;
+        this.actualFirstSemester = actualFirstSemester;
         semesterItems = new ArrayList<>();
         gradeDistribution = new int[6];
     }
@@ -78,5 +83,13 @@ public class StatisticsEvent {
 
     public void setGradeDistribution(int[] gradeDistribution) {
         this.gradeDistribution = gradeDistribution;
+    }
+
+    public Map<String, Integer> getSemesterToSemesterNumberMap() {
+        return semesterToSemesterNumberMap;
+    }
+
+    public String getActualFirstSemester() {
+        return actualFirstSemester;
     }
 }

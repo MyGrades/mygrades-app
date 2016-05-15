@@ -40,6 +40,20 @@ class SemesterMapperTest extends Specification {
     }
 
     @Unroll
+    def "get previous semester before #current_semester, expect #expected_previous_semester"() {
+        given:
+        def semesterMapper = new SemesterMapper()
+
+        expect:
+        semesterMapper.getPreviousSemester(current_semester) == expected_previous_semester
+
+        where:
+        current_semester           | expected_previous_semester
+        "Sommersemester 2015"      | "Wintersemester 2014/2015"
+        "Wintersemester 2014/2015" | "Sommersemester 2014"
+    }
+
+    @Unroll
     def "create consecutive semester list, expect #expected_list_size consecutive semester"() {
         when:
         def semesterMapper = new SemesterMapper()

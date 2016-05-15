@@ -14,8 +14,8 @@ public class GradeItem implements GradesAdapterItem {
     private Double modifiedCreditPoints;
     private Double weight;
     private String hash;
-    private Integer semesterNumber;
-    private Integer modifiedSemesterNumber;
+    private String semester;
+    private String modifiedSemester;
     private int seen;
 
     public GradeItem() {}
@@ -36,10 +36,10 @@ public class GradeItem implements GradesAdapterItem {
         setGrade(gradeEntry.getGrade());
         setModifiedGrade(gradeEntry.getModifiedGrade());
 
-        setWeight(gradeEntry.getWeight());
+        setSemester(gradeEntry.getSemester());
+        setModifiedSemester(gradeEntry.getModifiedSemester());
 
-        setSemesterNumber(gradeEntry.getSemesterNumber());
-        setModifiedSemesterNumber(gradeEntry.getModifiedSemesterNumber());
+        setWeight(gradeEntry.getWeight());
 
         if (gradeEntry.getSeen() != null) {
             setSeen(gradeEntry.getSeen());
@@ -67,7 +67,7 @@ public class GradeItem implements GradesAdapterItem {
             return true;
         } else if (modifiedName != null) {
             return true;
-        } else if (modifiedSemesterNumber != null) {
+        } else if (modifiedSemester != null) {
             return true;
         }
 
@@ -102,9 +102,9 @@ public class GradeItem implements GradesAdapterItem {
             return false;
         if (weight != null ? !weight.equals(gradeItem.weight) : gradeItem.weight != null)
             return false;
-        if (semesterNumber != null ? !semesterNumber.equals(gradeItem.semesterNumber) : gradeItem.semesterNumber != null)
+        if (semester != null ? !semester.equals(gradeItem.semester) : gradeItem.semester != null)
             return false;
-        return !(modifiedSemesterNumber != null ? !modifiedSemesterNumber.equals(gradeItem.modifiedSemesterNumber) : gradeItem.modifiedSemesterNumber != null);
+        return !(modifiedSemester != null ? !modifiedSemester.equals(gradeItem.modifiedSemester) : gradeItem.modifiedSemester != null);
 
     }
 
@@ -117,8 +117,8 @@ public class GradeItem implements GradesAdapterItem {
         result = 31 * result + (creditPoints != null ? creditPoints.hashCode() : 0);
         result = 31 * result + (modifiedCreditPoints != null ? modifiedCreditPoints.hashCode() : 0);
         result = 31 * result + (weight != null ? weight.hashCode() : 0);
-        result = 31 * result + (semesterNumber != null ? semesterNumber.hashCode() : 0);
-        result = 31 * result + (modifiedSemesterNumber != null ? modifiedSemesterNumber.hashCode() : 0);
+        result = 31 * result + (semester != null ? semester.hashCode() : 0);
+        result = 31 * result + (modifiedSemester != null ? modifiedSemester.hashCode() : 0);
         return result;
     }
 
@@ -186,20 +186,20 @@ public class GradeItem implements GradesAdapterItem {
         this.modifiedCreditPoints = modifiedCreditPoints;
     }
 
-    public Integer getSemesterNumber() {
-        return semesterNumber;
+    public String getSemester() {
+        return semester;
     }
 
-    public void setSemesterNumber(Integer semesterNumber) {
-        this.semesterNumber = semesterNumber;
+    public void setSemester(String semester) {
+        this.semester = semester;
     }
 
-    public Integer getModifiedSemesterNumber() {
-        return modifiedSemesterNumber;
+    public String getModifiedSemester() {
+        return modifiedSemester;
     }
 
-    public void setModifiedSemesterNumber(Integer modifiedSemesterNumber) {
-        this.modifiedSemesterNumber = modifiedSemesterNumber;
+    public void setModifiedSemester(String modifiedSemester) {
+        this.modifiedSemester = modifiedSemester;
     }
 
     public String getModifiedName() {
@@ -208,5 +208,9 @@ public class GradeItem implements GradesAdapterItem {
 
     public void setModifiedName(String modifiedName) {
         this.modifiedName = modifiedName;
+    }
+
+    public String getCurrentSemester() {
+        return modifiedSemester == null ? semester : modifiedSemester;
     }
 }

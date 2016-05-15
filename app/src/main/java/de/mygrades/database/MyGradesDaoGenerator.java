@@ -150,7 +150,6 @@ public class MyGradesDaoGenerator {
         gradeEntry.addStringProperty("annotation");
         gradeEntry.addStringProperty("attempt");
         gradeEntry.addStringProperty("examDate");
-        gradeEntry.addIntProperty("semesterNumber");
         gradeEntry.addStringProperty("tester");
         gradeEntry.addStringProperty("hash").primaryKey();
         gradeEntry.addBooleanProperty("overviewPossible");
@@ -169,7 +168,6 @@ public class MyGradesDaoGenerator {
         gradeEntry.addStringProperty("modifiedExamDate");
         gradeEntry.addStringProperty("modifiedTester");
         gradeEntry.addStringProperty("modifiedSemester");
-        gradeEntry.addIntProperty("modifiedSemesterNumber");
 
         gradeEntry.setHasKeepSections(true);
     }

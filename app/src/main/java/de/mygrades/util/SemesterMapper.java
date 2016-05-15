@@ -1,6 +1,5 @@
 package de.mygrades.util;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -33,12 +32,12 @@ public class SemesterMapper {
 
     /**
      * Creates a map semester->semesterNumber based on a list of grade entries.
-     * It also adds an additional semester to the map.
+     * It also appends a future semester and prepends a semester in the past (used in edit mode).
      *
      * @param gradeEntries list of grade entries
      * @return map semester->semesterNumber
      */
-    public Map<String, Integer> getGradeEntrySemesterMapForEditMode(List<GradeEntry> gradeEntries) {
+    public Map<String, Integer> getSemesterToNumberMap(List<GradeEntry> gradeEntries) {
         Set<String> semesterSet = new HashSet<>();
 
         // create set of semester strings
@@ -54,9 +53,10 @@ public class SemesterMapper {
         // get sorted semester list
         List<String> sortedSemester = createConsecutiveSemesterList(semesterSet);
 
-        // add another semester at the end
+        // add a future semester at the end and a past semester to the beginning
         if (sortedSemester.size() > 0) {
             sortedSemester.add(getNextSemester(sortedSemester.get(sortedSemester.size() - 1)));
+            sortedSemester.add(0, getPreviousSemester(sortedSemester.get(0)));
         }
 
         return getGradeEntrySemesterMap(sortedSemester);
@@ -157,13 +157,32 @@ public class SemesterMapper {
     }
 
     /**
-     * Creates a map semester->semesterNumber based on a set of semester strings.
+     * Get the previous semester before the given semester.
      *
-     * @param semestersSet set of semester strings
-     * @return map semester->semesterNumber
+     * @param currentSemester - current semester as string
+     * @return previous semester as string
      */
-    private Map<String, Integer> getGradeEntrySemesterMap(Set<String> semestersSet) {
-        return getGradeEntrySemesterMap(new ArrayList<>(semestersSet));
+    public String getPreviousSemester(String currentSemester) {
+        String newSemester;
+
+        // get semester and year from current semester
+        Matcher matcher = semesterPattern.matcher(currentSemester);
+
+        String semester = "";
+        Integer year = 0;
+        if (matcher.find()) {
+            semester = matcher.group(1);
+            year = parseInt(matcher.group(2));
+        }
+
+        // if extractedSemester starts with w -> Wintersemester, previous is Sommersemester
+        if (semester.toLowerCase().startsWith("w")) {
+            newSemester = SemesterTransformer.SEMESTER_SS + (year);
+        } else {
+            newSemester = SemesterTransformer.SEMESTER_WS + (year - 1) + "/" + (year);
+        }
+
+        return newSemester;
     }
 
     /**
@@ -234,18 +253,33 @@ public class SemesterMapper {
     }
 
     /**
-     * Updates each GradeEntry in gradeEntries with SemesterNumber.
-     * This is calculated by the available Semester Strings given in semestersSet.
+     * Returns the string of the actual first semester, based on the list of grade entries
+     * and the semester->semesterNumber map.
+     * This is necessary, because its possible that the map contains semester in the past,
+     * without actual grade entries.
      *
-     * @param gradeEntries GradeEntries which should get a SemesterNumber
-     * @param semestersSet available
+     * @param gradeEntries - list of grade entries
+     * @param semesterNumberMap - semester to semesterNumber map
+     * @return string of actual first semester
      */
-    public void setGradeEntrySemesterNumber(List<GradeEntry> gradeEntries, Set<String> semestersSet) {
-        Map<String, Integer> semesterSemesterNumberMap = getGradeEntrySemesterMap(semestersSet);
+    public String getActualFirstSemester(List<GradeEntry> gradeEntries, Map<String, Integer> semesterNumberMap) {
+        String actualFirstSemester = null;
+        Integer actualFirstSemesterNumber = null;
 
-        for (GradeEntry gradeEntry : gradeEntries) {
-            gradeEntry.setSemesterNumber(semesterSemesterNumberMap.get(gradeEntry.getSemester()));
+        // find grade entry with lowest semester
+        for(GradeEntry gradeEntry : gradeEntries) {
+            String currentSemester = gradeEntry.getModifiedSemester() == null ? gradeEntry.getSemester() : gradeEntry.getModifiedSemester();
+            int currentSemesterNumber = semesterNumberMap.get(currentSemester);
+            if (actualFirstSemesterNumber == null) {
+                actualFirstSemesterNumber = currentSemesterNumber;
+                actualFirstSemester = currentSemester;
+            } else if (currentSemesterNumber < actualFirstSemesterNumber) {
+                actualFirstSemester = currentSemester;
+                actualFirstSemesterNumber = currentSemesterNumber;
+            }
         }
+
+        return actualFirstSemester;
     }
 
     private Integer parseInt(String number) {

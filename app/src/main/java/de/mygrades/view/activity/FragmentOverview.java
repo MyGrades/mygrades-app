@@ -150,8 +150,8 @@ public class FragmentOverview extends Fragment {
 
         boolean dismissedNotificationInfo = prefs.getBoolean(Constants.PREF_KEY_DISMISSED_NOTIFICATION_INFO, false);
         if (!dismissedNotificationInfo) {
-            String title = getString(R.string.info_notifications_title, "");
-            String message = getString(R.string.info_notifications_message, "");
+            String title = getString(R.string.info_notifications_title);
+            String message = getString(R.string.info_notifications_message);
             adapter.showInfoBox(title, message, Constants.PREF_KEY_DISMISSED_NOTIFICATION_INFO);
         }
 
@@ -187,8 +187,8 @@ public class FragmentOverview extends Fragment {
     private void showDonationInfo(SharedPreferences prefs) {
         prefs.edit().putBoolean(Constants.PREF_KEY_DISMISSED_DONATION_INFO, false).apply();
 
-        String title = getString(R.string.info_donation_title, "");
-        String message = getString(R.string.info_donation_message, "");
+        String title = getString(R.string.info_donation_title);
+        String message = getString(R.string.info_donation_message);
         adapter.showInfoBox(title, message, Constants.PREF_KEY_DISMISSED_DONATION_INFO);
     }
 
@@ -200,8 +200,8 @@ public class FragmentOverview extends Fragment {
     private void showRatingInfo(SharedPreferences prefs) {
         prefs.edit().putBoolean(Constants.PREF_KEY_DISMISSED_RATING_INFO, false).apply();
 
-        String title = getString(R.string.info_rating_title, "");
-        String message = getString(R.string.info_rating_message, "");
+        String title = getString(R.string.info_rating_title);
+        String message = getString(R.string.info_rating_message);
         adapter.showInfoBox(title, message, Constants.PREF_KEY_DISMISSED_RATING_INFO);
     }
 
@@ -223,16 +223,12 @@ public class FragmentOverview extends Fragment {
      */
     public void onEventMainThread(GradesEvent gradesEvent) {
         if (adapter != null) {
+            adapter.setSemesterNumberMap(gradesEvent.getSemesterToSemesterNumberMap());
+            adapter.setActualFirstSemester(gradesEvent.getActualFirstSemester());
+
             for(GradeEntry gradeEntry : gradesEvent.getGrades()) {
                 GradeItem item = new GradeItem(gradeEntry);
-                String semester = gradeEntry.getSemester();
-                String modifiedSemester = gradeEntry.getModifiedSemester();
-                semester = modifiedSemester == null ? semester : modifiedSemester;
-
-                Integer semesterNumber = gradeEntry.getSemesterNumber();
-                Integer modifiedSemesterNumber = gradeEntry.getModifiedSemesterNumber();
-                semesterNumber = modifiedSemesterNumber == null ? semesterNumber : modifiedSemesterNumber;
-                adapter.addGradeForSemester(item, semesterNumber, semester);
+                adapter.addGrade(item);
             }
 
             // update the summary header

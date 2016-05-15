@@ -25,7 +25,6 @@ public class GradeEntry implements android.os.Parcelable {
     private String annotation;
     private String attempt;
     private String examDate;
-    private Integer semesterNumber;
     private String tester;
     private String hash;
     private Boolean overviewPossible;
@@ -42,7 +41,6 @@ public class GradeEntry implements android.os.Parcelable {
     private String modifiedExamDate;
     private String modifiedTester;
     private String modifiedSemester;
-    private Integer modifiedSemesterNumber;
     private Long overviewId;
 
     /** Used to resolve relations */
@@ -77,7 +75,7 @@ public class GradeEntry implements android.os.Parcelable {
         this.hash = hash;
     }
 
-    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, Integer semesterNumber, String tester, String hash, Boolean overviewPossible, Integer seen, Boolean overviewFailedOnFirstTry, Double weight, String modifiedName, Double modifiedGrade, String modifiedExamId, String modifiedState, Double modifiedCreditPoints, String modifiedAnnotation, String modifiedAttempt, String modifiedExamDate, String modifiedTester, String modifiedSemester, Integer modifiedSemesterNumber, Long overviewId) {
+    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, String tester, String hash, Boolean overviewPossible, Integer seen, Boolean overviewFailedOnFirstTry, Double weight, String modifiedName, Double modifiedGrade, String modifiedExamId, String modifiedState, Double modifiedCreditPoints, String modifiedAnnotation, String modifiedAttempt, String modifiedExamDate, String modifiedTester, String modifiedSemester, Long overviewId) {
         this.name = name;
         this.grade = grade;
         this.examId = examId;
@@ -87,7 +85,6 @@ public class GradeEntry implements android.os.Parcelable {
         this.annotation = annotation;
         this.attempt = attempt;
         this.examDate = examDate;
-        this.semesterNumber = semesterNumber;
         this.tester = tester;
         this.hash = hash;
         this.overviewPossible = overviewPossible;
@@ -104,7 +101,6 @@ public class GradeEntry implements android.os.Parcelable {
         this.modifiedExamDate = modifiedExamDate;
         this.modifiedTester = modifiedTester;
         this.modifiedSemester = modifiedSemester;
-        this.modifiedSemesterNumber = modifiedSemesterNumber;
         this.overviewId = overviewId;
     }
 
@@ -186,14 +182,6 @@ public class GradeEntry implements android.os.Parcelable {
 
     public void setExamDate(String examDate) {
         this.examDate = examDate;
-    }
-
-    public Integer getSemesterNumber() {
-        return semesterNumber;
-    }
-
-    public void setSemesterNumber(Integer semesterNumber) {
-        this.semesterNumber = semesterNumber;
     }
 
     public String getTester() {
@@ -324,14 +312,6 @@ public class GradeEntry implements android.os.Parcelable {
         this.modifiedSemester = modifiedSemester;
     }
 
-    public Integer getModifiedSemesterNumber() {
-        return modifiedSemesterNumber;
-    }
-
-    public void setModifiedSemesterNumber(Integer modifiedSemesterNumber) {
-        this.modifiedSemesterNumber = modifiedSemesterNumber;
-    }
-
     public Long getOverviewId() {
         return overviewId;
     }
@@ -430,7 +410,6 @@ public class GradeEntry implements android.os.Parcelable {
                 ", annotation='" + annotation + '\'' +
                 ", attempt='" + attempt + '\'' +
                 ", examDate='" + examDate + '\'' +
-                ", semesterNumber=" + semesterNumber +
                 ", tester='" + tester + '\'' +
                 ", hash='" + hash + '\'' +
                 ", overviewPossible=" + overviewPossible +
@@ -457,7 +436,6 @@ public class GradeEntry implements android.os.Parcelable {
         this.attempt = other.attempt;
         this.examDate = other.examDate;
         this.tester = other.tester;
-        this.semesterNumber = other.semesterNumber;
         this.overviewPossible = other.overviewPossible;
     }
 
@@ -481,8 +459,6 @@ public class GradeEntry implements android.os.Parcelable {
         if (attempt != null ? !attempt.equals(that.attempt) : that.attempt != null) return false;
         if (examDate != null ? !examDate.equals(that.examDate) : that.examDate != null)
             return false;
-        if (semesterNumber != null ? !semesterNumber.equals(that.semesterNumber) : that.semesterNumber != null)
-            return false;
         if (tester != null ? !tester.equals(that.tester) : that.tester != null) return false;
         if (hash != null ? !hash.equals(that.hash) : that.hash != null) return false;
         return !(overviewPossible != null ? !overviewPossible.equals(that.overviewPossible) : that.overviewPossible != null);
@@ -500,7 +476,6 @@ public class GradeEntry implements android.os.Parcelable {
         result = 31 * result + (annotation != null ? annotation.hashCode() : 0);
         result = 31 * result + (attempt != null ? attempt.hashCode() : 0);
         result = 31 * result + (examDate != null ? examDate.hashCode() : 0);
-        result = 31 * result + (semesterNumber != null ? semesterNumber.hashCode() : 0);
         result = 31 * result + (tester != null ? tester.hashCode() : 0);
         result = 31 * result + (hash != null ? hash.hashCode() : 0);
         result = 31 * result + (overviewPossible != null ? overviewPossible.hashCode() : 0);
@@ -523,7 +498,6 @@ public class GradeEntry implements android.os.Parcelable {
         dest.writeString(this.annotation);
         dest.writeString(this.attempt);
         dest.writeString(this.examDate);
-        dest.writeValue(this.semesterNumber);
         dest.writeString(this.tester);
         dest.writeString(this.hash);
         dest.writeValue(this.overviewPossible);
@@ -540,7 +514,6 @@ public class GradeEntry implements android.os.Parcelable {
         dest.writeString(this.modifiedExamDate);
         dest.writeString(this.modifiedTester);
         dest.writeString(this.modifiedSemester);
-        dest.writeValue(this.modifiedSemesterNumber);
         dest.writeValue(this.overviewId);
     }
 
@@ -554,7 +527,6 @@ public class GradeEntry implements android.os.Parcelable {
         this.annotation = in.readString();
         this.attempt = in.readString();
         this.examDate = in.readString();
-        this.semesterNumber = (Integer) in.readValue(Integer.class.getClassLoader());
         this.tester = in.readString();
         this.hash = in.readString();
         this.overviewPossible = (Boolean) in.readValue(Boolean.class.getClassLoader());
@@ -571,7 +543,6 @@ public class GradeEntry implements android.os.Parcelable {
         this.modifiedExamDate = in.readString();
         this.modifiedTester = in.readString();
         this.modifiedSemester = in.readString();
-        this.modifiedSemesterNumber = (Integer) in.readValue(Integer.class.getClassLoader());
         this.overviewId = (Long) in.readValue(Long.class.getClassLoader());
     }
     // KEEP METHODS END

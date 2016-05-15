@@ -6,8 +6,10 @@ import android.support.v7.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -15,6 +17,7 @@ import de.mygrades.R;
 import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.main.events.StatisticsEvent;
 import de.mygrades.util.AverageCalculator;
+import de.mygrades.util.SemesterMapper;
 import de.mygrades.view.adapter.model.GradeItem;
 import de.mygrades.view.adapter.model.SemesterItem;
 
@@ -23,10 +26,13 @@ import de.mygrades.view.adapter.model.SemesterItem;
  */
 public class StatisticsProcessor extends BaseProcessor {
     private SharedPreferences prefs;
+    private SemesterMapper semesterMapper;
+    private Map<String, Integer> semesterNumberMap;
 
     public StatisticsProcessor(Context context) {
         super(context);
         prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
+        semesterMapper = new SemesterMapper();
     }
 
     /**
@@ -34,7 +40,9 @@ public class StatisticsProcessor extends BaseProcessor {
      */
     public void getStatistics() {
         List<GradeEntry> gradeEntries = daoSession.getGradeEntryDao().loadAll();
-        StatisticsEvent statisticsEvent = new StatisticsEvent();
+        semesterNumberMap = semesterMapper.getSemesterToNumberMap(gradeEntries);
+        String actualFirstSemester = semesterMapper.getActualFirstSemester(gradeEntries, semesterNumberMap);
+        StatisticsEvent statisticsEvent = new StatisticsEvent(semesterNumberMap, actualFirstSemester);
 
         // set average and credit points sum
         boolean simpleWeighting = prefs.getBoolean(context.getString(R.string.pref_key_simple_weighting), false);
@@ -74,25 +82,32 @@ public class StatisticsProcessor extends BaseProcessor {
     private List<SemesterItem> getSemesterItems(List<GradeEntry> gradeEntries) {
         boolean simpleWeighting = prefs.getBoolean(context.getString(R.string.pref_key_simple_weighting), false);
 
-        Map<Integer, SemesterItem> semesterItemMap = new HashMap<>();
+        Map<String, SemesterItem> semesterItemMap = new HashMap<>();
+        for(String semester : semesterNumberMap.keySet()) {
+            SemesterItem item = new SemesterItem(simpleWeighting);
+            item.setSemester(semester);
+            semesterItemMap.put(semester, item);
+        }
 
-        // build map
-        for(GradeEntry gradeEntry : gradeEntries) {
-            int semesterNumber = gradeEntry.getSemesterNumber();
+        for (GradeEntry gradeEntry : gradeEntries) {
+            String semester = gradeEntry.getModifiedSemester() == null ? gradeEntry.getSemester() : gradeEntry.getModifiedSemester();
             GradeItem gradeItem = new GradeItem(gradeEntry);
 
-            if (!semesterItemMap.containsKey(semesterNumber)) {
-                semesterItemMap.put(semesterNumber, new SemesterItem(simpleWeighting));
-            }
-
-            SemesterItem item = semesterItemMap.get(semesterNumber);
-            item.setSemesterNumber(semesterNumber);
+            SemesterItem item = semesterItemMap.get(semester);
+            item.setSemester(semester);
             item.addGrade(gradeItem, false);
         }
 
-        // convert to list and sort
         List<SemesterItem> semesterItems = new ArrayList<>(semesterItemMap.values());
-        Collections.sort(semesterItems);
+        Collections.sort(semesterItems, new Comparator<SemesterItem>() {
+            @Override
+            public int compare(SemesterItem first, SemesterItem second) {
+                return semesterNumberMap.get(first.getSemester()) - semesterNumberMap.get(second.getSemester());
+            }
+        });
+
+        // remove empty semester at beginning and end of list
+        stripSemesterItems(semesterItems);
 
         // calculate averages and credit points per semester
         for (SemesterItem semesterItem : semesterItems) {
@@ -100,6 +115,33 @@ public class StatisticsProcessor extends BaseProcessor {
         }
 
         return semesterItems;
+    }
+
+    /**
+     * Removes all empty semester items at the beginning and end of the list.
+     *
+     * @param semesterItems list of semester items
+     */
+    private void stripSemesterItems(List<SemesterItem> semesterItems) {
+        ListIterator<SemesterItem> it = semesterItems.listIterator();
+        while(it.hasNext()) {
+            SemesterItem semesterItem = it.next();
+            if (semesterItem.getGrades().size() == 0) {
+                it.remove();
+            } else {
+                break;
+            }
+        }
+
+        it = semesterItems.listIterator(semesterItems.size());
+        while(it.hasPrevious()) {
+            SemesterItem semesterItem = it.previous();
+            if (semesterItem.getGrades().size() == 0) {
+                it.remove();
+            } else {
+                break;
+            }
+        }
     }
 
     /**

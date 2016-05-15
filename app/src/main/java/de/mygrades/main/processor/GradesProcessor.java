@@ -48,9 +48,11 @@ public class GradesProcessor extends BaseProcessor {
     public static final String ACTION_TYPE_TABLE_OVERVIEW = "table_overview";
 
     private String gradeHash;
+    private SemesterMapper semesterMapper;
 
     public GradesProcessor(Context context) {
         super(context);
+        semesterMapper = new SemesterMapper();
     }
 
     /**
@@ -70,7 +72,7 @@ public class GradesProcessor extends BaseProcessor {
 
             List<GradeEntry> gradeEntries = new ArrayList<>();
             gradeEntries.add(gradeEntry);
-            EventBus.getDefault().postSticky(new GradesEvent(gradeEntries));
+            EventBus.getDefault().postSticky(new GradesEvent(gradeEntries, null, null));
         }
 
         Log.d(TAG, gradeEntry.toString());
@@ -78,7 +80,7 @@ public class GradesProcessor extends BaseProcessor {
         // get semester mapping (used in edit mode)
         List<GradeEntry> gradeEntries = daoSession.getGradeEntryDao().loadAll();
         SemesterMapper semesterMapper = new SemesterMapper();
-        Map<String, Integer> semesterToNumberMap = semesterMapper.getGradeEntrySemesterMapForEditMode(gradeEntries);
+        Map<String, Integer> semesterToNumberMap = semesterMapper.getSemesterToNumberMap(gradeEntries);
 
         // post Event with GradeEntry to GUI
         GradeEntryEvent gradeEntryEvent = new GradeEntryEvent(gradeEntry);
@@ -284,9 +286,13 @@ public class GradesProcessor extends BaseProcessor {
             // save last_updated_at timestamp
             saveLastUpdatedAt(prefs);
 
-            // post event with all grades to activity
             daoSession.clear();
-            GradesEvent gradesEvent = new GradesEvent(daoSession.getGradeEntryDao().loadAll(), true);
+            gradeEntries = daoSession.getGradeEntryDao().loadAll();
+            Map<String, Integer> semesterNumberMap = getSemesterNumberMap(gradeEntries);
+            String actualFirstSemester = getActualFirstSemester(gradeEntries, semesterNumberMap);
+
+            // post event with all grades to activity
+            GradesEvent gradesEvent = new GradesEvent(gradeEntries, true, semesterNumberMap, actualFirstSemester);
             EventBus.getDefault().post(gradesEvent);
 
             // set initial loading to done and send event to activity
@@ -402,14 +408,15 @@ public class GradesProcessor extends BaseProcessor {
     }
 
     /**
-     * Load a grades from the database and post an event with all grades.
+     * Load all grades from the database and post an event with all grades.
      */
     public void getGradesFromDatabase(boolean sticky) {
         List<GradeEntry> gradeEntries = daoSession.getGradeEntryDao().loadAll();
 
         // post event with new grades to subscribers
-        GradesEvent gradesEvent = new GradesEvent();
-        gradesEvent.setGrades(gradeEntries);
+        Map<String, Integer> semesterNumberMap = getSemesterNumberMap(gradeEntries);
+        String actualFirstSemester = getActualFirstSemester(gradeEntries, semesterNumberMap);
+        GradesEvent gradesEvent = new GradesEvent(gradeEntries, semesterNumberMap, actualFirstSemester);
         if (sticky) {
             EventBus.getDefault().postSticky(gradesEvent);
         } else {
@@ -518,9 +525,13 @@ public class GradesProcessor extends BaseProcessor {
             // save last_updated_at timestamp
             saveLastUpdatedAt(prefs);
 
-            // post event with all grades to activity
             daoSession.clear();
-            GradesEvent gradesEvent = new GradesEvent(daoSession.getGradeEntryDao().loadAll());
+            gradeEntries = daoSession.getGradeEntryDao().loadAll();
+
+            // post event with all grades to activity
+            Map<String, Integer> semesterNumberMap = getSemesterNumberMap(gradeEntries);
+            String actualFirstSemester = getActualFirstSemester(gradeEntries, semesterNumberMap);
+            GradesEvent gradesEvent = new GradesEvent(gradeEntries, semesterNumberMap, actualFirstSemester);
             EventBus.getDefault().postSticky(gradesEvent);
         } catch (Exception e) {
             // ignore exceptions
@@ -563,5 +574,13 @@ public class GradesProcessor extends BaseProcessor {
     private void setAlarmErrorCounter() {
         ScrapeAlarmManager scrapeAlarmManager = new ScrapeAlarmManager(context);
         scrapeAlarmManager.setOneTimeFallbackAlarm(true);
+    }
+
+    private Map<String,Integer> getSemesterNumberMap(List<GradeEntry> gradeEntries) {
+        return semesterMapper.getSemesterToNumberMap(gradeEntries);
+    }
+
+    private String getActualFirstSemester(List<GradeEntry> gradeEntries, Map<String, Integer> semesterNumberMap) {
+        return semesterMapper.getActualFirstSemester(gradeEntries, semesterNumberMap);
     }
 }

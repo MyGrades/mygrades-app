@@ -607,11 +607,9 @@ public class GradeDetailedActivityEditHelper {
 
         if (semester.equals(modifiedSemester)) {
             gradeEntry.setModifiedSemester(null);
-            gradeEntry.setModifiedSemesterNumber(null);
             return true;
         } else if (!semester.equals(modifiedSemester)) {
             gradeEntry.setModifiedSemester(modifiedSemester);
-            gradeEntry.setModifiedSemesterNumber(semesterToNumberMap.get(modifiedSemester));
             return true;
         }
 
@@ -645,7 +643,6 @@ public class GradeDetailedActivityEditHelper {
         gradeEntry.setModifiedCreditPoints(null);
         gradeEntry.setModifiedAttempt(null);
         gradeEntry.setModifiedGrade(null);
-        gradeEntry.setModifiedSemesterNumber(null);
         gradeEntry.setModifiedSemester(null);
         gradeEntry.setModifiedTester(null);
         gradeEntry.setModifiedAnnotation(null);

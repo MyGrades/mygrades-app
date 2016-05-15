@@ -20,7 +20,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.mygrades.R;
 import de.mygrades.util.AverageCalculator;
@@ -46,10 +48,13 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private boolean simpleWeighting;
 
     private List<GradesAdapterItem> items;
+    private Map<String, Integer> semesterNumberMap;
+    private String actualFirstSemester;
 
     public GradesRecyclerViewAdapter(Context context) {
         super();
         items = new ArrayList<>();
+        semesterNumberMap = new HashMap<>();
 
         GradesSummaryItem summary = new GradesSummaryItem();
         items.add(0, summary);
@@ -82,9 +87,11 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * Add a new grade to the given semester by its termCount.
      *
      * @param newGrade - new grade
-     * @param semesterNumber - semester term count
      */
-    public void addGradeForSemester(GradeItem newGrade, int semesterNumber, String semester) {
+    public void addGrade(GradeItem newGrade) {
+        int semesterNumber = semesterNumberMap.get(newGrade.getCurrentSemester());
+        String semester = newGrade.getCurrentSemester();
+
         // check if grade already exists in different semester and delete it
         checkForDeletion(newGrade);
 
@@ -121,11 +128,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 if (gradeItem.getHash().equals(newGrade.getHash())) {
 
                     // check if semester has changed and remove old grade item if necessary
-                    Integer oldSemesterNumber = gradeItem.getSemesterNumber();
-                    oldSemesterNumber = gradeItem.getModifiedSemesterNumber() == null ? oldSemesterNumber : gradeItem.getModifiedSemesterNumber();
-
-                    Integer newSemesterNumber = newGrade.getSemesterNumber();
-                    newSemesterNumber = newGrade.getModifiedSemesterNumber() == null ? newSemesterNumber : newGrade.getModifiedSemesterNumber();
+                    Integer oldSemesterNumber = semesterNumberMap.get(gradeItem.getCurrentSemester());
+                    Integer newSemesterNumber = semesterNumberMap.get(newGrade.getCurrentSemester());
                     if (!oldSemesterNumber.equals(newSemesterNumber)) {
                         removeGrade(gradeItem, i, currentSemesterItem, currentSemesterIndex);
                         return;
@@ -267,7 +271,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         for(int i = 0; i < items.size(); i++) {
             if (items.get(i) instanceof SemesterItem) {
                 SemesterItem semesterItem = (SemesterItem) items.get(i);
-                if (semesterItem.getSemesterNumber() == semesterNumber) {
+                if (semesterNumberMap.get(semesterItem.getSemester()) == semesterNumber) {
                     semesterIndex = i;
                     break;
                 }
@@ -296,7 +300,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         for(int i = 0; i < items.size(); i++) {
             if (items.get(i) instanceof SemesterItem) {
                 SemesterItem semesterItem = (SemesterItem) items.get(i);
-                if (semesterNumber > semesterItem.getSemesterNumber()) {
+                if (semesterNumber > semesterNumberMap.get(semesterItem.getSemester())) {
                     semesterIndex = i;
                     break;
                 }
@@ -305,7 +309,6 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         // add new semester
         SemesterItem newSemester = new SemesterItem(simpleWeighting);
-        newSemester.setSemesterNumber(semesterNumber);
         newSemester.setSemester(semester);
         items.add(semesterIndex, newSemester);
         notifyItemInserted(semesterIndex);
@@ -408,7 +411,11 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             SemesterViewHolder viewHolder = (SemesterViewHolder) holder;
             SemesterItem semesterItem = (SemesterItem) items.get(position);
 
-            viewHolder.tvSemesterNumber.setText("" + semesterItem.getSemesterNumber() + ". Semester");
+            int semesterNumber = semesterNumberMap.get(semesterItem.getSemester());
+            int actualFirstSemesterNumber = semesterNumberMap.get(actualFirstSemester);
+            int actualSemesterNumber = (semesterNumber - actualFirstSemesterNumber) + 1;
+
+            viewHolder.tvSemesterNumber.setText("" + actualSemesterNumber + ". Semester");
             viewHolder.tvSemester.setText(semesterItem.getSemester());
             viewHolder.tvAverage.setText("Ø " + String.format("%.2f", semesterItem.getAverage()));
             viewHolder.tvCreditPoints.setText("Σ " + String.format("%.1f", semesterItem.getCreditPoints()) + " CP");
@@ -521,6 +528,20 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         prefs.edit().putBoolean(summary.getDismissPrefKey(), true).apply();
 
         notifyItemChanged(0);
+    }
+
+    public void setSemesterNumberMap(Map<String, Integer> semesterNumberMap) {
+        if (semesterNumberMap == null) return;
+        if (semesterNumberMap.size() < this.semesterNumberMap.size()) return;
+
+        this.semesterNumberMap = semesterNumberMap;
+    }
+
+    public void setActualFirstSemester(String actualFirstSemester) {
+        if (actualFirstSemester == null) return;
+
+        this.actualFirstSemester = actualFirstSemester;
+
     }
 
     /**

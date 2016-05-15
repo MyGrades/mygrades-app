@@ -29,6 +29,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
@@ -53,6 +54,8 @@ public class FragmentStatistics extends Fragment implements SharedPreferences.On
     private BarChart chartGradeDistribution;
 
     private MainServiceHelper mainServiceHelper;
+    private Map<String, Integer> semesterNumberMap;
+    private String actualFirstSemester;
 
     @Nullable
     @Override
@@ -87,6 +90,9 @@ public class FragmentStatistics extends Fragment implements SharedPreferences.On
      * @param statisticsEvent - StatisticsEvent
      */
     public void onEventMainThread(StatisticsEvent statisticsEvent) {
+        semesterNumberMap = statisticsEvent.getSemesterToSemesterNumberMap();
+        actualFirstSemester = statisticsEvent.getActualFirstSemester();
+
         tvAverage.setText("Ø " + String.format("%.2f", statisticsEvent.getAverage()));
         tvCreditPoints.setText("Σ " + String.format("%.1f", statisticsEvent.getCreditPoints()) + " CP");
         tvCreditPointsPerSemester.setText("Ø " + String.format("%.1f", statisticsEvent.getCreditPointsPerSemester()) + " CP");
@@ -107,7 +113,7 @@ public class FragmentStatistics extends Fragment implements SharedPreferences.On
     private void initCreditPointsChart(List<SemesterItem> semesterItems) {
         List<String> xVals = new ArrayList<>();
         for(SemesterItem item : semesterItems) {
-            xVals.add("" + item.getSemesterNumber());
+            xVals.add("" + getCorrectSemesterNumber(item));
         }
 
         List<Entry> yVals = new ArrayList<>();
@@ -134,7 +140,7 @@ public class FragmentStatistics extends Fragment implements SharedPreferences.On
     private void initCreditPointsPerSemesterChart(List<SemesterItem> semesterItems, float creditPointsPerSemester) {
         List<String> xVals = new ArrayList<>();
         for(SemesterItem item : semesterItems) {
-            xVals.add("" + item.getSemesterNumber());
+            xVals.add(""  + getCorrectSemesterNumber(item));
         }
 
         List<Entry> yVals = new ArrayList<>();
@@ -162,7 +168,7 @@ public class FragmentStatistics extends Fragment implements SharedPreferences.On
     private void initAverageGradePerSemesterChart(List<SemesterItem> semesterItems, float averageGrade) {
         List<String> xVals = new ArrayList<>();
         for(SemesterItem item : semesterItems) {
-            xVals.add("" + item.getSemesterNumber());
+            xVals.add("" + getCorrectSemesterNumber(item));
         }
 
         List<Entry> yVals = new ArrayList<>();
@@ -259,6 +265,18 @@ public class FragmentStatistics extends Fragment implements SharedPreferences.On
         rightYAxis.setDrawGridLines(false);
         rightYAxis.setDrawAxisLine(false);
         rightYAxis.setDrawLabels(false);
+    }
+
+    /**
+     * Get the correct semester number for a given semester item.
+     *
+     * @param item semester item
+     * @return correct semester number
+     */
+    private int getCorrectSemesterNumber(SemesterItem item) {
+        int semesterNumber = semesterNumberMap.get(item.getSemester());
+        int actualFirstSemesterNumber = semesterNumberMap.get(actualFirstSemester);
+        return (semesterNumber - actualFirstSemesterNumber) + 1;
     }
 
     /**
