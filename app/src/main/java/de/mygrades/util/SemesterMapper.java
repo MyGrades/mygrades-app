@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -39,42 +41,109 @@ public class SemesterMapper {
     public Map<String, Integer> getGradeEntrySemesterMapForEditMode(List<GradeEntry> gradeEntries) {
         Set<String> semesterSet = new HashSet<>();
 
-        // create semester set
+        // create set of semester strings
         for (GradeEntry gradeEntry : gradeEntries) {
-            semesterSet.add(gradeEntry.getSemester());
+            if (gradeEntry.getSemester() != null) {
+                semesterSet.add(gradeEntry.getSemester());
+            }
+            if (gradeEntry.getModifiedSemester() != null) {
+                semesterSet.add(gradeEntry.getModifiedSemester());
+            }
         }
 
-        addAdditionalSemester(semesterSet);
+        // get sorted semester list
+        List<String> sortedSemester = createConsecutiveSemesterList(semesterSet);
 
-        return getGradeEntrySemesterMap(semesterSet);
+        // add another semester at the end
+        if (sortedSemester.size() > 0) {
+            sortedSemester.add(getNextSemester(sortedSemester.get(sortedSemester.size() - 1)));
+        }
+
+        return getGradeEntrySemesterMap(sortedSemester);
     }
 
     /**
-     * Adds an additional semester to the given semester set, to provide the possibility to
-     * move a grade entry to a yet unknown semester.
+     * Creates a consecutive list of semester strings based on an already existing semester set.
+     * This set may have gaps between semesters, which are filled by this method.
+     * The returned list is sorted (ascending).
      *
      * @param semesterSet set of semester strings
+     * @return sorted, gapless list of semester strings
      */
-    private void addAdditionalSemester(Set<String> semesterSet) {
-        List<String> semesterList = new ArrayList<>(semesterSet);
-        sortSemesterList(semesterList, true);
+    public List<String> createConsecutiveSemesterList(Set<String> semesterSet) {
+        List<String> sortedSemester = new LinkedList<>(semesterSet);
+        sortSemesterList(sortedSemester, true);
 
-        // append additional semester
-        String lastSemester = semesterList.get(semesterList.size() - 1);
+        ListIterator<String> it = sortedSemester.listIterator();
+        while(it.hasNext()) {
+            String currentSemester = it.next();
+            String nextSemester = it.hasNext() ? it.next() : null;
+            it.previous(); // go back
+
+            if (nextSemester == null) break; // end of list
+
+            if(!isNextSemester(currentSemester, nextSemester)) {
+                String actualNextSemester = getNextSemester(currentSemester);
+                it.add(actualNextSemester);
+                it.previous(); // go back
+            }
+        }
+
+        return sortedSemester;
+    }
+
+    /**
+     * Checks if two semester are directly consecutive.
+     *
+     * @param currentSemester - current semester as string
+     * @param nextSemester - next semester as string
+     * @return true, if semester are consecutive
+     */
+    public boolean isNextSemester(String currentSemester, String nextSemester) {
+        if (currentSemester == null || nextSemester == null) return false;
+
+        Integer currentYear;
+        Matcher matcher = semesterPattern.matcher(currentSemester);
+        currentYear = matcher.find() ? parseInt(matcher.group(2)) : 0;
+
+        Integer nextYear;
+        matcher = semesterPattern.matcher(nextSemester);
+        nextYear = matcher.find() ? parseInt(matcher.group(2)) : 0;
+
+        // expect summer semester as next
+        if (currentSemester.toLowerCase().startsWith("w")) {
+            if (!nextSemester.toLowerCase().startsWith("s") || nextYear - currentYear != 1) {
+                return false;
+            }
+        }
+
+        // expect winter semester as next
+        if (currentSemester.toLowerCase().startsWith("s")) {
+            if (!nextSemester.toLowerCase().startsWith("w") || !nextYear.equals(currentYear)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the next semester after the given semester.
+     *
+     * @param currentSemester - current semester as string
+     * @return next semester as string
+     */
+    public String getNextSemester(String currentSemester) {
         String newSemester;
 
-        // get semester and year from last semester
-        Matcher matcher = semesterPattern.matcher(lastSemester);
+        // get semester and year from current semester
+        Matcher matcher = semesterPattern.matcher(currentSemester);
 
         String semester = "";
         Integer year = 0;
         if (matcher.find()) { // Find first match
             semester = matcher.group(1);
-            try {
-                year = Integer.parseInt(matcher.group(2));
-            } catch (NumberFormatException e) {
-                year = 0;
-            }
+            year = parseInt(matcher.group(2));
         }
 
         // if extractedSemester starts with w -> Wintersemester, next is Sommersemester
@@ -84,7 +153,7 @@ public class SemesterMapper {
             newSemester = SemesterTransformer.SEMESTER_WS + year + "/" + (year+1);
         }
 
-        semesterSet.add(newSemester);
+        return newSemester;
     }
 
     /**
@@ -93,17 +162,23 @@ public class SemesterMapper {
      * @param semestersSet set of semester strings
      * @return map semester->semesterNumber
      */
-    public Map<String, Integer> getGradeEntrySemesterMap(Set<String> semestersSet) {
-        // create List out of set to sort it
-        List<String> semestersList = new ArrayList<>(semestersSet);
+    private Map<String, Integer> getGradeEntrySemesterMap(Set<String> semestersSet) {
+        return getGradeEntrySemesterMap(new ArrayList<>(semestersSet));
+    }
 
-        // sort the list
-        sortSemesterList(semestersList, true);
+    /**
+     * Creates a map semester->semesterNumber based on a list of semester strings.
+     *
+     * @param semesterList list of semester strings
+     * @return map semester->semesterNumber
+     */
+    private Map<String, Integer> getGradeEntrySemesterMap(List<String> semesterList) {
+        sortSemesterList(semesterList, true);
 
         // create Map Semester -> SemesterNumber for easy adding to GradeEntry
         Map<String, Integer> semesterSemesterNumberMap = new HashMap<>();
-        for (int i = 0; i < semestersList.size(); i++) {
-            semesterSemesterNumberMap.put(semestersList.get(i), i+1);
+        for (int i = 0; i < semesterList.size(); i++) {
+            semesterSemesterNumberMap.put(semesterList.get(i), i+1);
         }
 
         return semesterSemesterNumberMap;
@@ -130,22 +205,14 @@ public class SemesterMapper {
                 matcher = semesterPattern.matcher(s1);
                 if (matcher.find()) { // Find first match
                     sem1 = matcher.group(1);
-                    try {
-                        year1 = Integer.parseInt(matcher.group(2));
-                    } catch (NumberFormatException e) {
-                        year1 = 0;
-                    }
+                    year1 = parseInt(matcher.group(2));
                 }
 
                 // get Semester and Year from second String
                 matcher = semesterPattern.matcher(s2);
                 if (matcher.find()) { // Find first match
                     sem2 = matcher.group(1);
-                    try {
-                        year2 = Integer.parseInt(matcher.group(2));
-                    } catch (NumberFormatException e) {
-                        year2 = 0;
-                    }
+                    year2 = parseInt(matcher.group(2));
                 }
 
                 // compare years -> if equal sem1 and sem2 (SoSe and WiSe) have to be compared
@@ -178,6 +245,14 @@ public class SemesterMapper {
 
         for (GradeEntry gradeEntry : gradeEntries) {
             gradeEntry.setSemesterNumber(semesterSemesterNumberMap.get(gradeEntry.getSemester()));
+        }
+    }
+
+    private Integer parseInt(String number) {
+        try {
+            return Integer.parseInt(number);
+        } catch (NumberFormatException e) {
+            return 0;
         }
     }
 }
