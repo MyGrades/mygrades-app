@@ -8,8 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.XpPreferenceFragment;
-import android.support.v7.widget.PreferenceDividerDecoration;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.webkit.WebView;
 
@@ -48,11 +46,6 @@ public class SettingsFragment extends XpPreferenceFragment {
         scrapeAlarmManager = new ScrapeAlarmManager(getContext());
         initAutomaticScrapingPreference();
         initScrapeFrequencyPreference();
-    }
-
-    @Override
-    public void onRecyclerViewCreated(RecyclerView list) {
-        list.addItemDecoration(new PreferenceDividerDecoration(getContext()).drawBottom(true));
     }
 
     /**

@@ -26,11 +26,15 @@ Get it on [Google Play.](https://play.google.com/store/apps/details?id=de.mygrad
 * [secure-preferences](https://github.com/scottyab/secure-preferences)
 * [android-advancedrecyclerview](https://github.com/h6ah4i/android-advancedrecyclerview)
 * [vector-compat](https://github.com/wnafee/vector-compat)
+* [materialish-progress](https://github.com/pnikosis/materialish-progress)
 * [android-Ultra-Pull-To-Refresh](https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh)
 * [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)
 * [android-support-preference](https://github.com/consp1racy/android-support-preference)
 * [NetCipher: Secured Networking for Android](https://github.com/guardianproject/NetCipher)
 * [JTidy](http://jtidy.sourceforge.net/)
+* [Groovy](http://www.groovy-lang.org/)
+* [Spock Framework](https://github.com/spockframework/spock)
+* [Hamcrest](http://hamcrest.org/)
 
 ## License
 

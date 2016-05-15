@@ -34,25 +34,25 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.android.support:preference-v7:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:design:23.3.0'
+    compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.android.support:preference-v7:23.3.0'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'de.greenrobot:greendao:2.0.0'
     compile 'de.greenrobot:greendao-generator:2.0.0'
     compile 'com.scottyab:secure-preferences-lib:0.1.4'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.8.5@aar') {
+    compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.9.0@aar') {
         transitive = true
     }
-    aarLinkSources 'com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.8.5:sources@jar'
+    aarLinkSources 'com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.9.0:sources@jar'
     compile 'com.wnafee:vector-compat:1.0.5'
     compile 'com.pnikosis:materialish-progress:1.7'
     compile 'in.srain.cube:ultra-ptr:1.0.11'
-    compile 'com.github.PhilJay:MPAndroidChart:v2.1.5'
-    compile 'net.xpece.android:support-preference:0.5.1'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
+    compile 'net.xpece.android:support-preference:0.8.1'
     compile 'info.guardianproject.netcipher:netcipher:1.2'
     compile 'net.sf.jtidy:jtidy:r938'
     testCompile 'junit:junit:4.12'

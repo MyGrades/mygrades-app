@@ -50,7 +50,6 @@
 
     <!-- set style for preferences -->
     <style name="Settings" parent="@style/PreferenceThemeOverlay.Material">
-        <item name="preferenceTint">@color/colorAccent</item>
         <item name="android:textViewStyle">@style/Base.Theme.AppCompat.Light</item>
     </style>
 
