@@ -66,6 +66,10 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN WEIGHT REAL;");
         db.execSQL("UPDATE GRADE_ENTRY SET WEIGHT = 1;");
 
+        // add 'hidden' to table 'GRADE_ENTRY' and set default value
+        db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN HIDDEN INTEGER;");
+        db.execSQL("UPDATE GRADE_ENTRY SET HIDDEN = 0;");
+
         // remove semesterNumber
         removeSemesterNumber(db);
     }
@@ -94,22 +98,23 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
                 "\"SEEN\" INTEGER," + // 12: seen
                 "\"OVERVIEW_FAILED_ON_FIRST_TRY\" INTEGER," + // 13: overviewFailedOnFirstTry
                 "\"WEIGHT\" REAL," + // 14: weight
-                "\"MODIFIED_NAME\" TEXT," + // 15: modifiedName
-                "\"MODIFIED_GRADE\" REAL," + // 16: modifiedGrade
-                "\"MODIFIED_EXAM_ID\" TEXT," + // 17: modifiedExamId
-                "\"MODIFIED_STATE\" TEXT," + // 18: modifiedState
-                "\"MODIFIED_CREDIT_POINTS\" REAL," + // 19: modifiedCreditPoints
-                "\"MODIFIED_ANNOTATION\" TEXT," + // 20: modifiedAnnotation
-                "\"MODIFIED_ATTEMPT\" TEXT," + // 21: modifiedAttempt
-                "\"MODIFIED_EXAM_DATE\" TEXT," + // 22: modifiedExamDate
-                "\"MODIFIED_TESTER\" TEXT," + // 23: modifiedTester
-                "\"MODIFIED_SEMESTER\" TEXT," + // 24: modifiedSemester
-                "\"OVERVIEW_ID\" INTEGER);"); // 25: overviewId
+                "\"HIDDEN\" INTEGER," + // 15: hidden
+                "\"MODIFIED_NAME\" TEXT," + // 16: modifiedName
+                "\"MODIFIED_GRADE\" REAL," + // 17: modifiedGrade
+                "\"MODIFIED_EXAM_ID\" TEXT," + // 18: modifiedExamId
+                "\"MODIFIED_STATE\" TEXT," + // 19: modifiedState
+                "\"MODIFIED_CREDIT_POINTS\" REAL," + // 20: modifiedCreditPoints
+                "\"MODIFIED_ANNOTATION\" TEXT," + // 21: modifiedAnnotation
+                "\"MODIFIED_ATTEMPT\" TEXT," + // 22: modifiedAttempt
+                "\"MODIFIED_EXAM_DATE\" TEXT," + // 23: modifiedExamDate
+                "\"MODIFIED_TESTER\" TEXT," + // 24: modifiedTester
+                "\"MODIFIED_SEMESTER\" TEXT," + // 25: modifiedSemester
+                "\"OVERVIEW_ID\" INTEGER);"); // 26: overviewId
         db.execSQL("INSERT INTO GRADE_ENTRY_BACKUP " +
                 "SELECT " +
                 "NAME, GRADE, EXAM_ID, SEMESTER, STATE, CREDIT_POINTS, ANNOTATION, ATTEMPT, " +
                 "EXAM_DATE, TESTER, HASH, OVERVIEW_POSSIBLE, SEEN, OVERVIEW_FAILED_ON_FIRST_TRY, " +
-                "WEIGHT, MODIFIED_NAME, MODIFIED_GRADE, MODIFIED_EXAM_ID, MODIFIED_STATE, " +
+                "WEIGHT, HIDDEN, MODIFIED_NAME, MODIFIED_GRADE, MODIFIED_EXAM_ID, MODIFIED_STATE, " +
                 "MODIFIED_CREDIT_POINTS, MODIFIED_ANNOTATION, MODIFIED_ATTEMPT, MODIFIED_EXAM_DATE, " +
                 "MODIFIED_TESTER, MODIFIED_SEMESTER, OVERVIEW_ID " +
                 "FROM GRADE_ENTRY;");

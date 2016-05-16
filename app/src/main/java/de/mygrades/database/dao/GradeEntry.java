@@ -31,6 +31,7 @@ public class GradeEntry implements android.os.Parcelable {
     private Integer seen;
     private Boolean overviewFailedOnFirstTry;
     private Double weight;
+    private Boolean hidden;
     private String modifiedName;
     private Double modifiedGrade;
     private String modifiedExamId;
@@ -75,7 +76,7 @@ public class GradeEntry implements android.os.Parcelable {
         this.hash = hash;
     }
 
-    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, String tester, String hash, Boolean overviewPossible, Integer seen, Boolean overviewFailedOnFirstTry, Double weight, String modifiedName, Double modifiedGrade, String modifiedExamId, String modifiedState, Double modifiedCreditPoints, String modifiedAnnotation, String modifiedAttempt, String modifiedExamDate, String modifiedTester, String modifiedSemester, Long overviewId) {
+    public GradeEntry(String name, Double grade, String examId, String semester, String state, Double creditPoints, String annotation, String attempt, String examDate, String tester, String hash, Boolean overviewPossible, Integer seen, Boolean overviewFailedOnFirstTry, Double weight, Boolean hidden, String modifiedName, Double modifiedGrade, String modifiedExamId, String modifiedState, Double modifiedCreditPoints, String modifiedAnnotation, String modifiedAttempt, String modifiedExamDate, String modifiedTester, String modifiedSemester, Long overviewId) {
         this.name = name;
         this.grade = grade;
         this.examId = examId;
@@ -91,6 +92,7 @@ public class GradeEntry implements android.os.Parcelable {
         this.seen = seen;
         this.overviewFailedOnFirstTry = overviewFailedOnFirstTry;
         this.weight = weight;
+        this.hidden = hidden;
         this.modifiedName = modifiedName;
         this.modifiedGrade = modifiedGrade;
         this.modifiedExamId = modifiedExamId;
@@ -232,6 +234,14 @@ public class GradeEntry implements android.os.Parcelable {
         this.weight = weight;
     }
 
+    public Boolean getHidden() {
+        return hidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        this.hidden = hidden;
+    }
+
     public String getModifiedName() {
         return modifiedName;
     }
@@ -371,6 +381,10 @@ public class GradeEntry implements android.os.Parcelable {
 
     // KEEP METHODS - put your custom methods here
 
+    public boolean isHidden() {
+        return hidden;
+    }
+
     /**
      * The hash is used as the primary key.
      */
@@ -504,6 +518,7 @@ public class GradeEntry implements android.os.Parcelable {
         dest.writeValue(this.seen);
         dest.writeValue(this.overviewFailedOnFirstTry);
         dest.writeValue(this.weight);
+        dest.writeValue(this.hidden);
         dest.writeString(this.modifiedName);
         dest.writeValue(this.modifiedGrade);
         dest.writeString(this.modifiedExamId);
@@ -533,6 +548,7 @@ public class GradeEntry implements android.os.Parcelable {
         this.seen = (Integer) in.readValue(Integer.class.getClassLoader());
         this.overviewFailedOnFirstTry = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.weight = (Double) in.readValue(Double.class.getClassLoader());
+        this.hidden = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.modifiedName = in.readString();
         this.modifiedGrade = (Double) in.readValue(Double.class.getClassLoader());
         this.modifiedExamId = in.readString();
