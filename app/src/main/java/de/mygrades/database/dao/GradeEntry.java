@@ -382,7 +382,7 @@ public class GradeEntry implements android.os.Parcelable {
     // KEEP METHODS - put your custom methods here
 
     public boolean isHidden() {
-        return hidden;
+        return hidden == null ? false : hidden;
     }
 
     /**

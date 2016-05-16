@@ -90,9 +90,11 @@ public class StatisticsProcessor extends BaseProcessor {
         }
 
         for (GradeEntry gradeEntry : gradeEntries) {
-            String semester = gradeEntry.getModifiedSemester() == null ? gradeEntry.getSemester() : gradeEntry.getModifiedSemester();
-            GradeItem gradeItem = new GradeItem(gradeEntry);
+            if (gradeEntry.isHidden())
+                continue;
 
+            GradeItem gradeItem = new GradeItem(gradeEntry);
+            String semester = gradeEntry.getModifiedSemester() == null ? gradeEntry.getSemester() : gradeEntry.getModifiedSemester();
             SemesterItem item = semesterItemMap.get(semester);
             item.setSemester(semester);
             item.addGrade(gradeItem, false);
@@ -174,6 +176,9 @@ public class StatisticsProcessor extends BaseProcessor {
         int[] gradeDistribution = new int[6];
 
         for (GradeEntry gradeEntry : gradeEntries) {
+            if (gradeEntry.isHidden())
+                continue;
+
             Double grade = gradeEntry.getGrade();
             grade = gradeEntry.getModifiedGrade() == null ? grade : gradeEntry.getModifiedGrade();
 
