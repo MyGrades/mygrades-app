@@ -17,6 +17,7 @@ public class GradeItem implements GradesAdapterItem {
     private String semester;
     private String modifiedSemester;
     private int seen;
+    private boolean hidden;
 
     public GradeItem() {}
 
@@ -40,6 +41,7 @@ public class GradeItem implements GradesAdapterItem {
         setModifiedSemester(gradeEntry.getModifiedSemester());
 
         setWeight(gradeEntry.getWeight());
+        setHidden(gradeEntry.isHidden());
 
         if (gradeEntry.getSeen() != null) {
             setSeen(gradeEntry.getSeen());
@@ -212,5 +214,13 @@ public class GradeItem implements GradesAdapterItem {
 
     public String getCurrentSemester() {
         return modifiedSemester == null ? semester : modifiedSemester;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 }

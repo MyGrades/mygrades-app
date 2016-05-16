@@ -37,6 +37,9 @@ public class AverageCalculator {
                 continue;
 
             GradeItem gradeItem = (GradeItem) item;
+            if (gradeItem.isHidden())
+                continue;
+
             double weight = gradeItem.getWeight() == null ? 1 : gradeItem.getWeight();
 
             double actCreditPoints = (gradeItem.getCreditPoints() == null ? 0f : gradeItem.getCreditPoints());
