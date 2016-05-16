@@ -60,10 +60,62 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_ATTEMPT TEXT;");
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_EXAM_DATE;");
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_TESTER TEXT;");
+        db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_SEMESTER TEXT;");
 
         // add 'weight' to table 'GRADE_ENTRY' and set default value
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN WEIGHT REAL;");
         db.execSQL("UPDATE GRADE_ENTRY SET WEIGHT = 1;");
+
+        // remove semesterNumber
+        removeSemesterNumber(db);
+    }
+
+    /**
+     * Drop the column 'semester_number' by creating a copy of the whole table,
+     * copy all other fields and drop the old one.
+     *
+     * @param db SQLiteDatabase
+     */
+    private void removeSemesterNumber(SQLiteDatabase db) {
+        db.execSQL("BEGIN TRANSACTION;");
+        db.execSQL("CREATE TABLE \"GRADE_ENTRY_BACKUP\" (" + //
+                "\"NAME\" TEXT NOT NULL ," + // 0: name
+                "\"GRADE\" REAL," + // 1: grade
+                "\"EXAM_ID\" TEXT," + // 2: examId
+                "\"SEMESTER\" TEXT," + // 3: semester
+                "\"STATE\" TEXT," + // 4: state
+                "\"CREDIT_POINTS\" REAL," + // 5: creditPoints
+                "\"ANNOTATION\" TEXT," + // 6: annotation
+                "\"ATTEMPT\" TEXT," + // 7: attempt
+                "\"EXAM_DATE\" TEXT," + // 8: examDate
+                "\"TESTER\" TEXT," + // 9: tester
+                "\"HASH\" TEXT PRIMARY KEY NOT NULL ," + // 10: hash
+                "\"OVERVIEW_POSSIBLE\" INTEGER," + // 11: overviewPossible
+                "\"SEEN\" INTEGER," + // 12: seen
+                "\"OVERVIEW_FAILED_ON_FIRST_TRY\" INTEGER," + // 13: overviewFailedOnFirstTry
+                "\"WEIGHT\" REAL," + // 14: weight
+                "\"MODIFIED_NAME\" TEXT," + // 15: modifiedName
+                "\"MODIFIED_GRADE\" REAL," + // 16: modifiedGrade
+                "\"MODIFIED_EXAM_ID\" TEXT," + // 17: modifiedExamId
+                "\"MODIFIED_STATE\" TEXT," + // 18: modifiedState
+                "\"MODIFIED_CREDIT_POINTS\" REAL," + // 19: modifiedCreditPoints
+                "\"MODIFIED_ANNOTATION\" TEXT," + // 20: modifiedAnnotation
+                "\"MODIFIED_ATTEMPT\" TEXT," + // 21: modifiedAttempt
+                "\"MODIFIED_EXAM_DATE\" TEXT," + // 22: modifiedExamDate
+                "\"MODIFIED_TESTER\" TEXT," + // 23: modifiedTester
+                "\"MODIFIED_SEMESTER\" TEXT," + // 24: modifiedSemester
+                "\"OVERVIEW_ID\" INTEGER);"); // 25: overviewId
+        db.execSQL("INSERT INTO GRADE_ENTRY_BACKUP " +
+                "SELECT " +
+                "NAME, GRADE, EXAM_ID, SEMESTER, STATE, CREDIT_POINTS, ANNOTATION, ATTEMPT, " +
+                "EXAM_DATE, TESTER, HASH, OVERVIEW_POSSIBLE, SEEN, OVERVIEW_FAILED_ON_FIRST_TRY, " +
+                "WEIGHT, MODIFIED_NAME, MODIFIED_GRADE, MODIFIED_EXAM_ID, MODIFIED_STATE, " +
+                "MODIFIED_CREDIT_POINTS, MODIFIED_ANNOTATION, MODIFIED_ATTEMPT, MODIFIED_EXAM_DATE, " +
+                "MODIFIED_TESTER, MODIFIED_SEMESTER, OVERVIEW_ID " +
+                "FROM GRADE_ENTRY;");
+        db.execSQL("DROP TABLE GRADE_ENTRY;");
+        db.execSQL("ALTER TABLE GRADE_ENTRY_BACKUP RENAME TO GRADE_ENTRY;");
+        db.execSQL("COMMIT;");
     }
 
     /**
