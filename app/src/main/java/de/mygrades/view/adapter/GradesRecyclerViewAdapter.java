@@ -580,6 +580,20 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         return editModeEnabled;
     }
 
+    public void restoreVisibility() {
+        enableEditMode(false);
+        MainServiceHelper mainServiceHelper = new MainServiceHelper(context);
+
+        for (GradesAdapterItem item : items) {
+            if (item instanceof GradeItem) {
+                GradeItem gradeItem = (GradeItem) item;
+                if (gradeItem.isHidden()) {
+                    mainServiceHelper.updateGradeEntryVisibility(gradeItem.getHash(), false);
+                }
+            }
+        }
+    }
+
     /**
      * Custom click listener to go to GradeDetailActivity.
      */

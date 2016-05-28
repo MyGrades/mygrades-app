@@ -1,10 +1,12 @@
 package de.mygrades.view.activity;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -295,8 +297,7 @@ public class FragmentOverview extends Fragment {
                 getActivity().invalidateOptionsMenu();
                 return true;
             case R.id.fragment_overview_restore:
-                adapter.enableEditMode(false);
-                getActivity().invalidateOptionsMenu();
+                showRestoreDialog();
                 return true;
         }
 
@@ -307,5 +308,28 @@ public class FragmentOverview extends Fragment {
     public void onDestroyView() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    private void showRestoreDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage(R.string.dialog_restore_grade_entry_visibility);
+        builder.setTitle(getString(R.string.dialog_restore_grade_entry_title));
+        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                adapter.restoreVisibility();
+                getActivity().invalidateOptionsMenu();
+            }
+        });
+
+        builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

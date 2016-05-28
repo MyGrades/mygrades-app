@@ -134,6 +134,7 @@
     <string name="et_grade_invalid">Note muss zwischen 0.0 und 5.0 liegen</string>
     <string name="dialog_restore_grade_entry_title">Zurücksetzen</string>
     <string name="dialog_restore_grade_entry">Möchtest du wirklich alle Bearbeitungen zurücksetzen?</string>
+    <string name="dialog_restore_grade_entry_visibility">Möchtest du wirklich alle Sichtbarkeiten zurücksetzen?</string>
 
     <string-array name="grade_attempt_spinner">
         <item>0</item>
