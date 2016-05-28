@@ -74,6 +74,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private TextView tvOverviewNotPossible;
 
     // bar chart
+    private Overview overview;
     private BarChart barChart;
     private static final int COLOR_GRAY = Color.rgb(233, 233, 233); // light gray
     private static final int COLOR_HIGHLIGHT = Color.rgb(139, 195, 74); // primary color green
@@ -288,8 +289,10 @@ public class GradeDetailedActivity extends AppCompatActivity {
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(OverviewEvent overviewEvent) {
-        Log.d(TAG, overviewEvent.getOverview().toString());
-        Overview overview = overviewEvent.getOverview();
+        if (overview != null)
+            return;
+
+        overview = overviewEvent.getOverview();
 
         // only set overview if it belongs to current gradeEntry
         if (gradeEntry != null && overview.getGradeEntryHash().equals(gradeHash)) {
@@ -444,7 +447,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                super.onBackPressed();
                 return true;
             case R.id.grade_detail_edit:
                 editHelper.enableEditMode(true);
@@ -463,6 +466,18 @@ public class GradeDetailedActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (editModeEnabled) {
+            editHelper.enableEditMode(false);
+            editModeEnabled = false;
+            invalidateOptionsMenu();
+            mainServiceHelper.getGradeDetails(gradeHash);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     /**

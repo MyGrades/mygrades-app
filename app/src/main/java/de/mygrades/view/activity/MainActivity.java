@@ -277,6 +277,12 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             // go to overview (e.g. if user is currently at FAQs and presses back)
             replaceFragment(R.id.fl_content, new FragmentOverview(), false);
             return;
+        } else {
+            if (((FragmentOverview)overview).isEditModeEnabled()) {
+                ((FragmentOverview)overview).disableEditMode();
+                invalidateOptionsMenu();
+                return;
+            }
         }
 
         super.onBackPressed();

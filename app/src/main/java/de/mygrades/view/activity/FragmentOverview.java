@@ -332,4 +332,12 @@ public class FragmentOverview extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    public boolean isEditModeEnabled() {
+        return adapter.isEditModeEnabled();
+    }
+
+    public void disableEditMode() {
+        adapter.enableEditMode(false);
+    }
 }

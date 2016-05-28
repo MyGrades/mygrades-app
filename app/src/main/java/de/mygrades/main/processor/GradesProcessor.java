@@ -63,7 +63,8 @@ public class GradesProcessor extends BaseProcessor {
      */
     public void getGradeDetails(String gradeHash) {
         // get GradeEntry from DB by hash with Overview (if present)
-        GradeEntry gradeEntry = daoSession.getGradeEntryDao().queryDeep("WHERE "+ GradeEntryDao.Properties.Hash.columnName +" = ?", gradeHash).get(0);
+        GradeEntry gradeEntry = daoSession.getGradeEntryDao().load(gradeHash);
+        daoSession.getGradeEntryDao().refresh(gradeEntry);
 
         // post sticky event to overview if seen state has changed
         if (gradeEntry.getSeen() != Constants.GRADE_ENTRY_SEEN) {
