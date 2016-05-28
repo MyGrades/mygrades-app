@@ -71,6 +71,24 @@
 
             </LinearLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_toggle_visibility"
+                android:layout_gravity="center_vertical"
+                android:layout_width="48dp"
+                android:layout_height="56dp"
+                android:paddingRight="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:paddingLeft="8dp"
+                android:src="@drawable/ic_visibility_white_24dp"
+                android:tint="@color/text87"
+                android:visibility="visible" />
+        </LinearLayout>
     </LinearLayout>
 
     <de.mygrades.view.widget.TriangleShapeView

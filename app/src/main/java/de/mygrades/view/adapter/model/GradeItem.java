@@ -92,6 +92,8 @@ public class GradeItem implements GradesAdapterItem {
 
         GradeItem gradeItem = (GradeItem) o;
 
+        if (seen != gradeItem.seen) return false;
+        if (hidden != gradeItem.hidden) return false;
         if (name != null ? !name.equals(gradeItem.name) : gradeItem.name != null) return false;
         if (modifiedName != null ? !modifiedName.equals(gradeItem.modifiedName) : gradeItem.modifiedName != null)
             return false;
@@ -104,10 +106,10 @@ public class GradeItem implements GradesAdapterItem {
             return false;
         if (weight != null ? !weight.equals(gradeItem.weight) : gradeItem.weight != null)
             return false;
+        if (hash != null ? !hash.equals(gradeItem.hash) : gradeItem.hash != null) return false;
         if (semester != null ? !semester.equals(gradeItem.semester) : gradeItem.semester != null)
             return false;
-        return !(modifiedSemester != null ? !modifiedSemester.equals(gradeItem.modifiedSemester) : gradeItem.modifiedSemester != null);
-
+        return modifiedSemester != null ? modifiedSemester.equals(gradeItem.modifiedSemester) : gradeItem.modifiedSemester == null;
     }
 
     @Override
@@ -119,8 +121,11 @@ public class GradeItem implements GradesAdapterItem {
         result = 31 * result + (creditPoints != null ? creditPoints.hashCode() : 0);
         result = 31 * result + (modifiedCreditPoints != null ? modifiedCreditPoints.hashCode() : 0);
         result = 31 * result + (weight != null ? weight.hashCode() : 0);
+        result = 31 * result + (hash != null ? hash.hashCode() : 0);
         result = 31 * result + (semester != null ? semester.hashCode() : 0);
         result = 31 * result + (modifiedSemester != null ? modifiedSemester.hashCode() : 0);
+        result = 31 * result + seen;
+        result = 31 * result + (hidden ? 1 : 0);
         return result;
     }
 

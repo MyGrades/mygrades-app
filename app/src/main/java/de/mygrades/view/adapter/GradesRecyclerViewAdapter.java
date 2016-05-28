@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.mygrades.R;
+import de.mygrades.main.MainServiceHelper;
 import de.mygrades.util.AverageCalculator;
 import de.mygrades.util.Constants;
 import de.mygrades.util.LogoutHelper;
@@ -50,6 +51,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private List<GradesAdapterItem> items;
     private Map<String, Integer> semesterNumberMap;
     private String actualFirstSemester;
+
+    private boolean editModeEnabled;
 
     public GradesRecyclerViewAdapter(Context context) {
         super();
@@ -195,11 +198,6 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             if (items.get(i) instanceof GradeItem) {
                 GradeItem gradeItem = (GradeItem) items.get(i);
                 if (gradeItem.getHash().equals(newGrade.getHash())) {
-                    if (gradeItem.getSeen() != newGrade.getSeen()) {
-                        gradeItem.setSeen(newGrade.getSeen());
-                        notifyItemChanged(i);
-                    }
-
                     if (!gradeItem.equals(newGrade)) {
                         // update old grade item and notify ui
                         gradeItem.setName(newGrade.getName());
@@ -209,6 +207,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                         gradeItem.setCreditPoints(newGrade.getCreditPoints());
                         gradeItem.setModifiedCreditPoints(newGrade.getModifiedCreditPoints());
                         gradeItem.setWeight(newGrade.getWeight());
+                        gradeItem.setSeen(newGrade.getSeen());
+                        gradeItem.setHidden(newGrade.isHidden());
                         notifyItemChanged(i);
 
                         // update semester item and notify ui
@@ -393,6 +393,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grade, parent, false);
             GradeViewHolder gradeViewHolder = new GradeViewHolder(v);
             gradeViewHolder.setGoToDetailsClickListener(new GoToDetailsClickListener());
+            gradeViewHolder.setToggleVisibilityClickListener(new ToggleVisibilityClickListener());
             return gradeViewHolder;
         } else if (viewType == VIEW_TYPE_SUMMARY) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grades_summary, parent, false);
@@ -419,10 +420,18 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             viewHolder.tvSemester.setText(semesterItem.getSemester());
             viewHolder.tvAverage.setText("Ø " + String.format("%.2f", semesterItem.getAverage()));
             viewHolder.tvCreditPoints.setText("Σ " + String.format("%.1f", semesterItem.getCreditPoints()) + " CP");
+
+            // hide semester if every grade is hidden
+            if (editModeEnabled) {
+                viewHolder.hide(false);
+            } else {
+                viewHolder.hide(semesterItem.getVisibleGradesCount() == 0);
+            }
         } else if (holder instanceof GradeViewHolder) {
             GradeViewHolder viewHolder = (GradeViewHolder) holder;
             GradeItem gradeItem = (GradeItem) items.get(position);
             viewHolder.setGradeHash(gradeItem.getHash());
+            viewHolder.setHidden(gradeItem.isHidden());
             viewHolder.tvName.setText(gradeItem.getShownName());
 
             Double grade = gradeItem.getGrade();
@@ -454,6 +463,24 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             }
 
             viewHolder.modifiedBadge.setVisibility(gradeItem.showModifiedBadge() ? View.VISIBLE : View.GONE);
+
+            if (editModeEnabled) {
+                viewHolder.ivToggleVisibility.setVisibility(View.VISIBLE);
+                viewHolder.hide(false);
+            } else {
+                viewHolder.ivToggleVisibility.setVisibility(View.GONE);
+                viewHolder.hide(gradeItem.isHidden());
+            }
+
+            if (gradeItem.isHidden()) {
+                viewHolder.setTransparent(true);
+                viewHolder.ivToggleVisibility.setImageResource(R.drawable.ic_visibility_off_white_24dp);
+            } else {
+                viewHolder.setTransparent(false);
+                viewHolder.ivToggleVisibility.setImageResource(R.drawable.ic_visibility_white_24dp);
+            }
+
+            viewHolder.enableClickListener(!editModeEnabled);
         } else if (holder instanceof GradesSummaryViewHolder) {
             GradesSummaryViewHolder viewHolder = (GradesSummaryViewHolder) holder;
             GradesSummaryItem summaryItem = (GradesSummaryItem) items.get(position);
@@ -544,6 +571,15 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     }
 
+    public void enableEditMode(boolean enable) {
+        editModeEnabled = enable;
+        notifyItemRangeChanged(1, items.size());
+    }
+
+    public boolean isEditModeEnabled() {
+        return editModeEnabled;
+    }
+
     /**
      * Custom click listener to go to GradeDetailActivity.
      */
@@ -563,9 +599,31 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     /**
+     * Click listener to toggle the visibility of a grade entry.
+     */
+    private static class ToggleVisibilityClickListener implements View.OnClickListener {
+        private String gradeHash = "";
+        private boolean isHidden;
+
+        private void setGradeHash(String gradeHash) {
+            this.gradeHash = gradeHash;
+        }
+
+        private void setHidden(boolean hidden) {
+            isHidden = hidden;
+        }
+
+        @Override
+        public void onClick(View v) {
+            MainServiceHelper mainServiceHelper = new MainServiceHelper(v.getContext());
+            mainServiceHelper.updateGradeEntryVisibility(gradeHash, !isHidden);
+        }
+    }
+
+    /**
      * View holder for a grade entry.
      */
-    public static class GradeViewHolder extends RecyclerView.ViewHolder {
+    public static class GradeViewHolder extends ConcealableViewHolder {
         public RelativeLayout llGradeContainer;
         public TextView tvName;
         public TextView tvGrade;
@@ -574,6 +632,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         public TextView tvWeight;
         public TriangleShapeView modifiedBadge;
         public GoToDetailsClickListener goToDetailsClickListener;
+        public ImageView ivToggleVisibility;
+        public ToggleVisibilityClickListener toggleVisibilityClickListener;
 
         public GradeViewHolder(View itemView) {
             super(itemView);
@@ -585,6 +645,13 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             llGradeContainer = (RelativeLayout) itemView.findViewById(R.id.grade_container);
             tvWeight = (TextView) itemView.findViewById(R.id.tv_weight);
             modifiedBadge = (TriangleShapeView) itemView.findViewById(R.id.modified_badge);
+            ivToggleVisibility = (ImageView) itemView.findViewById(R.id.iv_toggle_visibility);
+        }
+
+        public void setTransparent(boolean transparent) {
+            for (int i = 0; i < llGradeContainer.getChildCount(); i++) {
+                llGradeContainer.getChildAt(i).setAlpha(transparent ? 0.5f : 1.0f);
+            }
         }
 
         public void setGoToDetailsClickListener(GoToDetailsClickListener clickListener) {
@@ -592,15 +659,29 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             llGradeContainer.setOnClickListener(goToDetailsClickListener);
         }
 
+        public void setToggleVisibilityClickListener(ToggleVisibilityClickListener clickListener) {
+            this.toggleVisibilityClickListener = clickListener;
+            ivToggleVisibility.setOnClickListener(toggleVisibilityClickListener);
+        }
+
+        public void enableClickListener(boolean enable) {
+            llGradeContainer.setOnClickListener(enable ? goToDetailsClickListener : null);
+        }
+
         public void setGradeHash(String gradeHash) {
             goToDetailsClickListener.setGradeHash(gradeHash);
+            toggleVisibilityClickListener.setGradeHash(gradeHash);
+        }
+
+        public void setHidden(boolean hidden) {
+            toggleVisibilityClickListener.setHidden(hidden);
         }
     }
 
     /**
      * View holder for an semester section header.
      */
-    public static class SemesterViewHolder extends RecyclerView.ViewHolder {
+    public static class SemesterViewHolder extends ConcealableViewHolder {
         public TextView tvSemesterNumber;
         public TextView tvSemester;
         public TextView tvAverage;
@@ -672,6 +753,24 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             dismissInfoBox = (ImageView) itemView.findViewById(R.id.iv_dismiss_info);
             llNoGradesInfo = (LinearLayout) itemView.findViewById(R.id.ll_no_grades_wrapper);
             btnLogout = (Button) itemView.findViewById(R.id.btn_logout);
+        }
+    }
+
+    /**
+     * Abstract view holder to add the ability to hide it.
+     * If shown, the height is set to RecyclerView.LayoutParams.WRAP_CONTENT,
+     * whereas the width is untouched.
+     */
+    public static abstract class ConcealableViewHolder extends RecyclerView.ViewHolder {
+
+        public ConcealableViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        public void hide(boolean hide) {
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
+            params.height = hide ? 0 : RecyclerView.LayoutParams.WRAP_CONTENT;
+            itemView.setLayoutParams(params);
         }
     }
 }

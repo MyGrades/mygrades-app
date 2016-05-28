@@ -9,6 +9,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -46,11 +49,14 @@ public class FragmentOverview extends Fragment {
     private View.OnClickListener tryAgainListener;
     private View.OnClickListener goToFaqListener;
 
+    private boolean receivedGradesEvent;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
         mainServiceHelper = new MainServiceHelper(getContext());
+        setHasOptionsMenu(true);
 
         // init recycler view
         initGradesRecyclerView(view);
@@ -222,6 +228,8 @@ public class FragmentOverview extends Fragment {
      * @param gradesEvent - grades event
      */
     public void onEventMainThread(GradesEvent gradesEvent) {
+        receivedGradesEvent = true;
+
         if (adapter != null) {
             adapter.setSemesterNumberMap(gradesEvent.getSemesterToSemesterNumberMap());
             adapter.setActualFirstSemester(gradesEvent.getActualFirstSemester());
@@ -243,6 +251,8 @@ public class FragmentOverview extends Fragment {
 
         // remove from sticky events
         EventBus.getDefault().removeStickyEvent(gradesEvent);
+
+        getActivity().invalidateOptionsMenu();
     }
 
     /**
@@ -257,6 +267,40 @@ public class FragmentOverview extends Fragment {
         }
 
         UIHelper.displayErrorMessage(getView(), errorEvent, tryAgainListener, goToFaqListener);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_overview, menu);
+
+        MenuItem editItem = menu.findItem(R.id.fragment_overview_edit);
+        MenuItem saveItem = menu.findItem(R.id.fragment_overview_save);
+        MenuItem restoreItem = menu.findItem(R.id.fragment_overview_restore);
+        editItem.setVisible(receivedGradesEvent && !adapter.isEditModeEnabled());
+        saveItem.setVisible(receivedGradesEvent && adapter.isEditModeEnabled());
+        restoreItem.setVisible(receivedGradesEvent && adapter.isEditModeEnabled());
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.fragment_overview_edit:
+                adapter.enableEditMode(true);
+                getActivity().invalidateOptionsMenu();
+                return true;
+            case R.id.fragment_overview_save:
+                adapter.enableEditMode(false);
+                getActivity().invalidateOptionsMenu();
+                return true;
+            case R.id.fragment_overview_restore:
+                adapter.enableEditMode(false);
+                getActivity().invalidateOptionsMenu();
+                return true;
+        }
+
+        return false;
     }
 
     @Override

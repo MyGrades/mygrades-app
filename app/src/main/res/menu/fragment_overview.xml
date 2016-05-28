@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/fragment_overview_edit"
+        android:title="Editieren"
+        android:icon="@drawable/ic_mode_edit_white_24dp"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/fragment_overview_restore"
+        android:title="Zurücksetzen"
+        android:icon="@drawable/ic_restore_white_24dp"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/fragment_overview_save"
+        android:title="Speichern"
+        android:icon="@drawable/ic_done_white_24dp"
+        app:showAsAction="always"/>
+</menu>

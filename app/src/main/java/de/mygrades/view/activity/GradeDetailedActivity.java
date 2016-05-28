@@ -459,7 +459,6 @@ public class GradeDetailedActivity extends AppCompatActivity {
                 return true;
             case R.id.grade_detail_restore:
                 showRestoreDialog();
-                editModeEnabled = false;
                 return true;
         }
 
@@ -477,6 +476,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 editHelper.restore();
+                editModeEnabled = false;
                 invalidateOptionsMenu();
             }
         });

@@ -191,6 +191,25 @@ public class MainServiceHelper {
     }
 
     /**
+     * Starts a worker thread to update the visibility of a grade entry.
+     *
+     * @param gradeEntryHash grade entry hash
+     * @param hidden hidden or not
+     */
+    public void updateGradeEntryVisibility(String gradeEntryHash, boolean hidden) {
+        int method = MainService.METHOD_UPDATE_GRADE_ENTRY_VISIBILITY;
+
+        // set request id
+        long requestId = concatenateLong(method, gradeEntryHash.hashCode() + (hidden ? 1 : 0));
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_GRADES, method, requestId);
+        intent.putExtra(MainService.GRADE_HASH, gradeEntryHash);
+        intent.putExtra(MainService.GRADE_ENTRY_HIDDEN, hidden);
+        context.startService(intent);
+    }
+
+    /**
      * Starts a worker thread to post an error report to the server.
      *
      * @param name name

@@ -67,6 +67,14 @@ public class SemesterItem implements GradesAdapterItem {
         return grades;
     }
 
+    public int getVisibleGradesCount() {
+        int count = 0;
+        for (GradeItem gradeItem : grades) {
+            count += gradeItem.isHidden() ? 0 : 1;
+        }
+        return count;
+    }
+
     public void setSimpleWeighting(boolean simpleWeighting) {
         this.simpleWeighting = simpleWeighting;
         update();

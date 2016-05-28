@@ -1,5 +1,6 @@
 package de.mygrades.main.events;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,12 @@ public class GradesEvent {
         this.isScrapingResult = isScrapingResult;
         this.semesterToSemesterNumberMap = semesterToSemesterNumberMap;
         this.actualFirstSemester = actualFirstSemester;
+    }
+
+    public GradesEvent(GradeEntry gradeEntry) {
+        grades = new ArrayList<>();
+        grades.add(gradeEntry);
+        isScrapingResult = false;
     }
 
     public void setGrades(List<GradeEntry> grades) {

@@ -49,6 +49,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final int METHOD_GET_STATISTICS = 121;
     public static final int METHOD_POST_WISH = 122;
     public static final int METHOD_UPDATE_GRADE_ENTRY = 123;
+    public static final int METHOD_UPDATE_GRADE_ENTRY_VISIBILITY = 124;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
@@ -66,6 +67,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final String UNIVERSITY_NAME = "university_name";
     public static final String WISH_MESSAGE = "wish_message";
     public static final String GRADE_ENTRY = "grade_entry";
+    public static final String GRADE_ENTRY_HIDDEN = "grade_entry_hidden";
 
     // save request ids for pending request in this set, and remove them when its done.
     private Set<Long> pendingRequest;
@@ -183,6 +185,11 @@ public class MainService extends MultiThreadedIntentService {
             case METHOD_UPDATE_GRADE_ENTRY:
                 GradeEntry gradeEntry = intent.getParcelableExtra(GRADE_ENTRY);
                 gradesProcessor.updateGradeEntry(gradeEntry);
+                break;
+            case METHOD_UPDATE_GRADE_ENTRY_VISIBILITY:
+                gradeHash = intent.getStringExtra(GRADE_HASH);
+                boolean hidden = intent.getBooleanExtra(GRADE_ENTRY_HIDDEN, false);
+                gradesProcessor.updateGradeEntryVisibility(gradeHash, hidden);
                 break;
             default:
                 Log.e(TAG, "Invalid method call to MainService: "+ method);

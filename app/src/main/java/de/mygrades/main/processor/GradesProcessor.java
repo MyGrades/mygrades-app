@@ -24,7 +24,6 @@ import de.mygrades.database.dao.RuleDao;
 import de.mygrades.main.alarm.ScrapeAlarmManager;
 import de.mygrades.main.core.Parser;
 import de.mygrades.main.core.Scraper;
-import de.mygrades.util.SemesterMapper;
 import de.mygrades.main.core.Transformer;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.GradeEntryEvent;
@@ -35,6 +34,7 @@ import de.mygrades.main.events.OverviewEvent;
 import de.mygrades.main.events.OverviewPossibleEvent;
 import de.mygrades.main.events.ScrapeProgressEvent;
 import de.mygrades.util.Constants;
+import de.mygrades.util.SemesterMapper;
 import de.mygrades.util.exceptions.ParseException;
 
 /**
@@ -335,6 +335,22 @@ public class GradesProcessor extends BaseProcessor {
     }
 
     /**
+     * Updates the visibility of a grade entry and posts an GradesEvent.
+     *
+     * @param gradeHash - grade entry hash
+     * @param hidden - hidden or not
+     */
+    public void updateGradeEntryVisibility(String gradeHash, boolean hidden) {
+        // find grade entry by hash and update visibility
+        GradeEntry gradeEntry = daoSession.getGradeEntryDao().load(gradeHash);
+        gradeEntry.setHidden(hidden);
+        gradeEntry.update();
+
+        // post event to ui
+        EventBus.getDefault().post(new GradesEvent(gradeEntry));
+    }
+
+    /**
      * Saves given list of GradeEntries to database.
      * Only new and updated values are written to database.
      * 1. Create Map: GradeHash -> GradeEntry Object for new and old list (not that hard -> only copy of references not deep copy)
@@ -408,7 +424,7 @@ public class GradesProcessor extends BaseProcessor {
     }
 
     /**
-     * Load all grades from the database and post an event with all grades.
+     * Load all grades from the database and post an event with all grades and semester mapping.
      */
     public void getGradesFromDatabase(boolean sticky) {
         List<GradeEntry> gradeEntries = daoSession.getGradeEntryDao().loadAll();
