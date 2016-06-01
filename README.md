@@ -4,7 +4,7 @@
 > [MyGrades](https://mygrades.de/) Android App
 
 [![Apache2 License](https://img.shields.io/badge/license-APACHE2-blue.svg?style=flat-square)](/LICENSE)
-[![MyGrades Version](https://img.shields.io/badge/mygrades-1.0.8-8BC34A.svg?style=flat-square)](https://mygrades.de)
+[![MyGrades Version](https://img.shields.io/badge/mygrades-1.0.9-8BC34A.svg?style=flat-square)](https://mygrades.de)
 <br><br><br>
 MyGrades is an Android App developed by [Tilman Ginzel](https://github.com/tilmanginzel) and [Jonas Theis](https://github.com/jonastheis). Its main purpose is to scrape a students grades from her/his respective university's website. To do so, it simulates a browser which follows a sequence of URLs and extracts the desired information with XPATH (web scraping). The core functionality is based on our Android App [Scrapp](https://github.com/tilmanginzel/scrapp), which we developed during our studies at the RheinMain University of Applied Sciences. Special thanks to [Rahel Habacker](https://github.com/RedHilarious)!
 
