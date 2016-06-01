@@ -38,15 +38,15 @@ public class AverageCalculator {
 
             GradeItem gradeItem = (GradeItem) item;
             float actCreditPoints = (gradeItem.getCreditPoints() == null ? 0f : gradeItem.getCreditPoints());
-            if (gradeItem.getGrade() != null && gradeItem.getGrade() >= 0 && gradeItem.getGrade() < 5) {
+            float grade = (gradeItem.getGrade() == null ? 0f : gradeItem.getGrade());
+
+            if (grade >= 0 && grade < 5) {
                 creditPointsSum += actCreditPoints;
                 // only add grades with actual grade to the sum of credit points for average calculation
-                if (gradeItem.getGrade() > 0) {
+                if (grade > 0) {
                     creditPointsSumForAverage += actCreditPoints;
                 }
             }
-
-            float grade = (gradeItem.getGrade() == null ? 0f : gradeItem.getGrade());
 
             if (simpleWeighting) {
                 if (grade > 0 && grade < 5) {
