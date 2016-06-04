@@ -32,6 +32,7 @@ import de.mygrades.util.LogoutHelper;
 import de.mygrades.view.activity.GradeDetailedActivity;
 import de.mygrades.view.adapter.model.GradeItem;
 import de.mygrades.view.adapter.model.GradesAdapterItem;
+import de.mygrades.view.adapter.model.GradesFooterItem;
 import de.mygrades.view.adapter.model.GradesSummaryItem;
 import de.mygrades.view.adapter.model.SemesterItem;
 import de.mygrades.view.widget.TriangleShapeView;
@@ -43,6 +44,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private final int VIEW_TYPE_SEMESTER = 0;
     private final int VIEW_TYPE_GRADE = 1;
     private final int VIEW_TYPE_SUMMARY = 2;
+    private final int VIEW_TYPE_FOOTER = 3;
 
     private Context context;
     private SharedPreferences prefs;
@@ -60,8 +62,10 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         semesterNumberMap = new HashMap<>();
 
         GradesSummaryItem summary = new GradesSummaryItem();
+        GradesFooterItem footer = new GradesFooterItem(false);
         items.add(0, summary);
-        notifyItemInserted(0);
+        items.add(1, footer);
+        notifyItemRangeInserted(0, 1);
 
         this.context = context;
         prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
@@ -108,6 +112,11 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         if (!updateGrade(newGrade, semesterIndex)) {
             addGrade(newGrade, semesterIndex);
         }
+
+        // update footer
+        if (items.size() > 2) {
+            ((GradesFooterItem)items.get(items.size() - 1)).setVisible(true);
+        }
     }
 
     /**
@@ -120,7 +129,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         int currentSemesterIndex = -1;
         SemesterItem currentSemesterItem = null;
 
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < items.size() - 1; i++) {
             if (items.get(i) instanceof SemesterItem) {
                 currentSemesterIndex = i;
                 currentSemesterItem = (SemesterItem) items.get(i);
@@ -174,7 +183,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * Checks if any semester is empty and deletes it.
      */
     private void deleteEmptySemester() {
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < items.size() - 1; i++) {
             if (items.get(i) instanceof SemesterItem) {
                 SemesterItem semesterItem = (SemesterItem) items.get(i);
                 if (semesterItem.getGrades().size() == 0) {
@@ -194,7 +203,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * @return true, if grade was updated or if it exists already. false otherwise
      */
     private boolean updateGrade(GradeItem newGrade, int semesterIndex) {
-        for(int i = semesterIndex + 1; i < items.size(); i++) {
+        for(int i = semesterIndex + 1; i < items.size() - 1; i++) {
             if (items.get(i) instanceof GradeItem) {
                 GradeItem gradeItem = (GradeItem) items.get(i);
                 if (gradeItem.getHash().equals(newGrade.getHash())) {
@@ -235,8 +244,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private void addGrade(GradeItem newGrade, int semesterIndex) {
         // find position in semester (lexicographic)
         // start after the semesterIndex
-        int newGradeIndex = items.size();
-        for(int i = semesterIndex + 1; i < items.size(); i++) {
+        int newGradeIndex = items.size() - 1;
+        for(int i = semesterIndex + 1; i < items.size() - 1; i++) {
             if (items.get(i) instanceof GradeItem) {
                 GradeItem gradeItem = (GradeItem) items.get(i);
                 if (newGrade.getShownName().compareToIgnoreCase(gradeItem.getShownName()) <= 0) {
@@ -268,7 +277,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private int getIndexForSemester(int semesterNumber, String semester) {
         // find the index for a semester
         int semesterIndex = -1;
-        for(int i = 0; i < items.size(); i++) {
+        for(int i = 0; i < items.size() - 1; i++) {
             if (items.get(i) instanceof SemesterItem) {
                 SemesterItem semesterItem = (SemesterItem) items.get(i);
                 if (semesterNumberMap.get(semesterItem.getSemester()) == semesterNumber) {
@@ -294,10 +303,10 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * @return index
      */
     private int addSemester(int semesterNumber, String semester) {
-        int semesterIndex = items.size(); // add to bottom , if no other position will be found
+        int semesterIndex = items.size() - 1; // add to bottom , if no other position will be found
 
         // find index where the semester should be added (descending by semester number)
-        for(int i = 0; i < items.size(); i++) {
+        for(int i = 0; i < items.size() - 1; i++) {
             if (items.get(i) instanceof SemesterItem) {
                 SemesterItem semesterItem = (SemesterItem) items.get(i);
                 if (semesterNumber > semesterNumberMap.get(semesterItem.getSemester())) {
@@ -344,7 +353,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
      * Updates the summary for each SemesterItem.
      */
     private void updateSemesterSummaries() {
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < items.size() - 1; i++) {
             GradesAdapterItem item = items.get(i);
 
             if (item instanceof SemesterItem) {
@@ -402,6 +411,9 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             gradesSummaryViewHolder.dismissInfoBox.setOnClickListener(hideInfoBoxClickListener);
             gradesSummaryViewHolder.btnLogout.setOnClickListener(logoutClickListener);
             return gradesSummaryViewHolder;
+        } else if (viewType == VIEW_TYPE_FOOTER) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grades_footer, parent, false);
+            return new FooterViewHolder(v);
         }
         return null;
     }
@@ -506,6 +518,10 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             } else {
                 viewHolder.llNoGradesInfo.setVisibility(View.GONE);
             }
+        } else if (holder instanceof FooterViewHolder) {
+            FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
+            GradesFooterItem footerItem = (GradesFooterItem) items.get(position);
+            footerViewHolder.itemView.setVisibility(footerItem.isVisible() ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -522,6 +538,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             return VIEW_TYPE_GRADE;
         } else if (items.get(position) instanceof GradesSummaryItem) {
             return VIEW_TYPE_SUMMARY;
+        } else if (items.get(position) instanceof GradesFooterItem) {
+            return VIEW_TYPE_FOOTER;
         }
 
         return -1;
@@ -708,6 +726,15 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             tvSemester = (TextView) itemView.findViewById(R.id.tv_semester);
             tvAverage = (TextView) itemView.findViewById(R.id.tv_average);
             tvCreditPoints = (TextView) itemView.findViewById(R.id.tv_credit_points);
+        }
+    }
+
+    /**
+     * View holder for the footer.
+     */
+    public static class FooterViewHolder extends RecyclerView.ViewHolder {
+        public FooterViewHolder(View itemView) {
+            super(itemView);
         }
     }
 

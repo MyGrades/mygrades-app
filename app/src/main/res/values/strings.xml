@@ -135,6 +135,7 @@
     <string name="dialog_restore_grade_entry_title">Zurücksetzen</string>
     <string name="dialog_restore_grade_entry">Möchtest du wirklich alle Bearbeitungen zurücksetzen?</string>
     <string name="dialog_restore_grade_entry_visibility">Möchtest du wirklich alle Sichtbarkeiten zurücksetzen?</string>
+    <string name="grades_footer_no_guarantee">Alle Angaben ohne Gewähr.</string>
 
     <string-array name="grade_attempt_spinner">
         <item>0</item>
