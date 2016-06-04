@@ -2,6 +2,7 @@ package de.mygrades.main.processor;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 
 import de.greenrobot.event.EventBus;
@@ -39,6 +40,7 @@ public class ErrorProcessor extends BaseProcessor {
             // get university id
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
+            long ruleId = prefs.getLong(Constants.PREF_KEY_RULE_ID, -1);
 
             // create error report
             Error error = new Error();
@@ -47,6 +49,9 @@ public class ErrorProcessor extends BaseProcessor {
             error.setMessage(errorMessage);
             error.setAppVersion(BuildConfig.VERSION_NAME);
             error.setUniversityId(universityId);
+            error.setRuleId(ruleId);
+            error.setAndroidVersion(Build.VERSION.RELEASE + ", " + Build.VERSION.SDK_INT);
+            error.setDevice(Build.MANUFACTURER + ", " + Build.MODEL);
 
             // post to server
             restClient.getRestApi().postError(error);
@@ -67,6 +72,9 @@ public class ErrorProcessor extends BaseProcessor {
         private String message;
         private long universityId;
         private String appVersion;
+        private long ruleId;
+        private String androidVersion;
+        private String device;
 
         public String getName() {
             return name;
@@ -106,6 +114,30 @@ public class ErrorProcessor extends BaseProcessor {
 
         public void setAppVersion(String appVersion) {
             this.appVersion = appVersion;
+        }
+
+        public long getRuleId() {
+            return ruleId;
+        }
+
+        public void setRuleId(long ruleId) {
+            this.ruleId = ruleId;
+        }
+
+        public String getAndroidVersion() {
+            return androidVersion;
+        }
+
+        public void setAndroidVersion(String androidVersion) {
+            this.androidVersion = androidVersion;
+        }
+
+        public String getDevice() {
+            return device;
+        }
+
+        public void setDevice(String device) {
+            this.device = device;
         }
     }
 }
