@@ -77,6 +77,13 @@ public class FaqExpandableItemAdapter extends AbstractExpandableItemAdapter<FaqE
     @Override
     public void onBindGroupViewHolder(QuestionViewHolder holder, int groupPosition, int viewType) {
         FaqDataProvider.QuestionData group = dataProvider.getGroupItem(groupPosition);
+        if (group.getSectionTitle() != null) {
+            holder.tvFaqSection.setVisibility(View.VISIBLE);
+            holder.tvFaqSection.setText(group.getSectionTitle());
+        } else {
+            holder.tvFaqSection.setText(null);
+            holder.tvFaqSection.setVisibility(View.GONE);
+        }
 
         holder.tvFaqHeader.setText(group.getQuestion());
         holder.itemView.setClickable(true);
@@ -126,12 +133,14 @@ public class FaqExpandableItemAdapter extends AbstractExpandableItemAdapter<FaqE
         public TextView tvFaqHeader;
         public ExpandableItemIndicator indicator;
         public LinearLayout container;
+        public TextView tvFaqSection;
 
         public QuestionViewHolder(View itemView) {
             super(itemView);
             container = (LinearLayout) itemView.findViewById(R.id.ll_container);
             tvFaqHeader = (TextView) itemView.findViewById(R.id.tv_faq_question);
             indicator = (ExpandableItemIndicator) itemView.findViewById(R.id.indicator);
+            tvFaqSection = (TextView) itemView.findViewById(R.id.tv_faq_section);
         }
     }
 

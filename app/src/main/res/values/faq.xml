@@ -1,26 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="questions">
+    <!-- about mygrades -->
+    <string name="questions_about_mygrades_section_title">Über MyGrades</string>
+    <string-array name="questions_about_mygrades">
         <item>Was ist MyGrades?</item>
         <item>Wie funktioniert die App?</item>
         <item>Wo werden meine Noten und Benutzerdaten gespeichert?</item>
         <item>Wer steckt dahinter?</item>
+    </string-array>
+    <string-array name="answers_about_mygrades">
+        <item>MyGrades ist eine App zum Abrufen deiner Noten aus dem Notensystem deiner Hochschule. Sie erspart dir die mühsame Arbeit dich durch dein Notensystem zu klicken und du hast deine Noten jederzeit lokal und übersichtlich auf deinem Handy verfügbar.</item>
+        <item>Die App simuliert einen browsenden Benutzer und navigiert automatisch zu deiner Notentabelle. Diese wird dann lokal auf deinem Handy verarbeitet und bei dir gespeichert.\n\nGenauere Informationen und den Quelltext der App findest du unter <a href="https://github.com/mygrades/mygrades-app">github.com/mygrades/mygrades-app</a></item>
+        <item>Deine Benutzerdaten werden lokal und verschlüsselt auf deinem Smartphone gespeichert. Die Verarbeitung deiner Notentabelle und Speicherung deiner Noten ist ausschließlich lokal\n\nEs werden <b>keine Daten</b> an uns oder Dritte übermittelt.\n\nGenauere Informationen und den Quelltext der App findest du unter <a href="https://github.com/mygrades/mygrades-app">github.com/mygrades/mygrades-app</a></item>
+        <item>Wir – Jonas und Tilman – sind zwei Studenten der Medieninformatik an der Hochschule RheinMain.</item>
+    </string-array>
+
+    <!-- errors -->
+    <string name="questions_error_section_title">Fehlermeldungen</string>
+    <string-array name="questions_error">
         <item>Was ist der Zeitüberschreitungs-Fehler?</item>
         <item>Was bedeutet Allgemeiner Fehler?</item>
+    </string-array>
+    <string-array name="answers_error">
+        <item>Dieser Fehler tritt auf, wenn eine Anfrage an die Website deiner Hochschule nicht innerhalb von 25 Sekunden erfolgreich war.\n\nDies kann daran liegen, dass deine Internetverbindung schlecht oder der Server deiner Hochschule nicht erreichbar ist.</item>
+        <item>Dieser Fehler kann in verschiedenen Situationen auftreten. Möglicherweise...\n\n... sind deine Zugangsdaten falsch.\n\n... gibt es Probleme mit dem Notensystem deiner Hochschule.\n\n... hat sich der Aufbau deines Notensystems geändert und es ist zur Zeit somit nicht möglich, deine Noten abzurufen.\n\nSag uns Bescheid, falls dieses Problem länger besteht!</item>
+    </string-array>
+
+    <!-- general -->
+    <string name="questions_general_section_title">Allgemein</string>
+    <string-array name="questions_general">
         <item>Warum ist mein Notendurchschnitt falsch?</item>
         <item>Warum sind die Noten im falschen Semester?</item>
         <item>Warum stimmt die Anzahl meiner gesamt CP nicht?</item>
         <item>Warum gibt es keine Notenverteilung?</item>
         <item>Warum bekomme ich keine Benachrichtigung, wenn eine neue Note da ist?</item>
     </string-array>
-
-    <string-array name="answers">
-        <item>MyGrades ist eine App zum Abrufen deiner Noten aus dem Notensystem deiner Hochschule. Sie erspart dir die mühsame Arbeit dich durch dein Notensystem zu klicken und du hast deine Noten jederzeit lokal und übersichtlich auf deinem Handy verfügbar.</item>
-        <item>Die App simuliert einen browsenden Benutzer und navigiert automatisch zu deiner Notentabelle. Diese wird dann lokal auf deinem Handy verarbeitet und bei dir gespeichert.\n\nGenauere Informationen und den Quelltext der App findest du unter <a href="https://github.com/mygrades/mygrades-app">github.com/mygrades/mygrades-app</a></item>
-        <item>Deine Benutzerdaten werden lokal und verschlüsselt auf deinem Smartphone gespeichert. Die Verarbeitung deiner Notentabelle und Speicherung deiner Noten ist ausschließlich lokal\n\nEs werden <b>keine Daten</b> an uns oder Dritte übermittelt.\n\nGenauere Informationen und den Quelltext der App findest du unter <a href="https://github.com/mygrades/mygrades-app">github.com/mygrades/mygrades-app</a></item>
-        <item>Wir – Jonas und Tilman – sind zwei Studenten der Medieninformatik an der Hochschule RheinMain.</item>
-        <item>Dieser Fehler tritt auf, wenn eine Anfrage an die Website deiner Hochschule nicht innerhalb von 25 Sekunden erfolgreich war.\n\nDies kann daran liegen, dass deine Internetverbindung schlecht oder der Server deiner Hochschule nicht erreichbar ist.</item>
-        <item>Dieser Fehler kann in verschiedenen Situationen auftreten. Möglicherweise...\n\n... sind deine Zugangsdaten falsch.\n\n... gibt es Probleme mit dem Notensystem deiner Hochschule.\n\n... hat sich der Aufbau deines Notensystems geändert und es ist zur Zeit somit nicht möglich, deine Noten abzurufen.\n\nSag uns Bescheid, falls dieses Problem länger besteht!</item>
+    <string-array name="answers_general">
         <item>Die Berechnung des Notendurchschnitts erfolgt ohne Gewichtung einzelner Noten oder Semester, da dies meist spezifisch für einen Studiengang ist.\nWeiterhin werden Fächer mit 0 CPs nicht in die Berechnung mit einberechnet.</item>
         <item>Die Nummer des Semesters wird von der App automatisch anhand der vorliegenden Noten und deren Zeitpunkt berechnet. Um eine fortlaufende richtige Nummerierung zu erreichen muss also in jedem Semester mindestens eine Leistung eingetragen sein. Beispiele:\n\n- Du hast am Ende des 2. Semesters den Studiengang gewechselt. Die App erkennt nur die Leistungen deines neuen Studiengangs und ordnet diese dem 1. Semester zu.\n- Du hast ein Urlaubssemester eingelegt. Die App findet in dem Urlaubssemester keine Leistungen und ignoriert dieses daher.</item>
         <item>Wir gehen vom Standardwert von 180 CP aus. Wenn dieser bei dir nicht zutrifft, kannst du diesen einfach in den Einstellungen anpassen.</item>

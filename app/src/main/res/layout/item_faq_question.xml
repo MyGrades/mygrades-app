@@ -7,6 +7,19 @@
 
     <View style="@style/Divider"/>
 
+    <TextView
+        android:id="@+id/tv_faq_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        android:paddingLeft="16dp"
+        android:paddingTop="32dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp"
+        android:visibility="gone"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium" />
+
     <LinearLayout
         android:id="@+id/ll_container"
         android:layout_width="match_parent"
@@ -20,7 +33,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:fontFamily="sans-serif-medium"
             android:layout_weight="8"/>
 
         <de.mygrades.view.widget.ExpandableItemIndicator

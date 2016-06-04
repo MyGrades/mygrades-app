@@ -28,11 +28,20 @@ public class FaqDataProvider {
      */
     public void populateData(Context context) {
         data.clear();
-        CharSequence[] questions = context.getResources().getTextArray(R.array.questions);
-        CharSequence[] answers = context.getResources().getTextArray(R.array.answers);
 
-        for (int i = 0; i < questions.length && i < answers.length; i++) {
-            QuestionData question = new QuestionData(i + 1, questions[i]);
+        addQuestions(context, R.array.questions_about_mygrades, R.array.answers_about_mygrades, R.string.questions_about_mygrades_section_title);
+        addQuestions(context, R.array.questions_error, R.array.answers_error, R.string.questions_error_section_title);
+        addQuestions(context, R.array.questions_general, R.array.answers_general, R.string.questions_general_section_title);
+    }
+
+    private void addQuestions(Context context, int resIdQuestions, int resIdAnswers, int resIdSectionTitle) {
+        CharSequence[] questions = context.getResources().getTextArray(resIdQuestions);
+        CharSequence[] answers = context.getResources().getTextArray(resIdAnswers);
+        String sectionTitle = context.getResources().getString(resIdSectionTitle);
+
+        for (int i = 0; i < questions.length; i++) {
+            String title = (i == 0) ? sectionTitle : null;
+            QuestionData question = new QuestionData(data.size() + 1, questions[i], title);
             AnswerData answer = new AnswerData(1, answers[i]);
             data.add(new Pair(question, answer));
         }
@@ -78,10 +87,12 @@ public class FaqDataProvider {
     public static final class QuestionData {
         private final long id; // unique ids are required
         private final CharSequence question;
+        private final String sectionTitle;
 
-        public QuestionData(long id, CharSequence question) {
+        public QuestionData(long id, CharSequence question, String sectionTitle) {
             this.id = id;
             this.question = question;
+            this.sectionTitle = sectionTitle;
         }
 
         public long getGroupId() {
@@ -90,6 +101,10 @@ public class FaqDataProvider {
 
         public CharSequence getQuestion() {
             return question;
+        }
+
+        public String getSectionTitle() {
+            return sectionTitle;
         }
     }
 
