@@ -139,8 +139,8 @@
     </style>
 
     <style name="TriangleShapeViewModifiedBadge">
-        <item name="android:layout_width">24dp</item>
-        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
         <item name="android:layout_alignParentRight">true</item>
     </style>
 
