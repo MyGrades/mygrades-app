@@ -171,8 +171,10 @@ public class FragmentOverview extends Fragment {
         // show donation info at 8 or multiples of 20 app launches
         boolean dismissedDonationInfo = prefs.getBoolean(Constants.PREF_KEY_DISMISSED_DONATION_INFO, false);
         if (counter == 8 || counter % 20 == 0) {
-            if (!dismissedDonationInfo)
+            if (!dismissedDonationInfo) {
                 showDonationInfo(prefs);
+                return;
+            }
         } else {
             prefs.edit().putBoolean(Constants.PREF_KEY_DISMISSED_DONATION_INFO, false).apply();
         }
@@ -180,10 +182,20 @@ public class FragmentOverview extends Fragment {
         // show rating info at 15 app launches
         boolean dismissedRatingInfo = prefs.getBoolean(Constants.PREF_KEY_DISMISSED_RATING_INFO, false);
         if (counter == 15) {
-            if (!dismissedRatingInfo)
+            if (!dismissedRatingInfo) {
                 showRatingInfo(prefs);
+                return;
+            }
         } else {
             prefs.edit().putBoolean(Constants.PREF_KEY_DISMISSED_RATING_INFO, false);
+        }
+
+        // show edit mode info
+        boolean dismissedEditModeInfo = prefs.getBoolean(Constants.PREF_KEY_DISMISSED_EDIT_MODE_INFO, false);
+        if (!dismissedEditModeInfo) {
+            String title = getString(R.string.info_edit_mode_title);
+            String message = getString(R.string.info_edit_mode_message);
+            adapter.showInfoBox(title, message, Constants.PREF_KEY_DISMISSED_EDIT_MODE_INFO);
         }
     }
 

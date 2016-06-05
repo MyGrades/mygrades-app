@@ -20,6 +20,7 @@ public class Constants {
     public static final String PREF_KEY_DISMISSED_NOTIFICATION_INFO = "dismissed_notification_info";
     public static final String PREF_KEY_DISMISSED_DONATION_INFO = "dismissed_donation_info";
     public static final String PREF_KEY_DISMISSED_RATING_INFO = "dismissed_rating_info";
+    public static final String PREF_KEY_DISMISSED_EDIT_MODE_INFO = "dismissed_edit_mode_info";
     public static final String PREF_KEY_APPLICATION_LAUNCHES_COUNTER = "application_launches_counter";
 
     // Scraping status instance state

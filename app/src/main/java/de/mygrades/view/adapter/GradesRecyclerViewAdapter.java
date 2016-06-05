@@ -586,7 +586,6 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         if (actualFirstSemester == null) return;
 
         this.actualFirstSemester = actualFirstSemester;
-
     }
 
     public void enableEditMode(boolean enable) {
