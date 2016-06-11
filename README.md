@@ -35,6 +35,7 @@ Get it on [Google Play.](https://play.google.com/store/apps/details?id=de.mygrad
 * [Groovy](http://www.groovy-lang.org/)
 * [Spock Framework](https://github.com/spockframework/spock)
 * [Hamcrest](http://hamcrest.org/)
+* [FloatingActionButton](https://github.com/makovkastar/FloatingActionButton)
 
 ## License
 
