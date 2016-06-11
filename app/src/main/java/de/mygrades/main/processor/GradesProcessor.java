@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import de.greenrobot.event.EventBus;
@@ -25,6 +26,7 @@ import de.mygrades.main.alarm.ScrapeAlarmManager;
 import de.mygrades.main.core.Parser;
 import de.mygrades.main.core.Scraper;
 import de.mygrades.main.core.Transformer;
+import de.mygrades.main.events.DeleteGradeEvent;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.GradeEntryEvent;
 import de.mygrades.main.events.GradesEvent;
@@ -64,24 +66,26 @@ public class GradesProcessor extends BaseProcessor {
     public void getGradeDetails(String gradeHash) {
         // get GradeEntry from DB by hash with Overview (if present)
         GradeEntry gradeEntry = daoSession.getGradeEntryDao().load(gradeHash);
-        daoSession.getGradeEntryDao().refresh(gradeEntry);
-
-        // post sticky event to overview if seen state has changed
-        if (gradeEntry.getSeen() != Constants.GRADE_ENTRY_SEEN) {
-            gradeEntry.setSeen(Constants.GRADE_ENTRY_SEEN);
-            daoSession.getGradeEntryDao().update(gradeEntry);
-
-            List<GradeEntry> gradeEntries = new ArrayList<>();
-            gradeEntries.add(gradeEntry);
-            EventBus.getDefault().postSticky(new GradesEvent(gradeEntries, null, null));
-        }
-
-        Log.d(TAG, gradeEntry.toString());
 
         // get semester mapping (used in edit mode)
         List<GradeEntry> gradeEntries = daoSession.getGradeEntryDao().loadAll();
         SemesterMapper semesterMapper = new SemesterMapper();
         Map<String, Integer> semesterToNumberMap = semesterMapper.getSemesterToNumberMap(gradeEntries);
+
+        if (gradeEntry == null) { // create new grade with generated hash
+            gradeEntry = getGeneratedGradeEntry(semesterToNumberMap);
+        } else {
+            daoSession.getGradeEntryDao().refresh(gradeEntry);
+
+            // post sticky event to overview if seen state has changed
+            if (gradeEntry.getSeen() != Constants.GRADE_ENTRY_SEEN) {
+                gradeEntry.setSeen(Constants.GRADE_ENTRY_SEEN);
+                daoSession.getGradeEntryDao().update(gradeEntry);
+                EventBus.getDefault().postSticky(new GradesEvent(gradeEntry));
+            }
+        }
+
+        Log.d(TAG, gradeEntry.toString());
 
         // post Event with GradeEntry to GUI
         GradeEntryEvent gradeEntryEvent = new GradeEntryEvent(gradeEntry);
@@ -107,6 +111,28 @@ public class GradesProcessor extends BaseProcessor {
                 EventBus.getDefault().post(new OverviewPossibleEvent(gradeEntry.getOverviewPossible(), rule.getOverview()));
             }
         }
+    }
+
+    /**
+     * Creates a grade entry with a generated id and default values.
+     * This is used for grade entries which are created by the user.
+     *
+     * @return grade entry
+     */
+    private GradeEntry getGeneratedGradeEntry(Map<String, Integer> semesterToNumberMap) {
+        GradeEntry gradeEntry = new GradeEntry();
+        gradeEntry.__setDaoSession(daoSession);
+        gradeEntry.setOverviewPossible(false);
+        gradeEntry.setWeight(1.0);
+        gradeEntry.setName("Modulname");
+        gradeEntry.setGeneratedId(UUID.randomUUID().toString());
+        gradeEntry.setSeen(Constants.GRADE_ENTRY_SEEN);
+        gradeEntry.setAttempt("1");
+        gradeEntry.updateHash();
+
+        Map.Entry<String, Integer> entry = semesterToNumberMap.entrySet().iterator().next();
+        gradeEntry.setModifiedSemester(entry.getKey());
+        return gradeEntry;
     }
 
     /**
@@ -321,15 +347,20 @@ public class GradesProcessor extends BaseProcessor {
     }
 
     /**
-     * Updates a grade entry in the database. The session must be re-attached, because
+     * Updates or inserts a grade entry in the database. The session must be re-attached, because
      * the gradeEntry was un-parcelled before (without the session).
      *
-     * @param gradeEntry - grade entry to update.
+     * @param gradeEntry - grade entry to update or insert if it does not exist
      */
     public void updateGradeEntry(GradeEntry gradeEntry) {
         // re-attach grade entry to dao session
         gradeEntry.__setDaoSession(daoSession);
-        gradeEntry.update();
+
+        if (daoSession.getGradeEntryDao().load(gradeEntry.getHash()) == null) {
+            daoSession.getGradeEntryDao().insert(gradeEntry);
+        } else {
+            gradeEntry.update();
+        }
 
         // post sticky grades event
         getGradesFromDatabase(true);
@@ -349,6 +380,20 @@ public class GradesProcessor extends BaseProcessor {
 
         // post event to ui
         EventBus.getDefault().post(new GradesEvent(gradeEntry));
+    }
+
+    /**
+     * Deletes a GradeEntry by a given grade entry hash.
+     *
+     * @param gradeHash grade entry hash
+     */
+    public void deleteGradeEntry(String gradeHash) {
+        // find grade entry by hash
+        GradeEntry gradeEntry = daoSession.getGradeEntryDao().load(gradeHash);
+        gradeEntry.delete();
+
+        // post event to ui
+        EventBus.getDefault().postSticky(new DeleteGradeEvent(gradeEntry));
     }
 
     /**

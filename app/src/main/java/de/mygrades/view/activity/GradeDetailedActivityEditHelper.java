@@ -603,6 +603,7 @@ public class GradeDetailedActivityEditHelper {
      */
     private boolean updateSemester() {
         String semester = gradeEntry.getSemester();
+        semester = semester == null ? "" : semester;
         String modifiedSemester = (String) spSemester.getSelectedItem();
 
         if (semester.equals(modifiedSemester)) {
@@ -656,6 +657,13 @@ public class GradeDetailedActivityEditHelper {
         updateValues();
 
         enableEditMode(false);
+    }
+
+    /**
+     * Deletes this grade entry.
+     */
+    public void delete() {
+        mainServiceHelper.deleteGradeEntry(gradeEntry.getHash());
     }
 
     /**
@@ -717,5 +725,9 @@ public class GradeDetailedActivityEditHelper {
 
     public void setSemesterToNumberMap(Map<String, Integer> semesterToNumberMap) {
         this.semesterToNumberMap = semesterToNumberMap;
+    }
+
+    public boolean isCustomGradeEntry() {
+        return gradeEntry.getGeneratedId() != null;
     }
 }

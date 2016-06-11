@@ -1,25 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
-
-<in.srain.cube.views.ptr.PtrFrameLayout
-    android:id="@+id/pull_to_refresh"
-    xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="match_parent">
 
-    cube_ptr:ptr_resistance="1.7"
-    cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
-    cube_ptr:ptr_duration_to_close="500"
-    cube_ptr:ptr_duration_to_close_header="2000"
-    cube_ptr:ptr_keep_header_when_refresh="true"
-    cube_ptr:ptr_pull_to_fresh="false">
+    <in.srain.cube.views.ptr.PtrFrameLayout
+        android:id="@+id/pull_to_refresh"
+        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_grades"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        cube_ptr:ptr_resistance="1.7"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
+        cube_ptr:ptr_duration_to_close="500"
+        cube_ptr:ptr_duration_to_close_header="2000"
+        cube_ptr:ptr_keep_header_when_refresh="true"
+        cube_ptr:ptr_pull_to_fresh="false">
 
-</in.srain.cube.views.ptr.PtrFrameLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_grades"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+    </in.srain.cube.views.ptr.PtrFrameLayout>
+
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/fab_add_grade_entry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add_white_24dp"
+        fab:fab_colorNormal="@color/colorPrimary"
+        fab:fab_colorPressed="@color/colorPrimaryDark"
+        fab:fab_colorRipple="@color/ripple_material_dark" />
 </RelativeLayout>

@@ -6,6 +6,7 @@
  - change all properties (grade, cp, weight, ...)
  - move grade entry to another semester
  - hide unwanted grade entries
+ - add and delete custom grade entries
 - Appended *attempt* to grade entry hash, because some universities may not provide enough distinct information for each entry
 - Added property *weight* to GradeEntry to allow better average calculation
 

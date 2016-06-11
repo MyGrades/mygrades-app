@@ -1,5 +1,6 @@
 package de.mygrades.util;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -57,6 +58,8 @@ public class SemesterMapper {
         if (sortedSemester.size() > 0) {
             sortedSemester.add(getNextSemester(sortedSemester.get(sortedSemester.size() - 1)));
             sortedSemester.add(0, getPreviousSemester(sortedSemester.get(0)));
+        } else {
+            sortedSemester.add(createCurrentSemester());
         }
 
         return getGradeEntrySemesterMap(sortedSemester);
@@ -280,6 +283,39 @@ public class SemesterMapper {
         }
 
         return actualFirstSemester;
+    }
+
+    /**
+     * Creates a semester string based on the current year and month.
+     * April to september is a summer semester, and october till march winter semester.
+     *
+     * @return semester string
+     */
+    private String createCurrentSemester() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        return getSemesterByYearAndMonth(year, month);
+    }
+
+    /**
+     * Creates a semester string based on the current year and month.
+     * April to september is a summer semester, and october till march winter semester.
+     *
+     * @param year current year
+     * @param month current month
+     * @return semester string
+     */
+    public String getSemesterByYearAndMonth(int year, int month) {
+        if (month >= 0 && month <= 3) {
+            return "Wintersemester " + (year - 1) + "/" + year;
+        } else if (month >= 4 && month <= 9) {
+            return "Sommersemester " + year;
+        } else if (month >= 10 && month <= 12) {
+            return "Wintersemester " + year + "/" + (year + 1);
+        }
+
+        return null;
     }
 
     private Integer parseInt(String number) {

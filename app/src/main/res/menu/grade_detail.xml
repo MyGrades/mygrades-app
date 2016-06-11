@@ -14,6 +14,12 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/grade_detail_delete"
+        android:title="Löschen"
+        android:icon="@drawable/ic_delete_white_24dp"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/grade_detail_save"
         android:title="Speichern"
         android:icon="@drawable/ic_save_white_24dp"

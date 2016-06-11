@@ -210,6 +210,23 @@ public class MainServiceHelper {
     }
 
     /**
+     * Starts a worker thread to delete a grade entry.
+     *
+     * @param gradeEntryHash grade entry hash
+     */
+    public void deleteGradeEntry(String gradeEntryHash) {
+        int method = MainService.METHOD_DELETE_GRADE_ENTRY;
+
+        // set request id
+        long requestId = concatenateLong(method, gradeEntryHash.hashCode());
+
+        // start worker thread in background
+        Intent intent = getBasicIntent(MainService.PROCESSOR_GRADES, method, requestId);
+        intent.putExtra(MainService.GRADE_HASH, gradeEntryHash);
+        context.startService(intent);
+    }
+
+    /**
      * Starts a worker thread to post an error report to the server.
      *
      * @param name name

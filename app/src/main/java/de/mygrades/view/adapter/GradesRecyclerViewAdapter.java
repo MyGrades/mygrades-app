@@ -102,9 +102,6 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         // check if grade already exists in different semester and delete it
         checkForDeletion(newGrade);
 
-        // check if any semester is now empty and delete it if necessary
-        deleteEmptySemester();
-
         // find semester index, where the grade should be added
         int semesterIndex = getIndexForSemester(semesterNumber, semester);
 
@@ -113,10 +110,54 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             addGrade(newGrade, semesterIndex);
         }
 
-        // update footer
-        if (items.size() > 2) {
-            ((GradesFooterItem)items.get(items.size() - 1)).setVisible(true);
+        updateFooter();
+    }
+
+    /**
+     * Show footer if grade items exist.
+     */
+    private void updateFooter() {
+        if (items.size() > 1) {
+            ((GradesFooterItem)items.get(items.size() - 1)).setVisible(items.size() > 2);
+            notifyItemChanged(items.size() - 1);
         }
+    }
+
+    /**
+     * Deletes a grade item and its semester if necessary.
+     *
+     * @param newGrade grade item to delete
+     */
+    public void deleteGrade(GradeItem newGrade) {
+        int semesterNumber = semesterNumberMap.get(newGrade.getCurrentSemester());
+        String semester = newGrade.getCurrentSemester();
+
+        // find semester index, where the grade should be added
+        int semesterIndex = getIndexForSemester(semesterNumber, semester);
+        SemesterItem semesterItem = (SemesterItem) items.get(semesterIndex);
+
+        // find grade item index
+        int indexToDelete = -1;
+        for(int i = semesterIndex + 1; i < items.size() - 1; i++) {
+            if (items.get(i) instanceof GradeItem) {
+                GradeItem gradeItem = (GradeItem) items.get(i);
+                if (gradeItem.getHash().equals(newGrade.getHash())) {
+                    indexToDelete = i;
+                    break;
+                }
+            }
+        }
+
+        if (indexToDelete > 0 && semesterIndex > 0) {
+            GradeItem gradeItemToDelete = (GradeItem) items.get(indexToDelete);
+            removeGrade(gradeItemToDelete, indexToDelete, semesterItem, semesterIndex);
+
+            // check if any semester is now empty and delete it if necessary
+            deleteEmptySemester();
+        }
+
+        updateSummary();
+        updateFooter();
     }
 
     /**

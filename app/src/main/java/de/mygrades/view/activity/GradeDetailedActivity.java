@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,10 +50,10 @@ import in.srain.cube.views.ptr.PtrHandler;
  * If available for university and grade entry a diagram for overview of grades is shown.
  */
 public class GradeDetailedActivity extends AppCompatActivity {
-    private static final String TAG = GradeDetailedActivity.class.getSimpleName();
 
     // intent extra data
     public static final String EXTRA_GRADE_HASH = "grade_hash";
+    public static final String EXTRA_ADD_NEW_GRADE_ENTRY = "add_new_grade_entry";
 
     // instance state
     private static final String IS_OVERVIEW_POSSIBLE_STATE = "is_overview_possible_state";
@@ -86,6 +85,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private boolean isOverviewPossible;
     private boolean receivedGradeEntryEvent;
     private boolean editModeEnabled;
+    private boolean addNewGradeEntry;
 
     // snackbar listener
     private View.OnClickListener tryAgainListener;
@@ -110,6 +110,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         // get extra data
         Bundle extras = getIntent().getExtras();
         gradeHash = extras.getString(EXTRA_GRADE_HASH, "");
+        addNewGradeEntry = extras.getBoolean(EXTRA_ADD_NEW_GRADE_ENTRY, false);
 
         initListener();
         initViews();
@@ -273,10 +274,15 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
         editHelper.setGradeEntry(gradeEntry);
         editHelper.setSemesterToNumberMap(gradeEntryEvent.getSemesterToSemesterNumberMap());
-
         editHelper.init();
-        editHelper.enableEditMode(editModeEnabled);
         editHelper.updateValues();
+
+        if (addNewGradeEntry) {
+            editHelper.enableEditMode(true);
+            editModeEnabled = true;
+        } else {
+            editHelper.enableEditMode(editModeEnabled);
+        }
 
         receivedGradeEntryEvent = true;
         invalidateOptionsMenu();
@@ -436,9 +442,11 @@ public class GradeDetailedActivity extends AppCompatActivity {
         MenuItem editItem = menu.findItem(R.id.grade_detail_edit);
         MenuItem saveItem = menu.findItem(R.id.grade_detail_save);
         MenuItem restoreItem = menu.findItem(R.id.grade_detail_restore);
+        MenuItem deleteItem = menu.findItem(R.id.grade_detail_delete);
         editItem.setVisible(receivedGradeEntryEvent && !editHelper.isEditModeEnabled());
         saveItem.setVisible(receivedGradeEntryEvent && editHelper.isEditModeEnabled());
-        restoreItem.setVisible(receivedGradeEntryEvent && editHelper.isEditModeEnabled());
+        restoreItem.setVisible(receivedGradeEntryEvent && editHelper.isEditModeEnabled() && !editHelper.isCustomGradeEntry());
+        deleteItem.setVisible(receivedGradeEntryEvent && editHelper.isEditModeEnabled() && editHelper.isCustomGradeEntry());
 
         return true;
     }
@@ -459,6 +467,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
                 editHelper.saveEdits();
                 editModeEnabled = false;
                 invalidateOptionsMenu();
+                return true;
+            case R.id.grade_detail_delete:
+                showDeleteDialog();
                 return true;
             case R.id.grade_detail_restore:
                 showRestoreDialog();
@@ -493,6 +504,33 @@ public class GradeDetailedActivity extends AppCompatActivity {
                 editHelper.restore();
                 editModeEnabled = false;
                 invalidateOptionsMenu();
+            }
+        });
+
+        builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    /**
+     * Show dialog to ask the user whether he wants to delete this GradeEntry.
+     */
+    private void showDeleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialog_delete_grade_entry);
+        builder.setTitle(getString(R.string.dialog_delete_grade_entry_title));
+        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                editHelper.delete();
+                editModeEnabled = false;
+                finish();
             }
         });
 

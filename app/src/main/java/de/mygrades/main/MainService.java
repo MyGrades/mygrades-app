@@ -50,6 +50,7 @@ public class MainService extends MultiThreadedIntentService {
     public static final int METHOD_POST_WISH = 122;
     public static final int METHOD_UPDATE_GRADE_ENTRY = 123;
     public static final int METHOD_UPDATE_GRADE_ENTRY_VISIBILITY = 124;
+    public static final int METHOD_DELETE_GRADE_ENTRY = 125;
 
     // misc intent extra
     public static final String REQUEST_ID = "request_id";
@@ -190,6 +191,10 @@ public class MainService extends MultiThreadedIntentService {
                 gradeHash = intent.getStringExtra(GRADE_HASH);
                 boolean hidden = intent.getBooleanExtra(GRADE_ENTRY_HIDDEN, false);
                 gradesProcessor.updateGradeEntryVisibility(gradeHash, hidden);
+                break;
+            case METHOD_DELETE_GRADE_ENTRY:
+                gradeHash = intent.getStringExtra(GRADE_HASH);
+                gradesProcessor.deleteGradeEntry(gradeHash);
                 break;
             default:
                 Log.e(TAG, "Invalid method call to MainService: "+ method);

@@ -72,4 +72,22 @@ class SemesterMapperTest extends Specification {
         []                                                                              | 0
         ["Wintersemester 2014/2015", "Wintersemester 2015/2016", "Sommersemester 2017"] | 6
     }
+
+    @Unroll
+    def "create semester string for year #year and month #month, expect #semester"() {
+        when:
+        def semesterMapper = new SemesterMapper()
+
+        then:
+        semesterMapper.getSemesterByYearAndMonth(year, month) == semester
+
+        where:
+        year | month || semester
+        2016 | 1     || "Wintersemester 2015/2016"
+        2016 | 3     || "Wintersemester 2015/2016"
+        2016 | 4     || "Sommersemester 2016"
+        2016 | 9     || "Sommersemester 2016"
+        2016 | 10    || "Wintersemester 2016/2017"
+        2016 | 12    || "Wintersemester 2016/2017"
+    }
 }

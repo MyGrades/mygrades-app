@@ -1,6 +1,7 @@
 package de.mygrades.view.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -17,10 +18,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.melnykov.fab.FloatingActionButton;
+
 import de.greenrobot.event.EventBus;
 import de.mygrades.R;
 import de.mygrades.database.dao.GradeEntry;
 import de.mygrades.main.MainServiceHelper;
+import de.mygrades.main.events.DeleteGradeEvent;
 import de.mygrades.main.events.ErrorEvent;
 import de.mygrades.main.events.GradesEvent;
 import de.mygrades.main.events.ScrapeProgressEvent;
@@ -46,6 +50,7 @@ public class FragmentOverview extends Fragment {
 
     private PtrFrameLayout ptrFrame;
     private PtrHeader ptrHeader;
+    private FloatingActionButton fabAddGradeEntry;
 
     // snackbar buttons
     private View.OnClickListener tryAgainListener;
@@ -62,6 +67,9 @@ public class FragmentOverview extends Fragment {
 
         // init recycler view
         initGradesRecyclerView(view);
+
+        // init floating action button
+        initFloatingActionButton(view);
 
         // init pull to refresh layout
         initPullToRefresh(view);
@@ -151,6 +159,30 @@ public class FragmentOverview extends Fragment {
     }
 
     /**
+     * Initialize the floating action button to add new grade entries.
+     */
+    private void initFloatingActionButton(View rootView) {
+        fabAddGradeEntry = (FloatingActionButton) rootView.findViewById(R.id.fab_add_grade_entry);
+        fabAddGradeEntry.attachToRecyclerView(rvGrades);
+        fabAddGradeEntry.hide();
+        fabAddGradeEntry.setVisibility(View.GONE);
+        fabAddGradeEntry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapter.enableEditMode(false);
+                fabAddGradeEntry.hide(true);
+                fabAddGradeEntry.setVisibility(View.GONE);
+                getActivity().invalidateOptionsMenu();
+
+                final Intent intent = new Intent(v.getContext(), GradeDetailedActivity.class);
+                intent.putExtra(GradeDetailedActivity.EXTRA_GRADE_HASH, "");
+                intent.putExtra(GradeDetailedActivity.EXTRA_ADD_NEW_GRADE_ENTRY, true);
+                v.getContext().startActivity(intent);
+            }
+        });
+    }
+
+    /**
      * Decides if an info box should be shown.
      */
     private void showInfoBox() {
@@ -230,6 +262,7 @@ public class FragmentOverview extends Fragment {
      *
      * @param scrapeProgressEvent ScrapeProgressEvent
      */
+    @SuppressWarnings("unused")
     public void onEventMainThread(ScrapeProgressEvent scrapeProgressEvent) {
         if (ptrHeader != null && !scrapeProgressEvent.isScrapeForOverview()) {
             ptrHeader.increaseProgress(scrapeProgressEvent.getCurrentStep(), scrapeProgressEvent.getStepCount());
@@ -237,10 +270,11 @@ public class FragmentOverview extends Fragment {
     }
 
     /**
-     * Receive an GradesEvent and add all grades to the adapter.
+     * Receive a GradesEvent and add all grades to the adapter.
      *
      * @param gradesEvent - grades event
      */
+    @SuppressWarnings("unused")
     public void onEventMainThread(GradesEvent gradesEvent) {
         receivedGradesEvent = true;
 
@@ -270,10 +304,25 @@ public class FragmentOverview extends Fragment {
     }
 
     /**
+     * Receive a DeleteGradesEvent and deletes the GradeEntry.
+     *
+     * @param deleteGradeEvent DeleteGradeEvent
+     */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(DeleteGradeEvent deleteGradeEvent) {
+        if (adapter != null) {
+            adapter.deleteGrade(new GradeItem(deleteGradeEvent.getGradeEntry()));
+        }
+
+        EventBus.getDefault().removeStickyEvent(deleteGradeEvent);
+    }
+
+    /**
      * Receive an ErrorEvent and display it to the user.
      *
      * @param errorEvent - ErrorEvent
      */
+    @SuppressWarnings("unused")
     public void onEventMainThread(ErrorEvent errorEvent) {
         if (ptrFrame != null && ptrHeader != null) {
             ptrHeader.setIsError(true);
@@ -302,10 +351,14 @@ public class FragmentOverview extends Fragment {
         switch (item.getItemId()) {
             case R.id.fragment_overview_edit:
                 adapter.enableEditMode(true);
+                fabAddGradeEntry.show(true);
+                fabAddGradeEntry.setVisibility(View.VISIBLE);
                 getActivity().invalidateOptionsMenu();
                 return true;
             case R.id.fragment_overview_save:
                 adapter.enableEditMode(false);
+                fabAddGradeEntry.hide(true);
+                fabAddGradeEntry.setVisibility(View.GONE);
                 getActivity().invalidateOptionsMenu();
                 return true;
             case R.id.fragment_overview_restore:
@@ -330,6 +383,8 @@ public class FragmentOverview extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 adapter.restoreVisibility();
+                fabAddGradeEntry.hide(true);
+                fabAddGradeEntry.setVisibility(View.GONE);
                 getActivity().invalidateOptionsMenu();
             }
         });
