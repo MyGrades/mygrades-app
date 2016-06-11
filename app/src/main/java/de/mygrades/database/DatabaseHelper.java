@@ -61,6 +61,7 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_EXAM_DATE;");
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_TESTER TEXT;");
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN MODIFIED_SEMESTER TEXT;");
+        db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN GENERATED_ID TEXT;");
 
         // add 'weight' to table 'GRADE_ENTRY' and set default value
         db.execSQL("ALTER TABLE GRADE_ENTRY ADD COLUMN WEIGHT REAL;");

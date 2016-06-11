@@ -169,6 +169,7 @@ public class MyGradesDaoGenerator {
         gradeEntry.addStringProperty("modifiedExamDate");
         gradeEntry.addStringProperty("modifiedTester");
         gradeEntry.addStringProperty("modifiedSemester");
+        gradeEntry.addStringProperty("generatedId");
 
         gradeEntry.setHasKeepSections(true);
     }
