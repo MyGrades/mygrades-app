@@ -9,6 +9,7 @@
  - add and delete custom grade entries
 - Appended *attempt* to grade entry hash, because some universities may not provide enough distinct information for each entry
 - Added property *weight* to GradeEntry to allow better average calculation
+- Fix: Alarm settings are now recreated after an app upgrade to receive notifications for new grades
 
 # 1.0.9
 
