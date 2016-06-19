@@ -395,6 +395,10 @@ public class GradeEntry implements android.os.Parcelable {
         return hidden == null ? false : hidden;
     }
 
+    public boolean isCustomGradeEntry() {
+        return generatedId != null && generatedId.length() > 0;
+    }
+
     /**
      * The hash is used as the primary key.
      */

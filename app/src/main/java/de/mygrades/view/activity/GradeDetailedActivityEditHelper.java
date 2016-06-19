@@ -203,8 +203,10 @@ public class GradeDetailedActivityEditHelper {
         modified = updateAttemptSpinner() || modified;
         modified = updateSemesterSpinner() || modified;
 
-        // show or hide modified hint
-        llModifiedHint.setVisibility(modified ? View.VISIBLE : View.GONE);
+        // show or hide modified hint only if this entry is not a custom one
+        if (!gradeEntry.isCustomGradeEntry()) {
+            llModifiedHint.setVisibility(modified ? View.VISIBLE : View.GONE);
+        }
     }
 
     /**
@@ -364,6 +366,7 @@ public class GradeDetailedActivityEditHelper {
      */
     private void showBadge(ViewGroup parent, boolean modified, int resIdModifiedBadge) {
         if (resIdModifiedBadge < 0) return;
+        if (gradeEntry.isCustomGradeEntry()) return;
 
         View badge = parent.findViewById(resIdModifiedBadge);
         if (badge != null) {

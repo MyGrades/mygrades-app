@@ -142,6 +142,7 @@
         <item name="android:layout_width">20dp</item>
         <item name="android:layout_height">20dp</item>
         <item name="android:layout_alignParentRight">true</item>
+        <item name="android:visibility">gone</item>
     </style>
 
     <!-- RelativeLayout Row of GradeDetailed Activity -->

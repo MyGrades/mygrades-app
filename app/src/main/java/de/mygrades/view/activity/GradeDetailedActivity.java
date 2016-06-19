@@ -71,6 +71,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private TextView tvOverviewPassed;
     private TextView tvOverviewAverage;
     private TextView tvOverviewNotPossible;
+    private TextView tvCustomGradeEntry;
 
     // bar chart
     private Overview overview;
@@ -136,6 +137,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         tvOverviewNotPossible.setText(Html.fromHtml(getString(R.string.overview_not_possible, FaqDataProvider.GO_TO_WHY_NO_GRADING)));
         tvOverviewNotPossible.setMovementMethod(LinkMovementMethod.getInstance());
         llRootView = (LinearLayout) findViewById(R.id.ll_root_view);
+        tvCustomGradeEntry = (TextView) findViewById(R.id.tv_custom_grade_entry);
 
         initPullToRefresh();
     }
@@ -284,6 +286,10 @@ public class GradeDetailedActivity extends AppCompatActivity {
             editHelper.enableEditMode(editModeEnabled);
         }
 
+        if (gradeEntry.isCustomGradeEntry()) {
+            tvCustomGradeEntry.setVisibility(View.VISIBLE);
+        }
+
         receivedGradeEntryEvent = true;
         invalidateOptionsMenu();
     }
@@ -353,7 +359,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
                     }
                 });
                 // only show TextView if its possible in general for university to show a overview
-                if (overviewPossibleEvent.isOverviewPossibleForUniversity()) {
+                if (overviewPossibleEvent.isOverviewPossibleForUniversity() && !gradeEntry.isCustomGradeEntry()) {
                     tvOverviewNotPossible.setVisibility(View.VISIBLE);
                 }
             }

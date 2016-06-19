@@ -389,6 +389,15 @@
                     android:layout_margin="16dp"
                     android:gravity="center_horizontal" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_custom_grade_entry"
+                    android:text="@string/tv_custom_grade_entry"
+                    android:visibility="gone"
+                    android:layout_margin="16dp"
+                    android:gravity="center_horizontal" />
+
             </LinearLayout>
         </ScrollView>
     </in.srain.cube.views.ptr.PtrFrameLayout>
