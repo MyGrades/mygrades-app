@@ -73,7 +73,7 @@ public class GradesProcessor extends BaseProcessor {
         Map<String, Integer> semesterToNumberMap = semesterMapper.getSemesterToNumberMap(gradeEntries);
 
         if (gradeEntry == null) { // create new grade with generated hash
-            gradeEntry = getGeneratedGradeEntry(semesterToNumberMap);
+            gradeEntry = getGeneratedGradeEntry(semesterMapper.getSortedSemester());
         } else {
             daoSession.getGradeEntryDao().refresh(gradeEntry);
 
@@ -119,7 +119,7 @@ public class GradesProcessor extends BaseProcessor {
      *
      * @return grade entry
      */
-    private GradeEntry getGeneratedGradeEntry(Map<String, Integer> semesterToNumberMap) {
+    private GradeEntry getGeneratedGradeEntry(List<String> sortedSemester) {
         GradeEntry gradeEntry = new GradeEntry();
         gradeEntry.__setDaoSession(daoSession);
         gradeEntry.setOverviewPossible(false);
@@ -129,9 +129,7 @@ public class GradesProcessor extends BaseProcessor {
         gradeEntry.setSeen(Constants.GRADE_ENTRY_SEEN);
         gradeEntry.setAttempt("1");
         gradeEntry.updateHash();
-
-        Map.Entry<String, Integer> entry = semesterToNumberMap.entrySet().iterator().next();
-        gradeEntry.setModifiedSemester(entry.getKey());
+        gradeEntry.setModifiedSemester(sortedSemester.get(sortedSemester.size() - 1));
         return gradeEntry;
     }
 

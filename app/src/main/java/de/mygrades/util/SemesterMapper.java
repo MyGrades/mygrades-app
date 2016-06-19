@@ -26,6 +26,7 @@ public class SemesterMapper {
      * e.g. "Wintersemester 2013/2014" is splitted into "Wintersemester" and "2013".
      */
     private Pattern semesterPattern;
+    private List<String> sortedSemester;
 
     public SemesterMapper() {
         semesterPattern = Pattern.compile("(^\\w+)\\s*([0-9]+)");
@@ -52,7 +53,7 @@ public class SemesterMapper {
         }
 
         // get sorted semester list
-        List<String> sortedSemester = createConsecutiveSemesterList(semesterSet);
+        sortedSemester = createConsecutiveSemesterList(semesterSet);
 
         // add a future semester at the end and a past semester to the beginning
         if (sortedSemester.size() > 0) {
@@ -324,5 +325,9 @@ public class SemesterMapper {
         } catch (NumberFormatException e) {
             return 0;
         }
+    }
+
+    public List<String> getSortedSemester() {
+        return sortedSemester;
     }
 }
