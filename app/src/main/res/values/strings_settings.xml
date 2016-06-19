@@ -9,7 +9,7 @@
     <string name="pref_logout_title">Abmelden</string>
     <string name="pref_logout_summary">Alle deine Daten werden gelöscht</string>
     <string name="dialog_logout_title">Abmelden</string>
-    <string name="dialog_logout_message">Möchtest du dich wirklich abmelden und alle lokalen Daten löschen?</string>
+    <string name="dialog_logout_message">Möchtest du dich wirklich abmelden und alle lokalen Daten sowie Editierungen löschen?</string>
     <string name="tv_max_credit_points">von %1$s</string>
     <string name="pref_key_license">pref_key_license</string>
     <string name="pref_license_title">Lizenz</string>
