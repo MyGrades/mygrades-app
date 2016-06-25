@@ -30,8 +30,8 @@ public class FaqDataProvider {
         data.clear();
 
         addQuestions(context, R.array.questions_about_mygrades, R.array.answers_about_mygrades, R.string.questions_about_mygrades_section_title);
-        addQuestions(context, R.array.questions_error, R.array.answers_error, R.string.questions_error_section_title);
         addQuestions(context, R.array.questions_general, R.array.answers_general, R.string.questions_general_section_title);
+        addQuestions(context, R.array.questions_error, R.array.answers_error, R.string.questions_error_section_title);
     }
 
     private void addQuestions(Context context, int resIdQuestions, int resIdAnswers, int resIdSectionTitle) {
@@ -57,9 +57,9 @@ public class FaqDataProvider {
     public int getGroupId(int goToQuestion) {
         switch (goToQuestion) {
             case GO_TO_GENERAL_ERROR:
-                return 5;
+                return 11;
             case GO_TO_WHY_NO_GRADING:
-                return 9;
+                return 8;
             default:
                 return 0;
         }

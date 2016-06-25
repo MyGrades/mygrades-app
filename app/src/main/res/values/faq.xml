@@ -11,8 +11,27 @@
     <string-array name="answers_about_mygrades">
         <item>MyGrades ist eine App zum Abrufen deiner Noten aus dem Notensystem deiner Hochschule. Sie erspart dir die mühsame Arbeit dich durch dein Notensystem zu klicken und du hast deine Noten jederzeit lokal und übersichtlich auf deinem Handy verfügbar.</item>
         <item>Die App simuliert einen browsenden Benutzer und navigiert automatisch zu deiner Notentabelle. Diese wird dann lokal auf deinem Handy verarbeitet und bei dir gespeichert.\n\nGenauere Informationen und den Quelltext der App findest du unter <a href="https://github.com/mygrades/mygrades-app">github.com/mygrades/mygrades-app</a></item>
-        <item>Deine Benutzerdaten werden lokal und verschlüsselt auf deinem Smartphone gespeichert. Die Verarbeitung deiner Notentabelle und Speicherung deiner Noten ist ausschließlich lokal\n\nEs werden <b>keine Daten</b> an uns oder Dritte übermittelt.\n\nGenauere Informationen und den Quelltext der App findest du unter <a href="https://github.com/mygrades/mygrades-app">github.com/mygrades/mygrades-app</a></item>
+        <item>Deine Benutzerdaten werden lokal und verschlüsselt auf deinem Smartphone gespeichert. Die Verarbeitung deiner Notentabelle und Speicherung deiner Noten ist ausschließlich lokal.\n\nEs werden <b>keine Daten</b> an uns oder Dritte übermittelt.\n\nGenauere Informationen und den Quelltext der App findest du unter <a href="https://github.com/mygrades/mygrades-app">github.com/mygrades/mygrades-app</a></item>
         <item>Wir – Jonas und Tilman – sind zwei Studenten der Medieninformatik an der Hochschule RheinMain.</item>
+    </string-array>
+
+    <!-- general -->
+    <string name="questions_general_section_title">Allgemein</string>
+    <string-array name="questions_general">
+        <item>Was ist der Editiermodus?</item>
+        <item>Wie wird mein Notendurchschnitt berechnet?</item>
+        <item>Wie werden meine Gesamt-CPs berechnet?</item>
+        <item>Warum sind manche Module im falschen Semester?</item>
+        <item>Warum gibt es keine Notenverteilung?</item>
+        <item>Warum bekomme ich keine Benachrichtigung, wenn eine neue Note da ist?</item>
+    </string-array>
+    <string-array name="answers_general">
+        <item>Der Editiermodus erlaubt es dir neue Module hinzuzufügen, Module auszublenden, in andere Semester zu verschieben, Gewichtungen anzupassen oder auch alle anderen Werte zu ändern. Dazu findest du in der Notenübersicht und auf den Detailseiten ein Icon oben rechts, um den Editiermodus zu aktivieren.\n\nVon dir geänderte Werte werden mit einem orangenen Symbol gekennzeichnet. Deine Änderungen kannst du jederzeit zurücksetzen.</item>
+        <item>Standardmäßig erfolgt die Berechnung des Notendurchschnitts ohne Gewichtung einzelner Noten oder Semester, da dies meist spezifisch für einen Studiengang ist. Lediglich die CPs werden als Gewichtung genutzt. Dabei werden Fächer ohne CPs, ohne Note oder mit der Note 5.0 nicht in die Berechnung mit einberechnet. Wenn die CPs nicht als Gewichtung genutzt werden sollen und du eine einfache Gewichtung bevorzugst, kannst du dies in den Einstellungen aktivieren.\n\nWenn du Noten speziell nach deinem Studiengang gewichten möchtest, kannst du mit Hilfe des Editiermodus für einzelne Module eine Gewichtung einstellen. Auch kannst du Module ausblenden, sodass sie nicht in die Berechnung eingehen.</item>
+        <item>Wir gehen vom Standardwert von maximal 180 erreichbaren CPs aus. Wenn dieser bei dir nicht zutrifft, kannst du diesen einfach in den Einstellungen anpassen.\n\nZur Berechnug der aktuell erreichten CPs werden alle CPs der bestandenen Module addiert. Bestandene Module sind solche, die entweder keine Note haben oder nicht mit 5.0 abgeschlossen wurden.</item>
+        <item>Die Nummer des Semesters wird von der App automatisch anhand der vorliegenden Noten und deren Zeitpunkt berechnet. Um eine fortlaufende richtige Nummerierung zu erreichen muss also in jedem Semester mindestens eine Leistung eingetragen sein. Beispiele:\n\n- Du hast am Ende des 2. Semesters den Studiengang gewechselt. Die App erkennt nur die Leistungen deines neuen Studiengangs und ordnet diese dem 1. Semester zu.\n- Du hast ein Urlaubssemester eingelegt. Die App findet in dem Urlaubssemester keine Leistungen und ignoriert dieses daher.\n\nDu kannst falsch erkannte Module im Editiermodus in andere Semester – auch in der Zukunft liegende – verschieben.</item>
+        <item>Eine Notenverteilung für eine Klausur kann nur unter folgenden Bedingungen geladen werden:\n\n- deine Hochschule veröffentlicht die Notenverteilung in deinem Notensystem\n- du hast an der Leistung teilgenommen</item>
+        <item>Dies kann verschiedene Gründe haben. Zuerst solltest du überprüfen, ob die entsprechenden Einstellungen zum automatischen Abrufen bei dir gesetzt sind. Weiterhin kann es sein, dass dein Notensystem während dem automatischen Abrufen nicht erreichbar war und es somit zu einem Fehler kam.\n\nWenn du die Noten per Hand abrufst, werden keine Benachrichtigungen angezeigt.</item>
     </string-array>
 
     <!-- errors -->
@@ -24,22 +43,5 @@
     <string-array name="answers_error">
         <item>Dieser Fehler tritt auf, wenn eine Anfrage an die Website deiner Hochschule nicht innerhalb von 25 Sekunden erfolgreich war.\n\nDies kann daran liegen, dass deine Internetverbindung schlecht oder der Server deiner Hochschule nicht erreichbar ist.</item>
         <item>Dieser Fehler kann in verschiedenen Situationen auftreten. Möglicherweise...\n\n... sind deine Zugangsdaten falsch.\n\n... gibt es Probleme mit dem Notensystem deiner Hochschule.\n\n... hat sich der Aufbau deines Notensystems geändert und es ist zur Zeit somit nicht möglich, deine Noten abzurufen.\n\nSag uns Bescheid, falls dieses Problem länger besteht!</item>
-    </string-array>
-
-    <!-- general -->
-    <string name="questions_general_section_title">Allgemein</string>
-    <string-array name="questions_general">
-        <item>Warum ist mein Notendurchschnitt falsch?</item>
-        <item>Warum sind die Noten im falschen Semester?</item>
-        <item>Warum stimmt die Anzahl meiner gesamt CP nicht?</item>
-        <item>Warum gibt es keine Notenverteilung?</item>
-        <item>Warum bekomme ich keine Benachrichtigung, wenn eine neue Note da ist?</item>
-    </string-array>
-    <string-array name="answers_general">
-        <item>Die Berechnung des Notendurchschnitts erfolgt ohne Gewichtung einzelner Noten oder Semester, da dies meist spezifisch für einen Studiengang ist.\nWeiterhin werden Fächer mit 0 CPs nicht in die Berechnung mit einberechnet.</item>
-        <item>Die Nummer des Semesters wird von der App automatisch anhand der vorliegenden Noten und deren Zeitpunkt berechnet. Um eine fortlaufende richtige Nummerierung zu erreichen muss also in jedem Semester mindestens eine Leistung eingetragen sein. Beispiele:\n\n- Du hast am Ende des 2. Semesters den Studiengang gewechselt. Die App erkennt nur die Leistungen deines neuen Studiengangs und ordnet diese dem 1. Semester zu.\n- Du hast ein Urlaubssemester eingelegt. Die App findet in dem Urlaubssemester keine Leistungen und ignoriert dieses daher.</item>
-        <item>Wir gehen vom Standardwert von 180 CP aus. Wenn dieser bei dir nicht zutrifft, kannst du diesen einfach in den Einstellungen anpassen.</item>
-        <item>Eine Notenverteilung für eine Klausur kann nur unter folgenden Bedingungen geladen werden:\n\n- deine Hochschule veröffentlicht die Notenverteilung in deinem Notensystem\n- du hast an der Leistung teilgenommen</item>
-        <item>Dies kann verschiedene Gründe haben. Zuerst solltest du überprüfen, ob die entsprechenden Einstellungen zum automatischen Abrufen bei dir gesetzt sind. Weiterhin kann es sein, dass dein Notensystem während dem automatischen Abrufen nicht erreichbar war und es somit zu einem Fehler kam.\n\nWenn du die Noten per Hand abrufst, werden keine Benachrichtigungen angezeigt.</item>
     </string-array>
 </resources>
