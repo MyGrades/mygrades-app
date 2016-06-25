@@ -24,6 +24,7 @@
 
 # MPAndroidChart rules
 -keep class com.github.mikephil.charting.** { *; }
+-dontwarn io.realm.**
 
 # wnafee/vector-compat rules
 -keep class com.wnafee.vector.** { *; }

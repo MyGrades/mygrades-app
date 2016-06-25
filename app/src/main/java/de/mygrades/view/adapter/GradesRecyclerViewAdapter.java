@@ -48,6 +48,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     private Context context;
     private SharedPreferences prefs;
+    private SharedPreferences.OnSharedPreferenceChangeListener prefsListener;
     private boolean simpleWeighting;
 
     private List<GradesAdapterItem> items;
@@ -71,7 +72,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
 
         // register for preference changes
-        SharedPreferences.OnSharedPreferenceChangeListener prefsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        prefsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 if (key.equals(GradesRecyclerViewAdapter.this.context.getString(R.string.pref_key_max_credit_points))) {
@@ -400,7 +401,6 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             if (item instanceof SemesterItem) {
                 SemesterItem semesterItem = (SemesterItem) item;
                 semesterItem.setSimpleWeighting(simpleWeighting);
-                semesterItem.update();
                 notifyItemChanged(i);
             }
         }

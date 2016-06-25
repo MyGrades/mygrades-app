@@ -406,5 +406,7 @@ public class FragmentOverview extends Fragment {
 
     public void disableEditMode() {
         adapter.enableEditMode(false);
+        fabAddGradeEntry.hide();
+        fabAddGradeEntry.setVisibility(View.GONE);
     }
 }

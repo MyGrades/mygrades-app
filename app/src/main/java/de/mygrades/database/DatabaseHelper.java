@@ -110,14 +110,15 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
                 "\"MODIFIED_EXAM_DATE\" TEXT," + // 23: modifiedExamDate
                 "\"MODIFIED_TESTER\" TEXT," + // 24: modifiedTester
                 "\"MODIFIED_SEMESTER\" TEXT," + // 25: modifiedSemester
-                "\"OVERVIEW_ID\" INTEGER);"); // 26: overviewId
+                "\"GENERATED_ID\" TEXT," + // 26: generatedId
+                "\"OVERVIEW_ID\" INTEGER);"); // 27: overviewId
         db.execSQL("INSERT INTO GRADE_ENTRY_BACKUP " +
                 "SELECT " +
                 "NAME, GRADE, EXAM_ID, SEMESTER, STATE, CREDIT_POINTS, ANNOTATION, ATTEMPT, " +
                 "EXAM_DATE, TESTER, HASH, OVERVIEW_POSSIBLE, SEEN, OVERVIEW_FAILED_ON_FIRST_TRY, " +
                 "WEIGHT, HIDDEN, MODIFIED_NAME, MODIFIED_GRADE, MODIFIED_EXAM_ID, MODIFIED_STATE, " +
                 "MODIFIED_CREDIT_POINTS, MODIFIED_ANNOTATION, MODIFIED_ATTEMPT, MODIFIED_EXAM_DATE, " +
-                "MODIFIED_TESTER, MODIFIED_SEMESTER, OVERVIEW_ID " +
+                "MODIFIED_TESTER, MODIFIED_SEMESTER, GENERATED_ID, OVERVIEW_ID " +
                 "FROM GRADE_ENTRY;");
         db.execSQL("DROP TABLE GRADE_ENTRY;");
         db.execSQL("ALTER TABLE GRADE_ENTRY_BACKUP RENAME TO GRADE_ENTRY;");
