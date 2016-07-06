@@ -1,6 +1,7 @@
 package de.mygrades.view.activity;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,19 @@ import de.mygrades.util.SemesterMapper;
  */
 public class GradeDetailedActivityEditHelper {
     private static final String TAG = GradeDetailedActivityEditHelper.class.getSimpleName();
+
+    // instance state
+    public static final String ET_EXAM_ID_TEXT = "et_exam_id_text";
+    public static final String ET_STATE_TEXT = "et_state_text";
+    public static final String ET_CREDIT_POINTS_TEXT = "et_credit_points_text";
+    public static final String ET_GRADE_TEXT = "et_grade_text";
+    public static final String ET_ANNOTATION_TEXT = "et_annotation_text";
+    public static final String ET_EXAM_DATE_TEXT = "et_exam_date_text";
+    public static final String ET_TESTER_TEXT = "et_tester_text";
+    public static final String ET_WEIGHT_TEXT = "et_weight_text";
+    public static final String ET_NAME_TEXT = "et_name_text";
+    public static final String SP_ATTEMPT_POSITION = "sp_attempt_position";
+    public static final String SP_SEMESTER_POSITION = "sp_semester_position";
 
     private Activity activity;
     private MainServiceHelper mainServiceHelper;
@@ -716,6 +730,49 @@ public class GradeDetailedActivityEditHelper {
         }
 
         return null;
+    }
+
+    /**
+     * Get the instance state for all edit texts and spinner.
+     *
+     * @return instance state as Bundle
+     */
+    public Bundle getInstanceState() {
+        Bundle state = new Bundle();
+        state.putString(ET_EXAM_ID_TEXT, etExamId.getText().toString());
+        state.putString(ET_STATE_TEXT, etState.getText().toString());
+        state.putString(ET_CREDIT_POINTS_TEXT, etCreditPoints.getText().toString());
+        state.putString(ET_GRADE_TEXT, etGrade.getText().toString());
+        state.putString(ET_ANNOTATION_TEXT, etAnnotation.getText().toString());
+        state.putString(ET_EXAM_DATE_TEXT, etExamDate.getText().toString());
+        state.putString(ET_TESTER_TEXT, etTester.getText().toString());
+        state.putString(ET_WEIGHT_TEXT, etWeight.getText().toString());
+        state.putString(ET_NAME_TEXT, etName.getText().toString());
+        state.putInt(SP_ATTEMPT_POSITION, spAttempt.getSelectedItemPosition());
+        state.putInt(SP_SEMESTER_POSITION, spSemester.getSelectedItemPosition());
+
+        return state;
+    }
+
+    /**
+     * Restore the instance state for all edit texts and spinner.
+     *
+     * @param savedState Bundle
+     */
+    public void restoreInstanceState(Bundle savedState) {
+        if (savedState == null) return;
+
+        etExamId.setText(savedState.getString(ET_EXAM_ID_TEXT));
+        etState.setText(savedState.getString(ET_STATE_TEXT));
+        etCreditPoints.setText(savedState.getString(ET_CREDIT_POINTS_TEXT));
+        etGrade.setText(savedState.getString(ET_GRADE_TEXT));
+        etAnnotation.setText(savedState.getString(ET_ANNOTATION_TEXT));
+        etExamDate.setText(savedState.getString(ET_EXAM_DATE_TEXT));
+        etTester.setText(savedState.getString(ET_TESTER_TEXT));
+        etWeight.setText(savedState.getString(ET_WEIGHT_TEXT));
+        etName.setText(savedState.getString(ET_NAME_TEXT));
+        spAttempt.setSelection(savedState.getInt(SP_ATTEMPT_POSITION));
+        spSemester.setSelection(savedState.getInt(SP_SEMESTER_POSITION));
     }
 
     public void setGradeEntry(GradeEntry gradeEntry) {

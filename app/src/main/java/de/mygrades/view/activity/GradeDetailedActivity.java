@@ -60,6 +60,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private static final String GRADE_HASH_STATE = "grade_hash";
     private static final String EDIT_MODE_ENABLED_STATE = "edit_mode_enabled";
     private static final String ADD_NEW_GRADE_ENTRY = "add_new_grade_entry";
+    private static final String EDIT_HELPER_STATE = "edit_helper_state";
 
     // views
     private LinearLayout llRootView; // used to show snackbar
@@ -88,6 +89,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private boolean receivedGradeEntryEvent;
     private boolean editModeEnabled;
     private boolean addNewGradeEntry;
+    private Bundle editHelperState;
 
     // snackbar listener
     private View.OnClickListener tryAgainListener;
@@ -280,6 +282,9 @@ public class GradeDetailedActivity extends AppCompatActivity {
         editHelper.setSemesterToNumberMap(gradeEntryEvent.getSemesterToSemesterNumberMap());
         editHelper.init();
         editHelper.updateValues();
+        if (editModeEnabled) {
+            editHelper.restoreInstanceState(editHelperState);
+        }
 
         if (addNewGradeEntry) {
             editHelper.enableEditMode(true);
@@ -417,6 +422,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         outState.putString(GRADE_HASH_STATE, gradeHash);
         outState.putBoolean(EDIT_MODE_ENABLED_STATE, editModeEnabled);
         outState.putBoolean(ADD_NEW_GRADE_ENTRY, addNewGradeEntry);
+        outState.putBundle(EDIT_HELPER_STATE, editHelper.getInstanceState());
     }
 
     @Override
@@ -428,6 +434,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         ptrHeader.restoreInstanceState(savedInstanceState, ptrFrame);
         editModeEnabled = savedInstanceState.getBoolean(EDIT_MODE_ENABLED_STATE);
         addNewGradeEntry = savedInstanceState.getBoolean(ADD_NEW_GRADE_ENTRY);
+        editHelperState = savedInstanceState.getBundle(EDIT_HELPER_STATE);
     }
 
     private class MyValueFormatter implements ValueFormatter {
