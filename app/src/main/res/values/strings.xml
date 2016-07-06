@@ -140,6 +140,8 @@
     <string name="info_edit_mode_message"><![CDATA[Über das Icon oben rechts kannst du hier und auf der Detailseite in den neuen Editiermodus wechseln. Dort kannst du neue Module hinzufügen, Module ausblenden, in andere Semester verschieben, Gewichtungen anpassen oder auch alle anderen Werte ändern.]]></string>
     <string name="dialog_delete_grade_entry_title">Eintrag löschen</string>
     <string name="dialog_delete_grade_entry">Möchtest du diesen Eintrag wirklich löschen?</string>
+    <string name="dialog_discard_grade_entry_title">Eintrag verwerfen</string>
+    <string name="dialog_discard_grade_entry">Dieses Modul wurde noch nicht gespeichert. Möchtest du es verwerfen?</string>
     <string name="tv_custom_grade_entry">Selbsterstelltes Modul.</string>
 
     <string-array name="grade_attempt_spinner">

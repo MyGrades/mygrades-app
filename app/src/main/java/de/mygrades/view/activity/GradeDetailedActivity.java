@@ -59,6 +59,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     private static final String IS_OVERVIEW_POSSIBLE_STATE = "is_overview_possible_state";
     private static final String GRADE_HASH_STATE = "grade_hash";
     private static final String EDIT_MODE_ENABLED_STATE = "edit_mode_enabled";
+    private static final String ADD_NEW_GRADE_ENTRY = "add_new_grade_entry";
 
     // views
     private LinearLayout llRootView; // used to show snackbar
@@ -273,6 +274,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     public void onEventMainThread(GradeEntryEvent gradeEntryEvent) {
         gradeEntry = gradeEntryEvent.getGradeEntry();
+        gradeHash = gradeEntry.getHash();
 
         editHelper.setGradeEntry(gradeEntry);
         editHelper.setSemesterToNumberMap(gradeEntryEvent.getSemesterToSemesterNumberMap());
@@ -414,6 +416,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         outState.putBoolean(IS_OVERVIEW_POSSIBLE_STATE, isOverviewPossible);
         outState.putString(GRADE_HASH_STATE, gradeHash);
         outState.putBoolean(EDIT_MODE_ENABLED_STATE, editModeEnabled);
+        outState.putBoolean(ADD_NEW_GRADE_ENTRY, addNewGradeEntry);
     }
 
     @Override
@@ -424,6 +427,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
         gradeHash = savedInstanceState.getString(GRADE_HASH_STATE, "");
         ptrHeader.restoreInstanceState(savedInstanceState, ptrFrame);
         editModeEnabled = savedInstanceState.getBoolean(EDIT_MODE_ENABLED_STATE);
+        addNewGradeEntry = savedInstanceState.getBoolean(ADD_NEW_GRADE_ENTRY);
     }
 
     private class MyValueFormatter implements ValueFormatter {
@@ -471,6 +475,7 @@ public class GradeDetailedActivity extends AppCompatActivity {
             case R.id.grade_detail_save:
                 editHelper.enableEditMode(false);
                 editHelper.saveEdits();
+                addNewGradeEntry = false;
                 editModeEnabled = false;
                 invalidateOptionsMenu();
                 return true;
@@ -487,6 +492,11 @@ public class GradeDetailedActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (addNewGradeEntry) {
+            showDiscardDialog();
+            return;
+        }
+
         if (editModeEnabled) {
             editHelper.enableEditMode(false);
             editModeEnabled = false;
@@ -536,6 +546,31 @@ public class GradeDetailedActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 editHelper.delete();
                 editModeEnabled = false;
+                finish();
+            }
+        });
+
+        builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    /**
+     * Show dialog to ask the user whether he wants to discard this new GradeEntry.
+     */
+    private void showDiscardDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialog_discard_grade_entry);
+        builder.setTitle(getString(R.string.dialog_discard_grade_entry_title));
+        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 finish();
             }
         });

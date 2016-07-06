@@ -388,10 +388,12 @@ public class GradesProcessor extends BaseProcessor {
     public void deleteGradeEntry(String gradeHash) {
         // find grade entry by hash
         GradeEntry gradeEntry = daoSession.getGradeEntryDao().load(gradeHash);
-        gradeEntry.delete();
+        if (gradeEntry != null) {
+            gradeEntry.delete();
 
-        // post event to ui
-        EventBus.getDefault().postSticky(new DeleteGradeEvent(gradeEntry));
+            // post event to ui
+            EventBus.getDefault().postSticky(new DeleteGradeEvent(gradeEntry));
+        }
     }
 
     /**
