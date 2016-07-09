@@ -18,7 +18,7 @@ Get it on [Google Play.](https://play.google.com/store/apps/details?id=de.mygrad
 <img src="assets/screen-settings.jpg?raw=true" width="215px" />
 <img src="assets/screen-login-filled.jpg?raw=true" width="215px" />
 <img src="assets/screen-edit-overview.jpg?raw=true" width="215px" />
-<img src="assets/screen-detailed.jpg?raw=true" width="215px" />
+<img src="assets/screen-edit-detailed.jpg?raw=true" width="215px" />
 
 ## Used third-party libraries
 * [jsoup](http://jsoup.org/)
