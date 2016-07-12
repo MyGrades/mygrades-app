@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'aar-link-sources'
 apply plugin: 'groovyx.grooid.groovy-android'
 
 android {
@@ -11,6 +10,8 @@ android {
         targetSdkVersion 23
         versionCode 16
         versionName "1.1.0"
+
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -47,7 +48,6 @@ dependencies {
     compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.9.0@aar') {
         transitive = true
     }
-    aarLinkSources 'com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.9.0:sources@jar'
     compile 'com.wnafee:vector-compat:1.0.5'
     compile 'com.pnikosis:materialish-progress:1.7'
     compile 'in.srain.cube:ultra-ptr:1.0.11'
