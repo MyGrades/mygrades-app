@@ -240,6 +240,7 @@ public class Scraper {
         document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
         document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
         document.select("script").remove();
+        document.select("td:contains(aktuellen ECTS-Grades)").remove(); // remove invalid html (see error #71)
 
         // check if there is a redirect via meta-equiv=refresh
         Element metaRefresh = document.select("html head meta[http-equiv=refresh]").first();
