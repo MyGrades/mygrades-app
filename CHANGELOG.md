@@ -1,6 +1,10 @@
 # Changelog
 
-# 1.1.0 (next release)
+# 1.1.1
+
+- Minor fix to remove invalid html
+
+# 1.1.0
 
 - Added extensive edit mode to modify grade entries
  - change all properties (grade, cp, weight, ...)
