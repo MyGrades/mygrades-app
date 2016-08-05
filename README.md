@@ -45,7 +45,7 @@ This project is licensed under the [Apache Software License, Version 2.0](http:/
 
 See [`LICENSE`](LICENSE) for more information.
 
-    Copyright 2015 Jonas Theis, Tilman Ginzel
+    Copyright 2015-2016 Jonas Theis, Tilman Ginzel
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
