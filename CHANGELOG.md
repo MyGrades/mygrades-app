@@ -1,5 +1,9 @@
 # Changelog
 
+# 1.1.2
+
+- Added calculation of participants and average for overview if it is not given
+
 # 1.1.1
 
 - Minor fix to remove invalid html
