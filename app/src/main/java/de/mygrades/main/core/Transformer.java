@@ -114,6 +114,23 @@ public class Transformer {
         overview.setAverage(getDoubleProperty(xmlDocument, OVERVIEW_AVERAGE));
         overview.setUserSection((int) Math.round(userGrade));
 
+        // calculate participants from the sections if it is not given
+        if (overview.getParticipants() == null) {
+            int participants = overview.getSection(1) + overview.getSection(2) + overview.getSection(3)
+                    + overview.getSection(4) + overview.getSection(5);
+            overview.setParticipants(participants);
+        }
+
+        // calculate average from the sections and the participants if it is not given
+        if (overview.getAverage() == null) {
+            if (overview.getParticipants() != null && overview.getParticipants() != 0) {
+                double average = (overview.getSection(1) + overview.getSection(2) * 2 + overview.getSection(3) * 3
+                        + overview.getSection(4) * 4 + overview.getSection(5) * 5) / (double)overview.getParticipants();
+                overview.setAverage(average);
+            }
+
+        }
+
         return overview;
     }
 

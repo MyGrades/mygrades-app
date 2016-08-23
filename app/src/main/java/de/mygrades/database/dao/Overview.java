@@ -125,6 +125,36 @@ public class Overview {
 
     // KEEP METHODS - put your custom methods here
 
+    /**
+     * Gets the amount of an section as int.
+     * @param section The section to get
+     * @return The amount of the section
+     */
+    public int getSection(int section) {
+        switch (section) {
+            case 1:
+                return nullToZero(section1);
+            case 2:
+                return nullToZero(section2);
+            case 3:
+                return nullToZero(section3);
+            case 4:
+                return nullToZero(section4);
+            case 5:
+                return nullToZero(section5);
+        }
+        // if a wrong section is passed return 0
+        return 0;
+    }
+
+    /**
+     * Converts null to zero or returns the given value.
+     * @param n The Integer object
+     * @return 0 if it is null or the value as int
+     */
+    private int nullToZero(Integer n) {
+        return n == null ? 0 : n;
+    }
 
     /**
      * Updates Overview with values from other Overview.
