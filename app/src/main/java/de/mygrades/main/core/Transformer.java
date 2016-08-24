@@ -142,6 +142,20 @@ public class Transformer {
      * @throws ParseException if something goes wrong at parsing
      */
     public List<GradeEntry> transform() throws ParseException {
+        return this.transform(null);
+    }
+
+    /**
+     * Creates GradeEntry objects for all matching elements from html via
+     * xPath expression 'iterator' from TransformerMapping.
+     * The property semester of a grade entry is respectively set to globalSemester
+     * for all created grade entries if it is not null.
+     *
+     * @param globalSemester A global semester for all created grade entries. If it is null, it's ignored.
+     * @return List of extracted GradeEntries
+     * @throws ParseException if something goes wrong at parsing
+     */
+    public List<GradeEntry> transform(String globalSemester) throws ParseException {
         List<GradeEntry> gradeEntries = new ArrayList<>();
 
         // get List to iterate through and respectively extract GradeEntry values
@@ -155,12 +169,21 @@ public class Transformer {
             GradeEntry gradeEntry = new GradeEntry();
             gradeEntry.setExamId(getStringProperty(xmlDocument, EXAM_ID));
             gradeEntry.setName(getStringProperty(xmlDocument, NAME));
-            // ignore entry if there could no semester determined
-            String semester = semesterTransformer.calculateGradeEntrySemester(getStringProperty(xmlDocument, SEMESTER));
-            if (semester == null) {
-                continue;
+
+            // extract semester from line if there is no global semester given
+            String semester;
+            if (globalSemester == null) {
+                // ignore entry if there could no semester determined
+                semester = semesterTransformer.calculateGradeEntrySemester(getStringProperty(xmlDocument, SEMESTER));
+                if (semester == null) {
+                    continue;
+                }
+            } else {
+                // use global semester as semester
+                semester = globalSemester;
             }
             gradeEntry.setSemester(semester);
+
             gradeEntry.setGrade(getDoubleProperty(xmlDocument, GRADE, rule.getGradeFactor()));
             gradeEntry.setState(getStringProperty(xmlDocument, STATE));
             gradeEntry.setCreditPoints(getDoubleProperty(xmlDocument, CREDIT_POINTS));
