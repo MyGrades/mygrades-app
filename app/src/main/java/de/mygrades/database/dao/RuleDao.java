@@ -35,7 +35,8 @@ public class RuleDao extends AbstractDao<Rule, Long> {
         public final static Property GradeFactor = new Property(6, Double.class, "gradeFactor", false, "GRADE_FACTOR");
         public final static Property LastUpdated = new Property(7, java.util.Date.class, "lastUpdated", false, "LAST_UPDATED");
         public final static Property Overview = new Property(8, Boolean.class, "overview", false, "OVERVIEW");
-        public final static Property UniversityId = new Property(9, long.class, "universityId", false, "UNIVERSITY_ID");
+        public final static Property Type = new Property(9, String.class, "type", false, "TYPE");
+        public final static Property UniversityId = new Property(10, long.class, "universityId", false, "UNIVERSITY_ID");
     };
 
     private DaoSession daoSession;
@@ -64,7 +65,8 @@ public class RuleDao extends AbstractDao<Rule, Long> {
                 "\"GRADE_FACTOR\" REAL," + // 6: gradeFactor
                 "\"LAST_UPDATED\" INTEGER," + // 7: lastUpdated
                 "\"OVERVIEW\" INTEGER," + // 8: overview
-                "\"UNIVERSITY_ID\" INTEGER NOT NULL );"); // 9: universityId
+                "\"TYPE\" TEXT," + // 9: type
+                "\"UNIVERSITY_ID\" INTEGER NOT NULL );"); // 10: universityId
     }
 
     /** Drops the underlying database table. */
@@ -118,7 +120,12 @@ public class RuleDao extends AbstractDao<Rule, Long> {
         if (overview != null) {
             stmt.bindLong(9, overview ? 1L: 0L);
         }
-        stmt.bindLong(10, entity.getUniversityId());
+ 
+        String type = entity.getType();
+        if (type != null) {
+            stmt.bindString(10, type);
+        }
+        stmt.bindLong(11, entity.getUniversityId());
     }
 
     @Override
@@ -146,7 +153,8 @@ public class RuleDao extends AbstractDao<Rule, Long> {
             cursor.isNull(offset + 6) ? null : cursor.getDouble(offset + 6), // gradeFactor
             cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // lastUpdated
             cursor.isNull(offset + 8) ? null : cursor.getShort(offset + 8) != 0, // overview
-            cursor.getLong(offset + 9) // universityId
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // type
+            cursor.getLong(offset + 10) // universityId
         );
         return entity;
     }
@@ -163,7 +171,8 @@ public class RuleDao extends AbstractDao<Rule, Long> {
         entity.setGradeFactor(cursor.isNull(offset + 6) ? null : cursor.getDouble(offset + 6));
         entity.setLastUpdated(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
         entity.setOverview(cursor.isNull(offset + 8) ? null : cursor.getShort(offset + 8) != 0);
-        entity.setUniversityId(cursor.getLong(offset + 9));
+        entity.setType(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setUniversityId(cursor.getLong(offset + 10));
      }
     
     /** @inheritdoc */

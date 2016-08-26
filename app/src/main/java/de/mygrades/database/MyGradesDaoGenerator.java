@@ -69,6 +69,7 @@ public class MyGradesDaoGenerator {
         rule.addDoubleProperty("gradeFactor");
         rule.addDateProperty("lastUpdated");
         rule.addBooleanProperty("overview");
+        rule.addStringProperty("type");
 
         // add 1:n relation for university -> rules
         Property universityId = rule.addLongProperty("universityId").notNull().getProperty();
