@@ -274,7 +274,7 @@ public class Scraper {
                     requestData.put("semester", semestersForFollowUpRequests[j]);
 
                     // make request to retrieve HTML table code for current semester
-                    Log.d(TAG, "Sending Request to url: " + url + " -- requestData: " + requestData.toString());
+                    Log.d(TAG, "Sending Request to url: " + formUrl + " -- requestData: " + requestData.toString());
                     makeJsoupRequest(requestData, Connection.Method.POST, formUrl);
 
                     documentAsString = document.toString();

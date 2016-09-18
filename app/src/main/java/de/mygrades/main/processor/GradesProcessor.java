@@ -298,8 +298,10 @@ public class GradesProcessor extends BaseProcessor {
             if (rule.getType() != null && rule.getType().equals(RULE_TYPE_MULTIPLE_TABLES)) {
                 Map<String, String> scrapingResult = scraper.scrapeMultipleTables();
                 Log.d(TAG, scrapingResult.toString());
-                // TODO: call different transform method
-                gradeEntries = new ArrayList<>();
+
+                // start transforming
+                Transformer transformer = new Transformer(rule, null, parser); // note: the html to parse the grades is set by transformMultipleTables
+                gradeEntries = transformer.transformMultipleTables(scrapingResult);
             } else {
                 // start scraping
                 String scrapingResult = scraper.scrape();

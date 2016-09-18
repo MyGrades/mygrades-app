@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -155,7 +156,7 @@ public class Transformer {
      * @return List of extracted GradeEntries
      * @throws ParseException if something goes wrong at parsing
      */
-    public List<GradeEntry> transform(String globalSemester) throws ParseException {
+    private List<GradeEntry> transform(String globalSemester) throws ParseException {
         List<GradeEntry> gradeEntries = new ArrayList<>();
 
         // get List to iterate through and respectively extract GradeEntry values
@@ -171,16 +172,11 @@ public class Transformer {
             gradeEntry.setName(getStringProperty(xmlDocument, NAME));
 
             // extract semester from line if there is no global semester given
-            String semester;
-            if (globalSemester == null) {
-                // ignore entry if there could no semester determined
-                semester = semesterTransformer.calculateGradeEntrySemester(getStringProperty(xmlDocument, SEMESTER));
-                if (semester == null) {
-                    continue;
-                }
-            } else {
-                // use global semester as semester
-                semester = globalSemester;
+            String semesterRaw = globalSemester == null ? getStringProperty(xmlDocument, SEMESTER) : globalSemester;
+            String semester = semesterTransformer.calculateGradeEntrySemester(semesterRaw);
+            // ignore entry if there could no semester determined
+            if (semester == null) {
+                continue;
             }
             gradeEntry.setSemester(semester);
 
@@ -201,6 +197,30 @@ public class Transformer {
 
             // add GradeEntry to list
             gradeEntries.add(gradeEntry);
+        }
+
+        return gradeEntries;
+    }
+
+    /**
+     * Creates GradeEntry objects for all matching elements from respectively html table out of
+     * resultTables via xPath expression 'iterator' from TransformerMapping.
+     * The property semester of a grade entry is respectively set to the key of the map entry
+     *
+     * @param resultTables Map semester -> html table of grades
+     * @return List of extracted GradeEntries
+     * @throws ParseException if something goes wrong at parsing
+     */
+    public List<GradeEntry> transformMultipleTables(Map<String, String> resultTables) throws ParseException {
+        List<GradeEntry> gradeEntries = new ArrayList<>();
+
+        // extract grades from each html table and merge them into one list
+        for (Entry<String, String> entry : resultTables.entrySet()) {
+            // set html from which the grades get extracted
+            html = entry.getValue();
+            // extract grades and add to list
+            List<GradeEntry> test = transform(entry.getKey());
+            gradeEntries.addAll(test);
         }
 
         return gradeEntries;
