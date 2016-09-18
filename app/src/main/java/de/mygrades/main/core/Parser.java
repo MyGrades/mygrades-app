@@ -202,7 +202,7 @@ public class Parser {
      * @return content of node as string with XML-Structure
      * @throws ParseException if something goes wrong with transforming
      */
-    private String getNodeAsString(Node node) throws ParseException {
+    public String getNodeAsString(Node node) throws ParseException {
         StreamResult xmlOutput = new StreamResult(new StringWriter());
 
         try {

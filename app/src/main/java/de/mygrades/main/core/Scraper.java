@@ -10,6 +10,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Entities;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -213,6 +215,91 @@ public class Scraper {
     }
 
     /**
+     * Scrape step by step by given Actions.
+     * A clicking user is simulated with Jsoup and different steps to different urls.
+     * Cookies and other request specific Data are transferred.
+     *
+     * Multiple Tables - the grades for each semester are at another page
+     *  1. extract list of semesters (value of option form field)
+     *  2. extract the form url
+     *  3. make requests for semesters and extract semester name and the table of grades (html)
+     *
+     * @return Map semester name -> table of grades (html)
+     * @throws ParseException
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    public Map<String, String> scrapeMultipleTables() throws ParseException, IOException, URISyntaxException {
+        Map<String, String> resultTables = new HashMap<>();
+        String parsedHtml = null;
+        Map<String, String> requestData = new HashMap<>();
+
+        // iterate over all actions in order by position
+        for (int i = 0; i < actions.size(); i++) {
+            Action action = actions.get(i);
+            Log.v(TAG, action.toString());
+
+            String url = getUrl(parsedHtml, action.getUrl());
+            Log.v(TAG, "Action " + (i + 1) + "/" + actions.size() + " -- Sending Request to url: " + url);
+
+            // make request with data, cookies, current method
+            getRequestData(requestData, action.getActionParams());
+            makeJsoupRequest(requestData, getHttpMethodEnum(action.getMethod()), url);
+            previousUrl = url;
+
+            // reset request data -> now there can be added data for next result
+            requestData = new HashMap<>();
+
+
+            String documentAsString = document.toString();
+            // parse Content to String if its not the table action -> so there is most likely a link in
+            if (!action.getType().equals(GradesProcessor.ACTION_TYPE_TABLE_GRADES_ITERATOR)) {
+                parsedHtml = parser.parseToString(action.getParseExpression(), documentAsString);
+            } else {
+
+                // extract list of semesters to make follow up requests
+                NodeList nodeList = parser.parseToNodeList("//*[@id=\"semester\"]//option/@value", documentAsString); // TODO: save xpath to rule
+                String[] semestersForFollowUpRequests = new String[nodeList.getLength()];
+                for (int j = 0; j < nodeList.getLength(); j++) {
+                    Node nNode = nodeList.item(j);
+                    semestersForFollowUpRequests[j] = parser.getNodeAsString(nNode);
+                }
+
+                // extract form information (and hold it)
+                String formUrl = getUrl(parser.parseToString("//*[@id=\"semesterchange\"]/@action", documentAsString)); // TODO: save xpath to rule
+
+                // make request for each semester in list -- get html table code and current semester name (e.g. SoSe 13)
+                for (int j = 0; j < semestersForFollowUpRequests.length; j++) {
+                    // fill request data
+                    requestData.put("semester", semestersForFollowUpRequests[j]);
+
+                    // make request to retrieve HTML table code for current semester
+                    Log.d(TAG, "Sending Request to url: " + url + " -- requestData: " + requestData.toString());
+                    makeJsoupRequest(requestData, Connection.Method.POST, formUrl);
+
+                    documentAsString = document.toString();
+
+                    // parse table with XML
+                    parsedHtml = parser.parseToStringWithXML(action.getParseExpression(), documentAsString);
+                    // extract separate semester
+                    String parsedSemester = parser.parseToString("//*[@id=\"semester\"]/option[@selected]", documentAsString); // TODO: save xpath to rule
+
+                    // add semester -> grades table in map
+                    resultTables.put(parsedSemester, parsedHtml);
+
+                    // reset request data -> now there can be added data for next result
+                    requestData = new HashMap<>();
+                }
+            }
+
+            // post intermediate status event
+            EventBus.getDefault().post(new ScrapeProgressEvent(i + 1, actions.size() + 1, false, gradeHash));
+        }
+
+        return resultTables;
+    }
+
+    /**
      * Makes request to the given url with given request data and method.
      * Follows redirects (including HTML redirects).
      *
@@ -289,6 +376,16 @@ public class Scraper {
             return parsedHtml;
         }
         return actionUrl;
+    }
+
+    /**
+     * Evaluates the url from a previously parsed String.
+     *
+     * @param parsedHtml parsed HTML of previous action
+     * @return url as string
+     */
+    private String getUrl(String parsedHtml) throws MalformedURLException, URISyntaxException {
+        return getUrl(parsedHtml, null);
     }
 
     /**

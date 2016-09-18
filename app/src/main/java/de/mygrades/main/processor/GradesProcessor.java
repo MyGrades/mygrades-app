@@ -46,8 +46,10 @@ import de.mygrades.util.exceptions.ParseException;
 public class GradesProcessor extends BaseProcessor {
     private static final String TAG = GradesProcessor.class.getSimpleName();
 
+    public static final String RULE_TYPE_MULTIPLE_TABLES = "multiple_tables";
     public static final String ACTION_TYPE_TABLE_GRADES = "table_grades";
     public static final String ACTION_TYPE_TABLE_OVERVIEW = "table_overview";
+    public static final String ACTION_TYPE_TABLE_GRADES_ITERATOR = "table_grades_iterator";
 
     private String gradeHash;
     private SemesterMapper semesterMapper;
@@ -286,24 +288,31 @@ public class GradesProcessor extends BaseProcessor {
         EventBus.getDefault().post(new ScrapeProgressEvent(0, actions.size() + 1));
 
         try {
-            String scrapingResult;
             List<GradeEntry> gradeEntries;
 
-            // init Parser, Scraper, Transformer
+            // init Parser, Scraper
             Parser parser = new Parser(context);
+
             Scraper scraper = new Scraper(actions, parser);
 
-            // start scraping
-            scrapingResult = scraper.scrape();
+            if (rule.getType() != null && rule.getType().equals(RULE_TYPE_MULTIPLE_TABLES)) {
+                Map<String, String> scrapingResult = scraper.scrapeMultipleTables();
+                Log.d(TAG, scrapingResult.toString());
+                // TODO: call different transform method
+                gradeEntries = new ArrayList<>();
+            } else {
+                // start scraping
+                String scrapingResult = scraper.scrape();
 
-            // start transforming
-            Transformer transformer = new Transformer(rule, scrapingResult, parser);
-            gradeEntries = transformer.transform();
+                // start transforming
+                Transformer transformer = new Transformer(rule, scrapingResult, parser);
+                gradeEntries = transformer.transform();
+            }
+
+            Log.d(TAG, gradeEntries.toString());
 
             // post status event (100% done)
             EventBus.getDefault().post(new ScrapeProgressEvent(actions.size() + 1, actions.size() + 1, false));
-
-            Log.d(TAG, gradeEntries.toString());
 
             // save grade entries in database
             saveGradeEntriesToDB(gradeEntries, initialScraping, automaticScraping);
