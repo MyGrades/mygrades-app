@@ -46,6 +46,11 @@ public class Transformer {
     private static final String OVERVIEW_PARTICIPANTS = "overview_participants";
     private static final String OVERVIEW_AVERAGE = "overview_average";
 
+    // multiple tables of grades
+    public static final String MT_SEMESTER_OPTIONS = "mt_semester_options";
+    public static final String MT_FORM_URL = "mt_form_url";
+    public static final String MT_SEMESTER_STRING = "mt_semester_string";
+
     /**
      * Parser to extract values into Models.
      */
@@ -426,6 +431,33 @@ public class Transformer {
                 transformerMapping.put(tsMapping.getName(), tsMapping);
             }
         }
+    }
+
+    /**
+     * Creates HashMap for TransformerMappings for easy access.
+     * OverviewSections are ignored.
+     *
+     * @param transformerMappings which are put into Maps transformerMapping or transformerMappingOverviewSection
+     * @return Map of Name of TransformerMapping -> TransformerMapping
+     */
+    public static Map<String, TransformerMapping> getTransformermappingMap(List<TransformerMapping> transformerMappings) {
+        Map<String, TransformerMapping> transformerMappingMap = new HashMap<>();
+
+        // iterate all transformerMappings and add to map
+        for (TransformerMapping tsMapping : transformerMappings) {
+            String tsName = tsMapping.getName();
+            if (tsName == null) {
+                continue;
+            }
+
+            if (tsName.startsWith("overview_section")) {
+                continue;
+            } else {
+                transformerMappingMap.put(tsMapping.getName(), tsMapping);
+            }
+        }
+
+        return transformerMappingMap;
     }
 
     /**

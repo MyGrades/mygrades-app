@@ -36,6 +36,7 @@ import javax.net.ssl.X509TrustManager;
 import de.greenrobot.event.EventBus;
 import de.mygrades.database.dao.Action;
 import de.mygrades.database.dao.ActionParam;
+import de.mygrades.database.dao.TransformerMapping;
 import de.mygrades.main.events.IntermediateTableScrapingResultEvent;
 import de.mygrades.main.events.ScrapeProgressEvent;
 import de.mygrades.main.processor.GradesProcessor;
@@ -229,7 +230,7 @@ public class Scraper {
      * @throws IOException
      * @throws URISyntaxException
      */
-    public Map<String, String> scrapeMultipleTables() throws ParseException, IOException, URISyntaxException {
+    public Map<String, String> scrapeMultipleTables(Map<String, TransformerMapping> transformerMappings) throws ParseException, IOException, URISyntaxException {
         Map<String, String> resultTables = new HashMap<>();
         String parsedHtml = null;
         Map<String, String> requestData = new HashMap<>();
@@ -258,7 +259,7 @@ public class Scraper {
             } else {
 
                 // extract list of semesters to make follow up requests
-                NodeList nodeList = parser.parseToNodeList("//*[@id=\"semester\"]//option/@value", documentAsString); // TODO: save xpath to rule
+                NodeList nodeList = parser.parseToNodeList(transformerMappings.get(Transformer.MT_SEMESTER_OPTIONS).getParseExpression(), documentAsString);
                 String[] semestersForFollowUpRequests = new String[nodeList.getLength()];
                 for (int j = 0; j < nodeList.getLength(); j++) {
                     Node nNode = nodeList.item(j);
@@ -266,7 +267,7 @@ public class Scraper {
                 }
 
                 // extract form information (and hold it)
-                String formUrl = getUrl(parser.parseToString("//*[@id=\"semesterchange\"]/@action", documentAsString)); // TODO: save xpath to rule
+                String formUrl = getUrl(parser.parseToString(transformerMappings.get(Transformer.MT_FORM_URL).getParseExpression(), documentAsString));
 
                 // make request for each semester in list -- get html table code and current semester name (e.g. SoSe 13)
                 for (int j = 0; j < semestersForFollowUpRequests.length; j++) {
@@ -282,7 +283,7 @@ public class Scraper {
                     // parse table with XML
                     parsedHtml = parser.parseToStringWithXML(action.getParseExpression(), documentAsString);
                     // extract separate semester
-                    String parsedSemester = parser.parseToString("//*[@id=\"semester\"]/option[@selected]", documentAsString); // TODO: save xpath to rule
+                    String parsedSemester = parser.parseToString(transformerMappings.get(Transformer.MT_SEMESTER_STRING).getParseExpression(), documentAsString);
 
                     // add semester -> grades table in map
                     resultTables.put(parsedSemester, parsedHtml);
