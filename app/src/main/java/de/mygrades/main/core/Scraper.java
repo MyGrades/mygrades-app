@@ -252,13 +252,17 @@ public class Scraper {
             // reset request data -> now there can be added data for next result
             requestData = new HashMap<>();
 
-
             String documentAsString = document.toString();
             // parse Content to String if its not the table action -> so there is most likely a link in
-            if (!action.getType().equals(GradesProcessor.ACTION_TYPE_TABLE_GRADES_ITERATOR)) {
-                parsedHtml = parser.parseToString(action.getParseExpression(), documentAsString);
+            if (!action.getType().replace(":form", "").equals(GradesProcessor.ACTION_TYPE_TABLE_GRADES_ITERATOR)) {
+                if (action.getType().endsWith(":form")) {
+                    String parseExpression = action.getParseExpression();
+                    parsedHtml = parser.parseToString(parseExpression + "/@action", documentAsString);
+                    requestData.putAll(parser.getInputsAsMap(parseExpression + "//input[not(@type=\"submit\")]", documentAsString));
+                } else {
+                    parsedHtml = parser.parseToString(action.getParseExpression(), documentAsString);
+                }
             } else {
-
                 // extract list of semesters to make follow up requests
                 NodeList nodeList = parser.parseToNodeList(transformerMappings.get(Transformer.MT_SEMESTER_OPTIONS).getParseExpression(), documentAsString);
                 String[] semestersForFollowUpRequests = new String[nodeList.getLength()];
@@ -274,6 +278,13 @@ public class Scraper {
                 for (int j = 0; j < semestersForFollowUpRequests.length; j++) {
                     // fill request data
                     requestData.put("semester", semestersForFollowUpRequests[j]);
+
+                    // add form inputs if necessary
+                    if (action.getType().endsWith(":form")) {
+                        // TODO: maybe use new transformer mapping MT_FORM to avoid string replacement?
+                        String selectFormExpression = transformerMappings.get(Transformer.MT_FORM_URL).getParseExpression().replace("/@action", "");
+                        requestData.putAll(parser.getInputsAsMap(selectFormExpression + "//input[not(@type=\"submit\")]", documentAsString));
+                    }
 
                     // make request to retrieve HTML table code for current semester
                     Log.d(TAG, "Sending Request to url: " + formUrl + " -- requestData: " + requestData.toString());
