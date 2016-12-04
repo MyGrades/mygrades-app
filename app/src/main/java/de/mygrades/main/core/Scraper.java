@@ -7,6 +7,7 @@ import com.securepreferences.SecurePreferences;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Entities;
@@ -330,26 +331,22 @@ public class Scraper {
         document.select("script").remove();
         document.select("td:contains(aktuellen ECTS-Grades)").remove(); // remove invalid html (see error #71)
 
-        // check if there is a redirect via meta-equiv=refresh
-        Element metaRefresh = document.select("html head meta[http-equiv=refresh]").first();
-        if (metaRefresh != null) {
-            // get url to redirect
-            String refreshContent = metaRefresh.attr("content");
-            if (refreshContent != null) {
-                // split at ;URL= to get url
-                String redirectUrl = refreshContent.split(";URL=")[1];
-                if (redirectUrl != null) {
-                    // if its a relative redirect url -> prepend with host
-                    if (!redirectUrl.toLowerCase().startsWith("http")) {
-                        // check if it starts with / and remove it
-                        if (redirectUrl.startsWith("/") && response.url().toString().endsWith("/")) {
-                            redirectUrl = redirectUrl.substring(1);
-                        }
-                        redirectUrl = response.url().toString().concat(redirectUrl);
-                    }
-                    makeJsoupRequest(requestData, Connection.Method.GET, redirectUrl);
-                }
+        // check for meta refresh tag
+        Element meta = document.select("meta[http-equiv=Refresh").first();
+        if (meta != null) {
+            String content = meta.attr("content");
+            if (content != null) {
+                meta.attr("refresh-url", content.replaceAll("(?i)^(\\d+;.*URL=)(.+)$", "$2"));
+                makeJsoupRequest(requestData, Connection.Method.GET, meta.absUrl("refresh-url"));
             }
+        }
+
+        // check for refresh pseudo header
+        String refreshHeader = response.header("refresh");
+        if (refreshHeader != null) {
+            String relativeUrl = refreshHeader.replaceAll("(?i)^(\\d+;.*URL=)(.+)$", "$2");
+            String redirectUrl = StringUtil.resolve(document.baseUri(), relativeUrl);
+            makeJsoupRequest(requestData, Connection.Method.GET, redirectUrl);
         }
     }
 
