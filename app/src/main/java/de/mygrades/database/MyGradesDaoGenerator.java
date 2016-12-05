@@ -10,7 +10,7 @@ import de.greenrobot.daogenerator.Schema;
  */
 public class MyGradesDaoGenerator {
 
-    private static final int VERSION = 3;
+    private static final int VERSION = 4;
     private static final String PACKAGE = "de.mygrades.database.dao";
     private static final String DIR_PATH = "app/src/main/java";
 

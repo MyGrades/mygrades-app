@@ -32,11 +32,16 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.i("greenDAO", "Upgrading schema from version " + oldVersion + " to " + newVersion);
 
-        // important: old/new version refers to database schema version, not the app version
-        if (oldVersion < 2) {
-            reset(db);
-        } else if (oldVersion == 2 && newVersion == 3) {
-            upgrade2to3(db);
+        // current schema version is 4
+        switch (oldVersion) {
+            case 1:
+                reset(db);
+                break;
+            case 2:
+                upgrade2to3(db);
+                // no break statement, execute next upgrade also
+            case 3:
+                upgrade3to4(db);
         }
     }
 
@@ -73,6 +78,11 @@ public class DatabaseHelper extends DaoMaster.OpenHelper {
 
         // remove semesterNumber
         removeSemesterNumber(db);
+    }
+
+    private void upgrade3to4(SQLiteDatabase db) {
+        // add new column 'TYPE' to table 'RULE'
+        db.execSQL("ALTER TABLE RULE ADD COLUMN TYPE TEXT;");
     }
 
     /**
