@@ -175,6 +175,10 @@ public class Transformer {
             GradeEntry gradeEntry = new GradeEntry();
             gradeEntry.setExamId(getStringProperty(xmlDocument, EXAM_ID));
             gradeEntry.setName(getStringProperty(xmlDocument, NAME));
+            // name is mandatory, so ignore this entry if it has none
+            if (gradeEntry.getName() == null) {
+                continue;
+            }
 
             // extract semester from line if there is no global semester given
             String semesterRaw = globalSemester == null ? getStringProperty(xmlDocument, SEMESTER) : globalSemester;
