@@ -1,5 +1,11 @@
 # Changelog
 
+# 1.2.0
+
+- Allow scraping of universities which provide multiple grade entry tables for each semester
+- Improve redirect handling
+- Add new weekly scraping interval
+
 # 1.1.2
 
 - Added calculation of participants and average for overview if it is not given
