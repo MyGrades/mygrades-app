@@ -40,12 +40,14 @@
         <item>alle 2 Stunden</item>
         <item>alle 4 Stunden</item>
         <item>1 mal täglich</item>
+        <item>1 mal wöchentlich</item>
     </string-array>
     <string-array name="pref_scrape_frequency_values">
         <item>60</item>
         <item>120</item>
         <item>240</item>
         <item>1440</item>
+        <item>10080</item>
     </string-array>
 
     <string name="pref_only_wifi_title">Nur im WLAN</string>

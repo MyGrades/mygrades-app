@@ -91,14 +91,6 @@ public class ScrapeAlarmManager {
         // first alarm triggers minimum 10 minutes after being set
         long trigger = 10 * 60 * 1000;
 
-        /* TODO: remove - just for testing purposes: interval = 10min, trigger = 1min
-        interval = 10 * 60 * 1000;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(context.getResources().getString(R.string.pref_key_scrape_frequency), "10");
-        editor.commit();
-        trigger = 60 * 1000;
-        */
         // we can't use setInexactRepeating, because of the rare predefined intervals
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime() + trigger, interval, alarmIntent);
@@ -147,8 +139,7 @@ public class ScrapeAlarmManager {
             PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
             // set alarm
-            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    trigger, alarmIntent);
+            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, trigger, alarmIntent);
             Log.d(TAG, "set one time alarm in " + oneTimeInterval + "min");
 
             // increase

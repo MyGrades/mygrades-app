@@ -372,7 +372,7 @@ public class FragmentOverview extends Fragment {
     @Override
     public void onDestroyView() {
         EventBus.getDefault().unregister(this);
-        super.onDestroy();
+        super.onDestroyView();
     }
 
     private void showRestoreDialog() {
