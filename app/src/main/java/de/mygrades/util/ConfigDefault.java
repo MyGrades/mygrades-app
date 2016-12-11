@@ -18,7 +18,7 @@ public class ConfigDefault {
      * @return API url as String
      */
     public static String getApiUrl() {
-        return null; // must be implemented in Config.java
+        return getServerUrl() + "/api/v1";
     }
 
     /**

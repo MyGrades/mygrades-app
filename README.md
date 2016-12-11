@@ -4,7 +4,7 @@
 > [MyGrades](https://mygrades.de/) Android App
 
 [![Apache2 License](https://img.shields.io/badge/license-APACHE2-blue.svg?style=flat-square)](/LICENSE)
-[![MyGrades Version](https://img.shields.io/badge/mygrades-1.1.2-8BC34A.svg?style=flat-square)](https://mygrades.de)
+[![MyGrades Version](https://img.shields.io/badge/mygrades-1.2.0-8BC34A.svg?style=flat-square)](https://mygrades.de)
 <br><br><br>
 MyGrades is an Android App developed by [Tilman Ginzel](https://github.com/tilmanginzel) and [Jonas Theis](https://github.com/jonastheis). Its main purpose is to scrape a students grades from her/his respective university's website. To do so, it simulates a browser which follows a sequence of URLs and extracts the desired information with XPATH (web scraping). The core functionality is based on our Android App [Scrapp](https://github.com/tilmanginzel/scrapp), which we developed during our studies at the RheinMain University of Applied Sciences. Special thanks to [Rahel Habacker](https://github.com/RedHilarious)!
 
@@ -19,6 +19,19 @@ Get it on [Google Play.](https://play.google.com/store/apps/details?id=de.mygrad
 <img src="assets/screen-login-filled.jpg?raw=true" width="215px" />
 <img src="assets/screen-edit-overview.jpg?raw=true" width="215px" />
 <img src="assets/screen-edit-detailed.jpg?raw=true" width="215px" />
+
+## Installation
+
+Clone the project and create a `Config.java` file.
+
+```bash
+git clone https://github.com/MyGrades/mygrades-app.git
+cd mygrades-app/app/src/main/java/de/mygrades/util
+cp ConfigDefault.java Config.java
+```
+
+The config must at least implement the method `getServerUrl()`.
+Point this url to your running [server](https://github.com/MyGrades/mygrades-server).
 
 ## Used third-party libraries
 * [jsoup](http://jsoup.org/)
