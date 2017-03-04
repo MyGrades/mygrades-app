@@ -5,6 +5,7 @@
 - Allow scraping of universities which provide multiple grade entry tables for each semester
 - Improve redirect handling
 - Add new weekly scraping interval
+- Add setting to hide credit points
 
 # 1.1.2
 

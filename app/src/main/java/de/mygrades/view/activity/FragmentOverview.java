@@ -219,7 +219,7 @@ public class FragmentOverview extends Fragment {
                 return;
             }
         } else {
-            prefs.edit().putBoolean(Constants.PREF_KEY_DISMISSED_RATING_INFO, false);
+            prefs.edit().putBoolean(Constants.PREF_KEY_DISMISSED_RATING_INFO, false).apply();
         }
 
         // show edit mode info

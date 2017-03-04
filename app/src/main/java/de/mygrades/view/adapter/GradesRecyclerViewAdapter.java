@@ -56,6 +56,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private String actualFirstSemester;
 
     private boolean editModeEnabled;
+    private boolean hideCreditPoints;
 
     public GradesRecyclerViewAdapter(Context context) {
         super();
@@ -70,6 +71,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         this.context = context;
         prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
+        hideCreditPoints = prefs.getBoolean(context.getString(R.string.pref_key_hide_credit_points), false);
 
         // register for preference changes
         prefsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -81,6 +83,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                     updateSimpleWeighting();
                     updateSummary();
                     updateSemesterSummaries();
+                } else if (key.equals(GradesRecyclerViewAdapter.this.context.getString(R.string.pref_key_hide_credit_points))) {
+                    hideCreditPoints(prefs.getBoolean(key, false));
                 }
             }
         };
@@ -434,6 +438,11 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         items.clear();
     }
 
+    public void hideCreditPoints(boolean hide) {
+        this.hideCreditPoints = hide;
+        notifyItemRangeChanged(0, items.size() - 1);
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_SEMESTER) {
@@ -480,6 +489,9 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             } else {
                 viewHolder.hide(semesterItem.getVisibleGradesCount() == 0);
             }
+
+            // hide credit points if setting is set
+            viewHolder.tvCreditPoints.setVisibility(hideCreditPoints ? View.GONE : View.VISIBLE);
         } else if (holder instanceof GradeViewHolder) {
             GradeViewHolder viewHolder = (GradeViewHolder) holder;
             GradeItem gradeItem = (GradeItem) items.get(position);
@@ -534,6 +546,9 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             }
 
             viewHolder.enableClickListener(!editModeEnabled);
+
+            // hide credit points if setting is set
+            viewHolder.tvCreditPoints.setVisibility(hideCreditPoints ? View.GONE : View.VISIBLE);
         } else if (holder instanceof GradesSummaryViewHolder) {
             GradesSummaryViewHolder viewHolder = (GradesSummaryViewHolder) holder;
             GradesSummaryItem summaryItem = (GradesSummaryItem) items.get(position);
@@ -559,6 +574,9 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             } else {
                 viewHolder.llNoGradesInfo.setVisibility(View.GONE);
             }
+
+            // hide credit points if setting is set
+            viewHolder.llCreditPointsWrapper.setVisibility(hideCreditPoints ? View.GONE : View.VISIBLE);
         } else if (holder instanceof FooterViewHolder) {
             FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
             GradesFooterItem footerItem = (GradesFooterItem) items.get(position);
@@ -820,6 +838,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         public ImageView dismissInfoBox;
         public LinearLayout llNoGradesInfo;
         public Button btnLogout;
+        public LinearLayout llCreditPointsWrapper;
 
         public GradesSummaryViewHolder(final View itemView) {
             super(itemView);
@@ -834,6 +853,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             dismissInfoBox = (ImageView) itemView.findViewById(R.id.iv_dismiss_info);
             llNoGradesInfo = (LinearLayout) itemView.findViewById(R.id.ll_no_grades_wrapper);
             btnLogout = (Button) itemView.findViewById(R.id.btn_logout);
+            llCreditPointsWrapper = (LinearLayout) itemView.findViewById(R.id.ll_credit_points_wrapper);
         }
     }
 

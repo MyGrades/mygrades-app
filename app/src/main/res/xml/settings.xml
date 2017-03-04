@@ -20,6 +20,12 @@
             android:title="@string/pref_simple_weighting_title"
             android:summary="@string/pref_simple_weighting_summary" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_hide_credit_points"
+            android:title="@string/pref_hide_credit_points_title"
+            android:summary="@string/pref_hide_credit_points_summary" />
+
         <Preference
             android:key="@string/pref_key_logout"
             android:title="@string/pref_logout_title"

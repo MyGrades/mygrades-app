@@ -60,4 +60,8 @@
     <string name="pref_key_simple_weighting">pref_key_simple_weighting</string>
     <string name="pref_simple_weighting_title">Einfache Gewichtung</string>
     <string name="pref_simple_weighting_summary">Bestandene Leistungen werden bei Berechnung des Durchschnitts einfach gewichtet und CPs dabei ignoriert</string>
+
+    <string name="pref_key_hide_credit_points">pref_key_hide_credit_points</string>
+    <string name="pref_hide_credit_points_title">Credit-Points ausblenden</string>
+    <string name="pref_hide_credit_points_summary">CPs werden in der Übersicht und den Statistiken ausgeblendet</string>
 </resources>

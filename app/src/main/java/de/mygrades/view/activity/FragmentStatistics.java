@@ -9,6 +9,8 @@ import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -53,6 +55,12 @@ public class FragmentStatistics extends Fragment implements SharedPreferences.On
     private LineChart chartAverageGradePerSemester;
     private BarChart chartGradeDistribution;
 
+    private LinearLayout llCreditPointsWrapper;
+    private LinearLayout llCreditPointsPerSemesterWrapper;
+    private RelativeLayout rlCreditPointsSummaryWrapper;
+    private RelativeLayout rlCreditPointsPerSemesterSummaryWrapper;
+    private RelativeLayout rlStudyProgressSummaryWrapper;
+
     private MainServiceHelper mainServiceHelper;
     private Map<String, Integer> semesterNumberMap;
     private String actualFirstSemester;
@@ -75,6 +83,15 @@ public class FragmentStatistics extends Fragment implements SharedPreferences.On
         chartCreditPointsPerSemester = (LineChart) view.findViewById(R.id.chart_credit_points_per_semester);
         chartAverageGradePerSemester = (LineChart) view.findViewById(R.id.chart_average_grade_per_semester);
         chartGradeDistribution = (BarChart) view.findViewById(R.id.chart_grade_distribution);
+
+        llCreditPointsWrapper = (LinearLayout) view.findViewById(R.id.ll_chart_credit_points_wrapper);
+        llCreditPointsPerSemesterWrapper = (LinearLayout) view.findViewById(R.id.ll_chart_credit_points_per_semester_wrapper);
+        rlCreditPointsSummaryWrapper = (RelativeLayout) view.findViewById(R.id.rl_credit_points_summary_wrapper);
+        rlCreditPointsPerSemesterSummaryWrapper = (RelativeLayout) view.findViewById(R.id.rl_credit_points_per_semester_summary_wrapper);
+        rlStudyProgressSummaryWrapper = (RelativeLayout) view.findViewById(R.id.rl_study_progress_summary_wrapper);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        hideCreditPoints(prefs.getBoolean(getString(R.string.pref_key_hide_credit_points), false));
 
         EventBus.getDefault().register(this);
 
@@ -315,6 +332,18 @@ public class FragmentStatistics extends Fragment implements SharedPreferences.On
         if (key.equals(getContext().getString(R.string.pref_key_simple_weighting))) {
             mainServiceHelper.getStatistics();
         }
+
+        if (key.equals(getContext().getString(R.string.pref_key_hide_credit_points))) {
+            hideCreditPoints(sharedPreferences.getBoolean(key, false));
+        }
+    }
+
+    private void hideCreditPoints(boolean hide) {
+        llCreditPointsPerSemesterWrapper.setVisibility(hide ? View.GONE : View.VISIBLE);
+        llCreditPointsWrapper.setVisibility(hide ? View.GONE : View.VISIBLE);
+        rlCreditPointsSummaryWrapper.setVisibility(hide ? View.GONE : View.VISIBLE);
+        rlCreditPointsPerSemesterSummaryWrapper.setVisibility(hide ? View.GONE : View.VISIBLE);
+        rlStudyProgressSummaryWrapper.setVisibility(hide ? View.GONE : View.VISIBLE);
     }
 
     /**
