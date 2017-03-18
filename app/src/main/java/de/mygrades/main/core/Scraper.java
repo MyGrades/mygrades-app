@@ -169,7 +169,7 @@ public class Scraper {
             Log.v(TAG, action.toString());
 
             String url = getUrl(parsedHtml, action.getUrl());
-            Log.v(TAG, "Action " + (i + 1) + "/" + actions.size() + " -- Sending Request to url: " + url);
+            Log.v(TAG, "--- Action " + (i + 1) + "/" + actions.size() + " -- Sending Request to url: " + url);
 
             // make request with data, cookies, current method
             getRequestData(requestData, action.getActionParams());
@@ -242,7 +242,7 @@ public class Scraper {
             Log.v(TAG, action.toString());
 
             String url = getUrl(parsedHtml, action.getUrl());
-            Log.v(TAG, "Action " + (i + 1) + "/" + actions.size() + " -- Sending Request to url: " + url);
+            Log.v(TAG, "--- Action " + (i + 1) + "/" + actions.size() + " -- Sending Request to url: " + url);
 
             // make request with data, cookies, current method
             getRequestData(requestData, action.getActionParams());
@@ -321,7 +321,7 @@ public class Scraper {
      * @param url url as string
      * @throws IOException if there is an error connecting to the url
      */
-    private void makeJsoupRequest(Map<String, String> requestData, Connection.Method method, String url) throws IOException {
+    private void makeJsoupRequest(Map<String, String> requestData, Connection.Method method, String url) throws IOException, URISyntaxException {
         Connection.Response response = Jsoup.connect(url)
                 .data(requestData)
                 .cookies(cookies)
@@ -329,7 +329,7 @@ public class Scraper {
                 .userAgent(Config.BROWSER_USER_AGENT) // set explicit user agent
                 .method(method)
                 .timeout(Config.SCRAPER_TIMEOUT)
-                //.validateTLSCertificates(false) // do not validate ssl certificates -> must be used for self certified
+                .followRedirects(false)
                 .execute();
 
         // get cookies from response and add to all cookies
@@ -341,6 +341,13 @@ public class Scraper {
         document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
         document.select("script").remove();
         document.select("td:contains(aktuellen ECTS-Grades)").remove(); // remove invalid html (see error #71)
+
+        // check for location redirect
+        String location = response.header("location");
+        if (location != null) {
+            baseUri = new URL(location).toURI();
+            makeJsoupRequest(new HashMap<String, String>(), Connection.Method.GET, location);
+        }
 
         // check for meta refresh tag
         Element meta = document.select("meta[http-equiv=Refresh").first();

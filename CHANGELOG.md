@@ -6,6 +6,7 @@
 - Improve redirect handling
 - Add new weekly scraping interval
 - Add setting to hide credit points
+- Fix: Update baseUri after location redirect
 
 # 1.1.2
 
