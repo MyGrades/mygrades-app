@@ -19,20 +19,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import de.greenrobot.event.EventBus;
 import de.mygrades.database.dao.Action;
@@ -44,7 +33,6 @@ import de.mygrades.main.processor.GradesProcessor;
 import de.mygrades.util.Config;
 import de.mygrades.util.Constants;
 import de.mygrades.util.exceptions.ParseException;
-import info.guardianproject.netcipher.client.TlsOnlySocketFactory;
 
 
 /**
@@ -53,48 +41,6 @@ import info.guardianproject.netcipher.client.TlsOnlySocketFactory;
  */
 public class Scraper {
     private static final String TAG = Scraper.class.getSimpleName();
-
-    /**
-     * Avoid SSLv3 as the only protocol available.
-     * http://stackoverflow.com/questions/2793150/using-java-net-urlconnection-to-fire-and-handle-http-requests/2793153#2793153
-     * (not used) http://stackoverflow.com/questions/26633349/disable-ssl-as-a-protocol-in-httpsurlconnection
-     * (not used) http://stackoverflow.com/a/29946540 -> initializing of SSLv3 Context
-     */
-    static {
-        TrustManager[] trustAllCertificates = new TrustManager[] {
-                new X509TrustManager() {
-                    @Override
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return null; // Not relevant.
-                    }
-                    @Override
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                        // Do nothing. Just allow them all.
-                    }
-                    @Override
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                        // Do nothing. Just allow them all.
-                    }
-                }
-        };
-
-        HostnameVerifier trustAllHostnames = new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-                return true; // Just allow them all.
-            }
-        };
-
-        try {
-            SSLContext sc = SSLContext.getInstance("TLSv1");
-            sc.init(null, trustAllCertificates, new SecureRandom());
-            SSLSocketFactory noSSLv3Factory = new TlsOnlySocketFactory(sc.getSocketFactory());
-            HttpsURLConnection.setDefaultSSLSocketFactory(noSSLv3Factory);
-            HttpsURLConnection.setDefaultHostnameVerifier(trustAllHostnames);
-        }
-        catch (GeneralSecurityException e) {
-        }
-    }
 
     /**
      * List of Actions which are processed step by step.
@@ -355,7 +301,7 @@ public class Scraper {
             String content = meta.attr("content");
             if (content != null) {
                 meta.attr("refresh-url", content.replaceAll("(?i)^(\\d+;.*URL=)(.+)$", "$2"));
-                makeJsoupRequest(requestData, Connection.Method.GET, meta.absUrl("refresh-url"));
+                makeJsoupRequest(new HashMap<String, String>(), Connection.Method.GET, meta.absUrl("refresh-url"));
             }
         }
 
@@ -364,7 +310,7 @@ public class Scraper {
         if (refreshHeader != null) {
             String relativeUrl = refreshHeader.replaceAll("(?i)^(\\d+;.*URL=)(.+)$", "$2");
             String redirectUrl = StringUtil.resolve(document.baseUri(), relativeUrl);
-            makeJsoupRequest(requestData, Connection.Method.GET, redirectUrl);
+            makeJsoupRequest(new HashMap<String, String>(), Connection.Method.GET, redirectUrl);
         }
     }
 
