@@ -45,7 +45,6 @@ Point this url to your running [server](https://github.com/MyGrades/mygrades-ser
 * [android-Ultra-Pull-To-Refresh](https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh)
 * [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)
 * [android-support-preference](https://github.com/consp1racy/android-support-preference)
-* [NetCipher: Secured Networking for Android](https://github.com/guardianproject/NetCipher)
 * [JTidy](http://jtidy.sourceforge.net/)
 * [Groovy](http://www.groovy-lang.org/)
 * [Spock Framework](https://github.com/spockframework/spock)
