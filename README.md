@@ -11,14 +11,14 @@ MyGrades is an Android App developed by [Tilman Ginzel](https://github.com/tilma
 Get it on [Google Play.](https://play.google.com/store/apps/details?id=de.mygrades)
 
 ## Screenshots
-<img src="assets/screen-overview.jpg?raw=true" width="215px" />
-<img src="assets/screen-statistics.jpg?raw=true" width="215px" />
-<img src="assets/screen-detail1.jpg?raw=true" width="215px" />
-<img src="assets/screen-detail2.jpg?raw=true" width="215px" />
-<img src="assets/screen-settings.jpg?raw=true" width="215px" />
-<img src="assets/screen-login-filled.jpg?raw=true" width="215px" />
-<img src="assets/screen-edit-overview.jpg?raw=true" width="215px" />
-<img src="assets/screen-edit-detailed.jpg?raw=true" width="215px" />
+<span><img src="assets/screen-overview.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screen-statistics.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screen-detail1.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screen-detail2.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screen-settings.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screen-login-filled.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screen-edit-overview.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screen-edit-detailed.jpg?raw=true" width="215px" /></span>
 
 ## Installation
 
