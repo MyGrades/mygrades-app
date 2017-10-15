@@ -29,6 +29,7 @@ import de.mygrades.main.MainServiceHelper;
 import de.mygrades.util.AverageCalculator;
 import de.mygrades.util.Constants;
 import de.mygrades.util.LogoutHelper;
+import de.mygrades.view.UIHelper;
 import de.mygrades.view.activity.GradeDetailedActivity;
 import de.mygrades.view.adapter.model.GradeItem;
 import de.mygrades.view.adapter.model.GradesAdapterItem;
@@ -259,6 +260,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                         gradeItem.setModifiedName(newGrade.getModifiedName());
                         gradeItem.setGrade(newGrade.getGrade());
                         gradeItem.setModifiedGrade(newGrade.getModifiedGrade());
+                        gradeItem.setState(newGrade.getState());
+                        gradeItem.setModifiedState(newGrade.getModifiedState());
                         gradeItem.setCreditPoints(newGrade.getCreditPoints());
                         gradeItem.setModifiedCreditPoints(newGrade.getModifiedCreditPoints());
                         gradeItem.setWeight(newGrade.getWeight());
@@ -501,8 +504,12 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
             Double grade = gradeItem.getGrade();
             grade = gradeItem.getModifiedGrade() == null ? grade : gradeItem.getModifiedGrade();
-            String gradeAsString = grade == null ? "-" : String.format("%.1f", grade);
+            String state = gradeItem.getState();
+            state = gradeItem.getModifiedState() == null ? state : gradeItem.getModifiedState();
+            String gradeAsString = grade == null ? UIHelper.getShortState(context, state)
+                    : String.format("%.1f", grade);
             viewHolder.tvGrade.setText(gradeAsString);
+            viewHolder.tvGrade.setTextColor(UIHelper.getGradeColor(context, grade, state));
 
             Double creditPoints = gradeItem.getCreditPoints();
             creditPoints = gradeItem.getModifiedCreditPoints() == null ? creditPoints : gradeItem.getModifiedCreditPoints();

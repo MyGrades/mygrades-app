@@ -157,4 +157,9 @@
         <item>9</item>
         <item>10</item>
     </string-array>
+
+    <string name="state_an">AN</string>
+    <string name="state_be">BE</string>
+    <string name="state_nb">NB</string>
+    <string name="state_en">EN</string>
 </resources>
