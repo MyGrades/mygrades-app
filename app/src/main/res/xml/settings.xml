@@ -26,6 +26,12 @@
             android:title="@string/pref_hide_credit_points_title"
             android:summary="@string/pref_hide_credit_points_summary" />
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_colored_grades"
+            android:title="@string/pref_colored_grades_title"
+            android:summary="@string/pref_colored_grades_summary" />
+
         <Preference
             android:key="@string/pref_key_logout"
             android:title="@string/pref_logout_title"

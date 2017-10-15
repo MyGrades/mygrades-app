@@ -58,6 +58,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     private boolean editModeEnabled;
     private boolean hideCreditPoints;
+    private boolean coloredGrades;
 
     public GradesRecyclerViewAdapter(Context context) {
         super();
@@ -73,6 +74,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         this.context = context;
         prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
         hideCreditPoints = prefs.getBoolean(context.getString(R.string.pref_key_hide_credit_points), false);
+        coloredGrades = prefs.getBoolean(context.getString(R.string.pref_key_colored_grades), true);
 
         // register for preference changes
         prefsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -86,6 +88,9 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                     updateSemesterSummaries();
                 } else if (key.equals(GradesRecyclerViewAdapter.this.context.getString(R.string.pref_key_hide_credit_points))) {
                     hideCreditPoints(prefs.getBoolean(key, false));
+                } else if (key.equals(GradesRecyclerViewAdapter.this.context.getString(R.string.pref_key_colored_grades))) {
+                    coloredGrades = prefs.getBoolean(key, true);
+                    notifyItemRangeChanged(0, items.size() - 1);
                 }
             }
         };
@@ -509,7 +514,11 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             String gradeAsString = grade == null ? UIHelper.getShortState(context, state)
                     : String.format("%.1f", grade);
             viewHolder.tvGrade.setText(gradeAsString);
-            viewHolder.tvGrade.setTextColor(UIHelper.getGradeColor(context, grade, state));
+            if (coloredGrades) {
+                viewHolder.tvGrade.setTextColor(UIHelper.getGradeColor(context, grade, state));
+            } else {
+                viewHolder.tvGrade.setTextColor(context.getResources().getColor(R.color.text_default));
+            }
 
             Double creditPoints = gradeItem.getCreditPoints();
             creditPoints = gradeItem.getModifiedCreditPoints() == null ? creditPoints : gradeItem.getModifiedCreditPoints();
