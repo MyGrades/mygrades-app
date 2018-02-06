@@ -1,5 +1,11 @@
 # Changelog
 
+# 1.2.1
+
+- Better support for exams without grade
+- Highlight passed and failed exams
+- Thanks to @eltos for the pull request (#8)!
+
 # 1.2.0
 
 - Allow scraping of universities which provide multiple grade entry tables for each semester
