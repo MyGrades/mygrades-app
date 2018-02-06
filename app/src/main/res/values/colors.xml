@@ -10,4 +10,9 @@
     <color name="colorPrimaryDark">#689F38</color>
     <color name="colorAccent">#FF6E40</color>
     <color name="colorTextHighLight">#C5E1A5</color>
+
+    <color name="text_default">@android:color/primary_text_light</color>
+    <color name="text_passed">#8BC34A</color>
+    <color name="text_failed">#E53935</color>
+    <color name="text_failed_permanently">#795548</color>
 </resources>

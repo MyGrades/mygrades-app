@@ -9,7 +9,9 @@ public class GradeItem implements GradesAdapterItem {
     private String name;
     private String modifiedName;
     private Double grade;
+    private String state;
     private Double modifiedGrade;
+    private String modifiedState;
     private Double creditPoints;
     private Double modifiedCreditPoints;
     private Double weight;
@@ -37,6 +39,9 @@ public class GradeItem implements GradesAdapterItem {
         setGrade(gradeEntry.getGrade());
         setModifiedGrade(gradeEntry.getModifiedGrade());
 
+        setState(gradeEntry.getState());
+        setModifiedState(gradeEntry.getModifiedState());
+
         setSemester(gradeEntry.getSemester());
         setModifiedSemester(gradeEntry.getModifiedSemester());
 
@@ -63,17 +68,8 @@ public class GradeItem implements GradesAdapterItem {
      * @return true, if modified badge should be shown
      */
     public boolean showModifiedBadge() {
-        if (modifiedGrade != null) {
-            return true;
-        } else if (modifiedCreditPoints != null) {
-            return true;
-        } else if (modifiedName != null) {
-            return true;
-        } else if (modifiedSemester != null) {
-            return true;
-        }
-
-        return false;
+        return modifiedGrade != null || modifiedState != null || modifiedCreditPoints != null ||
+                modifiedName != null || modifiedSemester != null;
     }
 
     /**
@@ -99,6 +95,9 @@ public class GradeItem implements GradesAdapterItem {
             return false;
         if (grade != null ? !grade.equals(gradeItem.grade) : gradeItem.grade != null) return false;
         if (modifiedGrade != null ? !modifiedGrade.equals(gradeItem.modifiedGrade) : gradeItem.modifiedGrade != null)
+            return false;
+        if (state != null ? !state.equals(gradeItem.state) : gradeItem.state != null) return false;
+        if (modifiedState != null ? !modifiedState.equals(gradeItem.modifiedState) : gradeItem.modifiedState != null)
             return false;
         if (creditPoints != null ? !creditPoints.equals(gradeItem.creditPoints) : gradeItem.creditPoints != null)
             return false;
@@ -145,6 +144,14 @@ public class GradeItem implements GradesAdapterItem {
         this.grade = grade;
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
     public Double getCreditPoints() {
         return creditPoints;
     }
@@ -183,6 +190,14 @@ public class GradeItem implements GradesAdapterItem {
 
     public void setModifiedGrade(Double modifiedGrade) {
         this.modifiedGrade = modifiedGrade;
+    }
+
+    public String getModifiedState(){
+        return modifiedState;
+    }
+
+    public void setModifiedState(String modifiedState) {
+        this.modifiedState = modifiedState;
     }
 
     public Double getModifiedCreditPoints() {

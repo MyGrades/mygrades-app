@@ -140,10 +140,10 @@
                         android:text="@string/tv_grade_detail_grade" />
 
                     <EditText
+                        android:id="@+id/et_grade_detail_grade"
                         style="@style/GradeDetailEditText"
-                        android:inputType="numberDecimal"
-                        android:digits="0123456789.,"
-                        android:id="@+id/et_grade_detail_grade" />
+                        android:digits="-0123456789.,"
+                        android:inputType="numberDecimal" />
 
                     <de.mygrades.view.widget.TriangleShapeView
                         android:id="@+id/modified_badge_grade"

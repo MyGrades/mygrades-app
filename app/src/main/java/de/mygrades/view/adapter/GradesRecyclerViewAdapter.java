@@ -29,6 +29,7 @@ import de.mygrades.main.MainServiceHelper;
 import de.mygrades.util.AverageCalculator;
 import de.mygrades.util.Constants;
 import de.mygrades.util.LogoutHelper;
+import de.mygrades.view.UIHelper;
 import de.mygrades.view.activity.GradeDetailedActivity;
 import de.mygrades.view.adapter.model.GradeItem;
 import de.mygrades.view.adapter.model.GradesAdapterItem;
@@ -57,6 +58,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     private boolean editModeEnabled;
     private boolean hideCreditPoints;
+    private boolean coloredGrades;
 
     public GradesRecyclerViewAdapter(Context context) {
         super();
@@ -72,6 +74,7 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         this.context = context;
         prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
         hideCreditPoints = prefs.getBoolean(context.getString(R.string.pref_key_hide_credit_points), false);
+        coloredGrades = prefs.getBoolean(context.getString(R.string.pref_key_colored_grades), true);
 
         // register for preference changes
         prefsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -85,6 +88,9 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                     updateSemesterSummaries();
                 } else if (key.equals(GradesRecyclerViewAdapter.this.context.getString(R.string.pref_key_hide_credit_points))) {
                     hideCreditPoints(prefs.getBoolean(key, false));
+                } else if (key.equals(GradesRecyclerViewAdapter.this.context.getString(R.string.pref_key_colored_grades))) {
+                    coloredGrades = prefs.getBoolean(key, true);
+                    notifyItemRangeChanged(0, items.size() - 1);
                 }
             }
         };
@@ -259,6 +265,8 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                         gradeItem.setModifiedName(newGrade.getModifiedName());
                         gradeItem.setGrade(newGrade.getGrade());
                         gradeItem.setModifiedGrade(newGrade.getModifiedGrade());
+                        gradeItem.setState(newGrade.getState());
+                        gradeItem.setModifiedState(newGrade.getModifiedState());
                         gradeItem.setCreditPoints(newGrade.getCreditPoints());
                         gradeItem.setModifiedCreditPoints(newGrade.getModifiedCreditPoints());
                         gradeItem.setWeight(newGrade.getWeight());
@@ -501,8 +509,16 @@ public class GradesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
             Double grade = gradeItem.getGrade();
             grade = gradeItem.getModifiedGrade() == null ? grade : gradeItem.getModifiedGrade();
-            String gradeAsString = grade == null ? "-" : String.format("%.1f", grade);
+            String state = gradeItem.getState();
+            state = gradeItem.getModifiedState() == null ? state : gradeItem.getModifiedState();
+            String gradeAsString = grade == null ? UIHelper.getShortState(context, state)
+                    : String.format("%.1f", grade);
             viewHolder.tvGrade.setText(gradeAsString);
+            if (coloredGrades) {
+                viewHolder.tvGrade.setTextColor(UIHelper.getGradeColor(context, grade, state));
+            } else {
+                viewHolder.tvGrade.setTextColor(context.getResources().getColor(R.color.text_default));
+            }
 
             Double creditPoints = gradeItem.getCreditPoints();
             creditPoints = gradeItem.getModifiedCreditPoints() == null ? creditPoints : gradeItem.getModifiedCreditPoints();

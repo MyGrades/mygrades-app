@@ -64,4 +64,8 @@
     <string name="pref_key_hide_credit_points">pref_key_hide_credit_points</string>
     <string name="pref_hide_credit_points_title">Credit-Points ausblenden</string>
     <string name="pref_hide_credit_points_summary">CPs werden in der Übersicht und den Statistiken ausgeblendet</string>
+    
+    <string name="pref_key_colored_grades">pref_key_colored_grades</string>
+    <string name="pref_colored_grades_title">Noten farbig hervorheben</string>
+    <string name="pref_colored_grades_summary">Noten werden in der Übersicht entsprechend ihres Status farbig markiert</string>
 </resources>
