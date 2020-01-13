@@ -62,7 +62,7 @@
                         style="@style/GradeDetailEditText"
                         android:id="@+id/et_grade_detail_exam_id" />
 
-                    <de.mygrades.view.widget.TriangleShapeView
+                    <dh.mygrades.view.widget.TriangleShapeView
                         android:id="@+id/modified_badge_exam_id"
                         style="@style/TriangleShapeViewModifiedBadge" />
 
@@ -83,7 +83,7 @@
                         android:background="@drawable/grade_detail_edit_text_background_selector"
                         android:id="@+id/sp_grade_detail_semester"/>
 
-                    <de.mygrades.view.widget.TriangleShapeView
+                    <dh.mygrades.view.widget.TriangleShapeView
                         android:id="@+id/modified_badge_semester"
                         style="@style/TriangleShapeViewModifiedBadge" />
 
@@ -103,7 +103,7 @@
                         style="@style/GradeDetailEditText"
                         android:id="@+id/et_grade_detail_exam_date" />
 
-                    <de.mygrades.view.widget.TriangleShapeView
+                    <dh.mygrades.view.widget.TriangleShapeView
                         android:id="@+id/modified_badge_exam_date"
                         style="@style/TriangleShapeViewModifiedBadge" />
 
@@ -123,7 +123,7 @@
                         style="@style/GradeDetailEditText"
                         android:id="@+id/et_grade_detail_tester" />
 
-                    <de.mygrades.view.widget.TriangleShapeView
+                    <dh.mygrades.view.widget.TriangleShapeView
                         android:id="@+id/modified_badge_tester"
                         style="@style/TriangleShapeViewModifiedBadge" />
 
@@ -145,7 +145,7 @@
                         android:digits="-0123456789.,"
                         android:inputType="numberDecimal" />
 
-                    <de.mygrades.view.widget.TriangleShapeView
+                    <dh.mygrades.view.widget.TriangleShapeView
                         android:id="@+id/modified_badge_grade"
                         style="@style/TriangleShapeViewModifiedBadge" />
 
@@ -167,7 +167,7 @@
                         android:digits="0123456789.,"
                         android:id="@+id/et_grade_detail_credit_points" />
 
-                    <de.mygrades.view.widget.TriangleShapeView
+                    <dh.mygrades.view.widget.TriangleShapeView
                         android:id="@+id/modified_badge_credit_points"
                         style="@style/TriangleShapeViewModifiedBadge" />
 
@@ -221,7 +221,7 @@
                             android:id="@+id/et_grade_detail_weight" />
                     </LinearLayout>
 
-                    <de.mygrades.view.widget.TriangleShapeView
+                    <dh.mygrades.view.widget.TriangleShapeView
                         android:id="@+id/modified_badge_weight"
                         style="@style/TriangleShapeViewModifiedBadge" />
 
@@ -241,7 +241,7 @@
                         style="@style/GradeDetailEditText"
                         android:id="@+id/et_grade_detail_state" />
 
-                    <de.mygrades.view.widget.TriangleShapeView
+                    <dh.mygrades.view.widget.TriangleShapeView
                         android:id="@+id/modified_badge_state"
                         style="@style/TriangleShapeViewModifiedBadge" />
 
@@ -266,7 +266,7 @@
                         android:background="@drawable/grade_detail_edit_text_background_selector"
                         android:id="@+id/sp_grade_detail_attempt"/>
 
-                    <de.mygrades.view.widget.TriangleShapeView
+                    <dh.mygrades.view.widget.TriangleShapeView
                         android:id="@+id/modified_badge_attempt"
                         style="@style/TriangleShapeViewModifiedBadge" />
 
@@ -286,7 +286,7 @@
                         style="@style/GradeDetailEditText"
                         android:id="@+id/et_grade_detail_annotation" />
 
-                    <de.mygrades.view.widget.TriangleShapeView
+                    <dh.mygrades.view.widget.TriangleShapeView
                         android:id="@+id/modified_badge_annotation"
                         style="@style/TriangleShapeViewModifiedBadge" />
 
@@ -377,7 +377,7 @@
                         android:text="@string/tv_modified_hint"
                         android:textSize="14sp" />
 
-                    <de.mygrades.view.widget.TriangleShapeView
+                    <dh.mygrades.view.widget.TriangleShapeView
                         style="@style/TriangleShapeViewModifiedBadge"
                         android:visibility="visible"
                         android:layout_marginTop="4dp" />

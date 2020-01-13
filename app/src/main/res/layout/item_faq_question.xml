@@ -35,7 +35,7 @@
             android:textSize="18sp"
             android:layout_weight="8"/>
 
-        <de.mygrades.view.widget.ExpandableItemIndicator
+        <dh.mygrades.view.widget.ExpandableItemIndicator
             android:id="@+id/indicator"
             android:layout_width="0dp"
             android:layout_height="24dp"

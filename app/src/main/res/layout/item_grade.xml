@@ -91,7 +91,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <de.mygrades.view.widget.TriangleShapeView
+    <dh.mygrades.view.widget.TriangleShapeView
         android:id="@+id/modified_badge"
         style="@style/TriangleShapeViewModifiedBadge"
         android:visibility="gone"/>

@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="de.mygrades">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="dh.mygrades">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,10 +14,10 @@
 
     <application android:allowBackup="true" android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme"
-        android:name=".MyGradesApplication">
+        android:name="dh.mygrades.MyGradesApplication">
 
         <!-- MainActivity -->
-        <activity android:name=".view.activity.MainActivity">
+        <activity android:name="dh.mygrades.view.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -26,56 +26,56 @@
 
         <!-- GradeDetailedActivity -->
         <activity
-            android:name=".view.activity.GradeDetailedActivity"
-            android:parentActivityName=".view.activity.MainActivity">
+            android:name="dh.mygrades.view.activity.GradeDetailedActivity"
+            android:parentActivityName="dh.mygrades.view.activity.MainActivity">
             <!-- The meta-data element is needed for versions lower than 4.1 -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.activity.MainActivity" />
+                android:value="dh.mygrades.view.activity.MainActivity" />
         </activity>
 
         <!-- SelectUniversityActivity -->
         <activity
-            android:name=".view.activity.SelectUniversityActivity"
+            android:name="dh.mygrades.view.activity.SelectUniversityActivity"
             android:launchMode="singleTop"/>
 
         <!-- LoginActivity -->
         <activity
-            android:name=".view.activity.LoginActivity"
-            android:parentActivityName=".view.activity.SelectUniversityActivity">
+            android:name="dh.mygrades.view.activity.LoginActivity"
+            android:parentActivityName="dh.mygrades.view.activity.SelectUniversityActivity">
             <!-- The meta-data element is needed for versions lower than 4.1 -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.activity.SelectUniversityActivity" />
+                android:value="dh.mygrades.view.activity.SelectUniversityActivity" />
         </activity>
 
         <!-- LinkIntentActivity -->
         <activity
-            android:name=".view.activity.LinkIntentActivity"
-            android:parentActivityName=".view.activity.MainActivity">
+            android:name="dh.mygrades.view.activity.LinkIntentActivity"
+            android:parentActivityName="dh.mygrades.view.activity.MainActivity">
 
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.VIEW" />
-                <data android:scheme="de.mygrades.view.activity" />
+                <data android:scheme="dh.mygrades.view.activity" />
             </intent-filter>
         </activity>
 
         <!-- SettingsActivity -->
         <activity
-            android:name=".view.activity.SettingsActivity"
-            android:parentActivityName=".view.activity.MainActivity">
+            android:name="dh.mygrades.view.activity.SettingsActivity"
+            android:parentActivityName="dh.mygrades.view.activity.MainActivity">
             <!-- The meta-data element is needed for versions lower than 4.1 -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.activity.MainActivity" />
+                android:value="dh.mygrades.view.activity.MainActivity" />
         </activity>
 
         <!-- MainService -->
-        <service android:name=".main.MainService" android:exported="false" />
+        <service android:name="dh.mygrades.main.MainService" android:exported="false" />
 
         <!-- AlarmReceiver -->
-        <receiver android:name=".main.alarm.AlarmReceiver" android:enabled="true" />
+        <receiver android:name="dh.mygrades.main.alarm.AlarmReceiver" android:enabled="true" />
 
         <!-- BootReceiver: default disabled -> only gets enabled if alarm is set -->
         <receiver android:name=".main.alarm.BootReceiver" android:enabled="false">
@@ -85,7 +85,7 @@
         </receiver>
 
         <!-- PackageReplacedReceiver to refresh alarm settings -->
-        <receiver android:name=".main.alarm.PackageReplacedReceiver" android:enabled="true">
+        <receiver android:name="dh.mygrades.main.alarm.PackageReplacedReceiver" android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>

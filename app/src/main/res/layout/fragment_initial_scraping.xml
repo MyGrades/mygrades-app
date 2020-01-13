@@ -48,7 +48,7 @@
                                 android:layout_centerHorizontal="true"
                                 android:alpha="0.2" />
 
-                            <de.mygrades.view.ProgressImageViewOverlay
+                            <dh.mygrades.view.ProgressImageViewOverlay
                                 android:id="@+id/iv_progress_overlay"
                                 android:src="@drawable/mygrades_white_64dp"
                                 android:layout_width="wrap_content"

@@ -3,7 +3,7 @@
     <string name="username">Benutzername</string>
     <string name="password">Passwort</string>
     <string name="tv_enter_userdata">Gib die Benutzerdaten für deine Hochschule ein.</string>
-    <string name="tv_login_privacy_info"><![CDATA[Deine Benutzerdaten werden nur lokal und verschlüsselt auf deinem Smartphone gespeichert.<br/><br/>Weiterhin werden <b>keine</b> personenbezogenen Daten oder deine Noten an uns oder Dritte übermittelt. Genauere <a href="de.mygrades.view.activity://goto.fragment/privacy">Informationen</a> zum Schutz deiner Daten.]]></string>
+    <string name="tv_login_privacy_info"><![CDATA[Deine Benutzerdaten werden nur lokal und verschlüsselt auf deinem Smartphone gespeichert.<br/><br/>Weiterhin werden <b>keine</b> personenbezogenen Daten oder deine Noten an uns oder Dritte übermittelt. Genauere <a href="dh.mygrades.view.activity://goto.fragment/privacy">Informationen</a> zum Schutz deiner Daten.]]></string>
     <string name="error_username_not_empty">Benutzername darf nicht leer sein.</string>
     <string name="error_password_not_empty">Passwort darf nicht leer sein.</string>
 
@@ -38,7 +38,7 @@
     <string name="error_general">Deine Noten konnten nicht abgerufen werden. Das kann verschiedene Gründe haben:\n\n1. Deine Zugangsdaten sind falsch.\n2. Probleme mit der Internetverbindung oder dem Server deiner Hochschule.\n3. Die Linkstruktur innerhalb deines Notensystems könnte sich geändert haben und so ist es zur Zeit nicht möglich, deine Noten abzurufen.</string>
     <string name="tv_no_grades_found">Es wurden leider keine Noten gefunden.\n\nDeine Notentabelle ist entweder leer, oder deine Zugangsdaten sind inkorrekt. Melde dich im Zweifel einfach erneut an.</string>
     <string name="get_overview">Notenverteilung abrufen</string>
-    <string name="overview_not_possible"><![CDATA[Notenverteilung für dieses Modul nicht verfügbar. <a href="de.mygrades.view.activity://goto.fragment/faq/%1$d">Warum?</a>]]></string>
+    <string name="overview_not_possible"><![CDATA[Notenverteilung für dieses Modul nicht verfügbar. <a href="dh.mygrades.view.activity://goto.fragment/faq/%1$d">Warum?</a>]]></string>
 
     <string name="ptr_header_pull_to_refresh">Zum Laden herunterziehen.</string>
     <string name="ptr_header_release_to_refresh">Loslassen zum Aktualisieren.</string>
@@ -94,7 +94,7 @@
 
     <string name="snackbar_error_iab">Ups. Bitte nochmal!</string>
     <string name="tv_post_wish_introduction">Teile uns mit welche Hochschule du gerne hinzugefügt haben möchtest.\n\nBei Angabe deiner E-Mail-Adresse können wir, wenn nötig, mit dir in Kontakt treten falls wir weitere Fragen haben oder sobald die Hochschule hinzugefügt ist.</string>
-    <string name="tv_post_wish_privacy_info"><![CDATA[Genauere <a href="de.mygrades.view.activity://goto.fragment/privacy">Informationen</a> zum Schutz deiner Daten.]]></string>
+    <string name="tv_post_wish_privacy_info"><![CDATA[Genauere <a href="dh.mygrades.view.activity://goto.fragment/privacy">Informationen</a> zum Schutz deiner Daten.]]></string>
     <string name="university_name">Name der Hochschule</string>
     <string name="et_message">Nachricht (optional)</string>
     <string name="btn_post_wish">Wunsch absenden</string>
@@ -105,9 +105,9 @@
     <string name="info_notifications_message">Wenn du Benachrichtigungen über neue Noten erhalten möchtest, musst du in den Einstellungen das automatische Abrufen aktivieren.</string>
     <string name="info_notifications_title">Hinweis</string>
     <string name="info_donation_title">Unterstütze uns!</string>
-    <string name="info_donation_message"><![CDATA[Wir freuen uns, dass du die App regelmäßig nutzt. Nimm dir kurz Zeit und denke über eine <a href="de.mygrades.view.activity://goto.fragment/donation">Unterstützung</a> nach!]]></string>
+    <string name="info_donation_message"><![CDATA[Wir freuen uns, dass du die App regelmäßig nutzt. Nimm dir kurz Zeit und denke über eine <a href="dh.mygrades.view.activity://goto.fragment/donation">Unterstützung</a> nach!]]></string>
     <string name="info_rating_title">Bewerte die App</string>
-    <string name="info_rating_message"><![CDATA[Wir würden uns über dein Feedback im <a href="market://details?id=de.mygrades">PlayStore</a> freuen.]]></string>
+    <string name="info_rating_message"><![CDATA[Wir würden uns über dein Feedback im <a href="market://details?id=dh.mygrades">PlayStore</a> freuen.]]></string>
 
     <string name="donation2">2€</string>
     <string name="donation5">5€</string>
@@ -124,7 +124,7 @@
     <string name="donation_reason5">&#8226; Open-Source</string>
     <string name="donation_reason6">&#8226; Support und Weiterentwicklung</string>
 
-    <string name="general_error_stub_report_error"><![CDATA[<a href="de.mygrades.view.activity://goto.fragment/reporterror">Sag uns Bescheid</a>, falls dieses Problem länger besteht!]]></string>
+    <string name="general_error_stub_report_error"><![CDATA[<a href="dh.mygrades.view.activity://goto.fragment/reporterror">Sag uns Bescheid</a>, falls dieses Problem länger besteht!]]></string>
     <string name="tv_select_rule_hint">Für deine Hochschule gibt es mehrere Möglichkeiten. Wenn du dir nicht sicher bist, welche zutrifft, probiere einfach alle aus.</string>
     <string name="btn_logout">Erneut anmelden</string>
     <string name="tv_grade_detail_weight">Gewichtung</string>

@@ -34,9 +34,9 @@
 -keep class retrofit.** { *; }
 -keepattributes Signature
 -keepattributes Exceptions
--keep class de.mygrades.database.dao.** { *; }
--keep class de.mygrades.main.processor.ErrorProcessor$Error { *; }
--keep class de.mygrades.main.processor.WishProcessor$Wish { *; }
+-keep class dh.mygrades.database.dao.** { *; }
+-keep class dh.mygrades.main.processor.ErrorProcessor$Error { *; }
+-keep class dh.mygrades.main.processor.WishProcessor$Wish { *; }
 -keepclasseswithmembers class * {
     @retrofit.http.* <methods>;
 }
