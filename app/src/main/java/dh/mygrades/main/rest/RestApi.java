@@ -17,12 +17,12 @@ import retrofit.http.Query;
  */
 public interface RestApi {
 
-    @GET("/universities")
+    @GET("/universities.json")
     List<University> getUniversities(@Query("published") boolean publishedOnly,
                                      @Header("Updated-At-Server-Published") String updatedAtServerPublished,
                                      @Header("Updated-At-Server-Unpublished") String updatedAtServerUnpublished);
 
-    @GET("/universities/{university_id}?detailed=true")
+    @GET("/universities/{university_id}.json")
     University getUniversity(@Path("university_id") long universityId,
                              @Header("Updated-At-Server") String updatedAtServer);
 
