@@ -15,7 +15,7 @@ steps:
   displayName: 'gradlew build'
   inputs:
     gradleWrapperFile: 'gradlew'
-    tasks: 'assembleRelease'
+    tasks: 'bundleRelease'
     publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
@@ -24,23 +24,13 @@ steps:
 
 - task: AndroidSigning@2
   inputs:
-    apkFiles: '**/*.apk'
+    apkFiles: '**/*.aab'
     jarsign: true
     jarsignerKeystoreFile: 'mygradesreloaded.jks'
     jarsignerKeystorePassword: '$(jarsignerKeyPassword)'
     jarsignerKeystoreAlias: 'mygradesreloaded.upload'
     jarsignerKeyPassword: '$(jarsignerKeyPassword)'
-    jarsignerArguments: --out $(Build.SourcesDirectory)/app/build/outputs/apk/release/app-release.signed.apk
+    jarsignerArguments: --out $(build.artifactStagingDirectory)/app-release.signed.aab
     zipalign: true
 
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: $(Build.SourcesDirectory)
-    contents: '**/*.signed.apk'
-    targetFolder: '$(build.artifactStagingDirectory)'
-
 - task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/app/build/outputs/apk/release/'
-    artifactName: 'apk-files'
-    artifactType: 'container'
