@@ -30,12 +30,13 @@ steps:
     jarsignerKeystorePassword: '$(jarsignerKeyPassword)'
     jarsignerKeystoreAlias: 'mygradesreloaded.upload'
     jarsignerKeyPassword: '$(jarsignerKeyPassword)'
+    jarsignerArguments: --out $(Build.SourcesDirectory)/app/build/outputs/apk/release/app-release.signed.apk
     zipalign: true
 
 - task: CopyFiles@2
   inputs:
     SourceFolder: $(Build.SourcesDirectory)
-    contents: '**/*.apk'
+    contents: '**/*.signed.apk'
     targetFolder: '$(build.artifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
