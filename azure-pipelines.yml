@@ -15,7 +15,7 @@ steps:
   displayName: 'gradlew build'
   inputs:
     gradleWrapperFile: 'gradlew'
-    tasks: 'assembleRelease'
+    tasks: 'bundleRelease'
     publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
