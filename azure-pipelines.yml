@@ -22,17 +22,11 @@ steps:
     gradleOptions: '-Xmx3072m'
     sonarQubeRunAnalysis: false
 
-- task: DownloadSecureFile@1
-  name: appSignCertificate
-  displayName: 'Download App Signinig certificate'
-  inputs:
-    secureFile: 'deployment_cert.der'
-
 - task: AndroidSigning@2
   inputs:
     apkFiles: '**/*.apk'
     jarsign: true
-    jarsignerKeystoreFile: '$(appSignCertificate.secureFilePath)'
+    jarsignerKeystoreFile: 'deployment_cert.der'
     zipalign: true
 
 - task: CopyFiles@2
