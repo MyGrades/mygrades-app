@@ -22,20 +22,21 @@ steps:
     gradleOptions: '-Xmx3072m'
     sonarQubeRunAnalysis: false
 
-- task: AndroidSigning@2
-  inputs:
-    apkFiles: '**/*.apk'
-    jarsign: true
-    jarsignerKeystoreFile: 'deployment_cert.der'
-    zipalign: true
+# - task: AndroidSigning@2
+#   inputs:
+#     apkFiles: '**/*.apk'
+#     jarsign: true
+#     jarsignerKeystoreFile: 'deployment_cert.der'
+#     zipalign: true
 
 - task: CopyFiles@2
   inputs:
+    SourceFolder: $(Build.SourcesDirectory)
     contents: '**/*.apk'
     targetFolder: '$(build.artifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
   inputs:
-#    pathToPublish: '$(build.artifactStagingDirectory)/app/build/outputs/'
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)/app/build/outputs/apk/release/'
     artifactName: 'apk-files'
     artifactType: 'container'
