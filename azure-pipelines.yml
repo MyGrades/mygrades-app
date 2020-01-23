@@ -46,3 +46,11 @@ steps:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)/app/build/outputs/bundle/release'
     artifactName: 'apk-files'
     artifactType: 'container'
+
+- task: GooglePlayReleaseBundle@3
+  inputs:
+    serviceConnection: 'GooglePlayMyGradesReloaded'
+    applicationId: 'dh.mygrades'
+    bundleFile: '$(Build.ArtifactStagingDirectory)/app/build/outputs/bundle/release/*.aab'
+    track: 'internal'
+    languageCode: 'de-DE'
