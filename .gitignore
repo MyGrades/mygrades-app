@@ -10,7 +10,8 @@
 
 
 .DS_Store
-/build
+build
+release
 *.iml
 .gradle
 /captures

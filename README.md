@@ -4,39 +4,30 @@
 > [MyGrades](https://mygrades.de/) Android App
 
 [![Apache2 License](https://img.shields.io/badge/license-APACHE2-blue.svg?style=flat-square)](/LICENSE)
-[![MyGrades Version](https://img.shields.io/badge/mygrades-1.2.1-8BC34A.svg?style=flat-square)](https://mygrades.de)
+[![MyGrades Version](https://img.shields.io/badge/mygrades-0.1.0-8BC34A.svg?style=flat-square)](https://mygrades.de)
 <br><br><br>
-MyGrades is an Android App developed by [Tilman Ginzel](https://github.com/tilmanginzel) and [Jonas Theis](https://github.com/jonastheis). Its main purpose is to scrape a students grades from her/his respective university's website. To do so, it simulates a browser which follows a sequence of URLs and extracts the desired information with XPATH (web scraping). The core functionality is based on our Android App [Scrapp](https://github.com/tilmanginzel/scrapp), which we developed during our studies at the RheinMain University of Applied Sciences. Special thanks to [Rahel Habacker](https://github.com/RedHilarious)!
+MyGrades is an Android App to help you stay up to date with your university grades - it automatically fetches your grades and informs you about new marks. To do so, it simulates a browser which logs into your university's website and extracts the desired information with XPATH (web scraping). It is currenty maintained by [Daniel Habenicht](https://github.com/DanielHabenicht) and was mainly developed by [Tilman Ginzel](https://github.com/tilmanginzel) and [Jonas Theis](https://github.com/jonastheis), with the help of [Rahel Habacker](https://github.com/RedHilarious). 
 
-~~Get it here: 
+Get it here: 
 [Google Play](https://play.google.com/store/apps/details?id=dh.mygrades) | 
-[Direct Download](https://github.com/MyGrades/mygrades-app/releases/download/1.2.0/app-release-1.2.0.apk) | 
-[F-Droid Repository](https://apt.izzysoft.de/fdroid/index/apk/dh.mygrades) (maintained by [IzzySoft](https://github.com/IzzySoft))~~
-
-**Warning: Discontinued since 09/11/2019**
+[Direct Download](https://dev.azure.com/MyGradesReloaded/MyGrades-App/_build?definitionId=2) | 
+~~[F-Droid Repository](https://apt.izzysoft.de/fdroid/index/apk/dh.mygrades) (maintained by [IzzySoft](https://github.com/IzzySoft))~~
 
 ## Screenshots
-<span><img src="assets/screen-overview.jpg?raw=true" width="215px" /></span>
-<span><img src="assets/screen-statistics.jpg?raw=true" width="215px" /></span>
-<span><img src="assets/screen-detail1.jpg?raw=true" width="215px" /></span>
-<span><img src="assets/screen-detail2.jpg?raw=true" width="215px" /></span>
-<span><img src="assets/screen-settings.jpg?raw=true" width="215px" /></span>
-<span><img src="assets/screen-login-filled.jpg?raw=true" width="215px" /></span>
-<span><img src="assets/screen-edit-overview.jpg?raw=true" width="215px" /></span>
-<span><img src="assets/screen-edit-detailed.jpg?raw=true" width="215px" /></span>
+<span><img src="playstore/screenshots/screen-overview.jpg?raw=true" width="215px" /></span>
+<span><img src="playstore/screenshots/screen-statistics.jpg?raw=true" width="215px" /></span>
+<span><img src="playstore/screenshots/screen-detail1.jpg?raw=true" width="215px" /></span>
+<span><img src="playstore/screenshots/screen-detail2.jpg?raw=true" width="215px" /></span>
+<span><img src="playstore/screenshots/screen-settings.jpg?raw=true" width="215px" /></span>
+<span><img src="playstore/screenshots/screen-login-filled.jpg?raw=true" width="215px" /></span>
+<span><img src="playstore/screenshots/screen-edit-overview.jpg?raw=true" width="215px" /></span>
+<span><img src="playstore/screenshots/screen-edit-detailed.jpg?raw=true" width="215px" /></span>
 
 ## Installation
 
-Clone the project and create a `Config.java` file.
+1. Clone the project `git clone https://github.com/MyGradesReloaded/mygrades-app.git`.
 
-```bash
-git clone https://github.com/MyGrades/mygrades-app.git
-cd mygrades-app/app/src/main/java/de/mygrades/util
-cp ConfigDefault.java Config.java
-```
-
-The config must at least implement the method `getServerUrl()`.
-Point this url to your running [server](https://github.com/MyGrades/mygrades-server).
+2. Edit the config must so the string implemented in `getServerUrl()` point to your running [server](https://github.com/MyGradesReloaded/mygrades-server).
 
 ## Used third-party libraries
 * [jsoup](http://jsoup.org/)
@@ -58,20 +49,4 @@ Point this url to your running [server](https://github.com/MyGrades/mygrades-ser
 
 ## License
 
-This project is licensed under the [Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
-
-See [`LICENSE`](LICENSE) for more information.
-
-    Copyright 2015-2018 Jonas Theis, Tilman Ginzel
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+This project is licensed under the [Apache Software License, Version 2.0](LICENSE).
