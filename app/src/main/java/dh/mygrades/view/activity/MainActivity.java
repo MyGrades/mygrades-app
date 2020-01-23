@@ -5,14 +5,14 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.navigation.NavigationView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -235,10 +235,6 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             navigationView.getMenu().getItem(5).setChecked(true);
             getSupportActionBar().setTitle(getString(R.string.toolbar_report_error));
             ivToolbarLogo.setVisibility(View.GONE);
-        } else if (newFragment instanceof FragmentDonation) {
-            navigationView.getMenu().getItem(2).setChecked(true);
-            getSupportActionBar().setTitle(getString(R.string.toolbar_donation));
-            ivToolbarLogo.setVisibility(View.GONE);
         } else if (newFragment instanceof FragmentStatistics) {
             navigationView.getMenu().getItem(1).setChecked(true);
             getSupportActionBar().setTitle(getString(R.string.toolbar_statistics));
@@ -341,9 +337,6 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             case R.id.nav_report_error:
                 fragment = new FragmentReportError();
                 break;
-            case R.id.nav_donation:
-                fragment = new FragmentDonation();
-                break;
             case R.id.nav_statistics:
                 fragment = new FragmentStatistics();
                 break;
@@ -435,11 +428,5 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        // check if FragmentDonation is the currently active fragment and call method
-        FragmentDonation fragmentDonation = (FragmentDonation) getSupportFragmentManager().findFragmentByTag(FragmentDonation.class.getSimpleName());
-        if (fragmentDonation != null && fragmentDonation.isVisible()) {
-            fragmentDonation.onActivityResult(requestCode, resultCode, data);
-        }
     }
 }

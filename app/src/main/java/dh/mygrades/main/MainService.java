@@ -136,7 +136,7 @@ public class MainService extends MultiThreadedIntentService {
      * @param method - the method to call, represented by an integer
      */
     private void handleUniversityProcessor(int method, Intent intent) {
-        UniversityProcessor universityProcessor = new UniversityProcessor(this);
+            UniversityProcessor universityProcessor = new UniversityProcessor(this);
 
         switch(method) {
             case METHOD_GET_UNIVERSITIES:

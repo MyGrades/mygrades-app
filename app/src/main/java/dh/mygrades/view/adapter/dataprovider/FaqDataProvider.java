@@ -1,7 +1,7 @@
 package dh.mygrades.view.adapter.dataprovider;
 
 import android.content.Context;
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;

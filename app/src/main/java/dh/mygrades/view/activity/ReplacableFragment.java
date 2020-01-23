@@ -1,6 +1,6 @@
 package dh.mygrades.view.activity;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 /**
  * Interface which declares a method to replace a fragment.

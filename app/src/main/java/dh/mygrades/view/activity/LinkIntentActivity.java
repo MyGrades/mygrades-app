@@ -3,10 +3,10 @@ package dh.mygrades.view.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -92,9 +92,6 @@ public class LinkIntentActivity extends AppCompatActivity implements ReplacableF
             } else if (POST_WISH_PATH_SEGMENT.equals(firstPathSegment)) {
                 replaceFragment(R.id.fl_content, new FragmentPostWish(), false);
                 return;
-            } else if (DONATION_PATH_SEGMENT.equals(firstPathSegment)) {
-                replaceFragment(R.id.fl_content, new FragmentDonation(), false);
-                return;
             }
         }
 
@@ -122,19 +119,11 @@ public class LinkIntentActivity extends AppCompatActivity implements ReplacableF
             getSupportActionBar().setTitle(getString(R.string.toolbar_privacy_policy));
         } else if (newFragment instanceof FragmentPostWish) {
             getSupportActionBar().setTitle(getString(R.string.toolbar_post_wish));
-        } else if (newFragment instanceof  FragmentDonation) {
-            getSupportActionBar().setTitle(getString(R.string.toolbar_donation));
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        // check if FragmentDonation is the currently active fragment and call method
-        FragmentDonation fragmentDonation = (FragmentDonation) getSupportFragmentManager().findFragmentByTag(FragmentDonation.class.getSimpleName());
-        if (fragmentDonation != null && fragmentDonation.isVisible()) {
-            fragmentDonation.onActivityResult(requestCode, resultCode, data);
-        }
     }
 }

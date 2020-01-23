@@ -17,7 +17,7 @@
             android:textSize="16sp"
             android:paddingBottom="8dp"/>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -33,9 +33,9 @@
                 android:inputType="textNoSuggestions|textVisiblePassword"
                 android:singleLine="true"
                 android:theme="@style/CustomEditTextStyle"/>
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -51,9 +51,9 @@
                 android:inputType="textEmailAddress"
                 android:singleLine="true"
                 android:theme="@style/CustomEditTextStyle"/>
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -69,7 +69,7 @@
                 android:inputType="textMultiLine"
                 android:singleLine="true"
                 android:theme="@style/CustomEditTextStyle"/>
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btn_report_error"

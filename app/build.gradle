@@ -1,20 +1,22 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'groovyx.grooid.groovy-android'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId 'dh.mygrades'
-        minSdkVersion 16
-        targetSdkVersion 28
-        versionCode 2
-        versionName "1.0.0"
+        applicationId "dh.mygrades"
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 3
+        versionName "0.1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -24,33 +26,33 @@ android {
     }
     productFlavors {
     }
-    packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-    }
+    //packagingOptions {
+    //    exclude 'META-INF/LICENSE.txt'
+    //}
     sourceSets {
         test.java.srcDirs += "src/test/groovy"
     }
 }
 
-ext {
-    supportLibraryVersion = '25.2.0'
-}
-
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    // Old Imports
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
-    implementation "com.android.support:design:$supportLibraryVersion"
-    implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
-    implementation "com.android.support:preference-v7:$supportLibraryVersion"
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.preference:preference:1.0.0'
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'org.jsoup:jsoup:1.10.1'
     implementation 'com.squareup.retrofit:retrofit:1.9.0'
     implementation 'de.greenrobot:greendao:2.1.0'
     implementation 'de.greenrobot:greendao-generator:2.1.0'
     implementation 'com.scottyab:secure-preferences-lib:0.1.7'
     implementation 'de.greenrobot:eventbus:2.4.1'
-    implementation('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.1@aar') {
-        transitive = true
-    }
+    implementation 'com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:1.0.0'
     implementation 'com.wnafee:vector-compat:1.0.5'
     implementation 'com.pnikosis:materialish-progress:1.7'
     implementation 'in.srain.cube:ultra-ptr:1.0.11'

@@ -1,10 +1,25 @@
 
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
+# Android Studio Files 
 .idea/
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+
+
+.DS_Store
+/build
 *.iml
 .gradle
+/captures
+.externalNativeBuild
+.cxx
+
+# Generated files
+bin/
+gen/
 
 # Built application files
 *.apk
@@ -15,16 +30,6 @@
 
 # Java class files
 *.class
-
-# Generated files
-bin/
-gen/
-
-# Gradle files
-.gradle/
-build/
-/*/build/
-
 # Local configuration file (sdk path, etc)
 local.properties
 

@@ -18,7 +18,7 @@
         cube_ptr:ptr_keep_header_when_refresh="true"
         cube_ptr:ptr_pull_to_fresh="false">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_grades"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

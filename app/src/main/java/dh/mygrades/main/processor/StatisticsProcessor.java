@@ -2,7 +2,7 @@ package dh.mygrades.main.processor;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Collections;

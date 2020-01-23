@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v4.content.WakefulBroadcastReceiver;
+import androidx.legacy.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
 import dh.mygrades.R;
 import dh.mygrades.main.MainServiceHelper;
 
-import static android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences;
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 
 /**
  * Receiver for alarms from AlarmManager. Operates on main thread!

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyGrades</string>
+    <string name="app_name">MyGradesReloaded</string>
     <string name="username">Benutzername</string>
     <string name="password">Passwort</string>
     <string name="tv_enter_userdata">Gib die Benutzerdaten für deine Hochschule ein.</string>
