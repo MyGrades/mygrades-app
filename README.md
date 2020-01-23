@@ -1,4 +1,4 @@
-<img src="assets/logo.png?raw=true" align="left" width="100px" height="100px"/>
+<img src="playstore/icon/app_icon_512x512.png?raw=true" align="left" width="100px" height="100px"/>
 <img align="left" width="0" height="100px" hspace="5"/>
 
 > [MyGrades](https://mygrades.de/) Android App
