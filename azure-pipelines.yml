@@ -53,4 +53,5 @@ steps:
     applicationId: 'dh.mygrades'
     bundleFile: '$(Build.ArtifactStagingDirectory)/app/build/outputs/bundle/release/*.aab'
     track: 'internal'
-    languageCode: 'de-DE'
+    shouldAttachMetadata: true
+    metadataRootPath: 'metadata'
