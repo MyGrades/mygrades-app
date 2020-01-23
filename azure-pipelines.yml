@@ -54,4 +54,4 @@ steps:
     bundleFile: '$(Build.ArtifactStagingDirectory)/app/build/outputs/bundle/release/*.aab'
     track: 'internal'
     shouldAttachMetadata: true
-    metadataRootPath: 'metadata'
+    metadataRootPath: 'metadata/android'
