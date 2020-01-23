@@ -1,4 +1,4 @@
-<img src="playstore/icon/app_icon_512x512.png?raw=true" align="left" width="100px" height="100px"/>
+<img src="assets/icon/app_icon_512x512.png?raw=true" align="left" width="100px" height="100px"/>
 <img align="left" width="0" height="100px" hspace="5"/>
 
 > [MyGrades](https://mygrades.de/) Android App
@@ -14,14 +14,14 @@ Get it here:
 ~~[F-Droid Repository](https://apt.izzysoft.de/fdroid/index/apk/dh.mygrades) (maintained by [IzzySoft](https://github.com/IzzySoft))~~
 
 ## Screenshots
-<span><img src="playstore/screenshots/screen-overview.jpg?raw=true" width="215px" /></span>
-<span><img src="playstore/screenshots/screen-statistics.jpg?raw=true" width="215px" /></span>
-<span><img src="playstore/screenshots/screen-detail1.jpg?raw=true" width="215px" /></span>
-<span><img src="playstore/screenshots/screen-detail2.jpg?raw=true" width="215px" /></span>
-<span><img src="playstore/screenshots/screen-settings.jpg?raw=true" width="215px" /></span>
-<span><img src="playstore/screenshots/screen-login-filled.jpg?raw=true" width="215px" /></span>
-<span><img src="playstore/screenshots/screen-edit-overview.jpg?raw=true" width="215px" /></span>
-<span><img src="playstore/screenshots/screen-edit-detailed.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screenshots/screen-overview.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screenshots/screen-statistics.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screenshots/screen-detail1.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screenshots/screen-detail2.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screenshots/screen-settings.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screenshots/screen-login-filled.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screenshots/screen-edit-overview.jpg?raw=true" width="215px" /></span>
+<span><img src="assets/screenshots/screen-edit-detailed.jpg?raw=true" width="215px" /></span>
 
 ## Installation
 

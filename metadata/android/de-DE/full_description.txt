@@ -1,0 +1,62 @@
+MyGrades ruft deine Studiumsnoten direkt aus dem Notensystem deiner Hochschule ab. Dabei wird ein Browser simuliert, um dir die mühsame Arbeit abzunehmen dich durch dieses zu klicken. Außerdem werden deine Noten lokal gespeichert, sodass du sie jederzeit griffbereit hast. Deine Zugangsdaten zu dem Notensystem werden verschlüsselt auf deinem Smartphone gespeichert.
+
+
+Ich bin selbst Student und habe kein gewinnorientiertes Streben. Deswegen ist der Quellcode der App Open Source und deine Daten bleiben auf deinem Smartphone. Zur Information: Es gab schon einmal eine App mit dem gleichen Namen, die beiden Studenten dahinter haben sich aber entschieden die App nicht weiterzuführen, deshalb hab ich das jetzt übernommen. 
+
+
+<b>Bisher unterstützte Hochschulen</b>
+&#8226; Brandenburgische Technische Universität Cottbus-Senftenberg
+&#8226; Fachhochschule Aachen
+&#8226; Fachhochschule Bingen
+&#8226; Fachhochschule Kiel
+&#8226; FernUniversität in Hagen
+&#8226; Frankfurt University of Applied Sciences
+&#8226; Gottfried Wilhelm Leibniz Universität Hannover
+&#8226; Hochschule Aalen - Technik und Wirtschaft
+&#8226; Hochschule Darmstadt
+&#8226; Hochschule der Medien Stuttgart
+&#8226; Hochschule für angewandte Wissenschaften Würzburg-Schweinfurt
+&#8226; Hochschule für Telekommunikation Leipzig
+&#8226; Hochschule Geisenheim
+&#8226; Hochschule Kaiserslautern
+&#8226; Hochschule Karlsruhe - Technik und Wirtschaft
+&#8226; Hochschule Mainz
+&#8226; Hochschule Mannheim
+&#8226; Hochschule RheinMain
+&#8226; Hochschule Trier
+&#8226; Johann Wolfgang Goethe-Universität, Frankfurt am Main
+&#8226; Rheinische Friedrich-Wilhelms-Universität Bonn
+&#8226; Technische Universität Bergakademie Freiberg
+&#8226; Technische Universität Clausthal
+&#8226; Technische Universität Darmstadt
+&#8226; Technische Universität Dortmund
+&#8226; Technische Universität Dresden
+&#8226; Technische Universität Kaiserslautern (nur im Hochschulnetz!)
+&#8226; Universität Heidelberg
+&#8226; Universität Kassel
+&#8226; Universität Koblenz-Landau
+&#8226; Westfälische Hochschule
+&#8226; Westfälische Wilhelms-Universität Münster
+&#8226; Hochschule nicht dabei? Gib mir Bescheid!
+<br/>
+
+<b>Berechtigungen</b>
+
+<i>Beim Start ausführen</i>
+Wird benötigt, um die Abrufintervalle für das automatische Abrufen nach einem Neustart des Smartphones zu setzen (nur, wenn automatisches Abrufen aktiviert ist).
+
+<i>Ruhezustand deaktivieren</i>
+Wird benötigt, um nach neuen Noten auch im Standby suchen zu können (nur, wenn automatisches Abrufen aktiviert ist).
+
+<i>Vibrationsalarm steuern</i>
+Beim Erhalten der Benachrichtigung über eine neue Note vibriert das Smartphone kurz.
+
+<i>Voller Netzwerkzugriff</i>
+Woher sollen die Noten denn sonst kommen? ;)
+
+<i>Netzwerkverbindungen abrufen</i>
+Wird beim automatischen Abrufen benötigt, um zu überprüfen ob sich dein Smartphone im WLAN befindet.
+<br/>
+
+<b>Quellcode der App auf GitHub</b>
+https://github.com/MyGrades/mygrades-app
