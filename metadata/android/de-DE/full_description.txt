@@ -1,8 +1,4 @@
-MyGrades ruft deine Studiumsnoten direkt aus dem Notensystem deiner Hochschule ab. Dabei wird ein Browser simuliert, um dir die mühsame Arbeit abzunehmen dich durch dieses zu klicken. Außerdem werden deine Noten lokal gespeichert, sodass du sie jederzeit griffbereit hast. Deine Zugangsdaten zu dem Notensystem werden verschlüsselt auf deinem Smartphone gespeichert.
-
-
-Ich bin selbst Student und habe kein gewinnorientiertes Streben. Deswegen ist der Quellcode der App Open Source und deine Daten bleiben auf deinem Smartphone. Zur Information: Es gab schon einmal eine App mit dem gleichen Namen, die beiden Studenten dahinter haben sich aber entschieden die App nicht weiterzuführen, deshalb hab ich das jetzt übernommen. 
-
+MyGrades ruft deine Studiumsnoten direkt aus dem Notensystem deiner Hochschule ab. Dabei wird ein Browser simuliert, um dir die mühsame Arbeit abzunehmen dich durch dieses zu klicken. Außerdem werden deine Noten lokal gespeichert, sodass du sie jederzeit griffbereit hast. Deine Zugangsdaten zu dem Notensystem werden verschlüsselt nur auf deinem Smartphone gespeichert.
 
 <b>Bisher unterstützte Hochschulen</b>
 &#8226; Brandenburgische Technische Universität Cottbus-Senftenberg
@@ -57,6 +53,10 @@ Woher sollen die Noten denn sonst kommen? ;)
 <i>Netzwerkverbindungen abrufen</i>
 Wird beim automatischen Abrufen benötigt, um zu überprüfen ob sich dein Smartphone im WLAN befindet.
 <br/>
+
+
+Ich bin selbst Student und ich habe einfach Spaß daran diese App zu entwickeln. Deswegen ist der Quellcode der App Open Source und deine Daten bleiben auf deinem Smartphone. Zur Information: Es gab schon einmal eine App mit dem gleichen Namen, die beiden Studenten dahinter haben sich aber entschieden die App nicht weiterzuführen, deshalb hab ich das jetzt übernommen. 
+Du kannst mir helfen die App zu testen in dem du an der Beta teilnimmmst: https://play.google.com/apps/testing/dh.mygrades
 
 <b>Quellcode der App auf GitHub</b>
 https://github.com/MyGrades/mygrades-app

@@ -1,0 +1,57 @@
+MyGrades shows you the grades directly from your univertiy grading system. It simulates a Web-Browser to spare you the tedious job of clicking through non optimized university web platforms. Furthermore it stores your marks locally so they are alwaysat hand. The login details are securly stored only on your smartphone. 
+
+<b>Yet supported universities:</b>
+&#8226; Brandenburgische Technische Universität Cottbus-Senftenberg
+&#8226; Fachhochschule Aachen
+&#8226; Fachhochschule Bingen
+&#8226; Fachhochschule Kiel
+&#8226; FernUniversität in Hagen
+&#8226; Frankfurt University of Applied Sciences
+&#8226; Gottfried Wilhelm Leibniz Universität Hannover
+&#8226; Hochschule Aalen - Technik und Wirtschaft
+&#8226; Hochschule Darmstadt
+&#8226; Hochschule der Medien Stuttgart
+&#8226; Hochschule für angewandte Wissenschaften Würzburg-Schweinfurt
+&#8226; Hochschule für Telekommunikation Leipzig
+&#8226; Hochschule Geisenheim
+&#8226; Hochschule Kaiserslautern
+&#8226; Hochschule Karlsruhe - Technik und Wirtschaft
+&#8226; Hochschule Mainz
+&#8226; Hochschule Mannheim
+&#8226; Hochschule RheinMain
+&#8226; Hochschule Trier
+&#8226; Johann Wolfgang Goethe-Universität, Frankfurt am Main
+&#8226; Rheinische Friedrich-Wilhelms-Universität Bonn
+&#8226; Technische Universität Bergakademie Freiberg
+&#8226; Technische Universität Clausthal
+&#8226; Technische Universität Darmstadt
+&#8226; Technische Universität Dortmund
+&#8226; Technische Universität Dresden
+&#8226; Technische Universität Kaiserslautern (nur im Hochschulnetz!)
+&#8226; Universität Heidelberg
+&#8226; Universität Kassel
+&#8226; Universität Koblenz-Landau
+&#8226; Westfälische Hochschule
+&#8226; Westfälische Wilhelms-Universität Münster
+&#8226; You university is not in the list? Write me an E-mail!
+<br/>
+
+<b>Permissions</b>
+
+<i>Run at startup and Deactivate Hibernation</i>
+Will be needed in order to periodically check if a new grade was listed. (only if you activate it in the settings).
+
+<i>Control vibtrating alter</i>
+If MyGrades detects that you`ve got a new mark, we will let you know.
+
+<i>Network Connectivity</i>
+Where else should we get your grades from? ;)
+It is also needed in order to show you if you are connected to the internet.
+<br/>
+
+I am a student myself and I am having fun programming. Therefore the source code of this app is open source and your data will stay local. 
+Just if you wonder: Previously the same app was listed at the app store, but the developers decided to end the support of the app, thats why I have stepped in. 
+You can help me test the app by joining the beta: https://play.google.com/apps/testing/dh.mygrades
+
+<b>Quellcode der App auf GitHub</b>
+https://github.com/MyGrades/mygrades-app
