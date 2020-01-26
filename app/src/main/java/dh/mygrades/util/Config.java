@@ -47,31 +47,4 @@ public class Config {
     public static String getSecurePreferencesKey() {
         return null; // must be implemented in Config.java
     }
-
-    /**
-     * Get the public key to communicate with Play Store.
-     *
-     * @return base64 encoded Play Store public key as String.
-     */
-    public static String getPlayStorePublicKey() {
-        return null; // must be implemented in Config.java
-    }
-
-    /**
-     * Get the url for the test server.
-     *
-     * @return test server url as String.
-     */
-    public static String getTestServerUrl() {
-        return null;
-    }
-
-    /**
-     * Get the credentials for the test server.
-     *
-     * @return credentials as String.
-     */
-    public static String getTestServerCredentials() {
-        return null;
-    }
 }
