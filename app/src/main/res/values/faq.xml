@@ -10,8 +10,8 @@
     </string-array>
     <string-array name="answers_about_mygrades">
         <item>MyGrades ist eine App zum Abrufen deiner Noten aus dem Notensystem deiner Hochschule. Sie erspart dir die mühsame Arbeit dich durch dein Notensystem zu klicken und du hast deine Noten jederzeit lokal und übersichtlich auf deinem Handy verfügbar.</item>
-        <item>Die App simuliert einen browsenden Benutzer und navigiert automatisch zu deiner Notentabelle. Diese wird dann lokal auf deinem Handy verarbeitet und bei dir gespeichert.\n\nGenauere Informationen und den Quelltext der App findest du unter <a href="https://github.com/mygrades/mygrades-app">github.com/mygrades/mygrades-app</a></item>
-        <item>Deine Benutzerdaten werden lokal und verschlüsselt auf deinem Smartphone gespeichert. Die Verarbeitung deiner Notentabelle und Speicherung deiner Noten ist ausschließlich lokal.\n\nEs werden <b>keine Daten</b> an uns oder Dritte übermittelt.\n\nGenauere Informationen und den Quelltext der App findest du unter <a href="https://github.com/mygrades/mygrades-app">github.com/mygrades/mygrades-app</a></item>
+        <item>Die App simuliert einen browsenden Benutzer und navigiert automatisch zu deiner Notentabelle. Diese wird dann lokal auf deinem Handy verarbeitet und bei dir gespeichert.\n\nGenauere Informationen und den Quelltext der App findest du unter <a href="https://github.com/MyGradesReloaded/mygrades-app">github.com/MyGradesReloaded/mygrades-app</a></item>
+        <item>Deine Benutzerdaten werden lokal und verschlüsselt auf deinem Smartphone gespeichert. Die Verarbeitung deiner Notentabelle und Speicherung deiner Noten ist ausschließlich lokal.\n\nEs werden <b>keine Daten</b> an uns oder Dritte übermittelt.\n\nGenauere Informationen und den Quelltext der App findest du unter <a href="https://github.com/MyGradesReloaded/mygrades-app">github.com/MyGradesReloaded/mygrades-app</a></item>
         <item>Wir – Jonas und Tilman – sind zwei Studenten der Medieninformatik an der Hochschule RheinMain.</item>
     </string-array>
 

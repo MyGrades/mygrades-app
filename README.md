@@ -1,10 +1,10 @@
 <img src="assets/icon/app_icon_512x512.png?raw=true" align="left" width="100px" height="100px"/>
 <img align="left" width="0" height="100px" hspace="5"/>
 
-> [MyGrades](https://mygrades.de/) Android App
+> [MyGrades](https://mygrades.aquiver.de/) Android App
 
 [![Apache2 License](https://img.shields.io/badge/license-APACHE2-blue.svg?style=flat-square)](/LICENSE)
-[![MyGrades Version](https://img.shields.io/badge/mygrades-0.1.0-8BC34A.svg?style=flat-square)](https://mygrades.de)
+[![MyGrades Version](https://img.shields.io/badge/mygrades-0.1.0-8BC34A.svg?style=flat-square)](https://mygrades.aquiver.de)
 <br><br><br>
 MyGrades is an Android App to help you stay up to date with your university grades - it automatically fetches your grades and informs you about new marks. To do so, it simulates a browser which logs into your university's website and extracts the desired information with XPATH (web scraping). It is currenty maintained by [Daniel Habenicht](https://github.com/DanielHabenicht) and was mainly developed by [Tilman Ginzel](https://github.com/tilmanginzel) and [Jonas Theis](https://github.com/jonastheis), with the help of [Rahel Habacker](https://github.com/RedHilarious). 
 

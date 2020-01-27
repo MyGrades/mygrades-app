@@ -20,8 +20,8 @@
     <string name="pref_build_version_title">Build-Version</string>
     <string name="pref_key_github">pref_key_github</string>
     <string name="pref_github_title">Quellcode der App</string>
-    <string name="pref_github_summary">https://github.com/mygrades/mygrades-app</string>
-    <string name="uri_source_code">https://github.com/mygrades/mygrades-app</string>
+    <string name="pref_github_summary">https://github.com/MyGradesReloaded/mygrades-app</string>
+    <string name="uri_source_code">https://github.com/MyGradesReloaded/mygrades-app</string>
     <string name="settings_general_title">Allgemein</string>
     <string name="settings_info_title">Info</string>
 

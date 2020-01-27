@@ -54,4 +54,4 @@ Just if you wonder: Previously the same app was listed at the app store, but the
 You can help me test the app by joining the beta: https://play.google.com/apps/testing/dh.mygrades
 
 <b>Quellcode der App auf GitHub</b>
-https://github.com/MyGrades/mygrades-app
+https://github.com/MyGradesReloaded/mygrades-app

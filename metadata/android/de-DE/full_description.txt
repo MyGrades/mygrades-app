@@ -59,4 +59,4 @@ Ich bin selbst Student und ich habe einfach Spaß daran diese App zu entwickeln.
 Du kannst mir helfen die App zu testen in dem du an der Beta teilnimmmst: https://play.google.com/apps/testing/dh.mygrades
 
 <b>Quellcode der App auf GitHub</b>
-https://github.com/MyGrades/mygrades-app
+https://github.com/MyGradesReloaded/mygrades-app
