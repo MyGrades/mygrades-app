@@ -63,7 +63,7 @@ jobs:
     - task: CopyFiles@2
       inputs:
         SourceFolder: $(Build.SourcesDirectory)
-        contents: '**/*.aab'
+        contents: 'metadata/**'
         targetFolder: '$(build.artifactStagingDirectory)'
 
     - task: PublishBuildArtifacts@1
@@ -110,6 +110,6 @@ jobs:
 
     - task: PublishBuildArtifacts@1
       inputs:
-        pathtoPublish: '$(Build.ArtifactStagingDirectory)/app/build/outputs/bundle/release'
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)/app/build/outputs/apk/release/'
         artifactName: 'apk-files'
         artifactType: 'container'
