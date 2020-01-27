@@ -19,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.net.Uri;
 
 import de.greenrobot.event.EventBus;
 import dh.mygrades.BuildConfig;
@@ -326,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
      */
     private void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment = null;
+        Intent intent = null;
 
         switch(menuItem.getItemId()) {
             case R.id.nav_home:
@@ -340,8 +342,13 @@ public class MainActivity extends AppCompatActivity implements ReplacableFragmen
             case R.id.nav_statistics:
                 fragment = new FragmentStatistics();
                 break;
+            case R.id.nav_donation: 
+                Uri uri = Uri.parse("https://www.buymeacoffee.com/DanielHabenicht");
+                intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+                break;
             case R.id.nav_settings:
-                Intent intent = new Intent(this, SettingsActivity.class);
+                intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_privacy_policy:
