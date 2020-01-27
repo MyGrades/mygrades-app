@@ -185,12 +185,13 @@ public class SettingsFragment extends XpPreferenceFragment {
         license.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+                WebView view = (WebView) LayoutInflater.from(getContext()).inflate(R.layout.dialog_licenses, null);
+                view.loadUrl("file:///android_asset/LICENSE");
                 new AlertDialog.Builder(getContext())
-                    .setMessage(getString(R.string.license))
-                    .setTitle(getString(R.string.pref_license_title))
-                    .setPositiveButton(android.R.string.ok, null)
-                    .create()
-                    .show();
+                        .setTitle(getString(R.string.pref_license_title))
+                        .setView(view)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
                 return false;
             }
         });

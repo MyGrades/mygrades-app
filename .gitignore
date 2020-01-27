@@ -39,3 +39,5 @@ proguard/
 
 # Log Files
 *.log
+
+**/assets/LICENSE
