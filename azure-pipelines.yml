@@ -68,7 +68,7 @@ jobs:
 
     - task: PublishBuildArtifacts@1
       inputs:
-        pathtoPublish: '$(Build.ArtifactStagingDirectory)/metadata/android/**'
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)/metadata/android'
         artifactName: 'metadata-files'
         artifactType: 'container'
 
