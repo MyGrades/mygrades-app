@@ -22,12 +22,6 @@ public class MyGradesApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // Init Sentry Bug Tracking
-        if (!BuildConfig.DEBUG) {
-            Sentry.init("https://9d668d239d8c435182b234391c0a1ce6@sentry.io/2014696?release=" + BuildConfig.VERSION_CODE, new AndroidSentryClientFactory(this));
-        }
-
-
         // set preferences default values
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 

@@ -1,9 +1,12 @@
 package dh.mygrades.view.activity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -21,7 +24,14 @@ import de.greenrobot.event.EventBus;
 import dh.mygrades.R;
 import dh.mygrades.main.MainServiceHelper;
 import dh.mygrades.main.events.ErrorEvent;
-import dh.mygrades.main.events.PostWishDoneEvent;
+
+import dh.mygrades.BuildConfig;
+import dh.mygrades.main.tasks.SendFeedback;
+import dh.mygrades.main.tasks.TaskListener;
+import dh.mygrades.util.Constants;
+import io.sentry.Sentry;
+import io.sentry.android.AndroidSentryClientFactory;
+import io.sentry.event.UserBuilder;
 
 /**
  * Fragment with input fields to post a university wish.
@@ -116,12 +126,21 @@ public class FragmentPostWish extends Fragment {
      * Posts the university wish.
      */
     private void postWish() {
+        
         String universityName = etUniversityName.getText().toString();
         String name = etName.getText().toString();
         String email = etEmail.getText().toString();
         String message = etMessage.getText().toString();
 
-        mainServiceHelper.postWish(universityName, name, email, message);
+        TaskListener feedbackListener = new TaskListener() {
+            @Override
+            public void callback(){
+                showPostWishDone();
+            }
+        };
+
+
+        new SendFeedback(feedbackListener, getActivity(), name, email, message, "wish", universityName).execute();
     }
 
     /**
@@ -163,15 +182,6 @@ public class FragmentPostWish extends Fragment {
                 errorMessage = getString(R.string.error_post_error_report);
         }
         tvStatus.setText(errorMessage);
-    }
-
-    /**
-     * Receive the PostWishDoneEvent, after the post was successful.
-     *
-     * @param postWishDoneEvent - PostWishDoneEvent
-     */
-    public void onEventMainThread(PostWishDoneEvent postWishDoneEvent) {
-        showPostWishDone();
     }
 
     /**

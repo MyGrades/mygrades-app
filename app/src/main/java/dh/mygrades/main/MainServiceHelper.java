@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import dh.mygrades.database.dao.GradeEntry;
 
+
 /**
  * Helper class with convenience methods to start background
  * threads by sending intents to the MainService.
@@ -225,50 +226,7 @@ public class MainServiceHelper {
         intent.putExtra(MainService.GRADE_HASH, gradeEntryHash);
         context.startService(intent);
     }
-
-    /**
-     * Starts a worker thread to post an error report to the server.
-     *
-     * @param name name
-     * @param email email
-     * @param errorMessage error message
-     */
-    public void postErrorReport(String name, String email, String errorMessage) {
-        int method = MainService.METHOD_POST_ERROR;
-
-        // set request id
-        long requestId = concatenateLong(method, 0);
-
-        // start worker thread in background
-        Intent intent = getBasicIntent(MainService.PROCESSOR_ERROR, method, requestId);
-        intent.putExtra(MainService.NAME, name);
-        intent.putExtra(MainService.EMAIL, email);
-        intent.putExtra(MainService.ERROR_MESSAGE, errorMessage);
-        context.startService(intent);
-    }
-
-    /**
-     * Starts a worker thread to post an university wish to the server.
-     *
-     * @param universityName university name
-     * @param name name
-     * @param email email
-     * @param message message
-     */
-    public void postWish(String universityName, String name, String email, String message) {
-        int method = MainService.METHOD_POST_WISH;
-
-        // set request id
-        long requestId = concatenateLong(method, 0);
-
-        // start worker thread in background
-        Intent intent = getBasicIntent(MainService.PROCESSOR_WISH, method, requestId);
-        intent.putExtra(MainService.UNIVERSITY_NAME, universityName);
-        intent.putExtra(MainService.NAME, name);
-        intent.putExtra(MainService.EMAIL, email);
-        intent.putExtra(MainService.WISH_MESSAGE, message);
-        context.startService(intent);
-    }
+     
 
     /**
      * Starts a worker thread to create and get statistics.

@@ -67,11 +67,11 @@
     <string name="email_address">E-Mail-Adresse (optional)</string>
     <string name="error_description">Fehlerbeschreibung</string>
     <string name="btn_report_error">Fehler melden</string>
-    <string name="tv_report_error_introduction">Teile uns mit welche Probleme innerhalb der App oder in Bezug auf deine heruntergeladenen Noten bestehen.\n\nBei Angabe deiner E-Mail-Adresse können wir uns bei dir melden oder Bescheid geben, sobald der Fehler gelöst ist.</string>
+    <string name="tv_report_error_introduction">Teile uns mit welche Probleme innerhalb der App oder in Bezug auf deine heruntergeladenen Noten bestehen.</string>
     <string name="error_message_not_empty">Fehlerbeschreibung darf nicht leer sein</string>
     <string name="invalid_email_address">Ungültige E-Mail-Adresse</string>
     <string name="error_post_error_report">Unbekannter Fehler beim Senden des Fehlerberichts.</string>
-    <string name="error_report_done">Vielen Dank!</string>
+    <string name="error_report_done">Vielen Dank! Wir haben deine Nachricht erhalten.</string>
     <string name="notification_new_grade_title">Neue Note</string>
     <string name="notification_new_grades_title">neue Noten</string>
     <string name="notification_updated_grade_title">Note hat sich geändert</string>
@@ -91,9 +91,9 @@
     <string name="chart_credit_points_per_semester">Credit Points pro Semester</string>
     <string name="chart_average_grade_per_semester">Notendurchschnitt pro Semester</string>
     <string name="chart_grade_distribution">Deine Notenverteilung</string>
-
     <string name="snackbar_error_iab">Ups. Bitte nochmal!</string>
-    <string name="tv_post_wish_introduction">Teile uns mit welche Hochschule du gerne hinzugefügt haben möchtest.\n\nBei Angabe deiner E-Mail-Adresse können wir, wenn nötig, mit dir in Kontakt treten falls wir weitere Fragen haben oder sobald die Hochschule hinzugefügt ist.</string>
+    <string name="tv_post_wish_introduction">Teile uns mit welche Hochschule du gerne hinzugefügt haben möchtest.</string>
+    <string name="tv_post_collected_data">Bei Angabe deiner E-Mail-Adresse können wir uns bei dir melden, falls wir weitere Fragen haben.\n\nMit dem Absenden der Nachricht teilst du uns ebenfalls folgende Informationen mit: Geräteinformationen (Typ, Hersteller, Speicherplatzbelegung, Android-Version, etc.) und ggf. die Universität an der du angemeldet bist.</string>
     <string name="tv_post_wish_privacy_info"><![CDATA[Genauere <a href="dh.mygrades.view.activity://goto.fragment/privacy">Informationen</a> zum Schutz deiner Daten.]]></string>
     <string name="university_name">Name der Hochschule</string>
     <string name="et_message">Nachricht (optional)</string>

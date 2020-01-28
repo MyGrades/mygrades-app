@@ -22,7 +22,21 @@ import de.greenrobot.event.EventBus;
 import dh.mygrades.R;
 import dh.mygrades.main.MainServiceHelper;
 import dh.mygrades.main.events.ErrorEvent;
-import dh.mygrades.main.events.ErrorReportDoneEvent;
+
+import dh.mygrades.BuildConfig;
+import dh.mygrades.main.tasks.SendFeedback;
+import dh.mygrades.main.tasks.TaskListener;
+import io.sentry.Sentry;
+import io.sentry.android.AndroidSentryClientFactory;
+import io.sentry.event.UserBuilder;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import dh.mygrades.util.Constants;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
+import android.os.Bundle;
 
 /**
  * Fragment with input fields to report an error.
@@ -119,7 +133,18 @@ public class FragmentReportError extends Fragment {
         String email = etEmail.getText().toString();
         String errorMessage = etErrorMessage.getText().toString();
 
-        mainServiceHelper.postErrorReport(name, email, errorMessage);
+        TaskListener feedbackListener = new TaskListener() {
+            @Override
+            public void callback(){
+                showErrorReportDone();
+            }
+        };
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        long universityId = prefs.getLong(Constants.PREF_KEY_UNIVERSITY_ID, -1);
+        long ruleId = prefs.getLong(Constants.PREF_KEY_RULE_ID, -1);
+
+        new SendFeedback(feedbackListener, getActivity(), name, email, errorMessage, "error", universityId + "/" + ruleId).execute();
     }
 
     /**
@@ -142,15 +167,6 @@ public class FragmentReportError extends Fragment {
         }
 
         return inputCorrect;
-    }
-
-    /**
-     * Receive the ErrorReportDoneEvent, after the post was successful.
-     *
-     * @param errorReportDoneEvent - ErrorReportDoneEvent
-     */
-    public void onEventMainThread(ErrorReportDoneEvent errorReportDoneEvent) {
-        showErrorReportDone();
     }
 
     /**

@@ -16,6 +16,13 @@
             android:textSize="16sp"
             android:paddingBottom="8dp"
             android:text="@string/tv_post_wish_introduction" />
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:paddingBottom="8dp"
+            android:text="@string/tv_post_collected_data" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
